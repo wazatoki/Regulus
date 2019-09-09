@@ -42,8 +42,8 @@ prease setup production database by postgresql
 
 1. install nodejs
 
-  nodenv install 12.9.0
-  nodenv local 12.9.0
+  nodenv install 12.9.1
+  nodenv local 12.9.1
 
 1. install sqlboiler and driver for postgresql  
 
