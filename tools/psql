@@ -1,0 +1,2 @@
+#!/bin/sh
+docker exec -i postgresql psql $1
