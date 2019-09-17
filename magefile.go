@@ -18,7 +18,7 @@ import (
 func Build() error {
 	mg.Deps(InstallDeps)
 	fmt.Println("Building...")
-	cmd := exec.Command("go", "build", "-o", "MyApp", ".")
+	cmd := exec.Command("go", "build", "-o", "build", ".")
 	return cmd.Run()
 }
 
@@ -39,5 +39,5 @@ func InstallDeps() error {
 // Clean up after yourself
 func Clean() {
 	fmt.Println("Cleaning...")
-	os.RemoveAll("MyApp")
+	os.RemoveAll("build")
 }
