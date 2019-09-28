@@ -47,19 +47,9 @@ prease setup production database by postgresql
 
     nodenv local 12.9.1
 
-1. install mage
+1. install go tools
 
-    go get -u -d github.com/magefile/mage
-
-    cd $GOPATH/src/github.com/magefile/mage
-
-    go run bootstrap.go
-
-1. install sqlboiler and driver for postgresql  
-
-    go get -u -t github.com/volatiletech/sqlboiler
-
-    go get github.com/volatiletech/sqlboiler/drivers/sqlboiler-psql
+    ./tools/install_go_tools.sh
 
 1. download dependency liblalyies
 
