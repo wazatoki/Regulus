@@ -1,6 +1,7 @@
 package main
 
 import (
+	"regulus/infrastructures/echo"
 	"regulus/infrastructures/viper"
 )
 
@@ -8,4 +9,5 @@ import (
 func main() {
 	// configuration
 	viper.SetupAppConfig()
+	echo.StartEcho()
 }
