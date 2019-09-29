@@ -14,26 +14,46 @@ import (
 // If not set, running mage will list available targets
 // var Default = Build
 
+// reset environment
+func resetEnv() {
+	os.Setenv("CGO_ENABLED", "0")
+	os.Setenv("GOARCH", "amd64")
+	os.Setenv("GOOS", "linux")
+}
+
 // A build step that requires additional params, or platform specific steps for example
 func Build() error {
-	mg.Deps(InstallDeps)
-	fmt.Println("Building...")
-	cmd := exec.Command("go", "build", "-o", "build", ".")
-	return cmd.Run()
-}
 
-// A custom install step if you need your bin someplace other than go/bin
-func Install() error {
-	mg.Deps(Build)
-	fmt.Println("Installing...")
-	return os.Rename("./MyApp", "/usr/bin/MyApp")
-}
+	mg.Deps(Clean)
 
-// Manage your deps, or running package managers.
-func InstallDeps() error {
-	fmt.Println("Installing Deps...")
-	cmd := exec.Command("go", "get", "github.com/stretchr/piglatin")
-	return cmd.Run()
+	defer resetEnv()
+
+	os.Setenv("CGO_ENABLED", "0")
+	os.Setenv("GOARCH", "amd64")
+
+	fmt.Println("Building for linux")
+	os.Setenv("GOOS", "linux")
+	cmdLinux := exec.Command("go", "build", "-o", "build/regulus_linux_amd64.bin", "./backend/main.go")
+	if err := cmdLinux.Run(); err != nil {
+		return err
+	}
+
+	fmt.Println("Building for windows")
+	os.Setenv("GOOS", "windows")
+	cmdWindows := exec.Command("go", "build", "-o", "build/regulus_windows_amd64.bin", "./backend/main.go")
+	if err := cmdWindows.Run(); err != nil {
+		return err
+	}
+
+	fmt.Println("Building for darwin")
+	os.Setenv("GOOS", "darwin")
+	cmdDarwin := exec.Command("go", "build", "-o", "build/regulus_darwin_amd64.bin", "./backend/main.go")
+	if err := cmdDarwin.Run(); err != nil {
+		return err
+	}
+
+	fmt.Println("build finished !")
+	return nil
 }
 
 // Clean up after yourself
