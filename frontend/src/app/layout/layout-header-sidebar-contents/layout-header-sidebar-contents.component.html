@@ -1,0 +1,21 @@
+<div fxLayout="column">
+    
+    <!-- header -->
+    <div>
+        <app-header></app-header>
+    </div>
+
+    <!-- body -->
+    <div fxLayout="row wrap">
+        
+        <!-- side bar -->
+        <div fxFlex="20%" fxFlex.lt-md="100%">
+            <ng-content select=".sidebar"></ng-content>
+        </div>
+
+        <!-- conents -->
+        <div fxFlex="80%" fxFlex.lt-md="100%">
+            <ng-content select=".contents"></ng-content>
+        </div>
+    </div>
+</div>

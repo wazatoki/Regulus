@@ -31,32 +31,35 @@ prease setup production database by postgresql
 
 1. anyenv update plugin install
 
-  git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
+    git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
 
-  anyenv update
+    anyenv update
 
 1. install golang
 
-  goenv install 1.12.9
-  goenv local 1.12.9
+    goenv install 1.12.9
+  
+    goenv local 1.12.9
 
 1. install nodejs
 
-  nodenv install 12.9.1
-  nodenv local 12.9.1
+    nodenv install 12.9.1
 
-1. install sqlboiler and driver for postgresql  
+    nodenv local 12.9.1
 
-  go get -u -t github.com/volatiletech/sqlboiler
-  go get github.com/volatiletech/sqlboiler/drivers/sqlboiler-psql
+1. install go tools
+
+    ./tools/install_go_tools.sh
 
 1. download dependency liblalyies
 
-  cd src  
-  go build
+    cd src
 
-  cd js  
-  npm install
+    go build
+
+    cd js
+
+    npm install
 
 
 
