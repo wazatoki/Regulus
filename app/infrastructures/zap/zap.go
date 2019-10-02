@@ -1,7 +1,7 @@
 package zap
 
 import (
-	"regulus/utils/config"
+	"regulus/app/utils/config"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

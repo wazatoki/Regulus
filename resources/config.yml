@@ -1,0 +1,7 @@
+mode: "production"
+httpPort: "8080"
+dbUrl: "127.0.0.1"
+dbPort: "5432"
+dbUser: "regulus"
+dbPassword: "regulus"
+dbName: "reglusdb"

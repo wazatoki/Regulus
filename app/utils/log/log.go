@@ -1,7 +1,7 @@
 package log
 
 import (
-	"regulus/infrastructures/zap"
+	"regulus/app/infrastructures/zap"
 )
 
 // Debug output debug message

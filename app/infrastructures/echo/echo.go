@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"time"
 
-	"regulus/utils/config"
-	"regulus/utils/log"
+	"regulus/app/utils/config"
+	"regulus/app/utils/log"
 
 	"github.com/labstack/echo"
 )
