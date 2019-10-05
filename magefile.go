@@ -4,8 +4,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
 )
@@ -52,7 +54,10 @@ func Build() error {
 		return err
 	}
 
+	copyResources()
+
 	fmt.Println("build finished !")
+
 	return nil
 }
 
@@ -60,4 +65,51 @@ func Build() error {
 func Clean() {
 	fmt.Println("Cleaning...")
 	os.RemoveAll("build")
+}
+
+func copyResources() error {
+
+	separator := string(os.PathSeparator)
+	root := "." + separator + "resources"
+	targetDir := "." + separator + "build" + separator + "resources"
+	files := []string{}
+
+	// ディレクトリ内のファイルを取得
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		rel, err := filepath.Rel(root, path)
+		files = append(files, rel)
+		return nil
+	})
+
+	// ディレクトリを作成
+	for _, file := range files {
+		if fInfo, _ := os.Stat(root + separator + file); fInfo.IsDir() == true {
+			os.MkdirAll(targetDir+separator+file, 0777)
+		}
+	}
+
+	// コピー実行
+	for _, file := range files {
+		if fInfo, _ := os.Stat(root + separator + file); fInfo.IsDir() == false {
+			src, err := os.Open(root + separator + file)
+			if err != nil {
+				panic(err)
+			}
+
+			dst, err := os.Create(targetDir + separator + file)
+			if err != nil {
+				panic(err)
+			}
+
+			_, err = io.Copy(dst, src)
+			if err != nil {
+				panic(err)
+			}
+			src.Close()
+			dst.Close()
+		}
+	}
+
+	return err
+
 }
