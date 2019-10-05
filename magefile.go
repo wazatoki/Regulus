@@ -16,11 +16,17 @@ import (
 // If not set, running mage will list available targets
 // var Default = Build
 
-// reset environment
-func resetEnv() {
-	os.Setenv("CGO_ENABLED", "0")
-	os.Setenv("GOARCH", "amd64")
-	os.Setenv("GOOS", "linux")
+// BuildJs build javascript
+func BuildJs() error {
+
+	os.Chdir("./frontend")
+	defer os.Chdir("../")
+
+	cmd := exec.Command("npx", "ng", "build")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
 }
 
 // A build step that requires additional params, or platform specific steps for example
@@ -65,6 +71,12 @@ func Build() error {
 func Clean() {
 	fmt.Println("Cleaning...")
 	os.RemoveAll("build")
+}
+
+func resetEnv() {
+	os.Setenv("CGO_ENABLED", "0")
+	os.Setenv("GOARCH", "amd64")
+	os.Setenv("GOOS", "linux")
 }
 
 func copyResources() error {
