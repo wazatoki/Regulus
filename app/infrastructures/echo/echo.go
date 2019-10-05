@@ -15,7 +15,7 @@ import (
 // StartEcho http server start
 func StartEcho() {
 	e := echo.New()
-	e.Static("/", "resources")
+	e.Static("/", "resources/frontend")
 	defineRouting(e)
 	go func() {
 		log.Info("start server")
