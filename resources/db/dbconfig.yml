@@ -1,9 +1,9 @@
 development:
     dialect: postgres
-    datasource: host=127.0.0.1 port=5432 dbname=regulusdb user=regulus pass=regulus sslmode=disable
+    datasource: host=127.0.0.1 port=5432 dbname=regulusdb user=regulus password=regulus sslmode=disable
     dir: resources/db/migrations/postgres
 
 production:
     dialect: postgres
-    datasource: host=127.0.0.1 port=5432 dbname=regulusdb user=regulus pass=regulus sslmode=disable
+    datasource: host=127.0.0.1 port=5432 dbname=regulusdb user=regulus password=regulus sslmode=disable
     dir: resources/db/migrations/postgres
