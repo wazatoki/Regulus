@@ -16,6 +16,42 @@ import (
 // If not set, running mage will list available targets
 // var Default = Build
 
+// SqlMigrateUp execute sql-migrate down
+func SqlMigrateDown() error {
+	cmd := exec.Command("sql-migrate", "down", "-config=./resources/db/dbconfig.yml")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SqlMigrateUp execute sql-migrate up
+func SqlMigrateUp() error {
+	cmd := exec.Command("sql-migrate", "up", "-config=./resources/db/dbconfig.yml")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// SqlMigrateNew execute sql-migrate new
+func SqlMigrateNew() error {
+	cmd := exec.Command("sql-migrate", "new", "-config=./resources/db/dbconfig.yml")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// CreateDataAccessModel create data access model
+func CreateDataAccessModel() error {
+	cmd := exec.Command("sqlboiler", "--output", "./app/infrastructures/sqlboiler.toml", "--pkgname", "sqlboiler")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	return nil
+}
+
 // BuildJs build javascript
 func BuildJs() error {
 

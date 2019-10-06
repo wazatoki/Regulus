@@ -19,7 +19,8 @@ func SetupAppConfig() {
 
 	// read config file
 	viper.SetConfigName("config")
-	viper.AddConfigPath("./resources/config/")
+	viper.AddConfigPath("./resources/")
+	viper.AddConfigPath("./resources/app/")
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {
 		log.Panic(err.Error())
