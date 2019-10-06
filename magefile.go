@@ -44,8 +44,14 @@ func SqlMigrateNew() error {
 }
 
 // CreateDataAccessModel create data access model
+func DropDataAccessModel() {
+	os.RemoveAll("./app/infrastructures/sqlboiler")
+	//os.Mkdir("./app/infrastructures/sqlboiler", 0777)
+}
+
+// CreateDataAccessModel create data access model
 func CreateDataAccessModel() error {
-	cmd := exec.Command("sqlboiler", "--output", "./app/infrastructures/sqlboiler.toml", "--pkgname", "sqlboiler")
+	cmd := exec.Command("sqlboiler", "--output", "./app/infrastructures/sqlboiler", "--pkgname", "sqlboiler", "psql")
 	if err := cmd.Run(); err != nil {
 		return err
 	}
