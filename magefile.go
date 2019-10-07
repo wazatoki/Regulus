@@ -34,8 +34,9 @@ func SqlMigrateUp() error {
 	return nil
 }
 
-// SqlMigrateNew execute sql-migrate new
+// SqlMigrateNew execute sql-migrate new. option is maigration file name.
 func SqlMigrateNew() error {
+
 	cmd := exec.Command("sql-migrate", "new", "-config=./resources/db/dbconfig.yml")
 	if err := cmd.Run(); err != nil {
 		return err

@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout'
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +12,7 @@ import { WelcomComponent } from './welcom/welcom.component';
 import { LayoutHeaderSidebarContentsComponent } from './layout/layout-header-sidebar-contents/layout-header-sidebar-contents.component';
 import { LayoutHeaderContentsComponent } from './layout/layout-header-contents/layout-header-contents.component';
 import { LayoutContentsComponent } from './layout/layout-contents/layout-contents.component';
+import { ProductMasterComponent } from './master/product-master/product-master.component';
 
 @NgModule({
   declarations: [
@@ -19,12 +22,15 @@ import { LayoutContentsComponent } from './layout/layout-contents/layout-content
     LayoutHeaderSidebarContentsComponent,
     LayoutHeaderContentsComponent,
     LayoutContentsComponent,
+    ProductMasterComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    MatButtonModule,
+    MatMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,8 +1,12 @@
 <app-layout-header-sidebar-contents>
 
     <div class="sidebar">
-        <p>sidebara</p>
-        <p>sidebarb</p>
+        <button mat-button [matMenuTriggerFor]="menu">マスターメンテナンス</button>
+        <mat-menu #menu="matMenu">
+            <a mat-menu-item [routerLink]="['/product-master']">機器マスター</a>
+            <button mat-menu-item>スタッフマスター</button>
+        </mat-menu>
+
     </div>
 
     <div class="contents">
