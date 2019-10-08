@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout'
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button'; 
+import {MatTableModule} from '@angular/material/table';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,6 +44,7 @@ import { ProductMasterDetailComponent } from './master/product/product-master-de
     FlexLayoutModule,
     MatButtonModule,
     MatMenuModule,
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

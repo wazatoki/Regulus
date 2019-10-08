@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
+export interface ProductElement {
+  name: string;
+  jancode: string;
+  code: string;
+  symbol: string;
+}
+
 @Component({
   selector: 'app-product-master',
   templateUrl: './product-master.component.html',
@@ -7,7 +14,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductMasterComponent implements OnInit {
 
-  constructor() { }
+  displayedColumns: string[];
+  dataSource: ProductElement[];
+
+  constructor() { 
+    this.displayedColumns = ['maker', 'jmdn', 'jancode', 'name', 'code'];
+    this.dataSource = [];
+  }
 
   ngOnInit() {
   }
