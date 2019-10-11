@@ -4,7 +4,6 @@ export interface ProductElement {
   name: string;
   jancode: string;
   code: string;
-  symbol: string;
 }
 
 @Component({
@@ -18,7 +17,7 @@ export class ProductMasterComponent implements OnInit {
   dataSource: ProductElement[];
 
   constructor() { 
-    this.displayedColumns = ['maker', 'jmdn', 'jancode', 'name', 'code'];
+    this.displayedColumns = ['jancode', 'name', 'code'];
     this.dataSource = [];
   }
 
