@@ -16,7 +16,7 @@ export class ProductMasterComponent implements OnInit {
   displayedColumns: string[];
   dataSource: ProductElement[];
 
-  constructor() { 
+  constructor() {
     this.displayedColumns = ['jancode', 'name', 'code'];
     this.dataSource = [];
   }

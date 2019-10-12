@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import {MatTableModule} from '@angular/material/table';
 import { ProductMasterComponent } from './product-master.component';
-import { LayoutHeaderSidebarContentsComponent } from '../../../layout/layout-header-sidebar-contents/layout-header-sidebar-contents.component'
+import { LayoutModule } from '../../layout/layout.module';
 import { Component } from '@angular/core';
 
 @Component({selector: 'app-product-search', template: ''})
@@ -21,11 +21,11 @@ describe('ProductMasterComponent', () => {
       declarations: [ 
         ProductMasterComponent,
         ProductSearchComponent,
-        LayoutHeaderSidebarContentsComponent,
         HeaderComponent,
       ],
       imports: [
         MatTableModule,
+        LayoutModule,
       ]
     })
     .compileComponents();
