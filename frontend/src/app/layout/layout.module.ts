@@ -9,7 +9,7 @@ import { SearchComponent } from './search/search.component';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-import {MatGridListModule} from '@angular/material/grid-list'; 
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -26,7 +26,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatGridListModule,
+    FormsModule,
   ],
   exports: [
     LayoutContentsComponent,
