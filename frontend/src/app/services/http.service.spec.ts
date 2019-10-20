@@ -32,22 +32,19 @@ describe('HttpService', () => {
     httpTestingController.verify();
   });
 
-  fit('should be created', () => {
+  it('should be created', () => {
     const service: HttpService = TestBed.get(HttpService);
     expect(service).toBeTruthy();
-  });
-
-  fit('should be get correct hostname', () => {
-    const service: HttpService = TestBed.get(HttpService);
-    expect(service.BASE_URL).toBe('http://localhost:9876/');
   });
 
   fit('can test HttpClient.get', () => {
     const testData: Data = { name: 'Test Data' };
 
     httpClient.get<Data>('/data')
-      .subscribe(data =>
+      .subscribe(data =>{
         expect(data).toEqual(testData)
+      }
+        
       );
 
     const req = httpTestingController.expectOne('/data');
