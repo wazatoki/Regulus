@@ -10,7 +10,11 @@ export class MakerService {
 
   constructor( private http: HttpService ) { }
 
-  get(id: string): Observable<Maker> {
+  findById(id: string): Observable<Maker> {
     return this.http.get<Maker>( 'maker', { id: id } );
+  }
+
+  findAll(): Observable<Maker[]> {
+    return this.http.get<Maker[]>( 'maker' );
   }
 }

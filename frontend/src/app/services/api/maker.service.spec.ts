@@ -41,7 +41,7 @@ describe('MakerService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('get mothod with params', () => {
+  it('findById mothod', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
@@ -50,12 +50,32 @@ describe('MakerService', () => {
   
     let result: Maker;
 
-    makerService.get('testid').subscribe( data => {
+    makerService.findById('testid').subscribe( data => {
       result = data
     })
 
     expect(result).toEqual(testData);
     expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', {id: 'testid'});
+  });
+
+  it('findAll mothod', () => {
+    const testData: Maker[] = [
+      { id: 'testid1', name: 'Test Maker1' },
+      { id: 'testid2', name: 'Test Maker2' },
+    ];
+    makerService = TestBed.get(MakerService);
+    httpServiceSpy = TestBed.get(HttpService);
+    const stubValue = of(testData)
+    httpServiceSpy.get.and.returnValue(stubValue);
+  
+    let result: Maker[];
+
+    makerService.findAll().subscribe( data => {
+      result = data
+    })
+
+    expect(result).toEqual(testData);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker');
   });
 
 });
