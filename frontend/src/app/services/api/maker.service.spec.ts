@@ -15,7 +15,7 @@ describe('MakerService', () => {
 
   beforeEach(() => {
   
-    const spy = jasmine.createSpyObj('HttpService', ['get']);
+    const spy = jasmine.createSpyObj('HttpService', ['get', 'post']);
 
       TestBed.configureTestingModule(
         {
@@ -76,6 +76,23 @@ describe('MakerService', () => {
 
     expect(result).toEqual(testData);
     expect(httpServiceSpy.get).toHaveBeenCalledWith('maker');
+  });
+
+  it('add mothod', () => {
+    const testData: Maker = { id: '', name: 'Test Maker1' };
+    const resultData: Maker = { id: 'testid1', name: 'Test Maker1' };
+    makerService = TestBed.get(MakerService);
+    httpServiceSpy = TestBed.get(HttpService);
+    httpServiceSpy.post.and.returnValue(of(resultData));
+  
+    let result: Maker;
+
+    makerService.add(testData).subscribe( data => {
+      result = data
+    })
+
+    expect(result).toEqual(resultData);
+    expect(httpServiceSpy.post).toHaveBeenCalledWith('maker', testData);
   });
 
 });

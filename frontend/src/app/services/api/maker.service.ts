@@ -17,4 +17,8 @@ export class MakerService {
   findAll(): Observable<Maker[]> {
     return this.http.get<Maker[]>( 'maker' );
   }
+
+  add(data: Maker): Observable<Maker> {
+    return this.http.post<Maker>( 'maker', data );
+  }
 }
