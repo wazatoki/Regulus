@@ -54,7 +54,8 @@ describe('MakerService', () => {
       result = data
     })
 
-    expect(result).toEqual(testData)
+    expect(result).toEqual(testData);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', {id: 'testid'});
   });
 
 });
