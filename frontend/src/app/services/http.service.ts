@@ -10,22 +10,15 @@ export class HttpService {
 
   readonly HOST_URL: string = window.location.host
 
-  getHttpParams(data: { [key: string]: string }): HttpParams {
+  constructor(private client: HttpClient) { }
+
+  private getHttpParams(data: { [key: string]: string }): HttpParams {
 
     const params: HttpParams = new HttpParams();
     for (let key in data) {
       params.set(key, data[key])
     }
     return params;
-  }
-
-  get<T>(path: string, data: { [key: string]: string } = {}): Observable<T> {
-
-    return this.client.get<T>(`${this.HOST_URL}${path}`, { params: this.getHttpParams(data) })
-      .pipe(
-        retry(3),
-        catchError(this.handleError)
-      );
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -44,5 +37,21 @@ export class HttpService {
       'Something bad happened; please try again later.');
   };
 
-  constructor(private client: HttpClient) { }
+  get<T>(path: string, data: { [key: string]: string } = {}): Observable<T> {
+
+    return this.client.get<T>(`${this.HOST_URL}${path}`, { params: this.getHttpParams(data) })
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
+
+  post<T>(path: string, data: T): Observable<T> {
+
+    return this.client.post<T>(`${this.HOST_URL}${path}`, data)
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
 }

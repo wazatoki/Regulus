@@ -86,4 +86,19 @@ describe('HttpService', () => {
     req.flush(testData);
   });
 
+  it('post mothod', () => {
+    const testData: Data = { name: 'Test Data' };
+    const resultData: Data = { name: 'Result Data'};
+    const service: HttpService = TestBed.get(HttpService);
+
+    service.post<Data>('/data', testData)
+      .subscribe(data => {
+        expect(data).toEqual(resultData)
+      });
+
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    expect(req.request.method).toEqual('POST');
+    req.flush(resultData);
+  });
+
 });
