@@ -1,12 +1,60 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MakerService } from './maker.service';
+import { HttpService } from '../http.service'
+
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Maker} from '../models/maker';
+import { of } from 'rxjs';
 
 describe('MakerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+
+  let httpTestingController: HttpTestingController;
+  let makerService: MakerService;
+  let httpServiceSpy: jasmine.SpyObj<HttpService>;
+
+  beforeEach(() => {
+  
+    const spy = jasmine.createSpyObj('HttpService', ['get']);
+
+      TestBed.configureTestingModule(
+        {
+          imports: [
+            HttpClientTestingModule,
+          ],
+          providers: [
+            { provide: HttpService, useValue: spy },
+          ]
+        }
+      )
+
+      httpTestingController = TestBed.get(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpTestingController.verify();
+  });
+
 
   it('should be created', () => {
     const service: MakerService = TestBed.get(MakerService);
     expect(service).toBeTruthy();
   });
+
+  it('get mothod with params', () => {
+    const testData: Maker = { id: 'testid', name: 'Test Maker' };
+    makerService = TestBed.get(MakerService);
+    httpServiceSpy = TestBed.get(HttpService);
+    const stubValue = of(testData)
+    httpServiceSpy.get.and.returnValue(stubValue);
+  
+    let result: Maker;
+
+    makerService.get('testid').subscribe( data => {
+      result = data
+    })
+
+    expect(result).toEqual(testData)
+  });
+
 });

@@ -8,6 +8,8 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class HttpService {
 
+  readonly HOST_URL: string = window.location.host
+
   getHttpParams(data: { [key: string]: string }): HttpParams {
 
     const params: HttpParams = new HttpParams();
@@ -17,9 +19,9 @@ export class HttpService {
     return params;
   }
 
-  get<T>(path: string, data: { [key: string]: string }): Observable<T> {
+  get<T>(path: string, data: { [key: string]: string } = {}): Observable<T> {
 
-    return this.client.get<T>(path, { params: this.getHttpParams(data) })
+    return this.client.get<T>(`${this.HOST_URL}${path}`, { params: this.getHttpParams(data) })
       .pipe(
         retry(3),
         catchError(this.handleError)

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
-import { Maker} from '../model/maker';
+import { Maker} from '../models/maker';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,11 +8,9 @@ import { Observable } from 'rxjs';
 })
 export class MakerService {
 
-  get(id: string): Observable<Maker> {
-
-    return this.http.get<Maker>( 'maker', {'id': id} );
-  
-  }
-
   constructor( private http: HttpService ) { }
+
+  get(id: string): Observable<Maker> {
+    return this.http.get<Maker>( 'maker', { id: id } );
+  }
 }
