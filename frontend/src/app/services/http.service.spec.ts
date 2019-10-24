@@ -55,7 +55,7 @@ describe('HttpService', () => {
     req.flush(testData);
   });
 
-  it('get mothod without params', () => {
+  it('get method without params', () => {
     const testData: Data = { name: 'Test Data' };
     const service: HttpService = TestBed.get(HttpService);
 
@@ -69,7 +69,33 @@ describe('HttpService', () => {
     req.flush(testData);
   });
 
-  it('get mothod with params', () => {
+  it('get method as error with retry 4 times', () => {
+    const testData: Data = { name: 'Test Data' };
+    const service: HttpService = TestBed.get(HttpService);
+    const emsg = 'deliberate 404 error';
+
+    service.get<Data>('/data')
+      .subscribe(
+        data => {
+          expect(data).toEqual(testData);
+        },
+        (error: HttpErrorResponse) => {
+          expect(error.status).toEqual(404, 'status');
+          expect(error.error).toEqual(emsg, 'message');
+        }
+      );
+
+    const retryCount = 3;
+    for (var i = 0; i < retryCount; i++) {
+      let req = httpTestingController.expectOne('localhost:9876/data');
+      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+    }
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    req.flush(testData);
+
+  });
+
+  it('get method with params', () => {
     const testData: Data = { name: 'Test Data' };
     const service: HttpService = TestBed.get(HttpService);
 
@@ -86,9 +112,9 @@ describe('HttpService', () => {
     req.flush(testData);
   });
 
-  it('post mothod', () => {
+  it('post method', () => {
     const testData: Data = { name: 'Test Data' };
-    const resultData: Data = { name: 'Result Data'};
+    const resultData: Data = { name: 'Result Data' };
     const service: HttpService = TestBed.get(HttpService);
 
     service.post<Data>('/data', testData)
@@ -99,6 +125,33 @@ describe('HttpService', () => {
     const req = httpTestingController.expectOne('localhost:9876/data');
     expect(req.request.method).toEqual('POST');
     req.flush(resultData);
+  });
+
+  it('post method as error with retry 4 times', () => {
+    const testData: Data = { name: 'Test Data' };
+    const resultData: Data = { name: 'Result Data' };
+    const service: HttpService = TestBed.get(HttpService);
+    const emsg = 'deliberate 404 error';
+
+    service.post<Data>('/data', testData)
+      .subscribe(
+        data => {
+          expect(data).toEqual(resultData);
+        },
+        (error: HttpErrorResponse) => {
+          expect(error.status).toEqual(404, 'status');
+          expect(error.error).toEqual(emsg, 'message');
+        }
+      );
+
+    const retryCount = 3;
+    for (var i = 0; i < retryCount; i++) {
+      let req = httpTestingController.expectOne('localhost:9876/data');
+      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+    }
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    req.flush(resultData);
+
   });
 
 });

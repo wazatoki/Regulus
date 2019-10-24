@@ -78,7 +78,7 @@ describe('MakerService', () => {
     expect(httpServiceSpy.get).toHaveBeenCalledWith('maker');
   });
 
-  it('add mothod', () => {
+  it('add method', () => {
     const testData: Maker = { id: '', name: 'Test Maker1' };
     const resultData: Maker = { id: 'testid1', name: 'Test Maker1' };
     makerService = TestBed.get(MakerService);
