@@ -41,7 +41,7 @@ describe('MakerService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('findById mothod', () => {
+  it('findById method', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
@@ -58,7 +58,7 @@ describe('MakerService', () => {
     expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', {id: 'testid'});
   });
 
-  it('findAll mothod', () => {
+  it('findAll method', () => {
     const testData: Maker[] = [
       { id: 'testid1', name: 'Test Maker1' },
       { id: 'testid2', name: 'Test Maker2' },

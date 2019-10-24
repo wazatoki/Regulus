@@ -154,4 +154,46 @@ describe('HttpService', () => {
 
   });
 
+  it('put method', () => {
+    const testData: Data = { name: 'Test Data' };
+    const resultData: Data = { name: 'Result Data' };
+    const service: HttpService = TestBed.get(HttpService);
+
+    service.put<Data>('/data', testData)
+      .subscribe(data => {
+        expect(data).toEqual(resultData)
+      });
+
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    expect(req.request.method).toEqual('PUT');
+    req.flush(resultData);
+  });
+
+  it('put method as error with retry 4 times', () => {
+    const testData: Data = { name: 'Test Data' };
+    const resultData: Data = { name: 'Result Data' };
+    const service: HttpService = TestBed.get(HttpService);
+    const emsg = 'deliberate 404 error';
+
+    service.put<Data>('/data', testData)
+      .subscribe(
+        data => {
+          expect(data).toEqual(resultData);
+        },
+        (error: HttpErrorResponse) => {
+          expect(error.status).toEqual(404, 'status');
+          expect(error.error).toEqual(emsg, 'message');
+        }
+      );
+
+    const retryCount = 3;
+    for (var i = 0; i < retryCount; i++) {
+      let req = httpTestingController.expectOne('localhost:9876/data');
+      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+    }
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    req.flush(resultData);
+
+  });
+
 });

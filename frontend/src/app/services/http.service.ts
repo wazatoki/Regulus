@@ -54,4 +54,13 @@ export class HttpService {
         catchError(this.handleError)
       );
   }
+
+  put<T>(path: string, data: T): Observable<T> {
+
+    return this.client.put<T>(`${this.HOST_URL}${path}`, data)
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
 }
