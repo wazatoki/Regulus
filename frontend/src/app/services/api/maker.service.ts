@@ -21,4 +21,8 @@ export class MakerService {
   add(data: Maker): Observable<Maker> {
     return this.http.post<Maker>( 'maker', data );
   }
+
+  update(data: Maker): Observable<Maker> {
+    return this.http.put<Maker>( 'maker', data );
+  }
 }
