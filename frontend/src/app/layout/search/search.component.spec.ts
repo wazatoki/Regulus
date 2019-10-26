@@ -54,4 +54,15 @@ describe('SearchComponent', () => {
     fixture.detectChanges();
     expect(component.searchStrings).toBe('test words');
   })
+
+  it('should emit searchClick event', () => {
+    const buttonDe: DebugElement = elementd.query(By.css('button'));
+    const button: HTMLInputElement = buttonDe.nativeElement;
+    component.searchStrings = 'search text';
+    component.searchClick.subscribe( (data: string) => {
+      expect(data).toEqual(component.searchStrings);
+    });
+    button.dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+  });
 });
