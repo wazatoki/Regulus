@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
-import { Maker} from '../models/maker';
+import { Maker } from '../models/maker/maker';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,9 @@ export class MakerService {
   constructor( private http: HttpService ) { }
 
   findById(id: string): Observable<Maker> {
-    return this.http.get<Maker>( 'maker', { id: id } );
+    const data: Map<string, string> = new Map();
+    data.set('id', id);
+    return this.http.get<Maker>( 'maker', data );
   }
 
   findAll(): Observable<Maker[]> {

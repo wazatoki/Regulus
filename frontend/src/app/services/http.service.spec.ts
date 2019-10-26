@@ -98,8 +98,9 @@ describe('HttpService', () => {
   it('get method with params', () => {
     const testData: Data = { name: 'Test Data' };
     const service: HttpService = TestBed.get(HttpService);
-
-    service.get<Data>('/data', { id: 'idstring' })
+    const id: Map<string, string> = new Map();
+    id.set('id', 'idstring')
+    service.get<Data>('/data', id)
       .subscribe(data => {
         expect(data).toEqual(testData)
       });

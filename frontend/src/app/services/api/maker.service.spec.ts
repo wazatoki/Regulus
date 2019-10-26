@@ -4,7 +4,7 @@ import { MakerService } from './maker.service';
 import { HttpService } from '../http.service'
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Maker} from '../models/maker';
+import { Maker} from '../models/maker/maker';
 import { of } from 'rxjs';
 
 describe('MakerService', () => {
@@ -55,7 +55,9 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', {id: 'testid'});
+    const id: Map<string, string> = new Map();
+    id.set('id', 'testid');
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', id);
   });
 
   it('findAll method', () => {

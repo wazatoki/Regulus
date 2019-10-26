@@ -12,12 +12,15 @@ export class HttpService {
 
   constructor(private client: HttpClient) { }
 
-  private getHttpParams(data: { [key: string]: string }): HttpParams {
+  private getHttpParams(data: Map<string, string>): HttpParams {
 
     const params: HttpParams = new HttpParams();
-    for (let key in data) {
-      params.set(key, data[key])
-    }
+
+      data.forEach(
+        (key: string, value: string) => {
+          params.set(key, value);
+        }
+      );
     return params;
   }
 
@@ -37,7 +40,7 @@ export class HttpService {
       'Something bad happened; please try again later.');
   };
 
-  get<T>(path: string, data: { [key: string]: string } = {}): Observable<T> {
+  get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
 
     return this.client.get<T>(`${this.HOST_URL}${path}`, { params: this.getHttpParams(data) })
       .pipe(
