@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
 import { Maker } from '../models/maker/maker';
+import { MakerCondition } from '../models/maker/maker-condition'
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,6 +15,10 @@ export class MakerService {
     const data: Map<string, string> = new Map();
     data.set('id', id);
     return this.http.get<Maker>( 'maker', data );
+  }
+
+  findByCondition(condition: MakerCondition): Observable<Maker[]> {
+    return this.http.get<Maker[]>('maker', condition.toMap());
   }
 
   findAll(): Observable<Maker[]> {
