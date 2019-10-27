@@ -57,7 +57,7 @@ describe('SearchComponent', () => {
 
   it('should emit searchClick event', () => {
     const buttonDe: DebugElement = elementd.query(By.css('button'));
-    const button: HTMLInputElement = buttonDe.nativeElement;
+    const button: HTMLElement = buttonDe.nativeElement;
     component.searchStrings = 'search text';
     component.searchClick.subscribe( (data: string) => {
       expect(data).toEqual(component.searchStrings);

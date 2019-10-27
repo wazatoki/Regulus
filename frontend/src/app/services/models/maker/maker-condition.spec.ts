@@ -34,9 +34,29 @@ describe('MakerCondition', () => {
     const makerCondition: MakerCondition = TestBed.get(MakerCondition);
     makerCondition.id = 'testid';
     makerCondition.name = 'testname';
+    makerCondition.searchStrings = 'search words';
+    makerCondition.isPartialMatchName = true;
+    makerCondition.isUnMatchName = true;
     const result: Map<string, string> = new Map();
     result.set('id', 'testid');
     result.set('name', 'testname');
+    result.set('searchStrings', 'search words');
+    result.set('isPartialMatchName', 'true');
+    result.set('isUnMatchName', 'true');
+    expect(makerCondition.toMap()).toEqual(result);
+  });
+
+  it('test toMap boolean member is false', () => {
+    const makerCondition: MakerCondition = TestBed.get(MakerCondition);
+    makerCondition.id = 'testid';
+    makerCondition.name = 'testname';
+    makerCondition.searchStrings = 'search words';
+    makerCondition.isPartialMatchName = false;
+    makerCondition.isUnMatchName = false;
+    const result: Map<string, string> = new Map();
+    result.set('id', 'testid');
+    result.set('name', 'testname');
+    result.set('searchStrings', 'search words');
     expect(makerCondition.toMap()).toEqual(result);
   });
 

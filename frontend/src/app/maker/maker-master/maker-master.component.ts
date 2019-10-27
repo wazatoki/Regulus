@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
-export interface MakerElement {
-  id: string;
-  name: string;
-}
+import { MakerService } from '../../services/api/maker.service';
+import { Maker } from '../../services/models/maker/maker';
+import { MakerCondition } from '../../services/models/maker/maker-condition';
 
 @Component({
   selector: 'app-maker-master',
@@ -13,15 +11,25 @@ export interface MakerElement {
 export class MakerMasterComponent implements OnInit {
 
   displayedColumns: string[];
-  dataSource: MakerElement[];
+  dataSource: Maker[];
 
-  constructor() {
+  constructor(
+    private makerService:MakerService,
+    private makerCondition: MakerCondition) {
     this.displayedColumns = ['name'];
     this.dataSource = [];
   }
 
-
   ngOnInit() {
   }
 
+  onSearch(data: string){
+
+    this.makerCondition.name = data
+    this.makerService.findByCondition(this.makerCondition).subscribe(
+      makers => {
+        this.dataSource = makers;
+      }
+    );
+  }
 }

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Maker } from '../../services/models/maker/maker';
+import { MakerService } from '../../services/api/maker.service';
+import { MakerCondition } from '../../services/models/maker/maker-condition';
 
 @Component({
   selector: 'app-maker-search',
@@ -7,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MakerSearchComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private makerService: MakerService,
+    private makerCondition: MakerCondition) { }
 
   ngOnInit() {
   }
 
+  makers: Maker[];
+
+  onSearch(data: string) {
+
+    this.makerCondition.searchStrings = data
+    this.makerService.findByCondition(this.makerCondition).subscribe(
+      makers => {
+        this.makers = makers;
+      }
+    );
+  }
 }

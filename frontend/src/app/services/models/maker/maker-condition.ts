@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Maker } from './maker';
+import { TRUE } from '../enum/boolean';
 
 @Injectable({
     providedIn: 'root'
@@ -7,6 +8,12 @@ import { Maker } from './maker';
 export class MakerCondition {
 
     constructor(private maker: Maker) { }
+
+    searchStrings: string;
+
+    isPartialMatchName: boolean;
+
+    isUnMatchName: boolean;
 
     get id(): string {
         return this.maker.id;
@@ -27,12 +34,24 @@ export class MakerCondition {
     toMap(): Map<string, string> {
         const result: Map<string, string> = new Map();
 
+        if (this.searchStrings){
+            result.set('searchStrings', this.searchStrings);
+        }
+
         if (this.id) {
             result.set('id', this.id);
         }
 
         if (this.name) {
             result.set('name', this.name);
+        }
+
+        if(this.isPartialMatchName){
+            result.set('isPartialMatchName', TRUE);
+        }
+
+        if(this.isUnMatchName){
+            result.set('isUnMatchName', TRUE);
         }
 
         return result;
