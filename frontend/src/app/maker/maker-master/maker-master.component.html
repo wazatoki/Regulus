@@ -4,7 +4,7 @@
     </div>
 
     <div class="contents">
-        <app-search (searchClick)="onSearch($event)"></app-search>
+        <app-maker-search (fetched)="onFetchedMakers($event)"></app-maker-search>
 
         <table mat-table [dataSource]="dataSource">
 

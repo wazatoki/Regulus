@@ -23,13 +23,7 @@ export class MakerMasterComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSearch(data: string){
-
-    this.makerCondition.name = data
-    this.makerService.findByCondition(this.makerCondition).subscribe(
-      makers => {
-        this.dataSource = makers;
-      }
-    );
+  onFetchedMakers(data: Maker[]){
+    this.dataSource = data;
   }
 }

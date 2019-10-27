@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Maker } from '../../services/models/maker/maker';
 import { MakerService } from '../../services/api/maker.service';
 import { MakerCondition } from '../../services/models/maker/maker-condition';
@@ -17,14 +17,14 @@ export class MakerSearchComponent implements OnInit {
   ngOnInit() {
   }
 
-  makers: Maker[];
+  @Output() fetched: EventEmitter<Maker[]> = new EventEmitter();
 
-  onSearch(data: string) {
+  onSearch(searchStrings: string) {
 
-    this.makerCondition.searchStrings = data
+    this.makerCondition.searchStrings = searchStrings;
     this.makerService.findByCondition(this.makerCondition).subscribe(
       makers => {
-        this.makers = makers;
+        this.fetched.emit(makers);
       }
     );
   }

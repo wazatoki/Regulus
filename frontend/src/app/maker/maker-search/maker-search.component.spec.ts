@@ -54,8 +54,10 @@ describe('MakerSearchComponent', () => {
     ];
     const stubValue = of(testData)
     makerServiceSpy.findByCondition.and.returnValue(stubValue);
+    component.fetched.subscribe( (data: Maker[]) => {
+      expect(data).toBe(testData);
+    })
     component.onSearch('search word');
     expect(makerCondition.searchStrings).toEqual( 'search word' );
-    expect(component.makers).toBe(testData);
   });
 });
