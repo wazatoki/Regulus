@@ -1,9 +1,19 @@
-<div mat-dialog-content>
+<form [formGroup]="makerForm">
+
     <mat-form-field>
-        <input matInput placeholder="製造販売業者名称" [(ngModel)]="name">
+        <input
+            type='text' 
+            matInput placeholder="製造販売業者名称"
+            required
+            formControlName="name"
+        >
+        <mat-error *ngIf="name.invalid">
+            <span>製造販売業者名称は必須項目です。</span>
+        </mat-error>
+
     </mat-form-field>
-</div>
-<div mat-dialog-actions>
+
     <button mat-button (click)="onCancelClick()" cdkFocusInitial>取消</button>
     <button mat-button (click)="onSaveClick()">保存</button>
-</div>
+
+</form>

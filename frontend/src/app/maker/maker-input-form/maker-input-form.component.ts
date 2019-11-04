@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Maker } from '../../services/models/maker/maker';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-maker-input-form',
@@ -10,27 +9,18 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class MakerInputFormComponent implements OnInit {
 
-  form: FormGroup;
-  maker: Maker;
-
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<MakerInputFormComponent>,
-    @Inject(MAT_DIALOG_DATA) data
-  ) {
-    this.maker = data.maker;
-   }
+  constructor( private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.form = this.fb.group(this.maker)
   }
 
-  onCancelClick(){
-    this.dialogRef.close(this.maker)
+  makerForm: FormGroup = this.fb.group({
+    name: ['', [Validators.required]],
+  });
+
+  get name(): AbstractControl {
+    return this.makerForm.get('name');
   }
 
-  onSaveClick(){
-    this.dialogRef.close();
-  }
-
+  
 }
