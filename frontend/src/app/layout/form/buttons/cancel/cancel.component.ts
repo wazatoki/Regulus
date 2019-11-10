@@ -14,7 +14,7 @@ export class CancelComponent implements OnInit {
   ngOnInit() {
   }
 
-  onCancelClick() {
+  onClick() {
     this.clicked.emit('cancelClicked');
   }
 

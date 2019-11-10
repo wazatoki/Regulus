@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { CancelComponent } from './form/buttons/cancel/cancel.component';
 import { AutofocusDirective } from '../directive/autofocus.directive';
+import { SubmitComponent } from './form/buttons/submit/submit.component';
 
 @NgModule({
   declarations: [
@@ -19,9 +20,10 @@ import { AutofocusDirective } from '../directive/autofocus.directive';
     LayoutContentsComponent,
     LayoutHeaderContentsComponent,
     LayoutHeaderSidebarContentsComponent,
+    AutofocusDirective,
     SearchComponent,
     CancelComponent,
-    AutofocusDirective,
+    SubmitComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +39,7 @@ import { AutofocusDirective } from '../directive/autofocus.directive';
     LayoutHeaderSidebarContentsComponent,
     SearchComponent,
     CancelComponent,
+    SubmitComponent,
   ]
 })
 export class LayoutModule { }
