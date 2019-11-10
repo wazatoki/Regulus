@@ -1,11 +1,14 @@
 <app-layout-header-sidebar-contents>
 
     <div class="sidebar">
+        <mat-action-list>
+            <button mat-list-item (click)="openInputForm()"> 新規作成 </button>
+        </mat-action-list>
     </div>
 
     <div class="contents">
         <app-maker-search (fetched)="onFetchedMakers($event)"></app-maker-search>
-        <app-maker-input-form></app-maker-input-form>
+
         <table mat-table [dataSource]="dataSource">
 
             <!-- maker Column -->

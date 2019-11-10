@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+
 import { MakerService } from '../../services/api/maker.service';
 import { Maker } from '../../services/models/maker/maker';
 import { MakerCondition } from '../../services/models/maker/maker-condition';
+import { MakerInputFormComponent } from '../maker-input-form/maker-input-form.component';
 
 @Component({
   selector: 'app-maker-master',
@@ -15,7 +18,8 @@ export class MakerMasterComponent implements OnInit {
 
   constructor(
     private makerService:MakerService,
-    private makerCondition: MakerCondition) {
+    private makerCondition: MakerCondition,
+    private _bottomSheet: MatBottomSheet) {
     this.displayedColumns = ['name'];
     this.dataSource = [];
   }
@@ -25,5 +29,9 @@ export class MakerMasterComponent implements OnInit {
 
   onFetchedMakers(data: Maker[]){
     this.dataSource = data;
+  }
+
+  openInputForm(): void {
+    this._bottomSheet.open(MakerInputFormComponent);
   }
 }

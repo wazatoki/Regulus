@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
 import { Maker } from '../../services/models/maker/maker';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-maker-input-form',
@@ -9,7 +10,9 @@ import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/fo
 })
 export class MakerInputFormComponent implements OnInit {
 
-  constructor( private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private _bottomSheetRef: MatBottomSheetRef<MakerInputFormComponent>) { }
 
   ngOnInit() {
   }
@@ -23,6 +26,6 @@ export class MakerInputFormComponent implements OnInit {
   }
 
   onCancelClick() {
-    
+
   }
 }
