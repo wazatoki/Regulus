@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { CancelComponent } from './form/buttons/cancel/cancel.component';
 import { AutofocusDirective } from '../directive/autofocus.directive';
 import { SubmitComponent } from './form/buttons/submit/submit.component';
+import { ClearComponent } from './form/buttons/clear/clear.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SubmitComponent } from './form/buttons/submit/submit.component';
     SearchComponent,
     CancelComponent,
     SubmitComponent,
+    ClearComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +42,7 @@ import { SubmitComponent } from './form/buttons/submit/submit.component';
     SearchComponent,
     CancelComponent,
     SubmitComponent,
+    ClearComponent,
   ]
 })
 export class LayoutModule { }
