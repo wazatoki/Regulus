@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MakerInputFormComponent } from './maker-input-form.component';
-
+import { LayoutModule } from '../../layout/layout.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +19,7 @@ describe('MakerInputFormComponent', () => {
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
+        LayoutModule,
       ]
     })
     .compileComponents();
