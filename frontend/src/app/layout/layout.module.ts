@@ -6,11 +6,12 @@ import { LayoutHeaderSidebarContentsComponent } from './layout-header-sidebar-co
 import { LayoutHeaderContentsComponent } from './layout-header-contents/layout-header-contents.component';
 import { LayoutContentsComponent } from './layout-contents/layout-contents.component';
 import { SearchComponent } from './search/search.component';
-import {MatFormFieldModule} from '@angular/material/form-field'; 
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {FormsModule} from '@angular/forms';
-
+import { MatFormFieldModule } from '@angular/material/form-field'; 
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { CancelComponent } from './form/buttons/cancel/cancel.component';
+import { AutofocusDirective } from '../directive/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,8 @@ import {FormsModule} from '@angular/forms';
     LayoutHeaderContentsComponent,
     LayoutHeaderSidebarContentsComponent,
     SearchComponent,
+    CancelComponent,
+    AutofocusDirective,
   ],
   imports: [
     CommonModule,
@@ -33,6 +36,7 @@ import {FormsModule} from '@angular/forms';
     LayoutHeaderContentsComponent,
     LayoutHeaderSidebarContentsComponent,
     SearchComponent,
+    CancelComponent,
   ]
 })
 export class LayoutModule { }

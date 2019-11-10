@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button'; 
-import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
@@ -14,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { WelcomComponent } from './welcom/welcom.component';
+import { TestComponent } from './test/test.component';
 import { LayoutModule } from './layout/layout.module';
 
 
@@ -21,6 +21,7 @@ import { LayoutModule } from './layout/layout.module';
   declarations: [
     AppComponent,
     WelcomComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,7 +31,6 @@ import { LayoutModule } from './layout/layout.module';
     ReactiveFormsModule,
     MatButtonModule,
     MatMenuModule,
-    MatDialog,
     MatFormFieldModule,
     MatInputModule,
     LayoutModule,
