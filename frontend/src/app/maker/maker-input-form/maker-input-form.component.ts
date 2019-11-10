@@ -22,5 +22,7 @@ export class MakerInputFormComponent implements OnInit {
     return this.makerForm.get('name');
   }
 
-  
+  onCancelClick() {
+    
+  }
 }
