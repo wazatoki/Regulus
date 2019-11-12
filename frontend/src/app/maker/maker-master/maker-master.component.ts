@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
 
 import { MakerService } from '../../services/api/maker.service';
 import { Maker } from '../../services/models/maker/maker';
@@ -16,10 +16,12 @@ export class MakerMasterComponent implements OnInit {
   displayedColumns: string[];
   dataSource: Maker[];
 
+  name: string;
+
   constructor(
     private makerService:MakerService,
     private makerCondition: MakerCondition,
-    private _bottomSheet: MatBottomSheet) {
+    private dialog: MatDialog) {
     this.displayedColumns = ['name'];
     this.dataSource = [];
   }
@@ -32,6 +34,13 @@ export class MakerMasterComponent implements OnInit {
   }
 
   openInputForm(): void {
-    this._bottomSheet.open(MakerInputFormComponent);
+    const dialogRef = this.dialog.open(MakerInputFormComponent, {
+      width: '500px',
+      data: {name: this.name}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.name = '';
+    });
   }
 }

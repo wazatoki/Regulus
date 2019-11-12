@@ -1,7 +1,11 @@
-import { Component, OnInit, Injectable } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Maker } from '../../services/models/maker/maker';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
-import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export interface DialogData {
+  name: string;
+}
 
 @Component({
   selector: 'app-maker-input-form',
@@ -12,7 +16,8 @@ export class MakerInputFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private _bottomSheetRef: MatBottomSheetRef<MakerInputFormComponent>) { }
+    public dialogRef: MatDialogRef<MakerInputFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit() {
   }
@@ -26,6 +31,6 @@ export class MakerInputFormComponent implements OnInit {
   }
 
   onCancelClick() {
-
+    this.dialogRef.close();
   }
 }
