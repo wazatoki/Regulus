@@ -1,15 +1,15 @@
-<mat-card fxFlex="95%">
+<div fxFlex="95%">
     <form [formGroup]="makerForm">
-        <mat-card-content class="form-container">
+        <mat-dialog-content class="form-container">
             <mat-form-field>
                 <input type='text' matInput placeholder="製造販売業者名称" required formControlName="name">
                 <mat-error *ngIf="name.invalid">
                     <span>製造販売業者名称は必須項目です。</span>
                 </mat-error>
             </mat-form-field>
-        </mat-card-content>
+        </mat-dialog-content>
 
-        <mat-card-actions>
+        <mat-dialog-actions>
             <mat-grid-list cols="4" rowHeight="40">
                 <mat-grid-tile>
                     <app-cancel (clicked)="onCancelClick()"></app-cancel>
@@ -21,6 +21,6 @@
                     <app-submit [buttonLabelType]="save" (clicked)="onSaveClick()"></app-submit>
                 </mat-grid-tile>
             </mat-grid-list>
-        </mat-card-actions>
+        </mat-dialog-actions>
     </form>
-</mat-card>
+</div>

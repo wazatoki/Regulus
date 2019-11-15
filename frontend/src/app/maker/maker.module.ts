@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { LayoutModule } from '../layout/layout.module';
@@ -34,7 +33,6 @@ import { MakerInputFormComponent } from './maker-input-form/maker-input-form.com
     MatInputModule,
     MatButtonModule,
     MatGridListModule,
-    MatBottomSheetModule,
     MatDialogModule,
     MatListModule,
     MatTableModule,

@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 describe('MakerInputFormComponent', () => {
   let component: MakerInputFormComponent;
@@ -19,8 +21,19 @@ describe('MakerInputFormComponent', () => {
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
+        MatDialogModule,
+        MatGridListModule,
         LayoutModule,
-      ]
+      ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: { close: (dialogResult: any) => { } }
+        },
+        {
+          provide: MAT_DIALOG_DATA, useValue: {} 
+        },
+      ],
     })
     .compileComponents();
   }));

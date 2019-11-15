@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MakerMasterComponent } from './maker-master.component';
 import { MakerSearchComponent } from '../maker-search/maker-search.component';
 import { LayoutModule } from '../../layout/layout.module';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MakerService } from '../../services/api/maker.service';
 import { MakerCondition } from '../../services/models/maker/maker-condition'
@@ -25,6 +27,8 @@ describe('MakerMasterComponent', () => {
       imports: [ 
         LayoutModule,
         MatTableModule,
+        MatListModule,
+        MatDialogModule,
        ],
        providers: [
         { provide: MakerService, useValue: spy },
