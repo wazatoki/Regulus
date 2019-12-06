@@ -33,4 +33,8 @@ export class MakerInputFormComponent implements OnInit {
   onCancelClick() {
     this.dialogRef.close();
   }
+
+  onClearClick(){}
+
+  onSaveClick(){}
 }
