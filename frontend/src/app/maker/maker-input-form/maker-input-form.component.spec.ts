@@ -10,14 +10,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { CancelComponent } from '../../layout/form/buttons/cancel/cancel.component';
 
 describe('MakerInputFormComponent', () => {
   let component: MakerInputFormComponent;
   let fixture: ComponentFixture<MakerInputFormComponent>;
   let dbElement: DebugElement;
   let element: HTMLElement;
+  let MatDialogRefSpy: jasmine.SpyObj<MatDialogRef<any, any>>;
 
   beforeEach(async(() => {
+    const spy = jasmine.createSpyObj('MatDialogRef', ['close']);
+
     TestBed.configureTestingModule({
       declarations: [ MakerInputFormComponent ],
       imports: [
@@ -32,7 +36,7 @@ describe('MakerInputFormComponent', () => {
       providers: [
         {
           provide: MatDialogRef,
-          useValue: { close: (dialogResult: any) => { } }
+          useValue: spy
         },
         {
           provide: MAT_DIALOG_DATA, useValue: {} 
@@ -76,5 +80,13 @@ describe('MakerInputFormComponent', () => {
     fixture.detectChanges();
     element = dbElement.nativeElement; 
     expect(element.textContent).not.toContain('製造販売業者名称は必須項目です。');
+  });
+
+  it('should clear form at click cancel button', () => {
+    dbElement = fixture.debugElement;
+    const buttonDebugElement: DebugElement = dbElement.query(By.directive(CancelComponent));
+    buttonDebugElement.triggerEventHandler('clicked', null);
+    fixture.detectChanges();
+    expect(component.dialogRef.close).toHaveBeenCalled();
   });
 });

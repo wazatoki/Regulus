@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {FormsModule} from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 import { SearchComponent } from './search.component';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
@@ -15,7 +15,7 @@ describe('SearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchComponent ],
+      declarations: [SearchComponent],
       imports: [
         FlexLayoutModule,
         MatButtonModule,
@@ -23,13 +23,13 @@ describe('SearchComponent', () => {
         FormsModule,
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
-    elementd = fixture.debugElement; 
+    elementd = fixture.debugElement;
     element = elementd.nativeElement;
     fixture.detectChanges();
   });
@@ -59,7 +59,7 @@ describe('SearchComponent', () => {
     const buttonDe: DebugElement = elementd.query(By.css('button'));
     const button: HTMLElement = buttonDe.nativeElement;
     component.searchStrings = 'search text';
-    component.searchClick.subscribe( (data: string) => {
+    component.searchClick.subscribe((data: string) => {
       expect(data).toEqual(component.searchStrings);
     });
     button.dispatchEvent(new Event('click'));
