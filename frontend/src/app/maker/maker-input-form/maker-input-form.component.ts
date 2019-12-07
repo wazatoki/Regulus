@@ -34,7 +34,9 @@ export class MakerInputFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onClearClick(){}
+  onClearClick(){
+    this.makerForm.reset();
+  }
 
   onSaveClick(){}
 }

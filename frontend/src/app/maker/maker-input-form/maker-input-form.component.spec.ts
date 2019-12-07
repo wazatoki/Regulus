@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CancelComponent } from '../../layout/form/buttons/cancel/cancel.component';
+import { ClearComponent } from '../../layout/form/buttons/clear/clear.component';
 
 describe('MakerInputFormComponent', () => {
   let component: MakerInputFormComponent;
@@ -82,11 +83,23 @@ describe('MakerInputFormComponent', () => {
     expect(element.textContent).not.toContain('製造販売業者名称は必須項目です。');
   });
 
-  it('should clear form at click cancel button', () => {
+  it('should close form at click cancel button', () => {
     dbElement = fixture.debugElement;
     const buttonDebugElement: DebugElement = dbElement.query(By.directive(CancelComponent));
     buttonDebugElement.triggerEventHandler('clicked', null);
     fixture.detectChanges();
     expect(component.dialogRef.close).toHaveBeenCalled();
+  });
+
+  it('should clear form at click clear button', () => {
+    dbElement = fixture.debugElement;
+    const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;
+    const buttonDebugElement: DebugElement = dbElement.query(By.directive(ClearComponent));
+    inputElement.value = 'test value';
+    inputElement.dispatchEvent(new Event('input'));
+    inputElement.dispatchEvent(new Event('blur'));
+    buttonDebugElement.triggerEventHandler('clicked', null);
+    fixture.detectChanges();
+    expect(inputElement.value).toEqual('');
   });
 });
