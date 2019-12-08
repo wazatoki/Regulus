@@ -46,7 +46,7 @@ describe('MakerService', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
   
     let result: Maker;
