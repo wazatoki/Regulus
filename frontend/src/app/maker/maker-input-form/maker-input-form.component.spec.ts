@@ -16,7 +16,7 @@ import { SubmitComponent } from '../../layout/form/buttons/submit/submit.compone
 import { NoticeDialogComponent } from '../../layout/dialog/notice-dialog/notice-dialog.component';
 import { MakerService } from '../../services/api/maker.service';
 import { Maker } from '../../services/models/maker/maker';
-import { of } from 'rxjs';
+import { of, Observable, throwError } from 'rxjs';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 describe('MakerInputFormComponent', () => {
@@ -119,11 +119,27 @@ describe('MakerInputFormComponent', () => {
     expect(inputElement.value).toEqual('');
   });
 
-  it('should save form date at click save button', () => {
+  fit('should save form date at click save button', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
     const stubValue = of(testData);
     spy.add.and.returnValue(stubValue);
+
+    dbElement = fixture.debugElement;
+    const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;
+    const buttonDebugElement: DebugElement = dbElement.query(By.directive(SubmitComponent));
+    inputElement.value = 'test value';
+    inputElement.dispatchEvent(new Event('input'));
+    inputElement.dispatchEvent(new Event('blur'));
+    buttonDebugElement.triggerEventHandler('clicked', null);
+    fixture.detectChanges();
+    expect(component.makerService.add).toHaveBeenCalled();
+  });
+
+  it('should save form date at click save button with error', () => {
+    const testData: Maker = { id: 'testid', name: 'Test Maker' };
+    const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
+    spy.add.and.returnValue(throwError({status: 404}));
 
     dbElement = fixture.debugElement;
     const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;

@@ -47,11 +47,14 @@ export class MakerInputFormComponent implements OnInit {
     this.makerService.add(this.makerForm.value).subscribe(
       (res: Maker) => {
         const dialogRef = this.dialog.open(NoticeDialogComponent, {
-          width: '250px',
           data: { contents: '製造販売業者情報を保存しました。' }
         });
       },
-      (error: HttpErrorResponse) => {},
+      (error: HttpErrorResponse) => {
+        const dialogRef = this.dialog.open(NoticeDialogComponent, {
+          data: { contents: '製造販売業者情報の保存に失敗しました。<br/>システムログを確認してください。' }
+        });
+      },
     );
   }
 }
