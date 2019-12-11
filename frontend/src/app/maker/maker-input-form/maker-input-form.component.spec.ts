@@ -119,7 +119,7 @@ describe('MakerInputFormComponent', () => {
     expect(inputElement.value).toEqual('');
   });
 
-  fit('should save form date at click save button', () => {
+  it('should save form date at click save button', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
     const stubValue = of(testData);
