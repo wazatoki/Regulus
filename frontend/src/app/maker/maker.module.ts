@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +31,7 @@ import { MakerInputFormComponent } from './maker-input-form/maker-input-form.com
     MakerRoutingModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    BrowserAnimationsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -36,6 +40,9 @@ import { MakerInputFormComponent } from './maker-input-form/maker-input-form.com
     MatDialogModule,
     MatListModule,
     MatTableModule,
+    MatTableDataSource,
+    MatCheckboxModule,
+    MatPaginatorModule,
     LayoutModule,
   ],
   entryComponents: [

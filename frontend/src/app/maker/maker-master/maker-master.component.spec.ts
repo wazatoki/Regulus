@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MakerMasterComponent } from './maker-master.component';
 import { MakerSearchComponent } from '../maker-search/maker-search.component';
@@ -6,6 +7,8 @@ import { LayoutModule } from '../../layout/layout.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MakerService } from '../../services/api/maker.service';
 import { MakerCondition } from '../../services/models/maker/maker-condition'
 import { Maker } from '../../services/models/maker/maker';
@@ -24,18 +27,21 @@ describe('MakerMasterComponent', () => {
         MakerMasterComponent,
         MakerSearchComponent,
       ],
-      imports: [ 
+      imports: [
+        BrowserAnimationsModule,
         LayoutModule,
         MatTableModule,
         MatListModule,
         MatDialogModule,
-       ],
-       providers: [
+        MatCheckboxModule,
+        MatPaginatorModule,
+      ],
+      providers: [
         { provide: MakerService, useValue: spy },
         MakerCondition,
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -49,7 +55,7 @@ describe('MakerMasterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should explain table', () => {
+  fit('should explain table', () => {
 
     const testData: Maker[] = [
       { id: 'testid1', name: 'Test Maker1' },
@@ -59,6 +65,7 @@ describe('MakerMasterComponent', () => {
 
     component.onFetchedMakers(testData);
     fixture.detectChanges();
+    console.log(component.dataSource.data.length)
     expect(makerMasterElement.textContent).toContain('Test Maker1');
     expect(makerMasterElement.textContent).toContain('Test Maker2');
   });
