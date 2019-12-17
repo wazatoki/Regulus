@@ -17,6 +17,9 @@ import { SubmitComponent } from './form/buttons/submit/submit.component';
 import { ClearComponent } from './form/buttons/clear/clear.component';
 import { AlertDiarogComponent } from './dialog/alert-diarog/alert-diarog.component';
 import { NoticeDialogComponent } from './dialog/notice-dialog/notice-dialog.component';
+import { CreateComponent } from './form/buttons/create/create.component';
+import { DeleteComponent } from './form/buttons/delete/delete.component';
+import { UpdateComponent } from './form/buttons/update/update.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { NoticeDialogComponent } from './dialog/notice-dialog/notice-dialog.comp
     ClearComponent,
     AlertDiarogComponent,
     NoticeDialogComponent,
+    CreateComponent,
+    DeleteComponent,
+    UpdateComponent,
   ],
   imports: [
     CommonModule,
