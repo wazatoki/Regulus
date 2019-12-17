@@ -1,4 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MakerMasterComponent } from './maker-master.component';
@@ -15,7 +17,8 @@ import { Maker } from '../../services/models/maker/maker';
 
 describe('MakerMasterComponent', () => {
   let component: MakerMasterComponent;
-  let makerMasterElement: HTMLElement;
+  let dbElement: DebugElement;
+  let element: HTMLElement;
   let fixture: ComponentFixture<MakerMasterComponent>;
 
   beforeEach(async(() => {
@@ -47,7 +50,8 @@ describe('MakerMasterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MakerMasterComponent);
     component = fixture.componentInstance;
-    makerMasterElement = fixture.debugElement.nativeElement;
+    dbElement = fixture.debugElement;
+    element = dbElement.nativeElement;
     fixture.detectChanges();
   });
 
@@ -55,18 +59,39 @@ describe('MakerMasterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should explain table', () => {
+  it('should explain table', () => {
 
     const testData: Maker[] = [
       { id: 'testid1', name: 'Test Maker1' },
       { id: 'testid2', name: 'Test Maker2' },
     ];
-    expect(makerMasterElement.textContent).toContain(' 製造販売業者 ');
+    expect(element.textContent).toContain(' 製造販売業者 ');
 
     component.onFetchedMakers(testData);
     fixture.detectChanges();
-    console.log(component.dataSource.data.length)
-    expect(makerMasterElement.textContent).toContain('Test Maker1');
-    expect(makerMasterElement.textContent).toContain('Test Maker2');
+    expect(element.textContent).toContain('Test Maker1');
+    expect(element.textContent).toContain('Test Maker2');
+  });
+
+  it('select item as all checked', () => {
+
+    const testData: Maker[] = [
+      { id: 'testid1', name: 'Test Maker1' },
+      { id: 'testid2', name: 'Test Maker2' },
+    ];
+
+    component.onFetchedMakers(testData);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkbox = checkboxList[0];
+      checkbox.dispatchEvent(new Event('click'));
+      fixture.detectChanges();
+      expect(component.selection.selected.length).toBe(2);
+
+    });
   });
 });
