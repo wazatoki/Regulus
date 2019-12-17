@@ -94,4 +94,26 @@ describe('MakerMasterComponent', () => {
 
     });
   });
+
+  it('select item as checked', () => {
+
+    const testData: Maker[] = [
+      { id: 'testid1', name: 'Test Maker1' },
+      { id: 'testid2', name: 'Test Maker2' },
+    ];
+
+    component.onFetchedMakers(testData);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkbox = checkboxList[1];
+      checkbox.dispatchEvent(new Event('click'));
+      fixture.detectChanges();
+      expect(component.selection.selected.length).toBe(1);
+
+    });
+  });
 });
