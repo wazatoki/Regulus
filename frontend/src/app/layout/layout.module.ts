@@ -56,6 +56,10 @@ import { UpdateComponent } from './form/buttons/update/update.component';
     SubmitComponent,
     ClearComponent,
     AlertDiarogComponent,
+    NoticeDialogComponent,
+    CreateComponent,
+    DeleteComponent,
+    UpdateComponent,
   ]
 })
 export class LayoutModule { }

@@ -2,6 +2,7 @@
 
     <div class="sidebar">
         <mat-action-list>
+            <app-create mat-list-item (clicked)="openInputForm()"></app-create>
             <button mat-list-item (click)="openInputForm()"> 新規作成 </button>
         </mat-action-list>
         <mat-action-list>
