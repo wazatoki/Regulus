@@ -18,6 +18,7 @@ import { MakerRoutingModule } from './maker-routing.module';
 import { MakerMasterComponent } from './maker-master/maker-master.component';
 import { MakerSearchComponent } from './maker-search/maker-search.component';
 import { MakerInputFormComponent } from './maker-input-form/maker-input-form.component';
+import { NoticeDialogComponent } from '../layout/dialog/notice-dialog/notice-dialog.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { MakerInputFormComponent } from './maker-input-form/maker-input-form.com
   ],
   entryComponents: [
     MakerInputFormComponent,
+    NoticeDialogComponent,
   ]
 })
 export class MakerModule { }

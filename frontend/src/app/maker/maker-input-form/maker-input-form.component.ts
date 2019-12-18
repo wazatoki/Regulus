@@ -43,18 +43,20 @@ export class MakerInputFormComponent implements OnInit {
     this.makerForm.reset();
   }
 
-  onSaveClick(){
-    this.makerService.add(this.makerForm.value).subscribe(
-      (res: Maker) => {
-        const dialogRef = this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '製造販売業者情報を保存しました。' }
-        });
-      },
-      (error: HttpErrorResponse) => {
-        const dialogRef = this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '製造販売業者情報の保存に失敗しました。<br/>システムログを確認してください。' }
-        });
-      },
-    );
+  onSubmit(){
+    if(this.makerForm.valid){
+      this.makerService.add(this.makerForm.value).subscribe(
+        (res: Maker) => {
+          const dialogRef = this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '製造販売業者情報を保存しました。' }
+          });
+        },
+        (error: HttpErrorResponse) => {
+          const dialogRef = this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '製造販売業者情報の保存に失敗しました。<br/>システムログを確認してください。' }
+          });
+        },
+      );
+    }
   }
 }

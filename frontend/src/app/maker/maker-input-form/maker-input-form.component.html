@@ -1,5 +1,5 @@
 <div fxFlex="95%">
-    <form [formGroup]="makerForm">
+    <form [formGroup]="makerForm" (ngSubmit)="onSubmit()">
         <div mat-dialog-content class="form-container">
             <mat-form-field>
                 <input type='text' matInput placeholder="製造販売業者名称" required formControlName="name">
@@ -18,7 +18,7 @@
                     <app-clear (clicked)="onClearClick()"></app-clear>
                 </mat-grid-tile>
                 <mat-grid-tile>
-                    <app-submit [buttonLabelType]="save" (clicked)="onSaveClick()"></app-submit>
+                    <app-submit [buttonLabelType]="save"></app-submit>
                 </mat-grid-tile>
             </mat-grid-list>
         </div>
