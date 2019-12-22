@@ -32,4 +32,8 @@ export class MakerService {
   update(data: Maker): Observable<Maker> {
     return this.http.put<Maker>( 'maker', data );
   }
+
+  delete(data: string[]): Observable<Maker[]> {
+    return this.http.delete<Maker>('maker/delete', data);
+  }
 }

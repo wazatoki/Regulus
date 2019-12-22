@@ -16,7 +16,7 @@ describe('MakerService', () => {
 
   beforeEach(() => {
   
-    const spy = jasmine.createSpyObj('HttpService', ['get', 'post', 'put']);
+    const spy = jasmine.createSpyObj('HttpService', ['get', 'post', 'put', 'delete']);
 
       TestBed.configureTestingModule(
         {
@@ -142,6 +142,23 @@ describe('MakerService', () => {
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.put).toHaveBeenCalledWith('maker', testData);
+  });
+
+  it('delete method', () => {
+    const testData: string[] = ['id1', 'id2'];
+    const resultData: Maker[] = [];
+    makerService = TestBed.get(MakerService);
+    httpServiceSpy = TestBed.get(HttpService);
+    httpServiceSpy.delete.and.returnValue(of(resultData));
+  
+    let result: Maker[];
+
+    makerService.delete(testData).subscribe( data => {
+      result = data
+    })
+
+    expect(result).toEqual(resultData);
+    expect(httpServiceSpy.delete).toHaveBeenCalledWith('maker/delete', testData);
   });
 
 });

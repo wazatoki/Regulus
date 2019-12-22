@@ -197,7 +197,7 @@ describe('HttpService', () => {
 
   });
 
-  fit('delete method', () => {
+  it('delete method', () => {
     const testData: string[] = ['id1', 'id2'];
     const resultData: Data[] = [];
     const service: HttpService = TestBed.get(HttpService);
@@ -210,6 +210,33 @@ describe('HttpService', () => {
     const req = httpTestingController.expectOne('localhost:9876/data');
     expect(req.request.method).toEqual('DELETE');
     req.flush(resultData);
+  });
+
+  it('delete method as error with retry 4 times', () => {
+    const testData: string[] = ['id1', 'id2'];
+    const resultData: Data[] = [];
+    const service: HttpService = TestBed.get(HttpService);
+    const emsg = 'deliberate 404 error';
+
+    service.delete<Data>('/data', testData)
+      .subscribe(
+        data => {
+          expect(data).toEqual(resultData);
+        },
+        (error: HttpErrorResponse) => {
+          expect(error.status).toEqual(404, 'status');
+          expect(error.error).toEqual(emsg, 'message');
+        }
+      );
+
+    const retryCount = 3;
+    for (var i = 0; i < retryCount; i++) {
+      let req = httpTestingController.expectOne('localhost:9876/data');
+      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+    }
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    req.flush(resultData);
+
   });
 
 
