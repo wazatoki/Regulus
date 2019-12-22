@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
-
+import { NoticeDialogComponent } from '../../layout/dialog/notice-dialog/notice-dialog.component';
 import { MakerService } from '../../services/api/maker.service';
 import { Maker } from '../../services/models/maker/maker';
 import { MakerCondition } from '../../services/models/maker/maker-condition';
@@ -75,5 +75,26 @@ export class MakerMasterComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.name = '';
     });
+  }
+
+  deleteItems(): void {
+    const data: string[] = [];
+    this.selection.selected.forEach( (maker: Maker) => {
+      data.push(maker.id);
+    });
+    this.makerService.delete(data).subscribe( (res: Maker[]) => {
+      if (res.length > 0){
+        let str: string;
+        str = '以下のdataが削除できませんでした。<br/>';
+
+        res.forEach( (m: Maker) => {
+          str += '・' + m.name + '<br/>';
+        });
+
+        const dialogRef = this.dialog.open(NoticeDialogComponent, {
+          data: { contents: str }
+        });
+      }
+    });;
   }
 }
