@@ -119,7 +119,7 @@ describe('MakerInputFormComponent', () => {
     expect(inputElement.value).toEqual('');
   });
 
-  it('should save form date at click save button', () => {
+  it('should save form data at click save button', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
     const stubValue = of(testData);
@@ -127,27 +127,27 @@ describe('MakerInputFormComponent', () => {
 
     dbElement = fixture.debugElement;
     const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;
-    const buttonDebugElement: DebugElement = dbElement.query(By.directive(SubmitComponent));
+    const formDebugElement: DebugElement = dbElement.query(By.css('form'));
     inputElement.value = 'test value';
     inputElement.dispatchEvent(new Event('input'));
     inputElement.dispatchEvent(new Event('blur'));
-    buttonDebugElement.triggerEventHandler('clicked', null);
+    formDebugElement.triggerEventHandler('submit', null);
     fixture.detectChanges();
     expect(component.makerService.add).toHaveBeenCalled();
   });
 
-  it('should save form date at click save button with error', () => {
+  it('should save form data at click save button with error', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
     spy.add.and.returnValue(throwError({status: 404}));
 
     dbElement = fixture.debugElement;
     const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;
-    const buttonDebugElement: DebugElement = dbElement.query(By.directive(SubmitComponent));
+    const formDebugElement: DebugElement = dbElement.query(By.css('form'));
     inputElement.value = 'test value';
     inputElement.dispatchEvent(new Event('input'));
     inputElement.dispatchEvent(new Event('blur'));
-    buttonDebugElement.triggerEventHandler('clicked', null);
+    formDebugElement.triggerEventHandler('submit', null);
     fixture.detectChanges();
     expect(component.makerService.add).toHaveBeenCalled();
   });
