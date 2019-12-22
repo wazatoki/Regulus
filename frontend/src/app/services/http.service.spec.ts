@@ -197,4 +197,20 @@ describe('HttpService', () => {
 
   });
 
+  fit('delete method', () => {
+    const testData: string[] = ['id1', 'id2'];
+    const resultData: Data[] = [];
+    const service: HttpService = TestBed.get(HttpService);
+
+    service.delete<Data>('/data', testData)
+      .subscribe(data => {
+        expect(data).toEqual(resultData)
+      });
+
+    const req = httpTestingController.expectOne('localhost:9876/data');
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(resultData);
+  });
+
+
 });

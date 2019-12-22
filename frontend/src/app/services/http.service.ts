@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
@@ -65,5 +65,23 @@ export class HttpService {
         retry(3),
         catchError(this.handleError)
       );
+  }
+
+  delete<T>(path: string, data: string[]): Observable<T[]> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: new Array<string>(),
+    };
+    data.forEach( d => {
+      options.body.push(d);
+    });
+    
+    return this.client.delete<T[]>(`${this.HOST_URL}${path}`, options)
+    .pipe(
+      retry(3),
+      catchError(this.handleError)
+    );
   }
 }
