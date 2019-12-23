@@ -14,6 +14,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MakerService } from '../../services/api/maker.service';
 import { MakerCondition } from '../../services/models/maker/maker-condition'
 import { Maker } from '../../services/models/maker/maker';
+import { MatDialog } from '@angular/material/dialog';
+import { NoticeDialogComponent } from '../../layout/dialog/notice-dialog/notice-dialog.component';
 
 describe('MakerMasterComponent', () => {
   let component: MakerMasterComponent;
@@ -24,6 +26,7 @@ describe('MakerMasterComponent', () => {
   beforeEach(async(() => {
 
     const spy = jasmine.createSpyObj('MakerService', ['findByCondition']);
+    const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -41,6 +44,7 @@ describe('MakerMasterComponent', () => {
       ],
       providers: [
         { provide: MakerService, useValue: spy },
+        { provide: MatDialog, useValue: dialogspy },
         MakerCondition,
       ],
     })
@@ -115,5 +119,37 @@ describe('MakerMasterComponent', () => {
       expect(component.selection.selected.length).toBe(1);
 
     });
+  });
+
+  it('click delete without select', () => {
+    component.deleteItems();
+    expect(component.dialog.open).toHaveBeenCalledWith(NoticeDialogComponent, {
+      data: { contents: '削除対象が選択されていません。' }
+    })
+  });
+
+  it('click delete with select', () => {
+    const testData: Maker[] = [
+      { id: 'testid1', name: 'Test Maker1' },
+      { id: 'testid2', name: 'Test Maker2' },
+    ];
+    
+    component.onFetchedMakers(testData);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkbox = checkboxList[1];
+      checkbox.dispatchEvent(new Event('click'));
+      fixture.detectChanges();
+
+      component.deleteItems();
+      expect(component.makerService.delete).toHaveBeenCalled();
+
+    });
+    
+    
   });
 });

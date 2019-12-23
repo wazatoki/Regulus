@@ -25,9 +25,9 @@ export class MakerMasterComponent implements OnInit {
   name: string;
 
   constructor(
-    private makerService: MakerService,
+    public makerService: MakerService,
     private makerCondition: MakerCondition,
-    private dialog: MatDialog) {
+    public dialog: MatDialog) {
       
     const initialSelection = [];
     const allowMultiSelect = true;
@@ -78,23 +78,29 @@ export class MakerMasterComponent implements OnInit {
   }
 
   deleteItems(): void {
-    const data: string[] = [];
-    this.selection.selected.forEach( (maker: Maker) => {
-      data.push(maker.id);
-    });
-    this.makerService.delete(data).subscribe( (res: Maker[]) => {
-      if (res.length > 0){
-        let str: string;
-        str = '以下のdataが削除できませんでした。<br/>';
-
-        res.forEach( (m: Maker) => {
-          str += '・' + m.name + '<br/>';
-        });
-
-        const dialogRef = this.dialog.open(NoticeDialogComponent, {
-          data: { contents: str }
-        });
-      }
-    });;
+    if(this.selection.selected.length === 0){
+      const dialogRef = this.dialog.open(NoticeDialogComponent, {
+        data: { contents: '削除対象が選択されていません。' }
+      });
+    }else{
+      const data: string[] = [];
+      this.selection.selected.forEach( (maker: Maker) => {
+        data.push(maker.id);
+      });
+      this.makerService.delete(data).subscribe( (res: Maker[]) => {
+        if (res.length > 0){
+          let str: string;
+          str = '以下のdataが削除できませんでした。<br/>';
+  
+          res.forEach( (m: Maker) => {
+            str += '・' + m.name + '<br/>';
+          });
+  
+          const dialogRef = this.dialog.open(NoticeDialogComponent, {
+            data: { contents: str }
+          });
+        }
+      });
+    }
   }
 }
