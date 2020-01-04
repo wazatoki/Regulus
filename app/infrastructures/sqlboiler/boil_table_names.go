@@ -5,8 +5,10 @@ package sqlboiler
 
 var TableNames = struct {
 	GorpMigrations string
+	Maker          string
 	Staff          string
 }{
 	GorpMigrations: "gorp_migrations",
+	Maker:          "maker",
 	Staff:          "staff",
 }

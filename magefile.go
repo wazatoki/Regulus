@@ -44,7 +44,7 @@ func SqlMigrateNew() error {
 	return nil
 }
 
-// CreateDataAccessModel create data access model
+// DropDataAccessModel drop data access model
 func DropDataAccessModel() {
 	os.RemoveAll("./app/infrastructures/sqlboiler")
 	//os.Mkdir("./app/infrastructures/sqlboiler", 0777)
