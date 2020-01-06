@@ -16,6 +16,15 @@ import (
 // If not set, running mage will list available targets
 // var Default = Build
 
+func Test() error {
+	out, err := exec.Command("go", "test", "./...").Output()
+	fmt.Println(string(out))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // SqlMigrateUp execute sql-migrate down
 func SqlMigrateDown() error {
 	cmd := exec.Command("sql-migrate", "down", "-config=./resources/db/dbconfig.yml")
