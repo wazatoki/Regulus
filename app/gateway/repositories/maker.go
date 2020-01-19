@@ -1,0 +1,41 @@
+package repositories
+
+import (
+	"context"
+	makerEntity "regulus/app/domain/entities/maker"
+	"regulus/app/infrastructures/sqlboiler"
+	"regulus/app/utils"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/sqlboiler/boil"
+	// . "github.com/volatiletech/sqlboiler/queries/qm"
+)
+
+// MakerRepo repository struct
+type MakerRepo struct {
+	database db
+}
+
+// Insert insert data to database
+func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
+	id := ""
+	maker := &sqlboiler.Maker{}
+	maker.ID = utils.CreateID()
+	maker.Name = makerEntity.Name
+
+	err := m.database.WithDbContext(func(db *sqlx.DB) error {
+		err := maker.Insert(context.Background(), db.DB, boil.Infer())
+		return err
+	})
+
+	if err != nil {
+		id = maker.ID
+	}
+
+	return id, err
+}
+
+// NewMakerRepo constructor
+func NewMakerRepo() *MakerRepo {
+	return &MakerRepo{database: createDB()}
+}
