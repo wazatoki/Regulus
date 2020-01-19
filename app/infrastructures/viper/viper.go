@@ -15,7 +15,7 @@ func SetupAppConfig() {
 	viper.SetDefault("dbPort", "5432")
 	viper.SetDefault("dbUser", "regulus")
 	viper.SetDefault("dbPassword", "regulus")
-	viper.SetDefault("dbName", "reglusdb")
+	viper.SetDefault("dbName", "regulusdb")
 
 	// read config file
 	viper.SetConfigName("config")
