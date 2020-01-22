@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"errors"
 	makerEntity "regulus/app/domain/entities/maker"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
@@ -16,6 +17,23 @@ type MakerRepo struct {
 	database db
 }
 
+// Update insert data to database
+func (m *MakerRepo) Update(makerEntity *makerEntity.Maker) error {
+	if makerEntity.ID == "" {
+		return errors.New("ID must be required")
+	}
+
+	err := m.database.WithDbContext(func(db *sqlx.DB) error {
+		maker, _ := sqlboiler.FindMaker(context.Background(), db.DB, makerEntity.ID)
+		maker.Name = makerEntity.Name
+		var err error
+		_, err = maker.Update(context.Background(), db.DB, boil.Infer())
+		return err
+	})
+
+	return err
+}
+
 // Insert insert data to database
 func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
 	id := ""
@@ -24,11 +42,12 @@ func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
 	maker.Name = makerEntity.Name
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
-		err := maker.Insert(context.Background(), db.DB, boil.Infer())
+		var err error
+		err = maker.Insert(context.Background(), db.DB, boil.Infer())
 		return err
 	})
 
-	if err != nil {
+	if err == nil {
 		id = maker.ID
 	}
 
