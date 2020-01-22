@@ -17,7 +17,7 @@ type MakerRepo struct {
 	database db
 }
 
-// Update insert data to database
+// Update update data to database
 func (m *MakerRepo) Update(makerEntity *makerEntity.Maker) error {
 	if makerEntity.ID == "" {
 		return errors.New("ID must be required")
