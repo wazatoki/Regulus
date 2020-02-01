@@ -44,7 +44,7 @@ func TestMakerRepo_Insert(t *testing.T) {
 			con.Exec("delete from maker")
 
 			m := &MakerRepo{
-				database: createDB(),
+				database: tt.fields.database,
 			}
 			got, _ := m.Insert(tt.args.makerEntity)
 
@@ -109,6 +109,56 @@ func TestMakerRepo_Update(t *testing.T) {
 
 			if maker.Name != tt.args.makerEntity.Name {
 				t.Errorf("MakerRepo.Update() id = %v, name = %v, wantName %v", maker.ID, maker.Name, tt.args.makerEntity.Name)
+			}
+		})
+	}
+}
+
+func TestMakerRepo_Dalete(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "normal delete",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				id: "id1",
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db := createDB()
+			con, _ := db.Open()
+
+			con.Exec("delete from maker")
+			con.Exec("insert into maker (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
+
+			m := &MakerRepo{
+				database: tt.fields.database,
+			}
+
+			m.Dalete(tt.args.id)
+
+			maker := makerEntity.Maker{}
+
+			con.Get(&maker, "select id, name from maker where del = true")
+			con.Close()
+
+			if maker.ID != "id1" {
+				t.Errorf("MakerRepo.Dalete() deleted id = %v, wantErr %v", maker.ID, "id1")
 			}
 		})
 	}
