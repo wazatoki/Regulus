@@ -213,3 +213,53 @@ func TestMakerRepo_SelectByID(t *testing.T) {
 		})
 	}
 }
+
+func TestMakerRepo_SelectAll(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		want    []makerEntity.Maker
+		wantErr bool
+	}{
+		{
+			name: "normal select by id",
+			fields: fields{
+				database: createDB(),
+			},
+			want: []makerEntity.Maker{
+				{
+					ID:   "id1",
+					Name: "testname1",
+				},
+				{
+					ID:   "id2",
+					Name: "testname2",
+				},
+				{
+					ID:   "id3",
+					Name: "testname3",
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := connectDB()
+			defer con.Close()
+
+			con.Exec("insert into maker (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
+
+			m := &MakerRepo{
+				database: tt.fields.database,
+			}
+			got, _ := m.SelectAll()
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MakerRepo.SelectAll() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
