@@ -23,25 +23,36 @@ type MakerRepo struct {
 func (m *MakerRepo) Select(queryItems ...*query.Item) ([]makerEntity.Maker, error) {
 	meSlice := []makerEntity.Maker{}
 	queries := []qm.QueryMod{}
-	var beforeQueryItem *query.Item
+	var q qm.QueryMod
 
-	switch len(queryItems) {
-	case 0:
-		return m.SelectAll()
-	case 1: // todo
-		queries = append(queries, qm.Where(sqlboiler.MakerColumns.Del+"!=?", true))
-	default:
+	err := m.database.WithDbContext(func(db *sqlx.DB) error {
+		q = qm.Where(sqlboiler.MakerColumns.Del+"!=?", true)
 
-	}
-
-	for _, queryItem := range queryItems {
-		if beforeQueryItem != nil {
-
+		for _, queryItem := range queryItems {
+			q = qm.Expr(q, m.createQueryMod(queryItem))
 		}
 
-		beforeQueryItem = queryItem
-	}
-	return meSlice, nil
+		queries = append(queries, q)
+
+		makers, err := sqlboiler.Makers(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+
+			for _, maker := range makers {
+				var me *makerEntity.Maker
+				me = &makerEntity.Maker{}
+
+				me.ID = maker.ID
+				me.Name = maker.Name
+
+				meSlice = append(meSlice, *me)
+			}
+		}
+
+		return err
+	})
+
+	return meSlice, err
 }
 
 // SelectAll select all maker data without not del from database
@@ -151,16 +162,26 @@ func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
 	return id, err
 }
 
-func createQueryMod(queryItem *query.Item) qm.QueryMod {
-	mt := queryItem.MatchType
-
-	switch mt {
-	case "match":
-		return sqlboiler.MakerWhere.Name.EQ(queryItem.StringValue)
-	case "unmatch":
-		return sqlboiler.MakerWhere.Name.NEQ(queryItem.StringValue)
+func (m *MakerRepo) columnName(fieldName string) string {
+	switch fieldName {
+	case "Name":
+		return "name"
 	default:
-		return qm.Where(sqlboiler.MakerColumns.Name+"like", "%"+queryItem.StringValue+"%")
+		return "name"
+	}
+}
+
+func (m *MakerRepo) createQueryMod(queryItem *query.Item) qm.QueryMod {
+
+	mt, val := comparisonOperator(queryItem.MatchType, queryItem.Value)
+
+	switch queryItem.EntityName {
+	default:
+		if queryItem.Operator == "or" {
+			return qm.Or(m.columnName(queryItem.FieldName)+" "+mt+" ?", val)
+		}
+		//queryItem.Operator = "and"
+		return qm.And(m.columnName(queryItem.FieldName)+" "+mt+" ?", val)
 	}
 }
 
