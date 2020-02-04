@@ -372,3 +372,64 @@ func TestMakerRepo_Select(t *testing.T) {
 		})
 	}
 }
+
+func TestMakerRepo_SelectByIDs(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		ids []string
+	}
+	arg := args{
+		ids: []string{
+			"id1", "id2",
+		},
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []makerEntity.Maker
+		wantErr bool
+	}{
+		{
+			name: "normal select by ids",
+			fields: fields{
+				database: createDB(),
+			},
+			args: arg,
+			want: []makerEntity.Maker{
+				{
+					ID:   "id1",
+					Name: "testname1",
+				},
+				{
+					ID:   "id2",
+					Name: "testname2",
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		con := connectDB()
+		defer con.Close()
+
+		con.Exec("insert into maker (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', false),('id3', 'testname3', false)")
+
+		t.Run(tt.name, func(t *testing.T) {
+			m := &MakerRepo{
+				database: tt.fields.database,
+			}
+
+			got, _ := m.SelectByIDs(tt.args.ids)
+			// if (err != nil) != tt.wantErr {
+			// 	t.Errorf("MakerRepo.SelectByIDs() error = %v, wantErr %v", err, tt.wantErr)
+			// 	return
+			// }
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MakerRepo.SelectByIDs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

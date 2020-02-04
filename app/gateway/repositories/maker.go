@@ -26,7 +26,7 @@ func (m *MakerRepo) Select(queryItems ...*query.Item) ([]makerEntity.Maker, erro
 	var q qm.QueryMod
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
-		q = qm.Where(sqlboiler.MakerColumns.Del+"!=?", true)
+		q = qm.Where(sqlboiler.MakerColumns.ID + " IS NOT NULL")
 
 		for _, queryItem := range queryItems {
 			q = qm.Expr(q, m.createQueryMod(queryItem))
@@ -65,6 +65,51 @@ func (m *MakerRepo) SelectAll() ([]makerEntity.Maker, error) {
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.MakerColumns.Del+"!=?", true),
 		}
+
+		makers, err := sqlboiler.Makers(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+
+			for _, maker := range makers {
+				var me *makerEntity.Maker
+				me = &makerEntity.Maker{}
+
+				me.ID = maker.ID
+				me.Name = maker.Name
+
+				meSlice = append(meSlice, *me)
+			}
+		}
+
+		return err
+	})
+
+	return meSlice, err
+}
+
+// SelectByIDs select maker data by id list from database
+func (m *MakerRepo) SelectByIDs(ids []string) ([]makerEntity.Maker, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("id list must be required")
+	}
+
+	boil.DebugMode = true
+
+	meSlice := []makerEntity.Maker{}
+
+	var convertedIDs []interface{} = make([]interface{}, len(ids))
+	for i, d := range ids {
+		convertedIDs[i] = d
+	}
+
+	err := m.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where(sqlboiler.MakerColumns.Del+" !=?", true),
+		}
+
+		q := qm.AndIn(sqlboiler.MakerColumns.ID+" in ?", convertedIDs...)
+
+		queries = append(queries, q)
 
 		makers, err := sqlboiler.Makers(queries...).All(context.Background(), db.DB)
 
