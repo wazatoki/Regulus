@@ -32,6 +32,8 @@ func (m *MakerRepo) Select(queryItems ...*query.Item) ([]makerEntity.Maker, erro
 			q = qm.Expr(q, m.createQueryMod(queryItem))
 		}
 
+		q = qm.Expr(q, qm.And(sqlboiler.MakerColumns.Del+"!=?", true))
+
 		queries = append(queries, q)
 
 		makers, err := sqlboiler.Makers(queries...).All(context.Background(), db.DB)
