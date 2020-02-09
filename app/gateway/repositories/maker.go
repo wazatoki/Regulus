@@ -6,12 +6,15 @@ import (
 	makerEntity "regulus/app/domain/entities/maker"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
+	"sort"
+
+	"regulus/app/domain/vo/query"
+	makerEnum "regulus/app/domain/vo/query/enum/maker"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
-	"regulus/app/domain/vo/query"
 )
 
 // MakerRepo repository struct
@@ -20,7 +23,7 @@ type MakerRepo struct {
 }
 
 // Select select maker data by condition from database
-func (m *MakerRepo) Select(queryItems ...*query.Item) ([]makerEntity.Maker, error) {
+func (m *MakerRepo) Select(queryItems ...*query.ConditionItem) ([]makerEntity.Maker, error) {
 	meSlice := []makerEntity.Maker{}
 	queries := []qm.QueryMod{}
 	var q qm.QueryMod
@@ -209,7 +212,7 @@ func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
 	return id, err
 }
 
-func (m *MakerRepo) columnName(fieldName string) string {
+func (m *MakerRepo) columnName(fieldName query.FieldEnum) string {
 	switch fieldName {
 	case "Name":
 		return "name"
@@ -218,7 +221,7 @@ func (m *MakerRepo) columnName(fieldName string) string {
 	}
 }
 
-func (m *MakerRepo) createQueryMod(queryItem *query.Item) qm.QueryMod {
+func (m *MakerRepo) createQueryMod(queryItem *query.ConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.Value)
 
@@ -229,6 +232,46 @@ func (m *MakerRepo) createQueryMod(queryItem *query.Item) qm.QueryMod {
 		}
 		//queryItem.Operator = "and"
 		return qm.And(m.columnName(queryItem.FieldName)+" "+mt+" ?", val)
+	}
+}
+
+/*
+Sort is sort maker slice by orderItems
+*/
+func Sort(makers []makerEntity.Maker, orderItems []query.OrderItem) []makerEntity.Maker {
+	sort.Slice(makers, func(i int, j int) bool {
+		return compare(makers[i], makers[j], orderItems, 0)
+	})
+	return makers
+}
+
+func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []query.OrderItem, orderIndex int) bool {
+
+	if len(orderItems) <= orderIndex {
+		return false
+	}
+
+	switch orderItems[orderIndex].FieldName {
+	case makerEnum.Name: // 基本的にはこれしか選択されてない
+		if maker1.Name == maker2.Name {
+			orderIndex++
+			return compare(maker1, maker2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderType == query.Desc {
+			return maker1.Name > maker2.Name
+		}
+		return maker1.Name < maker2.Name
+
+	default:
+		if maker1.Name == maker2.Name {
+			orderIndex++
+			return compare(maker1, maker2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderType == query.Desc {
+			return maker1.Name > maker2.Name
+		}
+		return maker1.Name < maker2.Name
+
 	}
 }
 

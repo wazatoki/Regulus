@@ -4,6 +4,7 @@ import (
 	"reflect"
 	makerEntity "regulus/app/domain/entities/maker"
 	"regulus/app/domain/vo/query"
+	makerEnum "regulus/app/domain/vo/query/enum/maker"
 	"regulus/app/infrastructures/viper"
 	"testing"
 
@@ -270,9 +271,9 @@ func TestMakerRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*query.Item
+		queryItems []*query.ConditionItem
 	}
-	qi1 := query.Item{
+	qi1 := query.ConditionItem{
 		EntityName: "Maker",
 		FieldName:  "Name",
 		Value:      "1",
@@ -280,7 +281,7 @@ func TestMakerRepo_Select(t *testing.T) {
 		MatchType:  "pertialmatch",
 		Operator:   "and",
 	}
-	qi2 := query.Item{
+	qi2 := query.ConditionItem{
 		EntityName: "Maker",
 		FieldName:  "Name",
 		Value:      "2",
@@ -319,7 +320,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.Item{
+				queryItems: []*query.ConditionItem{
 					&qi1,
 				},
 			},
@@ -337,7 +338,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.Item{
+				queryItems: []*query.ConditionItem{
 					&qi1,
 					&qi2,
 				},
@@ -429,6 +430,94 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 			// }
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MakerRepo.SelectByIDs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSort(t *testing.T) {
+	type args struct {
+		makers     []makerEntity.Maker
+		orderItems []query.OrderItem
+	}
+	unsortMakers := []makerEntity.Maker{
+		{
+			ID:   "id1",
+			Name: "testname1",
+		},
+		{
+			ID:   "id2",
+			Name: "testname2",
+		},
+		{
+			ID:   "id3",
+			Name: "testname3",
+		},
+	}
+	tests := []struct {
+		name string
+		args args
+		want []makerEntity.Maker
+	}{
+		{
+			name: "sort by asc",
+			args: args{
+				makers: unsortMakers,
+				orderItems: []query.OrderItem{
+					{
+						EntityName: "",
+						FieldName:  makerEnum.Name,
+						OrderType:  query.Asc,
+					},
+				},
+			},
+			want: []makerEntity.Maker{
+				{
+					ID:   "id1",
+					Name: "testname1",
+				},
+				{
+					ID:   "id2",
+					Name: "testname2",
+				},
+				{
+					ID:   "id3",
+					Name: "testname3",
+				},
+			},
+		},
+		{
+			name: "sort by desc",
+			args: args{
+				makers: unsortMakers,
+				orderItems: []query.OrderItem{
+					{
+						EntityName: "",
+						FieldName:  makerEnum.Name,
+						OrderType:  query.Desc,
+					},
+				},
+			},
+			want: []makerEntity.Maker{
+				{
+					ID:   "id3",
+					Name: "testname3",
+				},
+				{
+					ID:   "id2",
+					Name: "testname2",
+				},
+				{
+					ID:   "id1",
+					Name: "testname1",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Sort(tt.args.makers, tt.args.orderItems); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Sort() = %v, want %v", got, tt.want)
 			}
 		})
 	}
