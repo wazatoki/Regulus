@@ -111,10 +111,7 @@ describe('ComplexSearchConditionItemComponent', () => {
     const radioEl: HTMLInputElement = radioDe[0].nativeElement;
     radioEl.click()
     fixture.detectChanges();
-
-    await fixture.whenStable().then(() => {
-      expect(component.operatorSelected).toBe('and')
-    });
+    expect(component.operatorSelected).toBe('and')
   });
 
 });
