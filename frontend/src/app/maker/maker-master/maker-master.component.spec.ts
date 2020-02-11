@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { of, Observable, throwError } from 'rxjs';
 
 import { MakerMasterComponent } from './maker-master.component';
 import { MakerSearchComponent } from '../maker-search/maker-search.component';
@@ -25,7 +26,7 @@ describe('MakerMasterComponent', () => {
 
   beforeEach(async(() => {
 
-    const spy = jasmine.createSpyObj('MakerService', ['findByCondition']);
+    const spy = jasmine.createSpyObj('MakerService', ['delete']);
     const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
@@ -133,6 +134,10 @@ describe('MakerMasterComponent', () => {
       { id: 'testid1', name: 'Test Maker1' },
       { id: 'testid2', name: 'Test Maker2' },
     ];
+
+    const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
+    const stubValue = of(testData);
+    spy.delete.and.returnValue(stubValue);
     
     component.onFetchedMakers(testData);
     fixture.detectChanges();
