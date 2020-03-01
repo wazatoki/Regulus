@@ -13,7 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CancelComponent } from './form/buttons/cancel/cancel.component';
 import { AutofocusDirective } from '../directive/autofocus.directive';
 import { SubmitComponent } from './form/buttons/submit/submit.component';
@@ -25,6 +25,7 @@ import { DeleteComponent } from './form/buttons/delete/delete.component';
 import { UpdateComponent } from './form/buttons/update/update.component';
 import { ComplexSearchConditionItemComponent } from './complex-search/complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from './complex-search/complex-search-order-item/complex-search-order-item.component';
+import { ComplexSearchComponent } from './complex-search/complex-search.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ComplexSearchOrderItemComponent } from './complex-search/complex-search
     UpdateComponent,
     ComplexSearchConditionItemComponent,
     ComplexSearchOrderItemComponent,
+    ComplexSearchComponent,
   ],
   imports: [
     CommonModule,
@@ -56,6 +58,7 @@ import { ComplexSearchOrderItemComponent } from './complex-search/complex-search
     MatDialogModule,
     MatGridListModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   exports: [
     LayoutContentsComponent,

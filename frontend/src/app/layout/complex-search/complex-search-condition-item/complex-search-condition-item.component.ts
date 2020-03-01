@@ -1,4 +1,5 @@
 import { Component, OnInit,Input } from '@angular/core';
+import { FormControl, FormArray, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-complex-search-condition-item',
@@ -7,20 +8,43 @@ import { Component, OnInit,Input } from '@angular/core';
 })
 export class ComplexSearchConditionItemComponent implements OnInit {
 
-  readonly matchTypesForString: string[] = ['match', 'unmatch', 'pertialmatch'];
-  readonly matchTypesForNumber: string[] = ['match', 'unmatch', 'gt', 'ge', 'le', 'lt'];
+  readonly matchTypesForString: matchTypeAttr[] = [
+    {name: 'match', viewValue: '完全一致'},
+    {name: 'unmatch', viewValue: '不一致'},
+    {name: 'pertialmatch', viewValue: '部分一致'},
+  ];
+  readonly matchTypesForNumber: matchTypeAttr[] = [
+    {name: 'match', viewValue: '完全一致'},
+    {name: 'unmatch', viewValue: '不一致'},
+    {name: 'gt', viewValue: '>'},
+    {name: 'ge', viewValue: '>='},
+    {name: 'le', viewValue: '<'},
+    {name: 'lt', viewValue: '<='},
+  ];
   readonly operators: string[] = ['and','or'];
 
-  fieldSelected: fieldAttr;
-  conditionValue: string;
-  matchTypeSelected: string;
-  operatorSelected: string;
+  get fieldSelected() {
+    return this.formGroup.get('fieldSelected') as FormControl;
+  }
 
-  matchTypes: string[];
-  fields: fieldAttr[];
+  get conditionValue() {
+    return this.formGroup.get('conditionValue') as FormControl;
+  }
+  
+  get matchTypeSelected() {
+    return this.formGroup.get('matchTypeSelected') as FormControl;
+  }
+  
+  get operatorSelected() {
+    return this.formGroup.get('operatorSelected') as FormControl;
+  }
+
+  matchTypes: matchTypeAttr[];
+  @Input() fields: fieldAttr[];
+  @Input() formGroup: FormGroup;
 
   onSelectField(): void {
-    if (this.fieldSelected.fieldType === "string") {
+    if (this.fieldSelected.value.fieldType === "string") {
       this.matchTypes = this.matchTypesForString;
     } else {
       this.matchTypes = this.matchTypesForNumber;
@@ -28,11 +52,11 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   constructor() {
-    this.matchTypes = this.matchTypesForString;
-    this.operatorSelected = 'and'
   }
 
   ngOnInit() {
+    this.matchTypes = this.matchTypesForString;
+    this.operatorSelected.setValue('and');
   }
 
 }
@@ -42,4 +66,9 @@ interface fieldAttr {
   fieldName: string,
   viewValue: string,
   fieldType: string,
+}
+
+interface matchTypeAttr {
+  name: string,
+  viewValue: string,
 }
