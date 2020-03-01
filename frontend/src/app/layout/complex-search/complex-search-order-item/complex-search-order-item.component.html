@@ -1,1 +1,18 @@
-<p>complex-search-order-item works!</p>
+<div>
+    <mat-grid-list cols="2">
+        <mat-grid-tile>
+            <mat-form-field>
+                <mat-select class="select-order-field-name" [formControl]="orderFieldSelected">
+                    <mat-option class="option-order-field-name" *ngFor="let field of orderFields" [value]="field">
+                    {{field.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-radio-group class="radio-group-order-field-key-word-select" [formControl]="orderFieldKeyWordSelected" aria-label="Select an order field key word">
+                <mat-radio-button class="radio-order-field-key-word-option" *ngFor="let key of orderFieldKeyWords" [value]="key.name">{{key.viewValue}}</mat-radio-button>
+            </mat-radio-group>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

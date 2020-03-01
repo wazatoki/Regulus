@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item.component';
 
-import { FormsModule, ReactiveFormsModule, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -46,7 +46,7 @@ describe('ComplexSearchConditionItemComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should click field select', async () => {
+  it('should click field select', async () => {
 
     const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-field-name"));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
