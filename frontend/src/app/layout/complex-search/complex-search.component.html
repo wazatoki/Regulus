@@ -1,4 +1,4 @@
-<form>
+<form [formGroup]='form'>
 
     <mat-card class="display-item">
         <mat-card-header>
@@ -6,20 +6,20 @@
         </mat-card-header>
         <mat-card-content>
             <div>
-                <div class="display-item-list-container">
+                <div class="item-list-container">
                     <div cdkDropList #displayItemFromList="cdkDropList" [cdkDropListData]="displayItemList"
-                            [cdkDropListConnectedTo]="[displayItemToList]" (cdkDropListDropped)="displayItemDrop($event)"
-                            class="display-item-list">
-                            <div class="display-item-box" *ngFor="let item of displayItemList; let i=index" cdkDrag>
+                            [cdkDropListConnectedTo]="[displayItemToList]" (cdkDropListDropped)="drop($event)"
+                            class="item-list">
+                            <div class="item-box" *ngFor="let item of displayItemList; let i=index" cdkDrag>
                                 <span>{{item.viewValue}}</span>
                             </div>
                         </div>
                 </div>
-                <div class="display-item-list-container">
+                <div class="item-list-container">
                     <div cdkDropList #displayItemToList="cdkDropList" [cdkDropListData]="selectedDisplayItemList"
-                            [cdkDropListConnectedTo]="[displayItemFromList]" (cdkDropListDropped)="displayItemDrop($event)"
-                            class="display-item-list">
-                            <div class="display-item-box" *ngFor="let item of selectedDisplayItemList; let i=index" cdkDrag>
+                            [cdkDropListConnectedTo]="[displayItemFromList]" (cdkDropListDropped)="drop($event)"
+                            class="item-list">
+                            <div class="item-box" *ngFor="let item of selectedDisplayItemList; let i=index" cdkDrag>
                                 <span>{{item.viewValue}}</span>
                             </div>
                         </div>
@@ -36,6 +36,16 @@
                 <button type="button" mat-stroked-button>追加</button>
             </mat-card-title>
         </mat-card-header>
+        <mat-card-content>
+            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="searchCondition">
+                <div class="item-box" *ngFor="let formGroup of searchConditionArray.controls; let i=index" cdkDrag>
+
+                        <app-complex-search-condition-item
+                            [fields]="searchConditionList" [formGroup]="formGroup">
+                        </app-complex-search-condition-item>
+                </div>
+            </div>
+        </mat-card-content>
     </mat-card>
 
     <mat-card class="order-condition">
@@ -45,20 +55,23 @@
                 <button type="button" mat-stroked-button>追加</button>
             </mat-card-title>
         </mat-card-header>
+        <mat-card-content></mat-card-content>
     </mat-card>
 
     <mat-card class="save-condition">
         <mat-card-header>
             <mat-card-title>保存条件</mat-card-title>
         </mat-card-header>
-        <mat-form-field appearance="standard">
-            <mat-label>検索パターン名称</mat-label>
-            <input matInput>
-        </mat-form-field>
-        <mat-checkbox>公開する</mat-checkbox>
-        <div class="Disclosure-destination">
-            <mat-checkbox></mat-checkbox>
-        </div>
+        <mat-card-content>
+            <mat-form-field appearance="standard">
+                <mat-label>検索パターン名称</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-checkbox>公開する</mat-checkbox>
+            <div class="Disclosure-destination">
+                <mat-checkbox></mat-checkbox>
+            </div>
+        </mat-card-content>
     </mat-card>
 
     <button type="button" mat-stroked-button>保存して検索</button>

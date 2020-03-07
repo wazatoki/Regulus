@@ -14,6 +14,8 @@ export class ComplexSearchComponent implements OnInit {
   selectedDisplayItemArray: fieldAttr[];
 
   @Input() displayItemList: fieldAttr[];
+  @Input() searchConditionList: fieldAttr[];
+  @Input() orderConditionList: fieldAttr[];
 
   get searchConditionArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -29,7 +31,12 @@ export class ComplexSearchComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { 
     this.form = this.fb.group({
-      searchCondition: this.fb.array([]),
+      searchCondition: this.fb.array([new FormGroup({
+        fieldSelected: new FormControl(''),
+        conditionValue: new FormControl(''),
+        matchTypeSelected: new FormControl(''),
+        operatorSelected: new FormControl(''),
+      })]),
       orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({}),
     });
@@ -38,7 +45,7 @@ export class ComplexSearchComponent implements OnInit {
   ngOnInit() {
   }
 
-  displayItemDrop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -49,7 +56,7 @@ export class ComplexSearchComponent implements OnInit {
     }
   }
 
-  
+
 
 }
 
