@@ -46,7 +46,7 @@ describe('ComplexSearchOrderItemComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should click order field select', async () => {
+  it('should click order field select', async () => {
 
     const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-order-field-name"));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
@@ -63,7 +63,7 @@ describe('ComplexSearchOrderItemComponent', () => {
     });
   });
 
-  fit('should click order key word radio button', async () => {
+  it('should click order key word radio button', async () => {
 
     const radioDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".radio-group-order-field-key-word-select .mat-radio-input"));
     const radioEl: HTMLInputElement = radioDe[0].nativeElement;
@@ -94,12 +94,14 @@ class TestHostComponent {
       entityName: 'aaa',
       fieldName: 'AAA',
       viewValue: 'aaa-AAA',
+      fieldType: 'number',
     },
     {
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',
+      fieldType: 'string',
     },
-  ];
+  ]
 }
 

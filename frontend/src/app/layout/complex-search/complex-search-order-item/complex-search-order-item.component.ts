@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { fieldAttr } from '../complex-search.component'
 
 @Component({
   selector: 'app-complex-search-order-item',
@@ -21,19 +22,13 @@ export class ComplexSearchOrderItemComponent implements OnInit {
     return this.formGroup.get('orderFieldKeyWordSelected') as FormControl;
   }
 
-  @Input() orderFields: orderFieldAttr[];
+  @Input() orderFields: fieldAttr[];
   @Input() formGroup: FormGroup;
 
   constructor() { }
 
   ngOnInit() { }
 
-}
-
-interface orderFieldAttr {
-  entityName: string,
-  fieldName: string,
-  viewValue: string,
 }
 
 interface orderKeyWordAttr{

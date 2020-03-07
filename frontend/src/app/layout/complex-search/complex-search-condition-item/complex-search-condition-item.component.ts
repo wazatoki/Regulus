@@ -1,5 +1,6 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { fieldAttr } from '../complex-search.component'
 
 @Component({
   selector: 'app-complex-search-condition-item',
@@ -59,13 +60,6 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     this.operatorSelected.setValue('and');
   }
 
-}
-
-interface fieldAttr {
-  entityName: string,
-  fieldName: string,
-  viewValue: string,
-  fieldType: string,
 }
 
 interface matchTypeAttr {

@@ -1,0 +1,68 @@
+<form>
+
+    <mat-card class="display-item">
+        <mat-card-header>
+            <mat-card-title>表示項目</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div>
+                <div class="display-item-list-container">
+                    <div cdkDropList #displayItemFromList="cdkDropList" [cdkDropListData]="displayItemList"
+                            [cdkDropListConnectedTo]="[displayItemToList]" (cdkDropListDropped)="displayItemDrop($event)"
+                            class="display-item-list">
+                            <div class="display-item-box" *ngFor="let item of displayItemList; let i=index" cdkDrag>
+                                <span>{{item.viewValue}}</span>
+                            </div>
+                        </div>
+                </div>
+                <div class="display-item-list-container">
+                    <div cdkDropList #displayItemToList="cdkDropList" [cdkDropListData]="selectedDisplayItemList"
+                            [cdkDropListConnectedTo]="[displayItemFromList]" (cdkDropListDropped)="displayItemDrop($event)"
+                            class="display-item-list">
+                            <div class="display-item-box" *ngFor="let item of selectedDisplayItemList; let i=index" cdkDrag>
+                                <span>{{item.viewValue}}</span>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="search-condition">
+        <mat-card-header>
+            <mat-card-title>
+                検索条件
+                <button type="button" mat-stroked-button>追加</button>
+            </mat-card-title>
+        </mat-card-header>
+    </mat-card>
+
+    <mat-card class="order-condition">
+        <mat-card-header>
+            <mat-card-title>
+                並び順
+                <button type="button" mat-stroked-button>追加</button>
+            </mat-card-title>
+        </mat-card-header>
+    </mat-card>
+
+    <mat-card class="save-condition">
+        <mat-card-header>
+            <mat-card-title>保存条件</mat-card-title>
+        </mat-card-header>
+        <mat-form-field appearance="standard">
+            <mat-label>検索パターン名称</mat-label>
+            <input matInput>
+        </mat-form-field>
+        <mat-checkbox>公開する</mat-checkbox>
+        <div class="Disclosure-destination">
+            <mat-checkbox></mat-checkbox>
+        </div>
+    </mat-card>
+
+    <button type="button" mat-stroked-button>保存して検索</button>
+
+    <button type="button" mat-stroked-button>検索</button>
+
+</form>
