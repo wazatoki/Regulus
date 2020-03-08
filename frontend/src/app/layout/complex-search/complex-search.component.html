@@ -1,6 +1,6 @@
 <form [formGroup]='form'>
 
-    <mat-card class="display-item">
+    <mat-card class="display-item" *ngIf="isShowDisplayItem">
         <mat-card-header>
             <mat-card-title>表示項目</mat-card-title>
         </mat-card-header>
@@ -48,7 +48,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="order-condition">
+    <mat-card class="order-condition" *ngIf="isShowOrderCondition">
         <mat-card-header>
             <mat-card-title>
                 並び順
@@ -67,7 +67,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="save-condition">
+    <mat-card class="save-condition" *ngIf="isShowSaveCondition">
         <mat-card-header>
             <mat-card-title>保存条件</mat-card-title>
         </mat-card-header>

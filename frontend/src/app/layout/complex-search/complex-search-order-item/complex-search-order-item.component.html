@@ -3,7 +3,7 @@
         <mat-grid-tile>
             <mat-form-field>
                 <mat-select class="select-order-field-name" [formControl]="orderFieldSelected">
-                    <mat-option class="option-order-field-name" *ngFor="let field of orderFields" [value]="field">
+                    <mat-option class="option-order-field-name" *ngFor="let field of fields" [value]="field">
                     {{field.viewValue}}
                     </mat-option>
                 </mat-select>

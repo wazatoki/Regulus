@@ -16,6 +16,9 @@ export class ComplexSearchComponent implements OnInit {
   @Input() displayItemList: fieldAttr[];
   @Input() searchConditionList: fieldAttr[];
   @Input() orderConditionList: fieldAttr[];
+  @Input() isShowDisplayItem: boolean = false;
+  @Input() isShowOrderCondition: boolean = false;
+  @Input() isShowSaveCondition: boolean = false;
 
   get searchConditionArray() {
     return this.form.get('searchCondition') as FormArray;
