@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, 
 import { ComplexSearchComponent } from './complex-search.component';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component'
 import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component"
-import { DebugElement, Component } from '@angular/core';
+import { DebugElement, Component, ViewChild } from '@angular/core';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -58,6 +58,24 @@ describe('ComplexSearchComponent', () => {
   });
 
   it('should create', () => {
+    const fb = new FormBuilder();
+    component.searchComponent.form = fb.group({
+      searchCondition: fb.array([new FormGroup({
+        fieldSelected: new FormControl(''),
+        conditionValue: new FormControl(''),
+        matchTypeSelected: new FormControl(''),
+        operatorSelected: new FormControl(''),
+      })]),
+      orderCondition: fb.array([new FormGroup({
+        orderFieldSelected: new FormControl(''),
+        orderFieldKeyWordSelected: new FormControl(''),
+      })]),
+      saveCondition: fb.group({}),
+    });
+    component.searchComponent.isShowDisplayItem = true;
+    component.searchComponent.isShowOrderCondition = true;
+    component.searchComponent.isShowSaveCondition = true;
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 });
@@ -72,6 +90,9 @@ describe('ComplexSearchComponent', () => {
   </app-complex-search>`
 })
 class TestHostComponent {
+
+  @ViewChild(ComplexSearchComponent, {static: true})
+  searchComponent:ComplexSearchComponent;
 
   displayItemList = [
     {

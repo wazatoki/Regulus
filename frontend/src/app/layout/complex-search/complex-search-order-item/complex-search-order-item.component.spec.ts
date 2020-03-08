@@ -46,7 +46,7 @@ describe('ComplexSearchOrderItemComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should click order field select', async () => {
+  it('should click order field select', async () => {
 
     const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-order-field-name"));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;

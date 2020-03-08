@@ -34,16 +34,8 @@ export class ComplexSearchComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { 
     this.form = this.fb.group({
-      searchCondition: this.fb.array([new FormGroup({
-        fieldSelected: new FormControl(''),
-        conditionValue: new FormControl(''),
-        matchTypeSelected: new FormControl(''),
-        operatorSelected: new FormControl(''),
-      })]),
-      orderCondition: this.fb.array([new FormGroup({
-        orderFieldSelected: new FormControl(''),
-        orderFieldKeyWordSelected: new FormControl(''),
-      })]),
+      searchCondition: this.fb.array([]),
+      orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({}),
     });
   }
