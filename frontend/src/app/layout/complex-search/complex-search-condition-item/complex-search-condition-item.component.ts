@@ -57,7 +57,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
   ngOnInit() {
     this.matchTypes = this.matchTypesForString;
-    this.operatorSelected.setValue('and');
+    this.operatorSelected.setValue(this.operators[0]);
   }
 
 }

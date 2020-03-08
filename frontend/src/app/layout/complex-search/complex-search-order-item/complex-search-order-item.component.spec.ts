@@ -59,7 +59,7 @@ describe('ComplexSearchOrderItemComponent', () => {
       inquiryOptions[0].nativeElement.click()
 
       fixture.detectChanges();
-      expect(orderFieldFormControll.value).toBe(component.orderFields[0])
+      expect(orderFieldFormControll.value).toBe(component.fields[0])
     });
   });
 
@@ -79,7 +79,7 @@ describe('ComplexSearchOrderItemComponent', () => {
 @Component({
   template: `
   <app-complex-search-order-item
-    [orderFields]="orderFields" [formGroup]="formGroup">
+    [fields]="fields" [formGroup]="formGroup">
   </app-complex-search-order-item>`
 })
 class TestHostComponent {
@@ -89,7 +89,7 @@ class TestHostComponent {
     orderFieldKeyWordSelected: new FormControl(''),
   });
 
-  orderFields = [
+  fields = [
     {
       entityName: 'aaa',
       fieldName: 'AAA',

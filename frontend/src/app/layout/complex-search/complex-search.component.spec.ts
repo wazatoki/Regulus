@@ -12,6 +12,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { ComplexSearchComponent } from './complex-search.component';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component'
+import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component"
 import { DebugElement, Component } from '@angular/core';
 
 describe('ComplexSearchComponent', () => {
@@ -24,6 +25,7 @@ describe('ComplexSearchComponent', () => {
         ComplexSearchComponent,
         TestHostComponent,
         ComplexSearchConditionItemComponent,
+        ComplexSearchOrderItemComponent,
       ],
       imports: [
         FormsModule,
@@ -65,6 +67,7 @@ describe('ComplexSearchComponent', () => {
   <app-complex-search
     [displayItemList]="displayItemList"
     [searchConditionList]="searchConditionList"
+    [orderConditionList]="orderConditionList"
     >
   </app-complex-search>`
 })
@@ -83,8 +86,22 @@ class TestHostComponent {
       viewValue: 'bbb-BBB',
       fieldType: 'string',
     },
-  ]
+  ];
   searchConditionList =  [
+    {
+      entityName: 'aaa',
+      fieldName: 'AAA',
+      viewValue: 'aaa-AAA',
+      fieldType: 'number',
+    },
+    {
+      entityName: 'bbb',
+      fieldName: 'BBB',
+      viewValue: 'bbb-BBB',
+      fieldType: 'string',
+    },
+  ];
+  orderConditionList =  [
     {
       entityName: 'aaa',
       fieldName: 'AAA',

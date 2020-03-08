@@ -22,12 +22,14 @@ export class ComplexSearchOrderItemComponent implements OnInit {
     return this.formGroup.get('orderFieldKeyWordSelected') as FormControl;
   }
 
-  @Input() orderFields: fieldAttr[];
+  @Input() fields: fieldAttr[];
   @Input() formGroup: FormGroup;
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.orderFieldKeyWordSelected.setValue(this.orderFieldKeyWords[0].name);
+  }
 
 }
 

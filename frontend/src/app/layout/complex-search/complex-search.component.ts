@@ -37,7 +37,10 @@ export class ComplexSearchComponent implements OnInit {
         matchTypeSelected: new FormControl(''),
         operatorSelected: new FormControl(''),
       })]),
-      orderCondition: this.fb.array([]),
+      orderCondition: this.fb.array([new FormGroup({
+        orderFieldSelected: new FormControl(''),
+        orderFieldKeyWordSelected: new FormControl(''),
+      })]),
       saveCondition: this.fb.group({}),
     });
   }

@@ -55,7 +55,16 @@
                 <button type="button" mat-stroked-button>追加</button>
             </mat-card-title>
         </mat-card-header>
-        <mat-card-content></mat-card-content>
+        <mat-card-content>
+            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="searchCondition">
+                <div class="item-box" *ngFor="let formGroup of orderConditionArray.controls; let i=index" cdkDrag>
+
+                        <app-complex-search-order-item
+                            [fields]="orderConditionList" [formGroup]="formGroup">
+                        </app-complex-search-order-item>
+                </div>
+            </div>
+        </mat-card-content>
     </mat-card>
 
     <mat-card class="save-condition">
