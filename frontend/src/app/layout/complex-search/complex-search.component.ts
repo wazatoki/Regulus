@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-complex-search',
@@ -32,7 +32,7 @@ export class ComplexSearchComponent implements OnInit {
     return this.form.get('saveCondition') as FormGroup;
   }
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
@@ -48,13 +48,27 @@ export class ComplexSearchComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
     }
   }
 
+  pushSearchCondition() {
+    this.searchConditionArray.push(new FormGroup({
+      fieldSelected: new FormControl(''),
+      conditionValue: new FormControl(''),
+      matchTypeSelected: new FormControl(''),
+      operatorSelected: new FormControl(''),
+    }));
+  }
 
+  pushOrderCondition() {
+    this.orderConditionArray.push(new FormGroup({
+      orderFieldSelected: new FormControl(''),
+      orderFieldKeyWordSelected: new FormControl(''),
+    }));
+  }
 
 }
 

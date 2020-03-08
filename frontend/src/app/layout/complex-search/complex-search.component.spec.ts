@@ -14,6 +14,7 @@ import { ComplexSearchComponent } from './complex-search.component';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component'
 import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component"
 import { DebugElement, Component, ViewChild } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -77,6 +78,42 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.isShowSaveCondition = true;
     fixture.detectChanges();
     expect(component).toBeTruthy();
+  });
+
+  it('should click add condition button', () => {
+
+    component.searchComponent.isShowDisplayItem = false;
+    component.searchComponent.isShowOrderCondition = false;
+    component.searchComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-search-condition"));
+    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    buttonEl.click();
+    buttonEl.click();
+    fixture.detectChanges();
+
+    const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchConditionItemComponent));
+
+    expect(itemBoxDeArray.length).toBe(2);
+  });
+
+  fit('should click add order button', () => {
+
+    component.searchComponent.isShowDisplayItem = false;
+    component.searchComponent.isShowOrderCondition = true;
+    component.searchComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-order-condition"));
+    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    buttonEl.click();
+    buttonEl.click();
+    fixture.detectChanges();
+
+    const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchOrderItemComponent));
+
+    expect(itemBoxDeArray.length).toBe(2);
   });
 });
 
