@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item.component';
+import { fieldAttr } from '../complex-search.component';
 
 import { FormsModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -62,7 +63,7 @@ describe('ComplexSearchConditionItemComponent', () => {
       inquiryOptions[0].nativeElement.click()
 
       fixture.detectChanges();
-      expect(fieldControll.value).toBe(component.fields[0])
+      expect(fieldControll.value).toBe(component.fields[0].id)
       selectDe.triggerEventHandler('selectionChange', null);
       fixture.detectChanges();
       selectEl2.click();
@@ -133,14 +134,16 @@ class TestHostComponent {
     operatorSelected: new FormControl(''),
   });
 
-  fields = [
+  fields: fieldAttr[] = [
     {
+      id: 'id1',
       entityName: 'aaa',
       fieldName: 'AAA',
       viewValue: 'aaa-AAA',
       fieldType: 'number',
     },
     {
+      id: 'id2',
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',

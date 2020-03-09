@@ -59,7 +59,7 @@ describe('ComplexSearchComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     const fb = new FormBuilder();
     component.searchComponent.form = fb.group({
       searchCondition: fb.array([new FormGroup({

@@ -37,7 +37,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="searchCondition">
+            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of searchConditionFormArray.controls; let i=index" cdkDrag>
 
                     <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup">
@@ -55,7 +55,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="orderCondition">
+            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index" cdkDrag>
 
                     <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup">

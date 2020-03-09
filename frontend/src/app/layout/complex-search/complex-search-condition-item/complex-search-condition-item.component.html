@@ -3,7 +3,7 @@
         <mat-grid-tile>
             <mat-form-field>
                 <mat-select class="select-field-name" (selectionChange)="onSelectField()" [formControl]="fieldSelected">
-                    <mat-option class="option-field-name" *ngFor="let field of fields" [value]="field">
+                    <mat-option class="option-field-name" *ngFor="let field of fields" [value]="field.id">
                     {{field.viewValue}}
                     </mat-option>
                 </mat-select>

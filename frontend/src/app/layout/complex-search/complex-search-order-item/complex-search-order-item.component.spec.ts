@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComplexSearchOrderItemComponent } from './complex-search-order-item.component';
+import { fieldAttr } from '../complex-search.component';
 
 import { FormsModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -59,7 +60,7 @@ describe('ComplexSearchOrderItemComponent', () => {
       inquiryOptions[0].nativeElement.click()
 
       fixture.detectChanges();
-      expect(orderFieldFormControll.value).toBe(component.fields[0])
+      expect(orderFieldFormControll.value).toBe(component.fields[0].id)
     });
   });
 
@@ -89,14 +90,16 @@ class TestHostComponent {
     orderFieldKeyWordSelected: new FormControl(''),
   });
 
-  fields = [
+  fields: fieldAttr[] = [
     {
+      id: 'id1',
       entityName: 'aaa',
       fieldName: 'AAA',
       viewValue: 'aaa-AAA',
       fieldType: 'number',
     },
     {
+      id: 'id2',
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',

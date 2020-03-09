@@ -52,7 +52,7 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupList.forEach( g => {
+    this.groupList.forEach(g => {
       this.discloseGroupFormArray.push(this.fb.control(''));
     })
   }
@@ -85,16 +85,37 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSave() {
-    let data: saveData;
+    const data: saveData = this.createSaveData();
+    this.onSave.emit(data)
+  }
+
+  createSaveData(): saveData {
+
+    const data: saveData = {
+      patternName: '',
+      category: '',
+      isDisclose: false,
+      discloseGroups: [],
+      ownerID: '',
+      conditionData: null,
+    };
+
     data.patternName = this.saveConditions.get('patternName').value;
     data.isDisclose = this.saveConditions.get('isDisclose').value;
+    this.discloseGroupFormArray.controls.forEach((v,i) => {
+      if (v.value === true){
+        data.discloseGroups.push(this.groupList[i].id);
+      }
+      
+    })
 
-    this.onSave.emit(data)
+    return data;
   }
 
 }
 
 export interface fieldAttr {
+  id: string,
   entityName: string,
   fieldName: string,
   viewValue: string,
@@ -111,5 +132,7 @@ interface saveData {
 }
 
 interface conditionData {
-
+  displayItemList: fieldAttr[],
+  searchConditionList: [],
+  orderConditionList: [],
 }
