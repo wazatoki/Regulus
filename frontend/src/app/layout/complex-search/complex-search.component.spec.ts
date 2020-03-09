@@ -15,6 +15,7 @@ import { ComplexSearchConditionItemComponent } from './complex-search-condition-
 import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component"
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { Group } from '../../services/models/group/group';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -58,7 +59,7 @@ describe('ComplexSearchComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     const fb = new FormBuilder();
     component.searchComponent.form = fb.group({
       searchCondition: fb.array([new FormGroup({
@@ -71,7 +72,11 @@ describe('ComplexSearchComponent', () => {
         orderFieldSelected: new FormControl(''),
         orderFieldKeyWordSelected: new FormControl(''),
       })]),
-      saveCondition: fb.group({}),
+      saveCondition: fb.group({
+        patternName: fb.control(""),
+        isDisclose: fb.control(""),
+        discloseGroups: fb.array([new FormControl('')]),
+      }),
     });
     component.searchComponent.isShowDisplayItem = true;
     component.searchComponent.isShowOrderCondition = true;
@@ -98,7 +103,7 @@ describe('ComplexSearchComponent', () => {
     expect(itemBoxDeArray.length).toBe(2);
   });
 
-  fit('should click add order button', () => {
+  it('should click add order button', () => {
 
     component.searchComponent.isShowDisplayItem = false;
     component.searchComponent.isShowOrderCondition = true;
@@ -123,6 +128,7 @@ describe('ComplexSearchComponent', () => {
     [displayItemList]="displayItemList"
     [searchConditionList]="searchConditionList"
     [orderConditionList]="orderConditionList"
+    [groupList]="groupList"
     >
   </app-complex-search>`
 })
@@ -173,4 +179,10 @@ class TestHostComponent {
       fieldType: 'string',
     },
   ]
+  groupList: Group[] = [
+    {
+      id: 'jdjdjdjdj',
+      name: 'name1',
+    }
+  ];
 }
