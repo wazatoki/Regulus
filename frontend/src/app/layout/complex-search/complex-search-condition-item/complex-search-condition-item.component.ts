@@ -1,4 +1,4 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { fieldAttr } from '../complex-search.component'
 
@@ -10,19 +10,19 @@ import { fieldAttr } from '../complex-search.component'
 export class ComplexSearchConditionItemComponent implements OnInit {
 
   readonly matchTypesForString: matchTypeAttr[] = [
-    {name: 'match', viewValue: '完全一致'},
-    {name: 'unmatch', viewValue: '不一致'},
-    {name: 'pertialmatch', viewValue: '部分一致'},
+    { name: 'match', viewValue: '完全一致' },
+    { name: 'unmatch', viewValue: '不一致' },
+    { name: 'pertialmatch', viewValue: '部分一致' },
   ];
   readonly matchTypesForNumber: matchTypeAttr[] = [
-    {name: 'match', viewValue: '完全一致'},
-    {name: 'unmatch', viewValue: '不一致'},
-    {name: 'gt', viewValue: '>'},
-    {name: 'ge', viewValue: '>='},
-    {name: 'le', viewValue: '<'},
-    {name: 'lt', viewValue: '<='},
+    { name: 'match', viewValue: '完全一致' },
+    { name: 'unmatch', viewValue: '不一致' },
+    { name: 'gt', viewValue: '>' },
+    { name: 'ge', viewValue: '>=' },
+    { name: 'le', viewValue: '<' },
+    { name: 'lt', viewValue: '<=' },
   ];
-  readonly operators: string[] = ['and','or'];
+  readonly operators: string[] = ['and', 'or'];
 
   get fieldSelected() {
     return this.formGroup.get('fieldSelected') as FormControl;
@@ -31,11 +31,11 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   get conditionValue() {
     return this.formGroup.get('conditionValue') as FormControl;
   }
-  
+
   get matchTypeSelected() {
     return this.formGroup.get('matchTypeSelected') as FormControl;
   }
-  
+
   get operatorSelected() {
     return this.formGroup.get('operatorSelected') as FormControl;
   }
@@ -43,6 +43,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   matchTypes: matchTypeAttr[];
   @Input() fields: fieldAttr[];
   @Input() formGroup: FormGroup;
+  @Output() onDelete = new EventEmitter();
 
   onSelectField(): void {
     if (this.fieldSelected.value.fieldType === "string") {
@@ -58,6 +59,10 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   ngOnInit() {
     this.matchTypes = this.matchTypesForString;
     this.operatorSelected.setValue(this.operators[0]);
+  }
+
+  deleteClicked() {
+    this.onDelete.emit();
   }
 
 }

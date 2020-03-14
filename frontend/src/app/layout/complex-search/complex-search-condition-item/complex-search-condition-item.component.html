@@ -1,5 +1,5 @@
 <div class="complex-search-condition-item">
-    <mat-grid-list cols="4" rowHeight="50px">
+    <mat-grid-list cols="5" rowHeight="50px">
         <mat-grid-tile>
             <mat-form-field>
                 <mat-select class="select-field-name" (selectionChange)="onSelectField()" [formControl]="fieldSelected">
@@ -27,6 +27,9 @@
             <mat-radio-group class="radio-group-operator-select" [formControl]="operatorSelected" aria-label="Select an operator">
                 <mat-radio-button class="radio-operator-option" *ngFor="let oparator of operators" [value]="oparator">{{oparator}}</mat-radio-button>
             </mat-radio-group>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <app-delete class="delete-button" (clicked)="deleteClicked()"></app-delete>
         </mat-grid-tile>
     </mat-grid-list>
 </div>

@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComplexSearchOrderItemComponent } from './complex-search-order-item.component';
 import { fieldAttr } from '../complex-search.component';
+import { DeleteComponent } from '../../form/buttons/delete/delete.component';
 
 import { FormsModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatButtonModule } from '@angular/material/button';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement, Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -22,6 +24,7 @@ describe('ComplexSearchOrderItemComponent', () => {
       declarations: [
         ComplexSearchOrderItemComponent,
         TestHostComponent,
+        DeleteComponent,
       ],
       imports: [
         FormsModule,
@@ -31,6 +34,7 @@ describe('ComplexSearchOrderItemComponent', () => {
         MatSelectModule,
         MatRadioModule,
         MatGridListModule,
+        MatButtonModule,
         NoopAnimationsModule,
       ]
     })
@@ -74,16 +78,31 @@ describe('ComplexSearchOrderItemComponent', () => {
     expect(orderFieldKeyWordFormControll.value).toBe('asc')
   });
 
+  it('should click delete button', () => {
+
+    const deleteDe: DebugElement = fixture.debugElement.query(By.css('.delete-button button'));
+    const deleteEl: HTMLButtonElement = deleteDe.nativeElement;
+    deleteEl.click()
+    fixture.detectChanges();
+    expect(component.onDelete()).toEqual("onDelete called");
+  });
+
 });
 
 
 @Component({
   template: `
   <app-complex-search-order-item
-    [fields]="fields" [formGroup]="formGroup">
+    [fields]="fields"
+    [formGroup]="formGroup"
+    (onDelete)="onDelete()">
   </app-complex-search-order-item>`
 })
 class TestHostComponent {
+
+  onDelete(): string{
+    return 'onDelete called';
+  }
 
   formGroup: FormGroup = new FormGroup({
     orderFieldSelected: new FormControl(''),

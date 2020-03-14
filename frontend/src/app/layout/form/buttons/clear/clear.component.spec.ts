@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ClearComponent } from './clear.component';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('ClearComponent', () => {
   let component: ClearComponent;
@@ -11,7 +12,8 @@ describe('ClearComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClearComponent ]
+      declarations: [ ClearComponent ],
+      imports: [ MatButtonModule ]
     })
     .compileComponents();
   }));

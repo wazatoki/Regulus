@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { SubmitComponent } from './submit.component';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('SubmitComponent', () => {
   let component: SubmitComponent;
@@ -11,7 +12,8 @@ describe('SubmitComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubmitComponent ]
+      declarations: [ SubmitComponent ],
+      imports: [ MatButtonModule ],
     })
     .compileComponents();
   }));

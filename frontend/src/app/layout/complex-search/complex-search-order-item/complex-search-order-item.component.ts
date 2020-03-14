@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { fieldAttr } from '../complex-search.component'
 
@@ -24,11 +24,16 @@ export class ComplexSearchOrderItemComponent implements OnInit {
 
   @Input() fields: fieldAttr[];
   @Input() formGroup: FormGroup;
+  @Output() onDelete = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() { 
     this.orderFieldKeyWordSelected.setValue(this.orderFieldKeyWords[0].name);
+  }
+
+  deleteClicked() {
+    this.onDelete.emit();
   }
 
 }

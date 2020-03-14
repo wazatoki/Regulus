@@ -1,6 +1,6 @@
 <div>
-    <mat-grid-list cols="2" rowHeight="50px">
-        <mat-grid-tile>
+    <mat-grid-list cols="5" rowHeight="50px">
+        <mat-grid-tile [colspan]="2">
             <mat-form-field>
                 <mat-select class="select-order-field-name" [formControl]="orderFieldSelected">
                     <mat-option class="option-order-field-name" *ngFor="let field of fields" [value]="field.id">
@@ -9,10 +9,13 @@
                 </mat-select>
             </mat-form-field>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <mat-grid-tile [colspan]="2">
             <mat-radio-group class="radio-group-order-field-key-word-select" [formControl]="orderFieldKeyWordSelected" aria-label="Select an order field key word">
                 <mat-radio-button class="radio-order-field-key-word-option" *ngFor="let key of orderFieldKeyWords" [value]="key.name">{{key.viewValue}}</mat-radio-button>
             </mat-radio-group>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <app-delete class="delete-button" (clicked)="deleteClicked()"></app-delete>
         </mat-grid-tile>
     </mat-grid-list>
 </div>

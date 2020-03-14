@@ -91,6 +91,10 @@ export class ComplexSearchComponent implements OnInit {
     }));
   }
 
+  removeSearchCondition(i: number) {
+    this.searchConditionFormArray.removeAt(i);
+  }
+
   pushOrderCondition() {
     this.orderConditionFormArray.push(new FormGroup({
       orderFieldSelected: new FormControl(''),

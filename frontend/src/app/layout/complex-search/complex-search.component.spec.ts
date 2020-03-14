@@ -11,8 +11,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { ComplexSearchComponent, saveData, fieldAttr } from './complex-search.component';
-import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component'
-import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component"
+import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component';
+import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component";
+import { DeleteComponent } from '../form/buttons/delete/delete.component';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Group } from '../../services/models/group/group';
@@ -29,6 +30,7 @@ describe('ComplexSearchComponent', () => {
         TestHostComponent,
         ComplexSearchConditionItemComponent,
         ComplexSearchOrderItemComponent,
+        DeleteComponent,
       ],
       imports: [
         FormsModule,
@@ -122,7 +124,7 @@ describe('ComplexSearchComponent', () => {
     expect(itemBoxDeArray.length).toBe(2);
   });
 
-  fit('should create save data', () => {
+  it('should create save data', () => {
 
     component.searchComponent.isShowDisplayItem = true;
     component.searchComponent.isShowOrderCondition = true;
@@ -163,6 +165,37 @@ describe('ComplexSearchComponent', () => {
     expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.orderConditionList[1]);
     expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
   });
+
+  it('should delete condition', () => {
+
+    component.searchComponent.isShowDisplayItem = false;
+    component.searchComponent.isShowOrderCondition = false;
+    component.searchComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+
+    component.searchComponent.pushSearchCondition();
+    component.searchComponent.pushSearchCondition();
+    fixture.detectChanges();
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('id1');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
+    (component.searchComponent.searchConditionFormArray.controls[1] as FormGroup).get('fieldSelected').setValue('id2');
+    (component.searchComponent.searchConditionFormArray.controls[1] as FormGroup).get('conditionValue').setValue('value2');
+    (component.searchComponent.searchConditionFormArray.controls[1] as FormGroup).get('matchTypeSelected').setValue('unmatch');
+    (component.searchComponent.searchConditionFormArray.controls[1] as FormGroup).get('operatorSelected').setValue('or');
+    fixture.detectChanges();
+
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".search-condition .item-list .delete-button button"));
+    const deleteEl0: HTMLInputElement = deleteDe[0].nativeElement;
+    deleteEl0.click();
+
+    fixture.detectChanges();
+
+    expect((component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').value).toEqual('id2');
+  });
+
 });
 
 @Component({
