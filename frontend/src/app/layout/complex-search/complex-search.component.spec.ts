@@ -188,12 +188,39 @@ describe('ComplexSearchComponent', () => {
     fixture.detectChanges();
 
     const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".search-condition .item-list .delete-button button"));
-    const deleteEl0: HTMLInputElement = deleteDe[0].nativeElement;
+    const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
     deleteEl0.click();
 
     fixture.detectChanges();
 
     expect((component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').value).toEqual('id2');
+  });
+
+  it('should delete order condition', () => {
+
+    component.searchComponent.isShowDisplayItem = false;
+    component.searchComponent.isShowOrderCondition = true;
+    component.searchComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+
+    component.searchComponent.pushOrderCondition();
+    component.searchComponent.pushOrderCondition();
+    fixture.detectChanges();
+    (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('id1');
+    (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
+    (component.searchComponent.orderConditionFormArray.controls[1] as FormGroup).get('orderFieldSelected').setValue('id2');
+    (component.searchComponent.orderConditionFormArray.controls[1] as FormGroup).get('orderFieldKeyWordSelected').setValue('desc');
+
+    fixture.detectChanges();
+
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".order-condition .item-list .delete-button button"));
+    const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
+    deleteEl0.click();
+
+    fixture.detectChanges();
+
+    expect((component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').value).toEqual('id2');
   });
 
 });

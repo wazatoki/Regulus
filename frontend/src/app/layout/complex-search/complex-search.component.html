@@ -58,7 +58,7 @@
             <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup">
+                    <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup" (onDelete)="removeOrderCondition(i)">
                     </app-complex-search-order-item>
                 </div>
             </div>

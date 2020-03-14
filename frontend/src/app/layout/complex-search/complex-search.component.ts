@@ -102,6 +102,10 @@ export class ComplexSearchComponent implements OnInit {
     }));
   }
 
+  removeOrderCondition(i: number) {
+    this.orderConditionFormArray.removeAt(i);
+  }
+
   clickSave() {
     const data: saveData = this.createSaveData();
     this.onSave.emit(data)
