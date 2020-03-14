@@ -124,7 +124,7 @@ describe('ComplexSearchComponent', () => {
     expect(itemBoxDeArray.length).toBe(2);
   });
 
-  it('should create save data', () => {
+  fit('should create save data', () => {
 
     component.searchComponent.isShowDisplayItem = true;
     component.searchComponent.isShowOrderCondition = true;

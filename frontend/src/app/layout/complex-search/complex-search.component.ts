@@ -15,14 +15,15 @@ export class ComplexSearchComponent implements OnInit {
   selectedDisplayItemArray: fieldAttr[];
   fromDisplayItemArray: fieldAttr[];
 
-  @Input() displayItemList: fieldAttr[];
-  @Input() searchConditionList: fieldAttr[];
-  @Input() orderConditionList: fieldAttr[];
+  @Input() displayItemList: fieldAttr[] = [];
+  @Input() searchConditionList: fieldAttr[] = [];
+  @Input() orderConditionList: fieldAttr[] = [];
   @Input() isShowDisplayItem: boolean = false;
   @Input() isShowOrderCondition: boolean = false;
   @Input() isShowSaveCondition: boolean = false;
-  @Input() groupList: Group[];
+  @Input() groupList: Group[] = [];
   @Output() onSave = new EventEmitter<saveData>();
+  @Output() onSearch = new EventEmitter<conditionData>();
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -108,7 +109,12 @@ export class ComplexSearchComponent implements OnInit {
 
   clickSave() {
     const data: saveData = this.createSaveData();
-    this.onSave.emit(data)
+    this.onSave.emit(data);
+  }
+
+  clickSearch(): void {
+    const data: conditionData = this.createSearchData();
+    this.onSearch.emit(data);
   }
 
   initSaveDataObj(): saveData {
@@ -182,14 +188,22 @@ export class ComplexSearchComponent implements OnInit {
       });
     }
 
+    data.conditionData = this.createSearchData();
+
+    return data;
+  }
+
+  createSearchData(): conditionData {
+    const data: conditionData = this.initConditionDataObj();
+
     if (this.isShowDisplayItem) {
-      data.conditionData.displayItemList = this.selectedDisplayItemArray;
+      data.displayItemList = this.selectedDisplayItemArray;
     }
 
-    data.conditionData.searchConditionList = this.createSearchCondition();
+    data.searchConditionList = this.createSearchCondition();
 
     if (this.isShowOrderCondition) {
-      data.conditionData.orderConditionList = this.createOrderCondition();
+      data.orderConditionList = this.createOrderCondition();
     }
 
     return data;
