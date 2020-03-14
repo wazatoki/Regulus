@@ -7,19 +7,19 @@
         <mat-card-content>
             <div>
                 <div class="item-list-container">
-                    <div cdkDropList #displayItemFromList="cdkDropList" [cdkDropListData]="displayItemList"
-                        [cdkDropListConnectedTo]="[displayItemToList]" (cdkDropListDropped)="drop($event)"
+                    <div cdkDropList #displayItemFromList="cdkDropList" [cdkDropListData]="fromDisplayItemArray"
+                        [cdkDropListConnectedTo]="[displayItemToList]" (cdkDropListDropped)="displayItemDrop($event)"
                         class="item-list">
-                        <div class="item-box" *ngFor="let item of displayItemList; let i=index" cdkDrag>
+                        <div class="item-box" *ngFor="let item of fromDisplayItemArray; let i=index" cdkDrag>
                             <span>{{item.viewValue}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="item-list-container">
-                    <div cdkDropList #displayItemToList="cdkDropList" [cdkDropListData]="selectedDisplayItemList"
-                        [cdkDropListConnectedTo]="[displayItemFromList]" (cdkDropListDropped)="drop($event)"
+                    <div cdkDropList #displayItemToList="cdkDropList" [cdkDropListData]="selectedDisplayItemArray"
+                        [cdkDropListConnectedTo]="[displayItemFromList]" (cdkDropListDropped)="displayItemDrop($event)"
                         class="item-list">
-                        <div class="item-box" *ngFor="let item of selectedDisplayItemList; let i=index" cdkDrag>
+                        <div class="item-box" *ngFor="let item of selectedDisplayItemArray; let i=index" cdkDrag>
                             <span>{{item.viewValue}}</span>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
+            <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of searchConditionFormArray.controls; let i=index" cdkDrag>
 
                     <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup">
@@ -55,7 +55,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div cdkDropList class="item-list" (cdkDropListDropped)="drop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
+            <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index" cdkDrag>
 
                     <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup">
@@ -73,11 +73,11 @@
             <div formGroupName="saveCondition">
                 <mat-form-field appearance="standard">
                     <mat-label>検索パターン名称</mat-label>
-                    <input matInput formControllName="patternName">
+                    <input class="pattern-name" matInput formControlName="patternName">
                 </mat-form-field>
-                <mat-checkbox formControllName="isDisclose">公開する</mat-checkbox>
-                <div class="Disclosure-destination" formArrayName="discloseGroups">
-                    <div *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
+                <mat-checkbox class="is-disclose" formControlName="isDisclose">公開する</mat-checkbox>
+                <div class="disclosure-destination" formArrayName="discloseGroups">
+                    <div class="disclosure-destination-group" *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
                         <mat-checkbox [formControlName]="i">
                             {{groupList[i].name}}
                         </mat-checkbox>

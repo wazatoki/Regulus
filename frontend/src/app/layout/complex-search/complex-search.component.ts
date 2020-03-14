@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Group } from '../../services/models/group/group';
 
@@ -13,6 +13,7 @@ export class ComplexSearchComponent implements OnInit {
   form: FormGroup;
 
   selectedDisplayItemArray: fieldAttr[];
+  fromDisplayItemArray: fieldAttr[];
 
   @Input() displayItemList: fieldAttr[];
   @Input() searchConditionList: fieldAttr[];
@@ -55,9 +56,22 @@ export class ComplexSearchComponent implements OnInit {
     this.groupList.forEach(g => {
       this.discloseGroupFormArray.push(this.fb.control(''));
     })
+    this.fromDisplayItemArray = this.displayItemList;
+    this.selectedDisplayItemArray = [];
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  displayItemDrop(event: CdkDragDrop<fieldAttr[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  controlDrop(event: CdkDragDrop<AbstractControl[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -89,30 +103,91 @@ export class ComplexSearchComponent implements OnInit {
     this.onSave.emit(data)
   }
 
-  createSaveData(): saveData {
-
-    const data: saveData = {
+  initSaveDataObj(): saveData {
+    return {
       patternName: '',
       category: '',
       isDisclose: false,
       discloseGroups: [],
       ownerID: '',
-      conditionData: null,
+      conditionData: this.initConditionDataObj(),
     };
+  }
 
-    data.patternName = this.saveConditions.get('patternName').value;
-    data.isDisclose = this.saveConditions.get('isDisclose').value;
-    this.discloseGroupFormArray.controls.forEach((v,i) => {
-      if (v.value === true){
-        data.discloseGroups.push(this.groupList[i].id);
+  initConditionDataObj() {
+    return {
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    }
+  }
+
+  createSearchCondition(): searchCondition[] {
+    const result: searchCondition[] = [];
+    this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
+      let field: fieldAttr;
+      this.searchConditionList.forEach((v, i) => {
+        if (v.id == formGroup.get('fieldSelected').value) {
+          field = v;
+        }
+      });
+      const condition: searchCondition = {
+        field: field,
+        conditionValue: formGroup.get('conditionValue').value,
+        matchType: formGroup.get('matchTypeSelected').value,
+        operator: formGroup.get('operatorSelected').value,
+      };
+      result.push(condition);
+    });
+    return result;
+  }
+
+  createOrderCondition(): orderCondition[] {
+    const result: orderCondition[] = [];
+    this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
+      let field: fieldAttr;
+      this.orderConditionList.forEach((v, i) => {
+        if (v.id == formGroup.get('orderFieldSelected').value) {
+          field = v;
+        }
+      });
+      const condition: orderCondition = {
+        orderField: field,
+        orderFieldKeyWord: formGroup.get('orderFieldKeyWordSelected').value,
       }
-      
-    })
+      result.push(condition);
+    });
+    return result;
+  }
+
+  createSaveData(): saveData {
+
+    const data: saveData = this.initSaveDataObj();
+
+    if (this.isShowSaveCondition) {
+      data.patternName = this.saveConditions.get('patternName').value;
+      data.isDisclose = this.saveConditions.get('isDisclose').value;
+      this.discloseGroupFormArray.controls.forEach((v, i) => {
+        if (v.value === true) {
+          data.discloseGroups.push(this.groupList[i].id);
+        }
+      });
+    }
+
+    if (this.isShowDisplayItem) {
+      data.conditionData.displayItemList = this.selectedDisplayItemArray;
+    }
+
+    data.conditionData.searchConditionList = this.createSearchCondition();
+
+    if (this.isShowOrderCondition) {
+      data.conditionData.orderConditionList = this.createOrderCondition();
+    }
 
     return data;
   }
 
-}
+}// end of class
 
 export interface fieldAttr {
   id: string,
@@ -122,7 +197,7 @@ export interface fieldAttr {
   fieldType: string,
 }
 
-interface saveData {
+export interface saveData {
   patternName: string;
   category: string;
   isDisclose: boolean;
@@ -133,6 +208,20 @@ interface saveData {
 
 interface conditionData {
   displayItemList: fieldAttr[],
-  searchConditionList: [],
-  orderConditionList: [],
+  searchConditionList: searchCondition[],
+  orderConditionList: orderCondition[],
 }
+
+interface searchCondition {
+  field: fieldAttr,
+  conditionValue: string,
+  matchType: string,
+  operator: string,
+}
+
+interface orderCondition {
+  orderField: fieldAttr,
+  orderFieldKeyWord: string,
+}
+
+

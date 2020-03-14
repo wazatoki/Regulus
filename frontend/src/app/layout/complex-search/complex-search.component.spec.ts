@@ -10,7 +10,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
-import { ComplexSearchComponent } from './complex-search.component';
+import { ComplexSearchComponent, saveData, fieldAttr } from './complex-search.component';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component'
 import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component"
 import { DebugElement, Component, ViewChild } from '@angular/core';
@@ -20,6 +20,7 @@ import { Group } from '../../services/models/group/group';
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
+  let saveData: saveData
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -120,6 +121,48 @@ describe('ComplexSearchComponent', () => {
 
     expect(itemBoxDeArray.length).toBe(2);
   });
+
+  fit('should create save data', () => {
+
+    component.searchComponent.isShowDisplayItem = true;
+    component.searchComponent.isShowOrderCondition = true;
+    component.searchComponent.isShowSaveCondition = true;
+    fixture.detectChanges();
+
+    const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
+    const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
+    patternNameEl.value = 'sample pattern name';
+    patternNameEl.dispatchEvent(new Event('input'));
+    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+    const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
+    isDiscloseEl.click();
+    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+    const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
+    const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
+    groupEl0.click();
+    groupEl1.click();
+
+    component.searchComponent.pushSearchCondition();
+    component.searchComponent.pushOrderCondition();
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('id1');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
+    (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('id2');
+    (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
+    fixture.detectChanges();
+
+    saveData = component.searchComponent.createSaveData();
+    expect(saveData.patternName).toBe('sample pattern name');
+    expect(saveData.isDisclose).toBe(true);
+    expect(saveData.discloseGroups).toEqual(['id1', 'id2']);
+    expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.searchConditionList[0]);
+    expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
+    expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
+    expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
+    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.orderConditionList[1]);
+    expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
+  });
 });
 
 @Component({
@@ -151,14 +194,16 @@ class TestHostComponent {
       fieldType: 'string',
     },
   ];
-  searchConditionList =  [
+  searchConditionList: fieldAttr[] =  [
     {
+      id: 'id1',
       entityName: 'aaa',
       fieldName: 'AAA',
       viewValue: 'aaa-AAA',
       fieldType: 'number',
     },
     {
+      id: 'id2',
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',
@@ -167,12 +212,14 @@ class TestHostComponent {
   ];
   orderConditionList =  [
     {
+      id: 'id1',
       entityName: 'aaa',
       fieldName: 'AAA',
       viewValue: 'aaa-AAA',
       fieldType: 'number',
     },
     {
+      id: 'id2',
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',
@@ -181,8 +228,16 @@ class TestHostComponent {
   ]
   groupList: Group[] = [
     {
-      id: 'jdjdjdjdj',
+      id: 'id1',
       name: 'name1',
-    }
+    },
+    {
+      id: 'id2',
+      name: 'name2',
+    },
+    {
+      id: 'id3',
+      name: 'name3',
+    },
   ];
 }
