@@ -5,11 +5,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { By } from '@angular/platform-browser';
-import { AlertDiarogComponent, DialogData } from './alert-diarog.component';
+import { AlertDialogComponent, DialogData } from './alert-dialog.component';
 
 describe('AlertDiarogComponent', () => {
-  let component: AlertDiarogComponent;
-  let fixture: ComponentFixture<AlertDiarogComponent>;
+  let component: AlertDialogComponent;
+  let fixture: ComponentFixture<AlertDialogComponent>;
   let debugElement: DebugElement;
 
   beforeEach( async( () => {
@@ -19,7 +19,7 @@ describe('AlertDiarogComponent', () => {
         MatDialogModule,
         NoopAnimationsModule,
       ],
-      declarations: [ AlertDiarogComponent ],
+      declarations: [ AlertDialogComponent ],
       providers: [
         {
           provide: MatDialogRef,
@@ -34,7 +34,7 @@ describe('AlertDiarogComponent', () => {
   }));
 
   beforeEach( () => {
-    fixture = TestBed.createComponent(AlertDiarogComponent);
+    fixture = TestBed.createComponent(AlertDialogComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 

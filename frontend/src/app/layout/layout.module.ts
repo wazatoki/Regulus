@@ -21,7 +21,7 @@ import { CancelComponent } from './form/buttons/cancel/cancel.component';
 import { AutofocusDirective } from '../directive/autofocus.directive';
 import { SubmitComponent } from './form/buttons/submit/submit.component';
 import { ClearComponent } from './form/buttons/clear/clear.component';
-import { AlertDiarogComponent } from './dialog/alert-diarog/alert-diarog.component';
+import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 import { NoticeDialogComponent } from './dialog/notice-dialog/notice-dialog.component';
 import { CreateComponent } from './form/buttons/create/create.component';
 import { DeleteComponent } from './form/buttons/delete/delete.component';
@@ -29,6 +29,7 @@ import { UpdateComponent } from './form/buttons/update/update.component';
 import { ComplexSearchConditionItemComponent } from './complex-search/complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from './complex-search/complex-search-order-item/complex-search-order-item.component';
 import { ComplexSearchComponent } from './complex-search/complex-search.component';
+import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import { ComplexSearchComponent } from './complex-search/complex-search.componen
     CancelComponent,
     SubmitComponent,
     ClearComponent,
-    AlertDiarogComponent,
+    AlertDialogComponent,
     NoticeDialogComponent,
     CreateComponent,
     DeleteComponent,
@@ -49,6 +50,7 @@ import { ComplexSearchComponent } from './complex-search/complex-search.componen
     ComplexSearchConditionItemComponent,
     ComplexSearchOrderItemComponent,
     ComplexSearchComponent,
+    ComplexSearchDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -74,7 +76,7 @@ import { ComplexSearchComponent } from './complex-search/complex-search.componen
     CancelComponent,
     SubmitComponent,
     ClearComponent,
-    AlertDiarogComponent,
+    AlertDialogComponent,
     NoticeDialogComponent,
     CreateComponent,
     DeleteComponent,
