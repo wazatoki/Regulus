@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item.component';
-import { fieldAttr } from '../complex-search.component';
+import { FieldAttr } from '../../../services/models/search/field-attr';
 import { DeleteComponent } from '../../form/buttons/delete/delete.component';
 
 import { FormsModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
@@ -152,7 +152,7 @@ class TestHostComponent {
     operatorSelected: new FormControl(''),
   });
 
-  fields: fieldAttr[] = [
+  fields: FieldAttr[] = [
     {
       id: 'id1',
       entityName: 'aaa',

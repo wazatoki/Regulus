@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { fieldAttr } from '../complex-search.component'
+import { FieldAttr } from '../../../services/models/search/field-attr';
 
 @Component({
   selector: 'app-complex-search-condition-item',
@@ -41,7 +41,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   matchTypes: matchTypeAttr[];
-  @Input() fields: fieldAttr[];
+  @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
   @Output() onDelete = new EventEmitter();
 

@@ -1,0 +1,9 @@
+import { FieldAttr } from './field-attr';
+import { SearchCondition } from './search-condition';
+import { OrderCondition } from './order-condition';
+
+export interface ConditionData {
+    displayItemList: FieldAttr[],
+    searchConditionList: SearchCondition[],
+    orderConditionList: OrderCondition[],
+}

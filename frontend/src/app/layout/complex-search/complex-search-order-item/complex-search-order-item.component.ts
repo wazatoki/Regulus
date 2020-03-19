@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { fieldAttr } from '../complex-search.component'
+import { FieldAttr } from '../../../services/models/search/field-attr';
 
 @Component({
   selector: 'app-complex-search-order-item',
@@ -22,7 +22,7 @@ export class ComplexSearchOrderItemComponent implements OnInit {
     return this.formGroup.get('orderFieldKeyWordSelected') as FormControl;
   }
 
-  @Input() fields: fieldAttr[];
+  @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
   @Output() onDelete = new EventEmitter();
 

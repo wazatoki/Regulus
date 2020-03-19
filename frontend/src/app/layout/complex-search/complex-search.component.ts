@@ -2,6 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Group } from '../../services/models/group/group';
+import { FieldAttr } from '../../services/models/search/field-attr';
+import { ConditionData } from '../../services/models/search/condition-data';
+import { SearchCondition } from "../../services/models/search/search-condition";
+import { OrderCondition } from "../../services/models/search/order-condition";
 
 @Component({
   selector: 'app-complex-search',
@@ -12,18 +16,18 @@ export class ComplexSearchComponent implements OnInit {
 
   form: FormGroup;
 
-  selectedDisplayItemArray: fieldAttr[];
-  fromDisplayItemArray: fieldAttr[];
+  selectedDisplayItemArray: FieldAttr[];
+  fromDisplayItemArray: FieldAttr[];
 
-  @Input() displayItemList: fieldAttr[] = [];
-  @Input() searchConditionList: fieldAttr[] = [];
-  @Input() orderConditionList: fieldAttr[] = [];
+  @Input() displayItemList: FieldAttr[] = [];
+  @Input() searchConditionList: FieldAttr[] = [];
+  @Input() orderConditionList: FieldAttr[] = [];
   @Input() isShowDisplayItem: boolean = false;
   @Input() isShowOrderCondition: boolean = false;
   @Input() isShowSaveCondition: boolean = false;
   @Input() groupList: Group[] = [];
   @Output() onSave = new EventEmitter<saveData>();
-  @Output() onSearch = new EventEmitter<conditionData>();
+  @Output() onSearch = new EventEmitter<ConditionData>();
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -61,7 +65,7 @@ export class ComplexSearchComponent implements OnInit {
     this.selectedDisplayItemArray = [];
   }
 
-  displayItemDrop(event: CdkDragDrop<fieldAttr[]>) {
+  displayItemDrop(event: CdkDragDrop<FieldAttr[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -113,7 +117,7 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSearch(): void {
-    const data: conditionData = this.createSearchData();
+    const data: ConditionData = this.createSearchData();
     this.onSearch.emit(data);
   }
 
@@ -136,16 +140,16 @@ export class ComplexSearchComponent implements OnInit {
     }
   }
 
-  createSearchCondition(): searchCondition[] {
-    const result: searchCondition[] = [];
+  createSearchCondition(): SearchCondition[] {
+    const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
-      let field: fieldAttr;
+      let field: FieldAttr;
       this.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
-      const condition: searchCondition = {
+      const condition: SearchCondition = {
         field: field,
         conditionValue: formGroup.get('conditionValue').value,
         matchType: formGroup.get('matchTypeSelected').value,
@@ -159,7 +163,7 @@ export class ComplexSearchComponent implements OnInit {
   createOrderCondition(): orderCondition[] {
     const result: orderCondition[] = [];
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
-      let field: fieldAttr;
+      let field: FieldAttr;
       this.orderConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('orderFieldSelected').value) {
           field = v;
@@ -193,8 +197,8 @@ export class ComplexSearchComponent implements OnInit {
     return data;
   }
 
-  createSearchData(): conditionData {
-    const data: conditionData = this.initConditionDataObj();
+  createSearchData(): ConditionData {
+    const data: ConditionData = this.initConditionDataObj();
 
     if (this.isShowDisplayItem) {
       data.displayItemList = this.selectedDisplayItemArray;
@@ -211,38 +215,17 @@ export class ComplexSearchComponent implements OnInit {
 
 }// end of class
 
-export interface fieldAttr {
-  id: string,
-  entityName: string,
-  fieldName: string,
-  viewValue: string,
-  fieldType: string,
-}
-
 export interface saveData {
   patternName: string;
   category: string;
   isDisclose: boolean;
   discloseGroups: string[];
   ownerID: string;
-  conditionData: conditionData;
-}
-
-interface conditionData {
-  displayItemList: fieldAttr[],
-  searchConditionList: searchCondition[],
-  orderConditionList: orderCondition[],
-}
-
-interface searchCondition {
-  field: fieldAttr,
-  conditionValue: string,
-  matchType: string,
-  operator: string,
+  conditionData: ConditionData;
 }
 
 interface orderCondition {
-  orderField: fieldAttr,
+  orderField: FieldAttr,
   orderFieldKeyWord: string,
 }
 

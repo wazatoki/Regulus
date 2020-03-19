@@ -10,7 +10,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
-import { ComplexSearchComponent, saveData, fieldAttr } from './complex-search.component';
+import { ComplexSearchComponent, saveData } from './complex-search.component';
+import { FieldAttr } from '../../services/models/search/field-attr';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component";
 import { DeleteComponent } from '../form/buttons/delete/delete.component';
@@ -124,7 +125,7 @@ describe('ComplexSearchComponent', () => {
     expect(itemBoxDeArray.length).toBe(2);
   });
 
-  fit('should create save data', () => {
+  it('should create save data', () => {
 
     component.searchComponent.isShowDisplayItem = true;
     component.searchComponent.isShowOrderCondition = true;
@@ -254,7 +255,7 @@ class TestHostComponent {
       fieldType: 'string',
     },
   ];
-  searchConditionList: fieldAttr[] =  [
+  searchConditionList: FieldAttr[] =  [
     {
       id: 'id1',
       entityName: 'aaa',
