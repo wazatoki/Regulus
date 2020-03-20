@@ -77,7 +77,7 @@ describe('ComplexSearchDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     component.openDialog();
     expect(component).toBeTruthy();
   });

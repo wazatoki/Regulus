@@ -10,21 +10,25 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
-import { ComplexSearchComponent, saveData } from './complex-search.component';
+import { ComplexSearchComponent } from './complex-search.component';
 import { FieldAttr } from '../../services/models/search/field-attr';
+import { SaveData } from '../../services/models/search/save-data';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component";
 import { DeleteComponent } from '../form/buttons/delete/delete.component';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Group } from '../../services/models/group/group';
+import { ComplexSearchService } from '../../services/share/complex-search.service';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
-  let saveData: saveData
+  let saveData: SaveData
 
   beforeEach(async(() => {
+    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService', ['orderComplexSearchSave','orderComplexSearch']);
+
     TestBed.configureTestingModule({
       declarations: [
         ComplexSearchComponent,
@@ -52,6 +56,10 @@ describe('ComplexSearchComponent', () => {
           provide: FormBuilder,
           useValue: new FormBuilder()
         },
+        {
+          provide: ComplexSearchService,
+          useValue: complexSearchServiceSpy
+        }
       ],
     })
       .compileComponents();
@@ -124,6 +132,39 @@ describe('ComplexSearchComponent', () => {
 
     expect(itemBoxDeArray.length).toBe(2);
   });
+
+  it('should click save button', () => {
+
+    const spy: jasmine.SpyObj<ComplexSearchService> = TestBed.get(ComplexSearchService);
+    component.searchComponent.isShowDisplayItem = true;
+    component.searchComponent.isShowOrderCondition = true;
+    component.searchComponent.isShowSaveCondition = true;
+    fixture.detectChanges();
+
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-condition-save-button"));
+    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    buttonEl.click();
+    fixture.detectChanges();
+
+    expect(spy.orderComplexSearchSave).toHaveBeenCalled();
+  });
+
+  it('should click search button', () => {
+
+    const spy: jasmine.SpyObj<ComplexSearchService> = TestBed.get(ComplexSearchService);
+    component.searchComponent.isShowDisplayItem = true;
+    component.searchComponent.isShowOrderCondition = true;
+    component.searchComponent.isShowSaveCondition = true;
+    fixture.detectChanges();
+
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-button"));
+    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    buttonEl.click();
+    fixture.detectChanges();
+
+    expect(spy.orderComplexSearch).toHaveBeenCalled();
+  });
+
 
   it('should create save data', () => {
 

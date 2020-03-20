@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Group } from '../../services/models/group/group';
 import { FieldAttr } from '../../services/models/search/field-attr';
 import { ConditionData } from '../../services/models/search/condition-data';
-import { SearchCondition } from "../../services/models/search/search-condition";
-import { OrderCondition } from "../../services/models/search/order-condition";
+import { SearchCondition } from '../../services/models/search/search-condition';
+import { OrderCondition } from '../../services/models/search/order-condition';
+import { SaveData } from '../../services/models/search/save-data';
+import { ComplexSearchService } from '../../services/share/complex-search.service';
 
 @Component({
   selector: 'app-complex-search',
@@ -26,8 +28,6 @@ export class ComplexSearchComponent implements OnInit {
   @Input() isShowOrderCondition: boolean = false;
   @Input() isShowSaveCondition: boolean = false;
   @Input() groupList: Group[] = [];
-  @Output() onSave = new EventEmitter<saveData>();
-  @Output() onSearch = new EventEmitter<ConditionData>();
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -45,7 +45,9 @@ export class ComplexSearchComponent implements OnInit {
     return this.saveConditions.get('discloseGroups') as FormArray;
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private complexSearchDataShereService: ComplexSearchService) {
+
     this.form = this.fb.group({
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
@@ -112,16 +114,16 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSave() {
-    const data: saveData = this.createSaveData();
-    this.onSave.emit(data);
+    const data: SaveData = this.createSaveData();
+    this.complexSearchDataShereService.orderComplexSearchSave(data);
   }
 
   clickSearch(): void {
     const data: ConditionData = this.createSearchData();
-    this.onSearch.emit(data);
+    this.complexSearchDataShereService.orderComplexSearch(data);
   }
 
-  initSaveDataObj(): saveData {
+  initSaveDataObj(): SaveData {
     return {
       patternName: '',
       category: '',
@@ -160,8 +162,8 @@ export class ComplexSearchComponent implements OnInit {
     return result;
   }
 
-  createOrderCondition(): orderCondition[] {
-    const result: orderCondition[] = [];
+  createOrderCondition(): OrderCondition[] {
+    const result: OrderCondition[] = [];
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
       this.orderConditionList.forEach((v, i) => {
@@ -169,7 +171,7 @@ export class ComplexSearchComponent implements OnInit {
           field = v;
         }
       });
-      const condition: orderCondition = {
+      const condition: OrderCondition = {
         orderField: field,
         orderFieldKeyWord: formGroup.get('orderFieldKeyWordSelected').value,
       }
@@ -178,9 +180,9 @@ export class ComplexSearchComponent implements OnInit {
     return result;
   }
 
-  createSaveData(): saveData {
+  createSaveData(): SaveData {
 
-    const data: saveData = this.initSaveDataObj();
+    const data: SaveData = this.initSaveDataObj();
 
     if (this.isShowSaveCondition) {
       data.patternName = this.saveConditions.get('patternName').value;
@@ -214,19 +216,3 @@ export class ComplexSearchComponent implements OnInit {
   }
 
 }// end of class
-
-export interface saveData {
-  patternName: string;
-  category: string;
-  isDisclose: boolean;
-  discloseGroups: string[];
-  ownerID: string;
-  conditionData: ConditionData;
-}
-
-interface orderCondition {
-  orderField: FieldAttr,
-  orderFieldKeyWord: string,
-}
-
-
