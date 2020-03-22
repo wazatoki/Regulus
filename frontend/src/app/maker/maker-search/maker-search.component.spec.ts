@@ -5,6 +5,7 @@ import { LayoutModule } from '../../layout/layout.module';
 import { MakerSearchComponent } from './maker-search.component';
 import { MakerService } from '../../services/api/maker.service';
 import { MakerCondition } from '../../services/models/maker/maker-condition';
+import { ComplexSearchService } from '../../services/share/complex-search.service';
 import { SearchComponent } from 'src/app/layout/search/search.component';
 import { Maker } from '../../services/models/maker/maker';
 import { of } from 'rxjs';
@@ -27,7 +28,7 @@ describe('MakerSearchComponent', () => {
       imports: [ LayoutModule ],
       providers: [
         { provide: MakerService, useValue: spy },
-        MakerCondition,
+        ComplexSearchService,
       ],
     })
     .compileComponents();

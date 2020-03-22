@@ -4,8 +4,8 @@ import { MakerService } from './maker.service';
 import { HttpService } from '../http.service'
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Maker} from '../models/maker/maker';
-import { MakerCondition } from '../models/maker/maker-condition'
+import { Maker } from '../models/maker/maker';
+import { ConditionData } from '../models/search/condition-data';
 import { of } from 'rxjs';
 
 describe('MakerService', () => {
@@ -15,21 +15,21 @@ describe('MakerService', () => {
   let httpServiceSpy: jasmine.SpyObj<HttpService>;
 
   beforeEach(() => {
-  
+
     const spy = jasmine.createSpyObj('HttpService', ['get', 'post', 'put', 'delete']);
 
-      TestBed.configureTestingModule(
-        {
-          imports: [
-            HttpClientTestingModule,
-          ],
-          providers: [
-            { provide: HttpService, useValue: spy },
-          ]
-        }
-      )
+    TestBed.configureTestingModule(
+      {
+        imports: [
+          HttpClientTestingModule,
+        ],
+        providers: [
+          { provide: HttpService, useValue: spy },
+        ]
+      }
+    )
 
-      httpTestingController = TestBed.get(HttpTestingController);
+    httpTestingController = TestBed.get(HttpTestingController);
   });
 
   afterEach(() => {
@@ -48,10 +48,10 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
-  
+
     let result: Maker;
 
-    makerService.findById('testid').subscribe( data => {
+    makerService.findById('testid').subscribe(data => {
       result = data
     })
 
@@ -68,26 +68,50 @@ describe('MakerService', () => {
       { id: 'testid2', name: 'Test Maker2' },
     ];
     makerService = TestBed.get(MakerService);
-    const makerCondition: MakerCondition = TestBed.get(MakerCondition);
+    const conditionData: ConditionData = {
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [
+        {
+          field: {
+            id: 'fieldid1',
+            entityName: 'maker',
+            fieldName: 'id',
+            viewValue: 'id',
+            fieldType: 'string',
+          },
+          conditionValue: 'testid',
+          matchType: 'match',
+          operator: 'and',
+        },
+        {
+          field: {
+            id: 'fieldid2',
+            entityName: 'maker',
+            fieldName: 'name',
+            viewValue: 'name',
+            fieldType: 'string',
+          },
+          conditionValue: 'Maker',
+          matchType: 'match',
+          operator: 'and',
+        }
+      ],
+      orderConditionList: [],
+    };
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
-  
+
     let result: Maker[];
 
-    makerCondition.id = 'testid';
-    makerCondition.name='Maker';
-
-    makerService.findByCondition(makerCondition).subscribe( data => {
+    makerService.findByCondition(conditionData).subscribe(data => {
       result = data
     })
 
     expect(result).toEqual(testData);
 
-    const condition: Map<string, string> = new Map();
-    condition.set('id', 'testid');
-    condition.set('name', 'Maker');
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', condition);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', conditionData);
   });
 
   it('findAll method', () => {
@@ -99,10 +123,10 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
-  
+
     let result: Maker[];
 
-    makerService.findAll().subscribe( data => {
+    makerService.findAll().subscribe(data => {
       result = data
     })
 
@@ -116,10 +140,10 @@ describe('MakerService', () => {
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.post.and.returnValue(of(resultData));
-  
+
     let result: Maker;
 
-    makerService.add(testData).subscribe( data => {
+    makerService.add(testData).subscribe(data => {
       result = data
     })
 
@@ -133,10 +157,10 @@ describe('MakerService', () => {
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.put.and.returnValue(of(resultData));
-  
+
     let result: Maker;
 
-    makerService.update(testData).subscribe( data => {
+    makerService.update(testData).subscribe(data => {
       result = data
     })
 
@@ -150,10 +174,10 @@ describe('MakerService', () => {
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.delete.and.returnValue(of(resultData));
-  
+
     let result: Maker[];
 
-    makerService.delete(testData).subscribe( data => {
+    makerService.delete(testData).subscribe(data => {
       result = data
     })
 

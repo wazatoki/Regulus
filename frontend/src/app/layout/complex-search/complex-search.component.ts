@@ -123,25 +123,6 @@ export class ComplexSearchComponent implements OnInit {
     this.complexSearchDataShereService.orderComplexSearch(data);
   }
 
-  initSaveDataObj(): SaveData {
-    return {
-      patternName: '',
-      category: '',
-      isDisclose: false,
-      discloseGroups: [],
-      ownerID: '',
-      conditionData: this.initConditionDataObj(),
-    };
-  }
-
-  initConditionDataObj() {
-    return {
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    }
-  }
-
   createSearchCondition(): SearchCondition[] {
     const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
@@ -182,7 +163,7 @@ export class ComplexSearchComponent implements OnInit {
 
   createSaveData(): SaveData {
 
-    const data: SaveData = this.initSaveDataObj();
+    const data: SaveData = this.complexSearchDataShereService.initSaveDataObj();
 
     if (this.isShowSaveCondition) {
       data.patternName = this.saveConditions.get('patternName').value;
@@ -200,7 +181,7 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   createSearchData(): ConditionData {
-    const data: ConditionData = this.initConditionDataObj();
+    const data: ConditionData = this.complexSearchDataShereService.initConditionDataObj();
 
     if (this.isShowDisplayItem) {
       data.displayItemList = this.selectedDisplayItemArray;

@@ -19,7 +19,7 @@ import { MakerMasterComponent } from './maker-master/maker-master.component';
 import { MakerSearchComponent } from './maker-search/maker-search.component';
 import { MakerInputFormComponent } from './maker-input-form/maker-input-form.component';
 import { NoticeDialogComponent } from '../layout/dialog/notice-dialog/notice-dialog.component';
-import { MakerComplexSearchComponent } from './maker-complex-search/maker-complex-search.component';
+import { ComplexSearchDialogComponent } from '../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 
 
 @NgModule({
@@ -27,7 +27,6 @@ import { MakerComplexSearchComponent } from './maker-complex-search/maker-comple
     MakerMasterComponent,
     MakerSearchComponent,
     MakerInputFormComponent,
-    MakerComplexSearchComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +48,7 @@ import { MakerComplexSearchComponent } from './maker-complex-search/maker-comple
   entryComponents: [
     MakerInputFormComponent,
     NoticeDialogComponent,
+    ComplexSearchDialogComponent,
   ]
 })
 export class MakerModule { }

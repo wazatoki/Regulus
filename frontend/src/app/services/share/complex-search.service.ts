@@ -15,6 +15,26 @@ export class ComplexSearchService {
   complexSearchOrdered$ = this.complexSearchOrderedSouce.asObservable();
   complexSearchSaveOrdered$ = this.complexSearchSaveOrderedSouce.asObservable();
 
+  initSaveDataObj(): SaveData {
+    return {
+      patternName: '',
+      category: '',
+      isDisclose: false,
+      discloseGroups: [],
+      ownerID: '',
+      conditionData: this.initConditionDataObj(),
+    };
+  }
+
+  initConditionDataObj(): ConditionData {
+    return {
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    };
+  }
+
   orderComplexSearch(data: ConditionData){
     this.complexSearchOrderedSouce.next(data);
   }
