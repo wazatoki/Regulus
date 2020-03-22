@@ -8,7 +8,8 @@ import { MakerCondition } from '../../services/models/maker/maker-condition';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
 import { SearchComponent } from 'src/app/layout/search/search.component';
 import { Maker } from '../../services/models/maker/maker';
-import { of } from 'rxjs';
+import { of,Subject } from 'rxjs';
+import { ConditionData } from 'src/app/services/models/search/condition-data';
 
 describe('MakerSearchComponent', () => {
   let component: MakerSearchComponent;
@@ -23,7 +24,7 @@ describe('MakerSearchComponent', () => {
 
     const spy = jasmine.createSpyObj('MakerService', ['findByCondition']);
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearchSave','orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj']);
+    ['orderComplexSearchSave','orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
       declarations: [ MakerSearchComponent ],
@@ -57,6 +58,8 @@ describe('MakerSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     });
+    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
+
     fixture = TestBed.createComponent(MakerSearchComponent);
     component = fixture.componentInstance;
     elementd = fixture.debugElement; 

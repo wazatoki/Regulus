@@ -1,38 +1,59 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Maker } from '../../services/models/maker/maker';
 import { MakerService } from '../../services/api/maker.service';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
-import { ConditionData } from '../../services/models/search/condition-data';
-import { MakerCondition } from '../../services/models/maker/maker-condition';
+import { ConditionData, mapCondition } from '../../services/models/search/condition-data';
+import { Subscription }   from 'rxjs';
 
 @Component({
   selector: 'app-maker-search',
   templateUrl: './maker-search.component.html',
   styleUrls: ['./maker-search.component.css']
 })
-export class MakerSearchComponent implements OnInit {
+export class MakerSearchComponent implements OnInit, OnDestroy {
 
   private condition: ConditionData;
+  private subscription: Subscription;
+
+  @Output() fetched: EventEmitter<Maker[]> = new EventEmitter();
 
   constructor(
     private makerService: MakerService,
     private complexSearchService: ComplexSearchService) {
+
       this.condition = this.complexSearchService.initConditionDataObj();
+
+      // 検索条件設定ダイアログで検索ボタンをクリックしたら検索条件を変更して検索を実行する。
+      this.subscription = this.complexSearchService.complexSearchOrdered$.subscribe(
+        (data: ConditionData) => {
+          mapCondition(data, this.condition);
+          this.search();
+        }
+      );
+
     }
 
   ngOnInit() {}
 
-  @Output() fetched: EventEmitter<Maker[]> = new EventEmitter();
+  ngOnDestroy() {
+    // prevent memory leak when component destroyed
+    this.subscription.unsubscribe();
+  }
 
   onSearch(searchStrings: string) {
 
     const splitString = '--sprit--string--';
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
     this.condition.searchStrings = searchStrings.replace(' ', splitString).replace('　', splitString).split(splitString);
+    this.search();
+  }
+
+  search() {
     this.makerService.findByCondition(this.condition).subscribe(
       makers => {
         this.fetched.emit(makers);
       }
     );
   }
+
 }
