@@ -24,6 +24,7 @@ import { ComplexSearchService } from '../../services/share/complex-search.servic
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
+  let spy: jasmine.SpyObj<ComplexSearchService>;
   let saveData: SaveData
 
   beforeEach(async(() => {
@@ -70,6 +71,26 @@ describe('ComplexSearchComponent', () => {
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    spy = TestBed.get(ComplexSearchService);
+    spy.initSaveDataObj.and.returnValue({
+      patternName: '',
+      category: '',
+      isDisclose: false,
+      discloseGroups: [],
+      ownerID: '',
+      conditionData: {
+        searchStrings: [],
+        displayItemList: [],
+        searchConditionList: [],
+        orderConditionList: [],
+      },
+    });
+    spy.initConditionDataObj.and.returnValue({
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    });
   });
 
   it('should create', () => {
@@ -135,27 +156,6 @@ describe('ComplexSearchComponent', () => {
   });
 
   it('should click save button', () => {
-
-    const spy: jasmine.SpyObj<ComplexSearchService> = TestBed.get(ComplexSearchService);
-    spy.initSaveDataObj.and.returnValue({
-      patternName: '',
-      category: '',
-      isDisclose: false,
-      discloseGroups: [],
-      ownerID: '',
-      conditionData: {
-        searchStrings: [],
-        displayItemList: [],
-        searchConditionList: [],
-        orderConditionList: [],
-      },
-    });
-    spy.initConditionDataObj.and.returnValue({
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    });
     component.searchComponent.isShowDisplayItem = true;
     component.searchComponent.isShowOrderCondition = true;
     component.searchComponent.isShowSaveCondition = true;
@@ -171,13 +171,6 @@ describe('ComplexSearchComponent', () => {
 
   it('should click search button', () => {
 
-    const spy: jasmine.SpyObj<ComplexSearchService> = TestBed.get(ComplexSearchService);
-    spy.initConditionDataObj.and.returnValue({
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    });
     component.searchComponent.isShowDisplayItem = true;
     component.searchComponent.isShowOrderCondition = true;
     component.searchComponent.isShowSaveCondition = true;

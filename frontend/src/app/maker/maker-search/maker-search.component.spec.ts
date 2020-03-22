@@ -16,25 +16,47 @@ describe('MakerSearchComponent', () => {
   let element: HTMLElement;
   let fixture: ComponentFixture<MakerSearchComponent>;
   let makerServiceSpy: jasmine.SpyObj<MakerService>;
-  let makerCondition: MakerCondition;
+  let complexSearchServiceSpy:jasmine.SpyObj<ComplexSearchService>;
 
 
   beforeEach(async(() => {
 
     const spy = jasmine.createSpyObj('MakerService', ['findByCondition']);
+    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
+    ['orderComplexSearchSave','orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj']);
 
     TestBed.configureTestingModule({
       declarations: [ MakerSearchComponent ],
       imports: [ LayoutModule ],
       providers: [
         { provide: MakerService, useValue: spy },
-        ComplexSearchService,
+        { provide: ComplexSearchService, useValue: complexSearchServiceSpy}
       ],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    complexSearchServiceSpy = TestBed.get(ComplexSearchService);
+    complexSearchServiceSpy.initSaveDataObj.and.returnValue({
+      patternName: '',
+      category: '',
+      isDisclose: false,
+      discloseGroups: [],
+      ownerID: '',
+      conditionData: {
+        searchStrings: [],
+        displayItemList: [],
+        searchConditionList: [],
+        orderConditionList: [],
+      },
+    });
+    complexSearchServiceSpy.initConditionDataObj.and.returnValue({
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    });
     fixture = TestBed.createComponent(MakerSearchComponent);
     component = fixture.componentInstance;
     elementd = fixture.debugElement; 
@@ -48,17 +70,25 @@ describe('MakerSearchComponent', () => {
 
   it('should onSearch set keywords to makerCondition.searchStrings', () => {
     makerServiceSpy = TestBed.get(MakerService);
-    makerCondition = TestBed.get(MakerCondition);
+    complexSearchServiceSpy = TestBed.get(ComplexSearchService);
     const testData: Maker[] = [
       { id: 'testid1', name: 'Test Maker1' },
       { id: 'testid2', name: 'Test Maker2' },
     ];
     const stubValue = of(testData)
+    const condition = {
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    };
     makerServiceSpy.findByCondition.and.returnValue(stubValue);
+    complexSearchServiceSpy.initConditionDataObj.and.returnValue(condition);
     component.fetched.subscribe( (data: Maker[]) => {
       expect(data).toBe(testData);
     })
     component.onSearch('search word');
-    expect(makerCondition.searchStrings).toEqual( 'search word' );
+    condition.searchStrings = ['search', 'word']
+    expect(makerServiceSpy.findByCondition).toHaveBeenCalledWith(condition);
   });
 });

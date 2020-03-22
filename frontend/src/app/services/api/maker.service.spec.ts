@@ -111,7 +111,9 @@ describe('MakerService', () => {
 
     expect(result).toEqual(testData);
 
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', conditionData);
+    const data: Map<string, string> = new Map();
+    data.set('condition',JSON.stringify(conditionData));
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', data);
   });
 
   it('findAll method', () => {

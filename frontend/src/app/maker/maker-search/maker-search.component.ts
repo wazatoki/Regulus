@@ -16,19 +16,19 @@ export class MakerSearchComponent implements OnInit {
 
   constructor(
     private makerService: MakerService,
-    private complexSearchService: ComplexSearchService) { }
+    private complexSearchService: ComplexSearchService) {
+      this.condition = this.complexSearchService.initConditionDataObj();
+    }
 
-  ngOnInit() {
-    this.condition = this.complexSearchService.initConditionDataObj();
-  }
+  ngOnInit() {}
 
   @Output() fetched: EventEmitter<Maker[]> = new EventEmitter();
 
   onSearch(searchStrings: string) {
 
     const splitString = '--sprit--string--';
-    // 全角文字を一旦区切り文字列に置き換えて配列に分割
-    this.condition.searchStrings = searchStrings.replace('　', splitString).split(splitString);
+    // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
+    this.condition.searchStrings = searchStrings.replace(' ', splitString).replace('　', splitString).split(splitString);
     this.makerService.findByCondition(this.condition).subscribe(
       makers => {
         this.fetched.emit(makers);
