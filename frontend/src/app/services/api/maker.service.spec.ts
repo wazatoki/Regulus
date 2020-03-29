@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MakerService } from './maker.service';
-import { HttpService } from '../http.service'
+import { HttpService } from '../http.service';
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Maker } from '../models/maker/maker';
+import { ComplexSearchItems } from '../models/search/complex-search-items';
 import { ConditionData } from '../models/search/condition-data';
 import { of } from 'rxjs';
 
@@ -185,6 +186,79 @@ describe('MakerService', () => {
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.delete).toHaveBeenCalledWith('maker/delete', testData);
+  });
+
+  it('findComplexSearchItems method', () => {
+    const testData: ComplexSearchItems = {
+      displayItemList: [
+        {
+          id: 'id1',
+          entityName: 'aaa',
+          fieldName: 'AAA',
+          viewValue: 'aaa-AAA',
+          fieldType: 'number',
+        },
+        {
+          id: 'id2',
+          entityName: 'bbb',
+          fieldName: 'BBB',
+          viewValue: 'bbb-BBB',
+          fieldType: 'string',
+        },
+      ],
+      searchConditionList: [
+        {
+          id: 'id1',
+          entityName: 'aaa',
+          fieldName: 'AAA',
+          viewValue: 'aaa-AAA',
+          fieldType: 'number',
+        },
+        {
+          id: 'id2',
+          entityName: 'bbb',
+          fieldName: 'BBB',
+          viewValue: 'bbb-BBB',
+          fieldType: 'string',
+        },
+      ],
+      orderConditionList: [
+        {
+          id: 'id1',
+          entityName: 'aaa',
+          fieldName: 'AAA',
+          viewValue: 'aaa-AAA',
+          fieldType: 'number',
+        },
+        {
+          id: 'id2',
+          entityName: 'bbb',
+          fieldName: 'BBB',
+          viewValue: 'bbb-BBB',
+          fieldType: 'string',
+        },
+      ],
+      isShowDisplayItem: true,
+      isShowOrderCondition: true,
+      isShowSaveCondition: true,
+      groupList: [
+        { id: 'id1', name: 'name1' },
+        { id: 'id2', name: 'name2' },
+      ],
+    };
+    makerService = TestBed.get(MakerService);
+    httpServiceSpy = TestBed.get(HttpService);
+    const stubValue = of(testData)
+    httpServiceSpy.get.and.returnValue(stubValue);
+
+    let result: ComplexSearchItems;
+
+    makerService.findComplexSearchItems().subscribe(data => {
+      result = data
+    })
+
+    expect(result).toEqual(testData);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker/ComplexSearchItems');
   });
 
 });

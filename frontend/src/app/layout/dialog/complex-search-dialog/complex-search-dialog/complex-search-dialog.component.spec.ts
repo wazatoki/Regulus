@@ -93,7 +93,6 @@ class TestHostComponent {
   openDialog() {
     const dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
       data: {
-        title: 'title1',
         displayItemList: [
           {
             id: 'id1',

@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { LayoutModule } from '../../layout/layout.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
 import { MakerSearchComponent } from './maker-search.component';
 import { MakerService } from '../../services/api/maker.service';
 import { MakerCondition } from '../../services/models/maker/maker-condition';
@@ -28,7 +30,11 @@ describe('MakerSearchComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ MakerSearchComponent ],
-      imports: [ LayoutModule ],
+      imports: [
+        LayoutModule,
+        MatButtonModule,
+        FlexLayoutModule,
+      ],
       providers: [
         { provide: MakerService, useValue: spy },
         { provide: ComplexSearchService, useValue: complexSearchServiceSpy}

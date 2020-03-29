@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NoticeDialogComponent } from '../../layout/dialog/notice-dialog/notice-dialog.component';
 import { MakerService } from '../../services/api/maker.service';
 import { Maker } from '../../services/models/maker/maker';
-import { MakerCondition } from '../../services/models/maker/maker-condition';
 import { MakerInputFormComponent } from '../maker-input-form/maker-input-form.component';
 
 @Component({
@@ -26,7 +25,6 @@ export class MakerMasterComponent implements OnInit {
 
   constructor(
     public makerService: MakerService,
-    private makerCondition: MakerCondition,
     public dialog: MatDialog) {
       
     const initialSelection = [];

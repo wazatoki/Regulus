@@ -5,6 +5,10 @@ import { ComplexSearchService } from '../../services/share/complex-search.servic
 import { ConditionData, mapCondition } from '../../services/models/search/condition-data';
 import { Subscription }   from 'rxjs';
 
+import { MatDialog } from '@angular/material/dialog';
+import { ComplexSearchDialogComponent } from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
+import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
+
 @Component({
   selector: 'app-maker-search',
   templateUrl: './maker-search.component.html',
@@ -19,7 +23,8 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private makerService: MakerService,
-    private complexSearchService: ComplexSearchService) {
+    private complexSearchService: ComplexSearchService,
+    private dialog: MatDialog) {
 
       this.condition = this.complexSearchService.initConditionDataObj();
 
@@ -38,6 +43,15 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // prevent memory leak when component destroyed
     this.subscription.unsubscribe();
+  }
+
+  openComplexSearch(){
+    this.makerService.findComplexSearchItems().subscribe( (data: ComplexSearchItems) => {
+      const dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
+        width: '500px',
+        data: data,
+      });
+    });
   }
 
   onSearch(searchStrings: string) {

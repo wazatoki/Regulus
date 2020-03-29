@@ -3,6 +3,7 @@ import { HttpService } from '../http.service';
 import { Maker } from '../models/maker/maker';
 import { ConditionData } from '../models/search/condition-data';
 import { Observable } from 'rxjs';
+import { ComplexSearchItems } from '../models/search/complex-search-items';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ import { Observable } from 'rxjs';
 export class MakerService {
 
   constructor( private http: HttpService ) { }
+
+  findComplexSearchItems(): Observable<ComplexSearchItems> {
+    return this.http.get<ComplexSearchItems>('maker/ComplexSearchItems')
+  }
 
   findById(id: string): Observable<Maker> {
     const data: Map<string, string> = new Map();
