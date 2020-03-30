@@ -8,6 +8,9 @@ package maker
 
 import (
 	makerEntity "regulus/app/domain/entities/maker"
+	"regulus/app/domain/vo/query"
+	makerEnum "regulus/app/domain/vo/query/enum/maker"
+	"regulus/app/usecases/maintenance/master/group"
 )
 
 /*
@@ -91,3 +94,35 @@ Find は検索時のユースケースです。条件指定がない場合は全
 
 */
 func Find() {}
+
+/*
+
+ComplexSearchItems は検索項目取得のユースケースです。
+
+*/
+func ComplexSearchItems(p group.Persistance) (interface{}, error) {
+
+	groups, err := p.SelectAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	ci := &query.ComplexSearchItems{
+		DisplayItemList: []query.FieldAttr{},
+		SearchConditionList: []query.FieldAttr{
+			{
+				EntityName: makerEnum.Maker,
+				FieldName:  makerEnum.Name,
+				ViewValue:  "メーカー名称",
+				FieldType:  query.String,
+			},
+		},
+		OrderConditionList:   []query.FieldAttr{},
+		IsShowDisplayItem:    false,
+		IsShowOrderCondition: false,
+		IsShowSaveCondition:  false,
+		GroupList:            groups,
+	}
+	return ci, nil
+}

@@ -7,8 +7,10 @@ var TableNames = struct {
 	GorpMigrations string
 	Maker          string
 	Staff          string
+	StaffGroup     string
 }{
 	GorpMigrations: "gorp_migrations",
 	Maker:          "maker",
 	Staff:          "staff",
+	StaffGroup:     "staff_group",
 }

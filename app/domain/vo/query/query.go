@@ -1,5 +1,32 @@
 package query
 
+import (
+	"regulus/app/domain/entities/group"
+)
+
+/*
+ComplexSearchItems is struct as search condition display
+*/
+type ComplexSearchItems struct {
+	DisplayItemList      []FieldAttr   `json:"displayItemList"`
+	SearchConditionList  []FieldAttr   `json:"searchConditionList"`
+	OrderConditionList   []FieldAttr   `json:"orderConditionList"`
+	IsShowDisplayItem    bool          `json:"isShowDisplayItem"`
+	IsShowOrderCondition bool          `json:"isShowOrderCondition"`
+	IsShowSaveCondition  bool          `json:"isShowSaveCondition"`
+	GroupList            []group.Group `json:"groupList"`
+}
+
+/*
+FieldAttr is query field attribute
+*/
+type FieldAttr struct {
+	EntityName EntityEnum    `json:"entityName"`
+	FieldName  FieldEnum     `json:"fieldName"`
+	ViewValue  string        `json:"viewValue"`
+	FieldType  ValueTypeEnum `json:"fieldType"`
+}
+
 /*
 ConditionItem is query condition
 */

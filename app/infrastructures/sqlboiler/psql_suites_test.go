@@ -11,4 +11,6 @@ func TestUpsert(t *testing.T) {
 	t.Run("Makers", testMakersUpsert)
 
 	t.Run("Staffs", testStaffsUpsert)
+
+	t.Run("StaffGroups", testStaffGroupsUpsert)
 }
