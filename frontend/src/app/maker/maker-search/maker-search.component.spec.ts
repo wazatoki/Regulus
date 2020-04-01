@@ -12,6 +12,7 @@ import { SearchComponent } from 'src/app/layout/search/search.component';
 import { Maker } from '../../services/models/maker/maker';
 import { of,Subject } from 'rxjs';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
+import { ComplexSearchItems } from 'src/app/services/models/search/complex-search-items';
 
 describe('MakerSearchComponent', () => {
   let component: MakerSearchComponent;
@@ -24,7 +25,7 @@ describe('MakerSearchComponent', () => {
 
   beforeEach(async(() => {
 
-    const spy = jasmine.createSpyObj('MakerService', ['findByCondition']);
+    const spy = jasmine.createSpyObj('MakerService', ['findByCondition', 'findComplexSearchItems']);
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
     ['orderComplexSearchSave','orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
@@ -74,6 +75,19 @@ describe('MakerSearchComponent', () => {
   });
 
   it('should create', () => {
+    makerServiceSpy = TestBed.get(MakerService);
+    const complexSearchItems: ComplexSearchItems = {
+      displayItemList: [],
+      searchConditionList:[],
+      orderConditionList: [],
+      isShowDisplayItem: false,
+      isShowOrderCondition: false,
+      isShowSaveCondition: false,
+      groupList: [],
+    }
+    const stubValue = of(complexSearchItems)
+
+    makerServiceSpy.findComplexSearchItems.and.returnValue(stubValue)
     expect(component).toBeTruthy();
   });
 

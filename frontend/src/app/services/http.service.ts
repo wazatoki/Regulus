@@ -13,7 +13,7 @@ export class HttpService {
   constructor(private client: HttpClient) { }
 
   private getHttpParams(data: Map<string, string>): HttpParams {
-
+console.log("parms")
     const params: HttpParams = new HttpParams();
 
       data.forEach(
@@ -41,8 +41,7 @@ export class HttpService {
   };
 
   get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
-
-    return this.client.get<T>(`${this.HOST_URL}${path}`, { params: this.getHttpParams(data) })
+    return this.client.get<T>(`${this.HOST_URL}/${path}`, { params: this.getHttpParams(data) })
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -51,7 +50,7 @@ export class HttpService {
 
   post<T>(path: string, data: T): Observable<T> {
 
-    return this.client.post<T>(`${this.HOST_URL}${path}`, data)
+    return this.client.post<T>(`${this.HOST_URL}/${path}`, data)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -60,7 +59,7 @@ export class HttpService {
 
   put<T>(path: string, data: T): Observable<T> {
 
-    return this.client.put<T>(`${this.HOST_URL}${path}`, data)
+    return this.client.put<T>(`${this.HOST_URL}/${path}`, data)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -78,7 +77,7 @@ export class HttpService {
       options.body.push(d);
     });
     
-    return this.client.delete<T[]>(`${this.HOST_URL}${path}`, options)
+    return this.client.delete<T[]>(`${this.HOST_URL}/${path}`, options)
     .pipe(
       retry(3),
       catchError(this.handleError)

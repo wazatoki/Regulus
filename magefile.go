@@ -68,13 +68,30 @@ func CreateDataAccessModel() error {
 	return nil
 }
 
+// Run execute program
+func Run() error {
+	// mg.Deps(Build)
+
+	os.Chdir("./build")
+	defer os.Chdir("../")
+
+	out, err := exec.Command("./regulus_linux_amd64.bin").Output()
+	fmt.Println(string(out))
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
 // BuildJs build javascript
 func BuildJs() error {
 
 	os.Chdir("./frontend")
 	defer os.Chdir("../")
 
-	cmd := exec.Command("npx", "ng", "build")
+	fmt.Println("Building frontend")
+	cmd := exec.Command("npx", "ng", "build", "--deploy-url=/resources/")
 	if err := cmd.Run(); err != nil {
 		return err
 	}
@@ -85,6 +102,7 @@ func BuildJs() error {
 func Build() error {
 
 	mg.Deps(Clean)
+	mg.Deps(BuildJs)
 
 	defer resetEnv()
 
