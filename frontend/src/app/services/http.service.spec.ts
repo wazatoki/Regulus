@@ -45,12 +45,12 @@ describe('HttpService', () => {
   it('can test HttpClient.get', () => {
     const testData: Data = { name: 'Test Data' };
 
-    httpClient.get<Data>('data')
+    httpClient.get<Data>('/data')
       .subscribe(data => {
         expect(data).toEqual(testData)
       });
 
-    const req = httpTestingController.expectOne('data');
+    const req = httpTestingController.expectOne('/data');
     expect(req.request.method).toEqual('GET');
     req.flush(testData);
   });
@@ -59,7 +59,7 @@ describe('HttpService', () => {
     const testData: Data = { name: 'Test Data' };
     const service: HttpService = TestBed.get(HttpService);
 
-    service.get<Data>('data')
+    service.get<Data>('/data')
       .subscribe(data => {
         expect(data).toEqual(testData)
       });
@@ -74,7 +74,7 @@ describe('HttpService', () => {
     const service: HttpService = TestBed.get(HttpService);
     const emsg = 'deliberate 404 error';
 
-    service.get<Data>('data')
+    service.get<Data>('/data')
       .subscribe(
         data => {
           expect(data).toEqual(testData);
@@ -100,7 +100,7 @@ describe('HttpService', () => {
     const service: HttpService = TestBed.get(HttpService);
     const id: Map<string, string> = new Map();
     id.set('id', 'idstring')
-    service.get<Data>('data', id)
+    service.get<Data>('/data', id)
       .subscribe(data => {
         expect(data).toEqual(testData)
       });
@@ -118,7 +118,7 @@ describe('HttpService', () => {
     const resultData: Data = { name: 'Result Data' };
     const service: HttpService = TestBed.get(HttpService);
 
-    service.post<Data>('data', testData)
+    service.post<Data>('/data', testData)
       .subscribe(data => {
         expect(data).toEqual(resultData)
       });
@@ -134,7 +134,7 @@ describe('HttpService', () => {
     const service: HttpService = TestBed.get(HttpService);
     const emsg = 'deliberate 404 error';
 
-    service.post<Data>('data', testData)
+    service.post<Data>('/data', testData)
       .subscribe(
         data => {
           expect(data).toEqual(resultData);
@@ -160,7 +160,7 @@ describe('HttpService', () => {
     const resultData: Data = { name: 'Result Data' };
     const service: HttpService = TestBed.get(HttpService);
 
-    service.put<Data>('data', testData)
+    service.put<Data>('/data', testData)
       .subscribe(data => {
         expect(data).toEqual(resultData)
       });
@@ -176,7 +176,7 @@ describe('HttpService', () => {
     const service: HttpService = TestBed.get(HttpService);
     const emsg = 'deliberate 404 error';
 
-    service.put<Data>('data', testData)
+    service.put<Data>('/data', testData)
       .subscribe(
         data => {
           expect(data).toEqual(resultData);
@@ -202,7 +202,7 @@ describe('HttpService', () => {
     const resultData: Data[] = [];
     const service: HttpService = TestBed.get(HttpService);
 
-    service.delete<Data>('data', testData)
+    service.delete<Data>('/data', testData)
       .subscribe(data => {
         expect(data).toEqual(resultData)
       });
@@ -218,7 +218,7 @@ describe('HttpService', () => {
     const service: HttpService = TestBed.get(HttpService);
     const emsg = 'deliberate 404 error';
 
-    service.delete<Data>('data', testData)
+    service.delete<Data>('/data', testData)
       .subscribe(
         data => {
           expect(data).toEqual(resultData);

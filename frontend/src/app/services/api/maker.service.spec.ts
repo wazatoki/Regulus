@@ -60,7 +60,7 @@ describe('MakerService', () => {
 
     const id: Map<string, string> = new Map();
     id.set('id', 'testid');
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', id);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker', id);
   });
 
   it('findByCondition method', () => {
@@ -114,7 +114,7 @@ describe('MakerService', () => {
 
     const data: Map<string, string> = new Map();
     data.set('condition',JSON.stringify(conditionData));
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker', data);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker', data);
   });
 
   it('findAll method', () => {
@@ -134,7 +134,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker');
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker');
   });
 
   it('add method', () => {
@@ -151,7 +151,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(resultData);
-    expect(httpServiceSpy.post).toHaveBeenCalledWith('maker', testData);
+    expect(httpServiceSpy.post).toHaveBeenCalledWith('/maker', testData);
   });
 
   it('update method', () => {
@@ -168,7 +168,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(resultData);
-    expect(httpServiceSpy.put).toHaveBeenCalledWith('maker', testData);
+    expect(httpServiceSpy.put).toHaveBeenCalledWith('/maker', testData);
   });
 
   it('delete method', () => {
@@ -185,7 +185,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(resultData);
-    expect(httpServiceSpy.delete).toHaveBeenCalledWith('maker/delete', testData);
+    expect(httpServiceSpy.delete).toHaveBeenCalledWith('/maker/delete', testData);
   });
 
   it('findComplexSearchItems method', () => {
@@ -258,7 +258,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('maker/ComplexSearchItems');
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/ComplexSearchItems');
   });
 
 });

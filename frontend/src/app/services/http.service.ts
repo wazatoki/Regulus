@@ -8,12 +8,11 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class HttpService {
 
-  readonly HOST_URL: string = window.location.host
+  readonly HOST_URL: string = 'http://' + window.location.host
 
   constructor(private client: HttpClient) { }
 
   private getHttpParams(data: Map<string, string>): HttpParams {
-console.log("parms")
     const params: HttpParams = new HttpParams();
 
       data.forEach(
@@ -25,6 +24,7 @@ console.log("parms")
   }
 
   private handleError(error: HttpErrorResponse) {
+    console.log(error)
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -41,7 +41,8 @@ console.log("parms")
   };
 
   get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
-    return this.client.get<T>(`${this.HOST_URL}/${path}`, { params: this.getHttpParams(data) })
+
+    return this.client.get<T>(`${this.HOST_URL}${path}`, { params: this.getHttpParams(data) })
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -50,7 +51,7 @@ console.log("parms")
 
   post<T>(path: string, data: T): Observable<T> {
 
-    return this.client.post<T>(`${this.HOST_URL}/${path}`, data)
+    return this.client.post<T>(`${this.HOST_URL}${path}`, data)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -59,7 +60,7 @@ console.log("parms")
 
   put<T>(path: string, data: T): Observable<T> {
 
-    return this.client.put<T>(`${this.HOST_URL}/${path}`, data)
+    return this.client.put<T>(`${this.HOST_URL}${path}`, data)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -77,7 +78,7 @@ console.log("parms")
       options.body.push(d);
     });
     
-    return this.client.delete<T[]>(`${this.HOST_URL}/${path}`, options)
+    return this.client.delete<T[]>(`${this.HOST_URL}${path}`, options)
     .pipe(
       retry(3),
       catchError(this.handleError)

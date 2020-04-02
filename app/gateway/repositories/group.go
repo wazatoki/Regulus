@@ -43,3 +43,8 @@ func (g *GroupRepo) SelectAll() ([]groupEntity.Group, error) {
 
 	return geSlice, err
 }
+
+// NewGroupRepo constructor
+func NewGroupRepo() *GroupRepo {
+	return &GroupRepo{database: createDB()}
+}
