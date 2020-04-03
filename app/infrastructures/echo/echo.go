@@ -18,6 +18,7 @@ func StartEcho() {
 	e.Static("/resources", "resources/frontend")
 	e.File("/index.html", "resources/frontend/index.html")
 
+	defineRewrite(e)
 	defineRouting(e)
 	go func() {
 		log.Info("start server")

@@ -37,20 +37,20 @@ describe('HttpService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should be correct host url', () => {
+  it('should be correct api url', () => {
     const service: HttpService = TestBed.get(HttpService);
-    expect(service.HOST_URL).toEqual('localhost:9876');
+    expect(service.API_URL).toEqual('http://localhost:9876/api');
   });
 
   it('can test HttpClient.get', () => {
     const testData: Data = { name: 'Test Data' };
 
-    httpClient.get<Data>('/data')
+    httpClient.get<Data>('/api/data')
       .subscribe(data => {
         expect(data).toEqual(testData)
       });
 
-    const req = httpTestingController.expectOne('/data');
+    const req = httpTestingController.expectOne('/api/data');
     expect(req.request.method).toEqual('GET');
     req.flush(testData);
   });
@@ -64,7 +64,7 @@ describe('HttpService', () => {
         expect(data).toEqual(testData)
       });
 
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     expect(req.request.method).toEqual('GET');
     req.flush(testData);
   });
@@ -87,10 +87,10 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (var i = 0; i < retryCount; i++) {
-      let req = httpTestingController.expectOne('localhost:9876/data');
+      let req = httpTestingController.expectOne('http://localhost:9876/api/data');
       req.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(testData);
 
   });
@@ -105,7 +105,7 @@ describe('HttpService', () => {
         expect(data).toEqual(testData)
       });
 
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     expect(req.request.method).toEqual('GET');
     const params: HttpParams = new HttpParams();
     params.set('id', 'idstring')
@@ -123,7 +123,7 @@ describe('HttpService', () => {
         expect(data).toEqual(resultData)
       });
 
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     expect(req.request.method).toEqual('POST');
     req.flush(resultData);
   });
@@ -147,10 +147,10 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (var i = 0; i < retryCount; i++) {
-      let req = httpTestingController.expectOne('localhost:9876/data');
+      let req = httpTestingController.expectOne('http://localhost:9876/api/data');
       req.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(resultData);
 
   });
@@ -165,7 +165,7 @@ describe('HttpService', () => {
         expect(data).toEqual(resultData)
       });
 
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     expect(req.request.method).toEqual('PUT');
     req.flush(resultData);
   });
@@ -189,10 +189,10 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (var i = 0; i < retryCount; i++) {
-      let req = httpTestingController.expectOne('localhost:9876/data');
+      let req = httpTestingController.expectOne('http://localhost:9876/api/data');
       req.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(resultData);
 
   });
@@ -207,7 +207,7 @@ describe('HttpService', () => {
         expect(data).toEqual(resultData)
       });
 
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     expect(req.request.method).toEqual('DELETE');
     req.flush(resultData);
   });
@@ -231,10 +231,10 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (var i = 0; i < retryCount; i++) {
-      let req = httpTestingController.expectOne('localhost:9876/data');
+      let req = httpTestingController.expectOne('http://localhost:9876/api/data');
       req.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
-    const req = httpTestingController.expectOne('localhost:9876/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(resultData);
 
   });
