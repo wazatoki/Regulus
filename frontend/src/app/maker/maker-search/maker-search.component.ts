@@ -48,7 +48,6 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
   openComplexSearch(){
     this.makerService.findComplexSearchItems().subscribe( (data: ComplexSearchItems) => {
       const dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
-        width: '800px',
         data: data,
       });
     });

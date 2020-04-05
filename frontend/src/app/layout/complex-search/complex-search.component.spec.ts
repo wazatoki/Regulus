@@ -73,6 +73,7 @@ describe('ComplexSearchComponent', () => {
     fixture.detectChanges();
     spy = TestBed.get(ComplexSearchService);
     spy.initSaveDataObj.and.returnValue({
+      id: '',
       patternName: '',
       category: '',
       isDisclose: false,
@@ -215,7 +216,8 @@ describe('ComplexSearchComponent', () => {
     (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
     fixture.detectChanges();
 
-    saveData = component.searchComponent.createSaveData();
+    component.searchComponent.createSaveData();
+    saveData = component.searchComponent.saveData;
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(true);
     expect(saveData.discloseGroups).toEqual(['id1', 'id2']);

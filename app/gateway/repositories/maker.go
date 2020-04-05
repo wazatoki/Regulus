@@ -223,15 +223,15 @@ func (m *MakerRepo) columnName(fieldName query.FieldEnum) string {
 
 func (m *MakerRepo) createQueryMod(queryItem *query.ConditionItem) qm.QueryMod {
 
-	mt, val := comparisonOperator(queryItem.MatchType, queryItem.Value)
+	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
-	switch queryItem.EntityName {
+	switch queryItem.Field.EntityName {
 	default:
 		if queryItem.Operator == "or" {
-			return qm.Or(m.columnName(queryItem.FieldName)+" "+mt+" ?", val)
+			return qm.Or(m.columnName(queryItem.Field.FieldName)+" "+mt+" ?", val)
 		}
 		//queryItem.Operator = "and"
-		return qm.And(m.columnName(queryItem.FieldName)+" "+mt+" ?", val)
+		return qm.And(m.columnName(queryItem.Field.FieldName)+" "+mt+" ?", val)
 	}
 }
 
@@ -251,7 +251,7 @@ func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []qu
 		return false
 	}
 
-	switch orderItems[orderIndex].FieldName {
+	switch orderItems[orderIndex].OrderField.FieldName {
 	case makerEnum.Name: // 基本的にはこれしか選択されてない
 		if maker1.Name == maker2.Name {
 			orderIndex++

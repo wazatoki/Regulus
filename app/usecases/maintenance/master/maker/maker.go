@@ -112,6 +112,7 @@ func ComplexSearchItems(p group.Persistance) (interface{}, error) {
 		DisplayItemList: []query.FieldAttr{},
 		SearchConditionList: []query.FieldAttr{
 			{
+				ID:         string(makerEnum.Maker) + "." + string(makerEnum.Name),
 				EntityName: makerEnum.Maker,
 				FieldName:  makerEnum.Name,
 				ViewValue:  "メーカー名称",

@@ -17,6 +17,7 @@ export class ComplexSearchService {
 
   initSaveDataObj(): SaveData {
     return {
+      id: '',
       patternName: '',
       category: '',
       isDisclose: false,

@@ -28,6 +28,7 @@ export class ComplexSearchComponent implements OnInit {
   @Input() isShowOrderCondition: boolean = false;
   @Input() isShowSaveCondition: boolean = false;
   @Input() groupList: Group[] = [];
+  @Input() saveData: SaveData;
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -57,6 +58,8 @@ export class ComplexSearchComponent implements OnInit {
         discloseGroups: this.fb.array([]),
       }),
     });
+
+    this.saveData = this.complexSearchDataShereService.initSaveDataObj();
   }
 
   ngOnInit() {
@@ -114,8 +117,8 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSave() {
-    const data: SaveData = this.createSaveData();
-    this.complexSearchDataShereService.orderComplexSearchSave(data);
+    this.createSaveData();
+    this.complexSearchDataShereService.orderComplexSearchSave(this.saveData);
   }
 
   clickSearch(): void {
@@ -161,23 +164,24 @@ export class ComplexSearchComponent implements OnInit {
     return result;
   }
 
-  createSaveData(): SaveData {
+  createSaveData(): void {
 
-    const data: SaveData = this.complexSearchDataShereService.initSaveDataObj();
+    if (this.saveData === null || this.saveData === undefined) {
+      this.saveData = this.complexSearchDataShereService.initSaveDataObj();
+    }
 
     if (this.isShowSaveCondition) {
-      data.patternName = this.saveConditions.get('patternName').value;
-      data.isDisclose = this.saveConditions.get('isDisclose').value;
+      this.saveData.patternName = this.saveConditions.get('patternName').value;
+      this.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
-          data.discloseGroups.push(this.groupList[i].id);
+          this.saveData.discloseGroups.push(this.groupList[i].id);
         }
       });
     }
 
-    data.conditionData = this.createSearchData();
+    this.saveData.conditionData = this.createSearchData();
 
-    return data;
   }
 
   createSearchData(): ConditionData {

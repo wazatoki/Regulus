@@ -21,6 +21,7 @@ type ComplexSearchItems struct {
 FieldAttr is query field attribute
 */
 type FieldAttr struct {
+	ID         string        `json:"id"`
 	EntityName EntityEnum    `json:"entityName"`
 	FieldName  FieldEnum     `json:"fieldName"`
 	ViewValue  string        `json:"viewValue"`
@@ -31,21 +32,41 @@ type FieldAttr struct {
 ConditionItem is query condition
 */
 type ConditionItem struct {
-	EntityName EntityEnum    `json:"entityName"`
-	FieldName  FieldEnum     `json:"fieldName"`
-	Value      string        `json:"stringValue"`
-	ValueType  ValueTypeEnum `json:"valueType"` // string, number
-	MatchType  MatchTypeEnum `json:"matchType"` // match, unmatch, pertialmatch, gt, ge, le, lt
-	Operator   OperatorEnum  `json:"operator"`  // and, or
+	Field          FieldAttr     `json:"field"`
+	ConditionValue string        `json:"conditionValue"`
+	MatchType      MatchTypeEnum `json:"matchType"` // match, unmatch, pertialmatch, gt, ge, le, lt
+	Operator       OperatorEnum  `json:"operator"`  // and, or
 }
 
 /*
 OrderItem is order condition
 */
 type OrderItem struct {
-	EntityName EntityEnum    `json:"entityName"`
-	FieldName  FieldEnum     `json:"fieldName"`
+	OrderField FieldAttr     `json:"orderField"`
 	OrderType  OrderTypeEnum `json:"orderType"` // asc, desc
+}
+
+/*
+ConditionData is query condition
+*/
+type ConditionData struct {
+	SearchStrings       []string        `json:"searchStrings"`
+	DisplayItemList     []FieldAttr     `json:"displayItemList"`
+	SearchConditionList []ConditionItem `json:"searchConditionList"`
+	OrderConditionList  []OrderItem     `json:"orderConditionList"`
+}
+
+/*
+SaveData is save query save data
+*/
+type SaveData struct {
+	ID             string        `json:"id"`
+	PatternName    string        `json:"patternName"`
+	Category       string        `json:"category"`
+	IsDisclose     bool          `json:"isDisclose"`
+	DiscloseGroups []string      `json:"discloseGroups"`
+	OwnerID        string        `json:"ownerID"`
+	ConditionData  ConditionData `json:"conditionData"`
 }
 
 /*

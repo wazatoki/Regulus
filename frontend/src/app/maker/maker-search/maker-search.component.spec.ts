@@ -47,6 +47,7 @@ describe('MakerSearchComponent', () => {
   beforeEach(() => {
     complexSearchServiceSpy = TestBed.get(ComplexSearchService);
     complexSearchServiceSpy.initSaveDataObj.and.returnValue({
+      id: '',
       patternName: '',
       category: '',
       isDisclose: false,

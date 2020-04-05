@@ -274,20 +274,28 @@ func TestMakerRepo_Select(t *testing.T) {
 		queryItems []*query.ConditionItem
 	}
 	qi1 := query.ConditionItem{
-		EntityName: "Maker",
-		FieldName:  "Name",
-		Value:      "1",
-		ValueType:  "string",
-		MatchType:  "pertialmatch",
-		Operator:   "and",
+		Field: query.FieldAttr{
+			ID:         "id1",
+			EntityName: "Maker",
+			FieldName:  "Name",
+			ViewValue:  "MakerName",
+			FieldType:  query.String,
+		},
+		ConditionValue: "1",
+		MatchType:      "pertialmatch",
+		Operator:       "and",
 	}
 	qi2 := query.ConditionItem{
-		EntityName: "Maker",
-		FieldName:  "Name",
-		Value:      "2",
-		ValueType:  "string",
-		MatchType:  "pertialmatch",
-		Operator:   "or",
+		Field: query.FieldAttr{
+			ID:         "id1",
+			EntityName: "Maker",
+			FieldName:  "Name",
+			ViewValue:  "MakerName",
+			FieldType:  query.String,
+		},
+		ConditionValue: "2",
+		MatchType:      "pertialmatch",
+		Operator:       "or",
 	}
 	tests := []struct {
 		name    string
@@ -465,9 +473,14 @@ func TestSort(t *testing.T) {
 				makers: unsortMakers,
 				orderItems: []query.OrderItem{
 					{
-						EntityName: "",
-						FieldName:  makerEnum.Name,
-						OrderType:  query.Asc,
+						OrderField: query.FieldAttr{
+							ID:         "id1",
+							EntityName: "",
+							FieldName:  makerEnum.Name,
+							FieldType:  query.String,
+							ViewValue:  "makerName",
+						},
+						OrderType: query.Asc,
 					},
 				},
 			},
@@ -492,9 +505,14 @@ func TestSort(t *testing.T) {
 				makers: unsortMakers,
 				orderItems: []query.OrderItem{
 					{
-						EntityName: "",
-						FieldName:  makerEnum.Name,
-						OrderType:  query.Desc,
+						OrderField: query.FieldAttr{
+							ID:         "id1",
+							EntityName: "",
+							FieldName:  makerEnum.Name,
+							FieldType:  query.String,
+							ViewValue:  "makerName",
+						},
+						OrderType: query.Desc,
 					},
 				},
 			},

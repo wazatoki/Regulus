@@ -15,12 +15,12 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     { name: 'pertialmatch', viewValue: '部分一致' },
   ];
   readonly matchTypesForNumber: matchTypeAttr[] = [
-    { name: 'match', viewValue: '完全一致' },
-    { name: 'unmatch', viewValue: '不一致' },
-    { name: 'gt', viewValue: '>' },
-    { name: 'ge', viewValue: '>=' },
-    { name: 'le', viewValue: '<' },
-    { name: 'lt', viewValue: '<=' },
+    { name: 'match', viewValue: '完全一致 =' },
+    { name: 'unmatch', viewValue: '不一致 !=' },
+    { name: 'gt', viewValue: '超過 >' },
+    { name: 'ge', viewValue: '以上 >=' },
+    { name: 'le', viewValue: '未満 <' },
+    { name: 'lt', viewValue: '以下 <=' },
   ];
   readonly operators: string[] = ['and', 'or'];
 
@@ -46,7 +46,12 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   @Output() onDelete = new EventEmitter();
 
   onSelectField(): void {
-    if (this.fieldSelected.value.fieldType === "string") {
+
+    const f = this.fields.find((field) => {
+      return (field.id === this.fieldSelected.value)
+    })
+
+    if (f.fieldType === "string") {
       this.matchTypes = this.matchTypesForString;
     } else {
       this.matchTypes = this.matchTypesForNumber;
