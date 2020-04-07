@@ -141,31 +141,44 @@ describe('ComplexSearchConditionItemComponent', () => {
 })
 class TestHostComponent {
 
+  formGroup: FormGroup;
+  fields: FieldAttr[];
+
   onDelete(): string{
     return 'onDelete called';
   }
 
-  formGroup: FormGroup = new FormGroup({
-    fieldSelected: new FormControl(''),
-    conditionValue: new FormControl(''),
-    matchTypeSelected: new FormControl(''),
-    operatorSelected: new FormControl(''),
-  });
+  constructor() {
+    this.formGroup = new FormGroup({
+      fieldSelected: new FormControl(''),
+      conditionValue: new FormControl(''),
+      matchTypeSelected: new FormControl(''),
+      operatorSelected: new FormControl(''),
+    });
 
-  fields: FieldAttr[] = [
-    {
-      id: 'id1',
-      entityName: 'aaa',
-      fieldName: 'AAA',
-      viewValue: 'aaa-AAA',
-      fieldType: 'number',
-    },
-    {
-      id: 'id2',
-      entityName: 'bbb',
-      fieldName: 'BBB',
-      viewValue: 'bbb-BBB',
-      fieldType: 'string',
-    },
-  ];
+    this.formGroup.setValue({
+      fieldSelected : 'id1',
+      conditionValue : 'abcdefg',
+      matchTypeSelected: 'unmatch',
+      operatorSelected: 'or',
+    });
+
+    this.fields = [
+      {
+        id: 'id1',
+        entityName: 'aaa',
+        fieldName: 'AAA',
+        viewValue: 'aaa-AAA',
+        fieldType: 'number',
+      },
+      {
+        id: 'id2',
+        entityName: 'bbb',
+        fieldName: 'BBB',
+        viewValue: 'bbb-BBB',
+        fieldType: 'string',
+      },
+    ];
+  }
+
 }

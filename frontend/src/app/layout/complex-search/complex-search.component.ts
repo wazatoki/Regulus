@@ -28,7 +28,7 @@ export class ComplexSearchComponent implements OnInit {
   @Input() isShowOrderCondition: boolean = false;
   @Input() isShowSaveCondition: boolean = false;
   @Input() groupList: Group[] = [];
-  @Input() saveData: SaveData;
+  @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -58,8 +58,6 @@ export class ComplexSearchComponent implements OnInit {
         discloseGroups: this.fb.array([]),
       }),
     });
-
-    this.saveData = this.complexSearchDataShereService.initSaveDataObj();
   }
 
   ngOnInit() {
@@ -68,6 +66,63 @@ export class ComplexSearchComponent implements OnInit {
     })
     this.fromDisplayItemArray = this.displayItemList;
     this.selectedDisplayItemArray = [];
+
+    // saveDataの編集のときは値をフォームに反映する
+    if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
+      this.setSavedDataToForm()
+    }
+  }
+
+  setSavedDataToForm() {
+    this.saveConditions.get('patternName').setValue(this.saveData.patternName)
+    this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
+    this.discloseGroupFormArray.controls.forEach((v, i) => {
+      this.saveData.discloseGroups.forEach(id => {
+        if (this.groupList[i].id === id) {
+          v.setValue(true)
+        }
+      });
+    });
+
+    // 表示項目を反映する。
+    if (this.saveData.conditionData.displayItemList !== null
+      && this.saveData.conditionData.displayItemList !== undefined
+      && this.saveData.conditionData.displayItemList.length > 0) {
+
+      this.selectedDisplayItemArray = this.saveData.conditionData.displayItemList;
+      this.fromDisplayItemArray = [];
+      this.displayItemList.filter(item => {
+        const flag = this.saveData.conditionData.displayItemList.some(savedItem => {
+          return savedItem.id !== item.id
+        });
+        if (flag) {
+          this.fromDisplayItemArray.push(item);
+        }
+      })
+    }
+
+    // 検索条件を反映する
+    this.saveData.conditionData.searchConditionList.forEach(condition => {
+      this.pushSearchCondition();
+      const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);
+      fgroup.get('fieldSelected').setValue(condition.field.id);
+      fgroup.get('conditionValue').setValue(condition.conditionValue);
+      fgroup.get('matchTypeSelected').setValue(condition.matchType);
+      fgroup.get('operatorSelected').setValue(condition.operator);
+    });
+
+    // 並び順を反映する
+    if (this.saveData.conditionData.orderConditionList !== null
+      && this.saveData.conditionData.orderConditionList !== undefined
+      && this.saveData.conditionData.orderConditionList.length > 0) {
+
+      this.saveData.conditionData.orderConditionList.forEach(orderCondition => {
+        this.pushOrderCondition()
+        const fgroup = this.orderConditionFormArray.at(this.orderConditionFormArray.length - 1);
+        fgroup.get('orderFieldSelected').setValue(orderCondition.orderField.id);
+        fgroup.get('orderFieldKeyWordSelected').setValue(orderCondition.orderFieldKeyWord);
+      });
+    }
   }
 
   displayItemDrop(event: CdkDragDrop<FieldAttr[]>) {

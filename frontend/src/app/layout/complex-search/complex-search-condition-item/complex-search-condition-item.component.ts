@@ -41,12 +41,34 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   matchTypes: matchTypeAttr[];
+
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
   @Output() onDelete = new EventEmitter();
 
   onSelectField(): void {
+    this.setMatchType();
+  }
 
+  constructor() {
+  }
+
+  ngOnInit() {
+    // matchTypeの初期設定
+    if (this.fieldSelected.value !== null && this.fieldSelected.value !== undefined && this.fieldSelected.value !== '') {
+      
+      this.setMatchType();
+
+    } else {
+      this.matchTypes = this.matchTypesForString;
+    }
+    // operatorの初期設定
+    if(this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
+      this.operatorSelected.setValue(this.operators[0]);
+    }
+  }
+
+  setMatchType(): void {
     const f = this.fields.find((field) => {
       return (field.id === this.fieldSelected.value)
     })
@@ -56,14 +78,6 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     } else {
       this.matchTypes = this.matchTypesForNumber;
     }
-  }
-
-  constructor() {
-  }
-
-  ngOnInit() {
-    this.matchTypes = this.matchTypesForString;
-    this.operatorSelected.setValue(this.operators[0]);
   }
 
   deleteClicked() {

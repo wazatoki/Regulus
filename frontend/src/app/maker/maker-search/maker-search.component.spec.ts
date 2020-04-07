@@ -85,6 +85,7 @@ describe('MakerSearchComponent', () => {
       isShowOrderCondition: false,
       isShowSaveCondition: false,
       groupList: [],
+      saveData: null,
     }
     const stubValue = of(complexSearchItems)
 

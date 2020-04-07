@@ -70,7 +70,7 @@ describe('ComplexSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    
     spy = TestBed.get(ComplexSearchService);
     spy.initSaveDataObj.and.returnValue({
       id: '',
@@ -92,31 +92,10 @@ describe('ComplexSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     });
+    fixture.detectChanges();
   });
 
   it('should create', () => {
-    const fb = new FormBuilder();
-    component.searchComponent.form = fb.group({
-      searchCondition: fb.array([new FormGroup({
-        fieldSelected: new FormControl(''),
-        conditionValue: new FormControl(''),
-        matchTypeSelected: new FormControl(''),
-        operatorSelected: new FormControl(''),
-      })]),
-      orderCondition: fb.array([new FormGroup({
-        orderFieldSelected: new FormControl(''),
-        orderFieldKeyWordSelected: new FormControl(''),
-      })]),
-      saveCondition: fb.group({
-        patternName: fb.control(""),
-        isDisclose: fb.control(""),
-        discloseGroups: fb.array([new FormControl('')]),
-      }),
-    });
-    component.searchComponent.isShowDisplayItem = true;
-    component.searchComponent.isShowOrderCondition = true;
-    component.searchComponent.isShowSaveCondition = true;
-    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
@@ -135,7 +114,7 @@ describe('ComplexSearchComponent', () => {
 
     const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchConditionItemComponent));
 
-    expect(itemBoxDeArray.length).toBe(2);
+    expect(itemBoxDeArray.length).toBe(3);
   });
 
   it('should click add order button', () => {
@@ -153,7 +132,7 @@ describe('ComplexSearchComponent', () => {
 
     const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchOrderItemComponent));
 
-    expect(itemBoxDeArray.length).toBe(2);
+    expect(itemBoxDeArray.length).toBe(3);
   });
 
   it('should click save button', () => {
@@ -219,7 +198,7 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.createSaveData();
     saveData = component.searchComponent.saveData;
     expect(saveData.patternName).toBe('sample pattern name');
-    expect(saveData.isDisclose).toBe(true);
+    expect(saveData.isDisclose).toBe(false);
     expect(saveData.discloseGroups).toEqual(['id1', 'id2']);
     expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
@@ -295,6 +274,7 @@ describe('ComplexSearchComponent', () => {
     [searchConditionList]="searchConditionList"
     [orderConditionList]="orderConditionList"
     [groupList]="groupList"
+    [saveData]="saveData"
     >
   </app-complex-search>`
 })
@@ -303,14 +283,16 @@ class TestHostComponent {
   @ViewChild(ComplexSearchComponent, {static: true})
   searchComponent:ComplexSearchComponent;
 
-  displayItemList = [
+  displayItemList: FieldAttr[] = [
     {
+      id: 'id1',
       entityName: 'aaa',
       fieldName: 'AAA',
       viewValue: 'aaa-AAA',
       fieldType: 'number',
     },
     {
+      id: 'id2',
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',
@@ -332,6 +314,13 @@ class TestHostComponent {
       viewValue: 'bbb-BBB',
       fieldType: 'string',
     },
+    {
+      id: 'id3',
+      entityName: 'ccc',
+      fieldName: 'CCC',
+      viewValue: 'ccc-CCC',
+      fieldType: 'string',
+    },
   ];
   orderConditionList =  [
     {
@@ -346,6 +335,13 @@ class TestHostComponent {
       entityName: 'bbb',
       fieldName: 'BBB',
       viewValue: 'bbb-BBB',
+      fieldType: 'string',
+    },
+    {
+      id: 'id3',
+      entityName: 'ccc',
+      fieldName: 'CCC',
+      viewValue: 'ccc-CCC',
       fieldType: 'string',
     },
   ]
@@ -363,4 +359,51 @@ class TestHostComponent {
       name: 'name3',
     },
   ];
+
+  saveData: SaveData = {
+    id: 'saveID1',
+    patternName: 'saveName1',
+    isDisclose: true,
+    discloseGroups: ['id1', 'id2'],
+    conditionData: {
+      displayItemList: [
+        {
+          id: 'id1',
+          entityName: 'aaa',
+          fieldName: 'AAA',
+          viewValue: 'aaa-AAA',
+          fieldType: 'number',
+        },
+      ],
+      searchConditionList: [
+        {
+          field: {
+            id: 'id1',
+            entityName: 'aaa',
+            fieldName: 'AAA',
+            viewValue: 'aaa-AAA',
+            fieldType: 'number',
+          },
+          conditionValue: 'aaa',
+          matchType : 'match',
+          operator: 'or'
+        },
+      ],
+      orderConditionList: [
+        {
+          orderField: {
+            id: 'id1',
+            entityName: 'aaa',
+            fieldName: 'AAA',
+            viewValue: 'aaa-AAA',
+            fieldType: 'number',
+          },
+          orderFieldKeyWord: 'desc',
+        },
+      ],
+      searchStrings: [],
+    },
+    ownerID: '',
+    category: '',
+  };
 }

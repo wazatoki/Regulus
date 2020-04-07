@@ -47,10 +47,41 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
 
   openComplexSearch(){
     this.makerService.findComplexSearchItems().subscribe( (data: ComplexSearchItems) => {
+      // data.saveData = this.testData(); // 検証用
       const dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
         data: data,
       });
     });
+  }
+
+  testData() {
+    return {
+      category: '',
+      discloseGroups: [],
+      isDisclose: true,
+      patternName: 'asdfg',
+      conditionData: {
+        displayItemList : [],
+        orderConditionList: [],
+        searchConditionList: [
+          {
+            conditionValue: 'abcd',
+            field: {
+              id: 'maker.name',
+              entityName: 'maker',
+              fieldName: 'name',
+              fieldType: 'string',
+              viewValue: 'メーカー名称',
+            },
+            matchType: 'unmatch',
+            operator: 'or'
+          },
+        ],
+        searchStrings: [],
+      },
+      id: 'savedataid',
+      ownerID: '',
+    };
   }
 
   onSearch(searchStrings: string) {
