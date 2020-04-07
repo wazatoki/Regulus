@@ -20,6 +20,8 @@ import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Group } from '../../services/models/group/group';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -29,7 +31,7 @@ describe('ComplexSearchComponent', () => {
 
   beforeEach(async(() => {
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearchSave','orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj']);
+    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -61,7 +63,11 @@ describe('ComplexSearchComponent', () => {
         {
           provide: ComplexSearchService,
           useValue: complexSearchServiceSpy
-        }
+        },
+        {
+          provide: MatDialog,
+          useValue: {}
+        },
       ],
     })
       .compileComponents();
@@ -92,6 +98,8 @@ describe('ComplexSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     });
+    spy.updateSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
+    spy.addSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
     fixture.detectChanges();
   });
 
@@ -146,7 +154,11 @@ describe('ComplexSearchComponent', () => {
     buttonEl.click();
     fixture.detectChanges();
 
-    expect(spy.orderComplexSearchSave).toHaveBeenCalled();
+    if(component.searchComponent.saveData.id){
+      expect(spy.updateSearchCondition).toHaveBeenCalled();
+    }else{
+      expect(spy.addSearchCondition).toHaveBeenCalled();
+    }
   });
 
   it('should click search button', () => {

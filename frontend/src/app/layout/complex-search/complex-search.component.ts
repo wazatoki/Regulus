@@ -8,6 +8,8 @@ import { SearchCondition } from '../../services/models/search/search-condition';
 import { OrderCondition } from '../../services/models/search/order-condition';
 import { SaveData } from '../../services/models/search/save-data';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NoticeDialogComponent } from '../dialog/notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-complex-search',
@@ -47,7 +49,8 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder,
-    private complexSearchDataShereService: ComplexSearchService) {
+    private complexSearchDataShereService: ComplexSearchService,
+    private dialog: MatDialog) {
 
     this.form = this.fb.group({
       searchCondition: this.fb.array([]),
@@ -173,7 +176,20 @@ export class ComplexSearchComponent implements OnInit {
 
   clickSave() {
     this.createSaveData();
-    this.complexSearchDataShereService.orderComplexSearchSave(this.saveData);
+    if (this.saveData.id) {
+      this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
+        this.dialog.open(NoticeDialogComponent, {
+          data: { contents: '検索条件を保存しました。' }
+        });
+      });
+    } else {
+      this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe(data => {
+        this.dialog.open(NoticeDialogComponent, {
+          data: { contents: '検索条件を保存しました。' }
+        });
+      });
+    }
+
   }
 
   clickSearch(): void {

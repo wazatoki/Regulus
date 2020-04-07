@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subject }    from 'rxjs';
+import { Subject, Observable }    from 'rxjs';
 
 import { ConditionData } from '../models/search/condition-data';
 import { SaveData } from '../models/search/save-data';
+import { HttpService } from '../http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,9 +41,13 @@ export class ComplexSearchService {
     this.complexSearchOrderedSouce.next(data);
   }
 
-  orderComplexSearchSave(data: SaveData){
-    this.complexSearchSaveOrderedSouce.next(data);
+  addSearchCondition(data: SaveData):Observable<SaveData>{
+    return this.http.post<SaveData>( '/complexSearch', data );
+  }
+
+  updateSearchCondition(data: SaveData):Observable<SaveData>{
+    return this.http.put<SaveData>( '/complexSearch', data );
   }
   
-  constructor() { }
+  constructor( private http: HttpService ) { }
 }

@@ -17,6 +17,7 @@ import { MakerCondition } from '../../services/models/maker/maker-condition'
 import { Maker } from '../../services/models/maker/maker';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from '../../layout/dialog/notice-dialog/notice-dialog.component';
+import { HttpClient } from '@angular/common/http';
 
 describe('MakerMasterComponent', () => {
   let component: MakerMasterComponent;
@@ -46,6 +47,7 @@ describe('MakerMasterComponent', () => {
       providers: [
         { provide: MakerService, useValue: spy },
         { provide: MatDialog, useValue: dialogspy },
+        { provide: HttpClient, useValue: {} },
         MakerCondition,
       ],
     })

@@ -10,5 +10,4 @@ export interface ComplexSearchItems {
     isShowOrderCondition: boolean,
     isShowSaveCondition: boolean,
     groupList: Group[],
-    saveData: SaveData,
 }

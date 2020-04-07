@@ -23,6 +23,7 @@ import { Group } from '../../../../services/models/group/group';
 import { FieldAttr } from '../../../../services/models/search/field-attr';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { HttpClient } from '@angular/common/http';
 
 describe('ComplexSearchDialogComponent', () => {
   let component: TestHostComponent;
@@ -62,6 +63,9 @@ describe('ComplexSearchDialogComponent', () => {
         {
           provide: MAT_DIALOG_DATA, useValue: {} 
         },
+        {
+          provide: HttpClient, useValue: {}
+        }
       ],
     }).overrideModule(BrowserDynamicTestingModule, {
       set: {

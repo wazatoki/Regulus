@@ -245,7 +245,6 @@ describe('MakerService', () => {
         { id: 'id1', name: 'name1' },
         { id: 'id2', name: 'name2' },
       ],
-      saveData: null,
     };
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);

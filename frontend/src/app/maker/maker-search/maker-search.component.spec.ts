@@ -27,7 +27,7 @@ describe('MakerSearchComponent', () => {
 
     const spy = jasmine.createSpyObj('MakerService', ['findByCondition', 'findComplexSearchItems']);
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearchSave','orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
+    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
       declarations: [ MakerSearchComponent ],
@@ -85,7 +85,6 @@ describe('MakerSearchComponent', () => {
       isShowOrderCondition: false,
       isShowSaveCondition: false,
       groupList: [],
-      saveData: null,
     }
     const stubValue = of(complexSearchItems)
 
