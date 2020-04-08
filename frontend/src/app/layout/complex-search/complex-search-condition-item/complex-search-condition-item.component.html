@@ -1,0 +1,35 @@
+<div class="complex-search-condition-item">
+    <mat-grid-list cols="5" rowHeight="50px">
+        <mat-grid-tile>
+            <mat-form-field>
+                <mat-select class="select-field-name" (selectionChange)="onSelectField()" [formControl]="fieldSelected">
+                    <mat-option class="option-field-name" *ngFor="let field of fields" [(value)]="field.id">
+                    {{field.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-form-field>
+                <input matInput class="input-value" [formControl]="conditionValue">
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-form-field>
+                <mat-select class="select-match-type" [formControl]="matchTypeSelected">
+                    <mat-option class="option-match-type" *ngFor="let matchType of matchTypes" [value]="matchType.name">
+                        {{matchType.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-radio-group class="radio-group-operator-select" [formControl]="operatorSelected" aria-label="Select an operator">
+                <mat-radio-button class="radio-operator-option" *ngFor="let oparator of operators" [value]="oparator">{{oparator}}</mat-radio-button>
+            </mat-radio-group>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <app-delete class="delete-button" (clicked)="deleteClicked()"></app-delete>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

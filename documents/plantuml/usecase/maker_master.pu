@@ -1,0 +1,25 @@
+@startuml maker_master
+
+title maker master
+
+left to right direction
+
+rectangle system {
+    (新規作成)
+    (更新)
+    (削除)
+    (検索)
+}
+
+:master_admin_user: -- (新規作成)
+:master_admin_user: -- (更新)
+:master_admin_user: -- (削除)
+:master_admin_user: -- (検索)
+
+
+(新規作成) -- :db:
+(更新) -- :db:
+(削除) -- :db:
+(検索) -- :db:
+
+@enduml

@@ -1,0 +1,46 @@
+<app-layout-header-sidebar-contents>
+
+    <div class="sidebar">
+    </div>
+
+    <div class="contents">
+        <app-product-search></app-product-search>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <!-- maker Column -->
+            <ng-container matColumnDef="maker">
+                <th mat-header-cell *matHeaderCellDef> 製造販売業者 </th>
+                <td mat-cell *matCellDef="let product"> {{product.maker.name}} </td>
+            </ng-container>
+
+            <!-- jmdn Column -->
+            <ng-container matColumnDef="jmdn">
+                <th mat-header-cell *matHeaderCellDef> 一般的名称 </th>
+                <td mat-cell *matCellDef="let product"> {{product.jmdn.name}} </td>
+            </ng-container>
+
+            <!-- jan code Column -->
+            <ng-container matColumnDef="jancode">
+                <th mat-header-cell *matHeaderCellDef> ＪＡＮコード </th>
+                <td mat-cell *matCellDef="let product"> {{product.jancode}} </td>
+            </ng-container>
+
+            <!-- product name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> 商品名 </th>
+                <td mat-cell *matCellDef="let product"> {{product.name}} </td>
+            </ng-container>
+
+            <!-- product code Column -->
+            <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef> 製品番号 </th>
+                <td mat-cell *matCellDef="let product"> {{product.code}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+</app-layout-header-sidebar-contents>

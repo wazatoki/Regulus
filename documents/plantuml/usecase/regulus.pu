@@ -1,0 +1,13 @@
+@startuml regulus
+
+title: regulus
+
+left to right direction
+
+rectangle system {
+    (master maintenance)
+}
+
+:master_admin_user: -- (master maintenance)
+
+@enduml

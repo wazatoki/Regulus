@@ -1,0 +1,16 @@
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+
+    <!-- input -->
+    <div class="search-strings-wrapper" fxFlex="40em" fxFlex.lt-md="13em">
+        <input
+            class="search-strings"
+            matInput
+            placeholder="prease input search strings"
+            [(ngModel)]="searchStrings">
+    </div>
+
+    <!-- search button -->
+    <div fxFlex="4em">
+        <button mat-flat-button color="primary" (click)="onSearchClick()">検索</button>
+    </div>
+</div>

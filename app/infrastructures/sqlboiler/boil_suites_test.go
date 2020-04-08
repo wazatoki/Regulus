@@ -13,64 +13,90 @@ import "testing"
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrations)
+	t.Run("Makers", testMakers)
 	t.Run("Staffs", testStaffs)
+	t.Run("StaffGroups", testStaffGroups)
 }
 
 func TestDelete(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsDelete)
+	t.Run("Makers", testMakersDelete)
 	t.Run("Staffs", testStaffsDelete)
+	t.Run("StaffGroups", testStaffGroupsDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsQueryDeleteAll)
+	t.Run("Makers", testMakersQueryDeleteAll)
 	t.Run("Staffs", testStaffsQueryDeleteAll)
+	t.Run("StaffGroups", testStaffGroupsQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsSliceDeleteAll)
+	t.Run("Makers", testMakersSliceDeleteAll)
 	t.Run("Staffs", testStaffsSliceDeleteAll)
+	t.Run("StaffGroups", testStaffGroupsSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsExists)
+	t.Run("Makers", testMakersExists)
 	t.Run("Staffs", testStaffsExists)
+	t.Run("StaffGroups", testStaffGroupsExists)
 }
 
 func TestFind(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsFind)
+	t.Run("Makers", testMakersFind)
 	t.Run("Staffs", testStaffsFind)
+	t.Run("StaffGroups", testStaffGroupsFind)
 }
 
 func TestBind(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsBind)
+	t.Run("Makers", testMakersBind)
 	t.Run("Staffs", testStaffsBind)
+	t.Run("StaffGroups", testStaffGroupsBind)
 }
 
 func TestOne(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsOne)
+	t.Run("Makers", testMakersOne)
 	t.Run("Staffs", testStaffsOne)
+	t.Run("StaffGroups", testStaffGroupsOne)
 }
 
 func TestAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsAll)
+	t.Run("Makers", testMakersAll)
 	t.Run("Staffs", testStaffsAll)
+	t.Run("StaffGroups", testStaffGroupsAll)
 }
 
 func TestCount(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsCount)
+	t.Run("Makers", testMakersCount)
 	t.Run("Staffs", testStaffsCount)
+	t.Run("StaffGroups", testStaffGroupsCount)
 }
 
 func TestHooks(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsHooks)
+	t.Run("Makers", testMakersHooks)
 	t.Run("Staffs", testStaffsHooks)
+	t.Run("StaffGroups", testStaffGroupsHooks)
 }
 
 func TestInsert(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsInsert)
 	t.Run("GorpMigrations", testGorpMigrationsInsertWhitelist)
+	t.Run("Makers", testMakersInsert)
+	t.Run("Makers", testMakersInsertWhitelist)
 	t.Run("Staffs", testStaffsInsert)
 	t.Run("Staffs", testStaffsInsertWhitelist)
+	t.Run("StaffGroups", testStaffGroupsInsert)
+	t.Run("StaffGroups", testStaffGroupsInsertWhitelist)
 }
 
 // TestToOne tests cannot be run in parallel
@@ -115,25 +141,35 @@ func TestToManyRemove(t *testing.T) {}
 
 func TestReload(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsReload)
+	t.Run("Makers", testMakersReload)
 	t.Run("Staffs", testStaffsReload)
+	t.Run("StaffGroups", testStaffGroupsReload)
 }
 
 func TestReloadAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsReloadAll)
+	t.Run("Makers", testMakersReloadAll)
 	t.Run("Staffs", testStaffsReloadAll)
+	t.Run("StaffGroups", testStaffGroupsReloadAll)
 }
 
 func TestSelect(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsSelect)
+	t.Run("Makers", testMakersSelect)
 	t.Run("Staffs", testStaffsSelect)
+	t.Run("StaffGroups", testStaffGroupsSelect)
 }
 
 func TestUpdate(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsUpdate)
+	t.Run("Makers", testMakersUpdate)
 	t.Run("Staffs", testStaffsUpdate)
+	t.Run("StaffGroups", testStaffGroupsUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsSliceUpdateAll)
+	t.Run("Makers", testMakersSliceUpdateAll)
 	t.Run("Staffs", testStaffsSliceUpdateAll)
+	t.Run("StaffGroups", testStaffGroupsSliceUpdateAll)
 }

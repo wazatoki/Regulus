@@ -15,7 +15,10 @@ import (
 // StartEcho http server start
 func StartEcho() {
 	e := echo.New()
-	e.Static("/", "resources/frontend")
+	e.Static("/resources", "resources/frontend")
+	e.File("/index.html", "resources/frontend/index.html")
+
+	defineRewrite(e)
 	defineRouting(e)
 	go func() {
 		log.Info("start server")

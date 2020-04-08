@@ -7,6 +7,8 @@ require (
 	github.com/denisenkom/go-mssqldb v0.0.0-20191001013358-cfbb681360f0 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
+	github.com/google/uuid v1.1.1
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/kat-co/vala v0.0.0-20170210184112-42e1d8b61f12
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
@@ -21,7 +23,7 @@ require (
 	github.com/pelletier/go-toml v1.4.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/posener/complete v1.2.1 // indirect
-	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1 // indirect
+	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

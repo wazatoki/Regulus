@@ -1,2 +1,2 @@
 #!/bin/sh
-docker exec -i postgresql dropdb $1 $2
+docker exec -i postgresql dropdb -U regulus $1 $2

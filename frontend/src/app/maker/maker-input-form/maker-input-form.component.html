@@ -1,0 +1,26 @@
+<div fxFlex="95%">
+    <form [formGroup]="makerForm" (ngSubmit)="onSubmit()">
+        <div mat-dialog-content class="form-container">
+            <mat-form-field>
+                <input type='text' matInput placeholder="製造販売業者名称" required formControlName="name">
+                <mat-error *ngIf="name.invalid">
+                    <span>製造販売業者名称は必須項目です。</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div mat-dialog-actions class="form-container">
+            <mat-grid-list cols="4" rowHeight="40">
+                <mat-grid-tile>
+                    <app-cancel (clicked)="onCancelClick()"></app-cancel>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="2">
+                    <app-clear (clicked)="onClearClick()"></app-clear>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <app-submit [buttonLabelType]="save"></app-submit>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+    </form>
+</div>

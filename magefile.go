@@ -16,6 +16,15 @@ import (
 // If not set, running mage will list available targets
 // var Default = Build
 
+func Test() error {
+	out, err := exec.Command("go", "test", "./...").Output()
+	fmt.Println(string(out))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // SqlMigrateUp execute sql-migrate down
 func SqlMigrateDown() error {
 	cmd := exec.Command("sql-migrate", "down", "-config=./resources/db/dbconfig.yml")
@@ -34,8 +43,9 @@ func SqlMigrateUp() error {
 	return nil
 }
 
-// SqlMigrateNew execute sql-migrate new
+// SqlMigrateNew execute sql-migrate new. option is maigration file name.
 func SqlMigrateNew() error {
+
 	cmd := exec.Command("sql-migrate", "new", "-config=./resources/db/dbconfig.yml")
 	if err := cmd.Run(); err != nil {
 		return err
@@ -43,7 +53,7 @@ func SqlMigrateNew() error {
 	return nil
 }
 
-// CreateDataAccessModel create data access model
+// DropDataAccessModel drop data access model
 func DropDataAccessModel() {
 	os.RemoveAll("./app/infrastructures/sqlboiler")
 	//os.Mkdir("./app/infrastructures/sqlboiler", 0777)
@@ -58,13 +68,30 @@ func CreateDataAccessModel() error {
 	return nil
 }
 
+// Run execute program
+func Run() error {
+	// mg.Deps(Build)
+
+	os.Chdir("./build")
+	defer os.Chdir("../")
+
+	out, err := exec.Command("./regulus_linux_amd64.bin").Output()
+	fmt.Println(string(out))
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
 // BuildJs build javascript
 func BuildJs() error {
 
 	os.Chdir("./frontend")
 	defer os.Chdir("../")
 
-	cmd := exec.Command("npx", "ng", "build")
+	fmt.Println("Building frontend")
+	cmd := exec.Command("npx", "ng", "build", "--deploy-url=/resources/")
 	if err := cmd.Run(); err != nil {
 		return err
 	}
@@ -75,6 +102,7 @@ func BuildJs() error {
 func Build() error {
 
 	mg.Deps(Clean)
+	mg.Deps(BuildJs)
 
 	defer resetEnv()
 
@@ -102,7 +130,17 @@ func Build() error {
 		return err
 	}
 
-	copyResources()
+	fmt.Println("copy start")
+	// resourcesコピー
+	separator := getSeparator()
+	rootDir := "." + separator + "resources"
+	targetDir := "." + separator + "build" + separator + "resources"
+	copy(rootDir, targetDir)
+
+	// frontendコピー
+	rootDir = "." + separator + "frontend" + separator + "dist"
+	targetDir = "." + separator + "build" + separator + "resources"
+	copy(rootDir, targetDir)
 
 	fmt.Println("build finished !")
 
@@ -121,31 +159,33 @@ func resetEnv() {
 	os.Setenv("GOOS", "linux")
 }
 
-func copyResources() error {
+func getSeparator() string {
+	return string(os.PathSeparator)
+}
 
-	separator := string(os.PathSeparator)
-	root := "." + separator + "resources"
-	targetDir := "." + separator + "build" + separator + "resources"
+func copy(rootDir string, targetDir string) error {
+
+	separator := getSeparator()
 	files := []string{}
 
 	// ディレクトリ内のファイルを取得
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		rel, err := filepath.Rel(root, path)
+	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
+		rel, err := filepath.Rel(rootDir, path)
 		files = append(files, rel)
 		return nil
 	})
 
 	// ディレクトリを作成
 	for _, file := range files {
-		if fInfo, _ := os.Stat(root + separator + file); fInfo.IsDir() == true {
+		if fInfo, _ := os.Stat(rootDir + separator + file); fInfo.IsDir() == true {
 			os.MkdirAll(targetDir+separator+file, 0777)
 		}
 	}
 
 	// コピー実行
 	for _, file := range files {
-		if fInfo, _ := os.Stat(root + separator + file); fInfo.IsDir() == false {
-			src, err := os.Open(root + separator + file)
+		if fInfo, _ := os.Stat(rootDir + separator + file); fInfo.IsDir() == false {
+			src, err := os.Open(rootDir + separator + file)
 			if err != nil {
 				panic(err)
 			}
@@ -165,5 +205,4 @@ func copyResources() error {
 	}
 
 	return err
-
 }

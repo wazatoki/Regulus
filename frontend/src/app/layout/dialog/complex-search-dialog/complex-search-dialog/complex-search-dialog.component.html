@@ -1,0 +1,14 @@
+<h1 mat-dialog-title class="dialog-title">{{ data.title }}</h1>
+<div mat-dialog-content>
+    <div class="dialog-contents">
+        <app-complex-search [displayItemList]="data.displayItemList" [searchConditionList]="data.searchConditionList"
+            [orderConditionList]="data.orderConditionList" [groupList]="data.groupList"
+            [isShowDisplayItem]="data.isShowDisplayItem" [isShowOrderCondition]="data.isShowOrderCondition"
+            [isShowSaveCondition]="data.isShowSaveCondition" [saveData]="data.saveData"
+             (onSearch)="onSearch($event)">
+        </app-complex-search>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <app-cancel (clicked)="onCancelClick()"></app-cancel>
+</div>

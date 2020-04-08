@@ -1,2 +1,2 @@
 #!/bin/sh
-docker exec -i postgresql psql $1
+docker exec -i postgresql psql -U regulus  $1

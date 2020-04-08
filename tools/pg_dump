@@ -1,2 +1,2 @@
 #!/bin/sh
-docker exec -i postgresql pg_dump $1 $2
+docker exec -i postgresql pg_dump -U regulus $1 $2
