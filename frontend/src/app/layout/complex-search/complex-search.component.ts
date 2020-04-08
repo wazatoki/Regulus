@@ -140,14 +140,15 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   controlDrop(event: CdkDragDrop<AbstractControl[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
-    }
+    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    // if (event.previousContainer === event.container) {
+    //   moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    // } else {
+    //   transferArrayItem(event.previousContainer.data,
+    //     event.container.data,
+    //     event.previousIndex,
+    //     event.currentIndex);
+    // }
   }
 
   pushSearchCondition() {
@@ -267,7 +268,6 @@ export class ComplexSearchComponent implements OnInit {
     if (this.isShowOrderCondition) {
       data.orderConditionList = this.createOrderCondition();
     }
-
     return data;
   }
 
