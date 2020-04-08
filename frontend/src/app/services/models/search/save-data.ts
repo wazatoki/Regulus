@@ -1,4 +1,5 @@
 import { ConditionData } from './condition-data'
+import { Staff } from '../staff/staff';
 
 export interface SaveData {
     id: string,
@@ -8,4 +9,5 @@ export interface SaveData {
     discloseGroups: string[],
     ownerID: string,
     conditionData: ConditionData,
+    owner: Staff
   }

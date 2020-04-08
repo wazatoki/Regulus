@@ -153,7 +153,5 @@ describe('MakerMasterComponent', () => {
       expect(component.makerService.delete).toHaveBeenCalled();
 
     });
-    
-    
   });
 });

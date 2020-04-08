@@ -56,6 +56,10 @@ describe('MakerSearchComponent', () => {
         searchConditionList: [],
         orderConditionList: [],
       },
+      owner: {
+        id: '',
+        name: '',
+      }
     });
     complexSearchServiceSpy.initConditionDataObj.and.returnValue({
       searchStrings: [],

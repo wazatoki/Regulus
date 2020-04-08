@@ -25,6 +25,10 @@ export class ComplexSearchService {
       discloseGroups: [],
       ownerID: '',
       conditionData: this.initConditionDataObj(),
+      owner: {
+        id: '',
+        name: '',
+      }
     };
   }
 

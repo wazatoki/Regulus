@@ -91,6 +91,10 @@ describe('ComplexSearchComponent', () => {
         searchConditionList: [],
         orderConditionList: [],
       },
+      owner: {
+        id: '',
+        name: '',
+      },
     });
     spy.initConditionDataObj.and.returnValue({
       searchStrings: [],
@@ -417,5 +421,9 @@ class TestHostComponent {
     },
     ownerID: '',
     category: '',
+    owner: {
+      id: '',
+      name: '',
+    }
   };
 }

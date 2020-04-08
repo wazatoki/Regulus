@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
+import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-complex-search-condition-master',
@@ -16,6 +17,33 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   dataSource: MatTableDataSource<SaveData>;
   selection: SelectionModel<SaveData>;
 
+  deleteItems(): void {
+    if(this.selection.selected.length === 0){
+      const dialogRef = this.dialog.open(NoticeDialogComponent, {
+        data: { contents: '削除対象が選択されていません。' }
+      });
+    }else{
+      const data: string[] = [];
+      this.selection.selected.forEach( (saveData: SaveData) => {
+        data.push(saveData.id);
+      });
+      this.complexSearchConditionService.delete(data).subscribe( (res: SaveData[]) => {
+        if (res.length > 0){
+          let str: string;
+          str = '以下のdataが削除できませんでした。<br/>';
+  
+          res.forEach( (s: SaveData) => {
+            str += '・' + s.patternName + '<br/>';
+          });
+  
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: str }
+          });
+        }
+      });
+    }
+  }
+  
   onFetchedSearchConditions(data: SaveData[]) {
     this.dataSource = new MatTableDataSource(data);
   }

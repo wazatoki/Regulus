@@ -74,6 +74,10 @@ describe('ComplexSearchConditionSearchComponent', () => {
         isDisclose: false,
         ownerID: '',
         patternName: '',
+        owner: {
+          id: '',
+          name: '',
+        },
       },
       {
         id : 'id2',
@@ -88,6 +92,10 @@ describe('ComplexSearchConditionSearchComponent', () => {
         isDisclose: false,
         ownerID: '',
         patternName: '',
+        owner: {
+          id: '',
+          name: '',
+        },
       }
     ];
     complexSearchConditionServiceSpy.findByCondition.and.returnValue(of(data))
