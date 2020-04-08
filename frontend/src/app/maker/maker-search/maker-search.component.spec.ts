@@ -1,14 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { LayoutModule } from '../../layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MakerSearchComponent } from './maker-search.component';
 import { MakerService } from '../../services/api/maker.service';
-import { MakerCondition } from '../../services/models/maker/maker-condition';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
-import { SearchComponent } from 'src/app/layout/search/search.component';
 import { Maker } from '../../services/models/maker/maker';
 import { of,Subject } from 'rxjs';
 import { ConditionData } from 'src/app/services/models/search/condition-data';

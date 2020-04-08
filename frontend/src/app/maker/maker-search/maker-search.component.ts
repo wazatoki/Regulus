@@ -2,14 +2,13 @@ import { Component, OnInit, EventEmitter, Output, OnDestroy, Input } from '@angu
 import { Maker } from '../../services/models/maker/maker';
 import { MakerService } from '../../services/api/maker.service';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
-import { ConditionData, mapCondition } from '../../services/models/search/condition-data';
+import { ConditionData, mapCondition, splitStrings } from '../../services/models/search/condition-data';
 import { Subscription } from 'rxjs';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ComplexSearchDialogComponent } from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
 import { SaveData } from 'src/app/services/models/search/save-data';
-import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-maker-search',
@@ -20,7 +19,6 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
 
   private condition: ConditionData;
   private complexSearchSubscription: Subscription;
-  private complexSearchSaveSubscription: Subscription;
   private saveData: SaveData;
   private dialogRef: MatDialogRef<ComplexSearchDialogComponent>;
 
@@ -82,9 +80,8 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
 
   onSearch(searchStrings: string) {
 
-    const splitString = '--sprit--string--';
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
-    this.condition.searchStrings = searchStrings.replace(' ', splitString).replace('　', splitString).split(splitString);
+    this.condition.searchStrings = splitStrings(searchStrings)
     this.search();
   }
 
