@@ -1,36 +1,29 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Group } from '../../services/models/group/group';
-import { FieldAttr } from '../../services/models/search/field-attr';
-import { ConditionData } from '../../services/models/search/condition-data';
-import { SearchCondition } from '../../services/models/search/search-condition';
-import { OrderCondition } from '../../services/models/search/order-condition';
-import { SaveData } from '../../services/models/search/save-data';
-import { ComplexSearchService } from '../../services/share/complex-search.service';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { MatDialog } from '@angular/material/dialog';
-import { NoticeDialogComponent } from '../dialog/notice-dialog/notice-dialog.component';
+import { FieldAttr } from 'src/app/services/models/search/field-attr';
+import { SaveData } from 'src/app/services/models/search/save-data';
+import { Group } from 'src/app/services/models/group/group';
+import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
+import { SearchCondition } from 'src/app/services/models/search/search-condition';
+import { OrderCondition } from 'src/app/services/models/search/order-condition';
+import { ConditionData } from 'src/app/services/models/search/condition-data';
 
 @Component({
-  selector: 'app-complex-search',
-  templateUrl: './complex-search.component.html',
-  styleUrls: ['./complex-search.component.css']
+  selector: 'app-complex-search-condition-input-form',
+  templateUrl: './complex-search-condition-input-form.component.html',
+  styleUrls: ['./complex-search-condition-input-form.component.css']
 })
-export class ComplexSearchComponent implements OnInit {
-
-  form: FormGroup;
+export class ComplexSearchConditionInputFormComponent implements OnInit {
 
   selectedDisplayItemArray: FieldAttr[];
   fromDisplayItemArray: FieldAttr[];
+  isShowDisplayItem: boolean = true;
+  isShowOrderCondition: boolean = true;
+  isShowSaveCondition: boolean = true;
 
-  @Input() displayItemList: FieldAttr[] = [];
-  @Input() searchConditionList: FieldAttr[] = [];
-  @Input() orderConditionList: FieldAttr[] = [];
-  @Input() isShowDisplayItem: boolean = false;
-  @Input() isShowOrderCondition: boolean = false;
-  @Input() isShowSaveCondition: boolean = false;
-  @Input() groupList: Group[] = [];
-  @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
+  form: FormGroup;
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -47,11 +40,18 @@ export class ComplexSearchComponent implements OnInit {
   get discloseGroupFormArray() {
     return this.saveConditions.get('discloseGroups') as FormArray;
   }
-
-  constructor(private fb: FormBuilder,
-    private complexSearchDataShereService: ComplexSearchService,
-    private dialog: MatDialog) {
-
+  
+  @Input() displayItemList: FieldAttr[] = [];
+  @Input() searchConditionList: FieldAttr[] = [];
+  @Input() orderConditionList: FieldAttr[] = [];
+  @Input() groupList: Group[] = [];
+  @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
+  
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private complexSearchDataShereService: ComplexSearchService
+  ) {
     this.form = this.fb.group({
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
@@ -64,12 +64,6 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupList.forEach(g => {
-      this.discloseGroupFormArray.push(this.fb.control(''));
-    })
-    this.fromDisplayItemArray = this.displayItemList;
-    this.selectedDisplayItemArray = [];
-
     // saveDataの編集のときは値をフォームに反映する
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
       this.setSavedDataToForm()
@@ -128,21 +122,6 @@ export class ComplexSearchComponent implements OnInit {
     }
   }
 
-  displayItemDrop(event: CdkDragDrop<FieldAttr[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex);
-    }
-  }
-
-  controlDrop(event: CdkDragDrop<AbstractControl[]>) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-  }
-
   pushSearchCondition() {
     this.searchConditionFormArray.push(new FormGroup({
       fieldSelected: new FormControl(''),
@@ -183,11 +162,6 @@ export class ComplexSearchComponent implements OnInit {
       });
     }
 
-  }
-
-  clickSearch(): void {
-    const data: ConditionData = this.createSearchData();
-    this.complexSearchDataShereService.orderComplexSearch(data);
   }
 
   createSearchCondition(): SearchCondition[] {
@@ -263,4 +237,4 @@ export class ComplexSearchComponent implements OnInit {
     return data;
   }
 
-}// end of class
+}
