@@ -16,38 +16,42 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   dataSource: MatTableDataSource<SaveData>;
   selection: SelectionModel<SaveData>;
 
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
-      const numSelected = this.selection.selected.length;
-      const numRows = this.dataSource.data.length;
-      return numSelected === numRows;
-    }
-  
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-      this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
-    }
-  
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: SaveData): string {
-      if (!row) {
-        return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-      }
-      return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
-    }
+  onFetchedSearchConditions(data: SaveData[]) {
+    this.dataSource = new MatTableDataSource(data);
+  }
 
-  constructor( private complexSearchConditionService: ComplexSearchConditionService,
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: SaveData): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
+  }
+
+  constructor(private complexSearchConditionService: ComplexSearchConditionService,
     public dialog: MatDialog
-    ) { 
-      const initialSelection = [];
-      const allowMultiSelect = true;
-      this.displayedColumns = ['select', 'name', 'category', 'owner'];
-      this.dataSource = new MatTableDataSource<SaveData>([]);
-      this.selection = new SelectionModel<SaveData>(allowMultiSelect, initialSelection);
+  ) {
+    const initialSelection = [];
+    const allowMultiSelect = true;
+    this.displayedColumns = ['select', 'name', 'category', 'owner'];
+    this.dataSource = new MatTableDataSource<SaveData>([]);
+    this.selection = new SelectionModel<SaveData>(allowMultiSelect, initialSelection);
 
-    }
+  }
 
   ngOnInit() {
   }

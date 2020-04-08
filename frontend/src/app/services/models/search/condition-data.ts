@@ -17,8 +17,8 @@ export function mapCondition(from: ConditionData, to: ConditionData) {
 
 export function splitStrings(str: string): string[] {
 
-    const splitString = '--sprit--string--';
+    const pattern = new RegExp(' |　');
 
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
-    return str.replace(' ', splitString).replace('　', splitString).split(splitString);
+    return str.split(pattern);
 }
