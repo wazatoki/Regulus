@@ -16,17 +16,26 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { MatButtonModule } from '@angular/material/button';
+import { ViewChild, Component } from '@angular/core';
+
+import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec'
+import { Category } from 'src/app/services/models/search/category';
 
 describe('ComplexSearchConditionInputFormComponent', () => {
-  let component: ComplexSearchConditionInputFormComponent;
-  let fixture: ComponentFixture<ComplexSearchConditionInputFormComponent>;
+  let component: TestHostComponent;
+  let fixture: ComponentFixture<TestHostComponent>;
+  // let component: ComplexSearchConditionInputFormComponent;
+  // let fixture: ComponentFixture<ComplexSearchConditionInputFormComponent>;
 
   beforeEach(async(() => {
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
     ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
 
     TestBed.configureTestingModule({
-      declarations: [ComplexSearchConditionInputFormComponent],
+      declarations: [
+        ComplexSearchConditionInputFormComponent,
+        TestHostComponent,
+      ],
       imports: [
         LayoutModule,
         FlexLayoutModule,
@@ -63,12 +72,34 @@ describe('ComplexSearchConditionInputFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComplexSearchConditionInputFormComponent);
+    fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });
+
+
+@Component({
+  template: `
+  <app-complex-search-condition-input-form
+    [categories]="categories"
+    [displayItemList]="displayItemList"
+    [searchConditionList]="searchConditionList"
+    [orderConditionList]="orderConditionList"
+    [groupList]="groupList"
+    [saveData]="saveData"
+  >
+  </app-complex-search-condition-input-form>`
+})
+class TestHostComponent {
+
+  @ViewChild(ComplexSearchConditionInputFormComponent, {static: true})
+  complexSearchConditionInputFormComponent: ComplexSearchConditionInputFormComponent;
+
+  categories: Category[] = ceateTestArrayForMasterMaintenanceTest();
+}
+

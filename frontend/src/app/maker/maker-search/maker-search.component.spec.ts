@@ -101,11 +101,11 @@ describe('MakerSearchComponent', () => {
       { id: 'testid2', name: 'Test Maker2' },
     ];
     const stubValue = of(testData)
-    const condition = {
-      searchStrings: [],
+    const condition: ConditionData = {
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
+      searchStrings: [],
     };
     makerServiceSpy.findByCondition.and.returnValue(stubValue);
     complexSearchServiceSpy.initConditionDataObj.and.returnValue(condition);

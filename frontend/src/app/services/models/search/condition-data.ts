@@ -2,11 +2,16 @@ import { FieldAttr } from './field-attr';
 import { SearchCondition } from './search-condition';
 import { OrderCondition } from './order-condition';
 
-export interface ConditionData {
-    searchStrings: string[],
-    displayItemList: FieldAttr[],
-    searchConditionList: SearchCondition[],
-    orderConditionList: OrderCondition[],
+/*
+
+ConditionData 検索実行の際サーバーに送るデータ構造
+
+*/
+export class ConditionData {
+    searchStrings: string[]
+    displayItemList: FieldAttr[]
+    searchConditionList: SearchCondition[]
+    orderConditionList: OrderCondition[]
 }
 
 export function mapCondition(from: ConditionData, to: ConditionData) {

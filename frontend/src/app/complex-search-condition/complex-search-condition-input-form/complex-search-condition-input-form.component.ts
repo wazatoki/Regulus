@@ -9,6 +9,7 @@ import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notic
 import { SearchCondition } from 'src/app/services/models/search/search-condition';
 import { OrderCondition } from 'src/app/services/models/search/order-condition';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
+import { Category } from 'src/app/services/models/search/category';
 
 @Component({
   selector: 'app-complex-search-condition-input-form',
@@ -17,6 +18,7 @@ import { ConditionData } from 'src/app/services/models/search/condition-data';
 })
 export class ComplexSearchConditionInputFormComponent implements OnInit {
 
+  
   selectedDisplayItemArray: FieldAttr[];
   fromDisplayItemArray: FieldAttr[];
   isShowDisplayItem: boolean = true;
@@ -24,6 +26,11 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
   isShowSaveCondition: boolean = true;
 
   form: FormGroup;
+
+
+  get categorySelected() {
+    return this.saveConditions.get('category') as FormControl;
+  }
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -40,13 +47,14 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
   get discloseGroupFormArray() {
     return this.saveConditions.get('discloseGroups') as FormArray;
   }
-  
+
+  @Input() categories: Category[];
   @Input() displayItemList: FieldAttr[] = [];
   @Input() searchConditionList: FieldAttr[] = [];
   @Input() orderConditionList: FieldAttr[] = [];
   @Input() groupList: Group[] = [];
   @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
-  
+
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -56,8 +64,9 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({
-        patternName: this.fb.control(""),
-        isDisclose: this.fb.control(""),
+        category: this.fb.control(''),
+        patternName: this.fb.control(''),
+        isDisclose: this.fb.control(''),
         discloseGroups: this.fb.array([]),
       }),
     });
@@ -68,6 +77,15 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
       this.setSavedDataToForm()
     }
+  }
+
+  onSelectCategory() {
+    const category = this.categories.find((c) => {
+      return (c.name === this.categorySelected.value)
+    })
+
+    this.isShowDisplayItem = category.isShowDisplayItem
+    this.isShowOrderCondition = category.isShowOrderCondition
   }
 
   setSavedDataToForm() {

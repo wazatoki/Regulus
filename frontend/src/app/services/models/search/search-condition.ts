@@ -1,8 +1,13 @@
 import { FieldAttr } from './field-attr';
 
-export interface SearchCondition {
-    field: FieldAttr,
-    conditionValue: string,
-    matchType: string,
-    operator: string,
+/*
+
+SearchCondition 検索条件のパーツ
+
+*/
+export class SearchCondition {
+    field: FieldAttr
+    conditionValue: string
+    matchType: string
+    operator: string
 }
