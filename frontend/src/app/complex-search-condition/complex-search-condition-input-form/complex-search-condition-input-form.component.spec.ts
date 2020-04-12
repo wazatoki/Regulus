@@ -19,7 +19,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { ViewChild, Component } from '@angular/core';
 
 import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec'
+import { createTestArray as createFielsAttrTeatArray } from 'src/app/services/models/search/field-attr.spec';
+import { ceateTestArray as createSearchConditionArray } from 'src/app/services/models/search/search-condition.spec'
+import { ceateTestArray as createOrderConditionArray } from 'src/app/services/models/search/order-condition.spec'
+import { ceateTestArray as createGroupArray } from 'src/app/services/models/group/group.spec';
 import { Category } from 'src/app/services/models/search/category';
+import { FieldAttr } from 'src/app/services/models/search/field-attr';
+import { SearchCondition } from 'src/app/services/models/search/search-condition';
+import { OrderCondition } from 'src/app/services/models/search/order-condition';
+import { Group } from 'src/app/services/models/group/group';
+import { SaveData } from 'src/app/services/models/search/save-data';
 
 describe('ComplexSearchConditionInputFormComponent', () => {
   let component: TestHostComponent;
@@ -101,5 +110,10 @@ class TestHostComponent {
   complexSearchConditionInputFormComponent: ComplexSearchConditionInputFormComponent;
 
   categories: Category[] = ceateTestArrayForMasterMaintenanceTest();
+  displayItemList: FieldAttr[] = createFielsAttrTeatArray();
+  searchConditionList: SearchCondition[] = createSearchConditionArray();
+  orderConditionList: OrderCondition[] = createOrderConditionArray();
+  groupList: Group[] = createGroupArray();
+  saveData: SaveData
 }
 

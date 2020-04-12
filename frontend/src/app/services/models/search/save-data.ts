@@ -13,6 +13,6 @@ export class SaveData {
     isDisclose: boolean
     discloseGroups: string[]
     ownerID: string
-    conditionData: ConditionData
     owner: Staff
+    conditionData: ConditionData
   }
