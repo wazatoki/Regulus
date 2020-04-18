@@ -16,6 +16,8 @@ import { DebugElement } from '@angular/core';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { of } from 'rxjs';
 
+import { createTestArray } from 'src/app/services/models/search/save-data.spec';
+
 describe('ComplexSearchConditionMasterComponent', () => {
   let component: ComplexSearchConditionMasterComponent;
   let fixture: ComponentFixture<ComplexSearchConditionMasterComponent>;
@@ -58,44 +60,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
     element = dbElement.nativeElement;
     fixture.detectChanges();
 
-    testData = [
-      {
-        id: 'testID1',
-        ownerID: 'testOwnerID1',
-        patternName: 'testName1',
-        category: 'testCategory1',
-        conditionData: {
-          displayItemList: [],
-          orderConditionList: [],
-          searchConditionList: [],
-          searchStrings: [],
-        },
-        discloseGroups: [],
-        isDisclose: false,
-        owner: {
-          id: '',
-          name: 'testStaffName1',
-        },
-      },
-      {
-        id: 'testID2',
-        ownerID: 'testOwnerID2',
-        patternName: 'testName2',
-        category: 'testCategory2',
-        conditionData: {
-          displayItemList: [],
-          orderConditionList: [],
-          searchConditionList: [],
-          searchStrings: [],
-        },
-        discloseGroups: [],
-        isDisclose: false,
-        owner: {
-          id: '',
-          name: 'testStaffName1',
-        },
-      },
-    ];
+    testData = createTestArray();
   });
 
   it('should create', () => {
@@ -108,8 +73,8 @@ describe('ComplexSearchConditionMasterComponent', () => {
 
     component.onFetchedSearchConditions(testData);
     fixture.detectChanges();
-    expect(element.textContent).toContain('testName1');
-    expect(element.textContent).toContain('testName2');
+    expect(element.textContent).toContain('saveName1');
+    expect(element.textContent).toContain('saveName2');
   });
 
   it('select item as all checked', () => {

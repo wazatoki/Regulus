@@ -21,8 +21,8 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
   
   selectedDisplayItemArray: FieldAttr[];
   fromDisplayItemArray: FieldAttr[];
-  isShowDisplayItem: boolean = true;
-  isShowOrderCondition: boolean = true;
+  isShowDisplayItem: boolean = false;
+  isShowOrderCondition: boolean = false;
   isShowSaveCondition: boolean = true;
 
   form: FormGroup;
@@ -92,7 +92,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
     this.discloseGroupFormArray.controls.forEach((v, i) => {
-      this.saveData.discloseGroups.forEach(id => {
+      this.saveData.discloseGroupIDs.forEach(id => {
         if (this.groupList[i].id === id) {
           v.setValue(true)
         }
@@ -130,7 +130,6 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     if (this.saveData.conditionData.orderConditionList !== null
       && this.saveData.conditionData.orderConditionList !== undefined
       && this.saveData.conditionData.orderConditionList.length > 0) {
-
       this.saveData.conditionData.orderConditionList.forEach(orderCondition => {
         this.pushOrderCondition()
         const fgroup = this.orderConditionFormArray.at(this.orderConditionFormArray.length - 1);
@@ -231,7 +230,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
       this.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
-          this.saveData.discloseGroups.push(this.groupList[i].id);
+          this.saveData.discloseGroupIDs.push(this.groupList[i].id);
         }
       });
     }

@@ -56,14 +56,13 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   ngOnInit() {
     // matchTypeの初期設定
     if (this.fieldSelected.value !== null && this.fieldSelected.value !== undefined && this.fieldSelected.value !== '') {
-      
       this.setMatchType();
 
     } else {
       this.matchTypes = this.matchTypesForString;
     }
     // operatorの初期設定
-    if(this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
+    if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
       this.operatorSelected.setValue(this.operators[0]);
     }
   }
@@ -73,10 +72,21 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       return (field.id === this.fieldSelected.value)
     })
 
-    if (f.fieldType === "string") {
+    if (f) {
+      switch (f.fieldType) {
+        case 'number':
+          this.matchTypes = this.matchTypesForNumber;
+          break;
+        case 'string':
+          this.matchTypes = this.matchTypesForString;
+          break;
+
+        default:
+          this.matchTypes = this.matchTypesForString;
+          break;
+      }
+    } else { // 検索対象フィールドが選択されていないときなど。
       this.matchTypes = this.matchTypesForString;
-    } else {
-      this.matchTypes = this.matchTypesForNumber;
     }
   }
 

@@ -11,7 +11,7 @@ export class SaveData {
     patternName: string
     category: string
     isDisclose: boolean
-    discloseGroups: string[]
+    discloseGroupIDs: string[]
     ownerID: string
     owner: Staff
     conditionData: ConditionData

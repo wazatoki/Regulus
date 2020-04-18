@@ -8,6 +8,8 @@ import { ComplexSearchService } from 'src/app/services/share/complex-search.serv
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { of } from 'rxjs';
 
+import { createTestArray } from 'src/app/services/models/search/save-data.spec';
+
 describe('ComplexSearchConditionSearchComponent', () => {
   let component: ComplexSearchConditionSearchComponent;
   let fixture: ComponentFixture<ComplexSearchConditionSearchComponent>;
@@ -60,44 +62,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     };
-    const data: SaveData[] = [
-      {
-        id : 'id1',
-        category: 'testCategory',
-        conditionData: {
-          displayItemList: [],
-          orderConditionList:[],
-          searchConditionList:[],
-          searchStrings: [],
-        },
-        discloseGroups: [],
-        isDisclose: false,
-        ownerID: '',
-        patternName: '',
-        owner: {
-          id: '',
-          name: '',
-        },
-      },
-      {
-        id : 'id2',
-        category: 'testCategory2',
-        conditionData: {
-          displayItemList: [],
-          orderConditionList:[],
-          searchConditionList:[],
-          searchStrings: [],
-        },
-        discloseGroups: [],
-        isDisclose: false,
-        ownerID: '',
-        patternName: '',
-        owner: {
-          id: '',
-          name: '',
-        },
-      }
-    ];
+    const data: SaveData[] = createTestArray();
     complexSearchConditionServiceSpy.findByCondition.and.returnValue(of(data))
     component.onSearch(searchWords);
 

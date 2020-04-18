@@ -80,7 +80,7 @@ export class ComplexSearchComponent implements OnInit {
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
     this.discloseGroupFormArray.controls.forEach((v, i) => {
-      this.saveData.discloseGroups.forEach(id => {
+      this.saveData.discloseGroupIDs.forEach(id => {
         if (this.groupList[i].id === id) {
           v.setValue(true)
         }
@@ -239,7 +239,7 @@ export class ComplexSearchComponent implements OnInit {
       this.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
-          this.saveData.discloseGroups.push(this.groupList[i].id);
+          this.saveData.discloseGroupIDs.push(this.groupList[i].id);
         }
       });
     }

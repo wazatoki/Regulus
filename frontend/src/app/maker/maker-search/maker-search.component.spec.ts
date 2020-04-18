@@ -48,7 +48,7 @@ describe('MakerSearchComponent', () => {
       patternName: '',
       category: '',
       isDisclose: false,
-      discloseGroups: [],
+      discloseGroupIDs: [],
       ownerID: '',
       conditionData: {
         searchStrings: [],

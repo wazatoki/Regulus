@@ -22,7 +22,7 @@ export class ComplexSearchService {
       patternName: '',
       category: '',
       isDisclose: false,
-      discloseGroups: [],
+      discloseGroupIDs: [],
       ownerID: '',
       conditionData: this.initConditionDataObj(),
       owner: {
