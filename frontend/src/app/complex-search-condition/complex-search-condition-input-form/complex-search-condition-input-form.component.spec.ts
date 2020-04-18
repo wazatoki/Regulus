@@ -24,6 +24,8 @@ import { ceateTestArray as createSearchConditionArray } from 'src/app/services/m
 import { ceateTestArray as createOrderConditionArray } from 'src/app/services/models/search/order-condition.spec'
 import { ceateTestArray as createGroupArray } from 'src/app/services/models/group/group.spec';
 import { createTestInstance1 as createSaveData } from 'src/app/services/models/search/save-data.spec';
+import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
+import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 
 import { Category } from 'src/app/services/models/search/category';
 import { FieldAttr } from 'src/app/services/models/search/field-attr';
@@ -32,11 +34,15 @@ import { OrderCondition } from 'src/app/services/models/search/order-condition';
 import { Group } from 'src/app/services/models/group/group';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { By } from '@angular/platform-browser';
+import { ComplexSearchConditionItemComponent } from 'src/app/layout/complex-search/complex-search-condition-item/complex-search-condition-item.component';
+import { ComplexSearchOrderItemComponent } from 'src/app/layout/complex-search/complex-search-order-item/complex-search-order-item.component';
+import { Subject } from 'rxjs';
 
 
 describe('ComplexSearchConditionInputFormComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
+  let spy: jasmine.SpyObj<ComplexSearchService>;
   // let component: ComplexSearchConditionInputFormComponent;
   // let fixture: ComponentFixture<ComplexSearchConditionInputFormComponent>;
 
@@ -87,6 +93,13 @@ describe('ComplexSearchConditionInputFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
+
+    spy = TestBed.get(ComplexSearchService);
+    spy.initSaveDataObj.and.returnValue(createInitSaveData());
+    spy.initConditionDataObj.and.returnValue(createInitConditionData());
+    spy.updateSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
+    spy.addSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
+
     fixture.detectChanges();
   });
 
@@ -109,6 +122,60 @@ describe('ComplexSearchConditionInputFormComponent', () => {
       expect(component.complexSearchConditionInputFormComponent.isShowDisplayItem).toBe(true)
       expect(component.complexSearchConditionInputFormComponent.isShowOrderCondition).toBe(true)
     });
+  });
+
+  it('should click add condition button', () => {
+
+    component.complexSearchConditionInputFormComponent.isShowDisplayItem = false;
+    component.complexSearchConditionInputFormComponent.isShowOrderCondition = false;
+    component.complexSearchConditionInputFormComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-search-condition"));
+    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    buttonEl.click();
+    buttonEl.click();
+    fixture.detectChanges();
+
+    const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchConditionItemComponent));
+
+    expect(itemBoxDeArray.length).toBe(4);
+  });
+
+  it('should click add order button', () => {
+
+    component.complexSearchConditionInputFormComponent.isShowDisplayItem = false;
+    component.complexSearchConditionInputFormComponent.isShowOrderCondition = true;
+    component.complexSearchConditionInputFormComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-order-condition"));
+    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    buttonEl.click();
+    buttonEl.click();
+    fixture.detectChanges();
+
+    const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchOrderItemComponent));
+
+    expect(itemBoxDeArray.length).toBe(4);
+  });
+
+  it('should click save button', () => {
+    const spy: jasmine.SpyObj<ComplexSearchService> = TestBed.get(ComplexSearchService);
+    component.complexSearchConditionInputFormComponent.isShowDisplayItem = true;
+    component.complexSearchConditionInputFormComponent.isShowOrderCondition = true;
+    component.complexSearchConditionInputFormComponent.isShowSaveCondition = true;
+    fixture.detectChanges();
+
+    const formDebugElement: DebugElement = fixture.debugElement.query(By.css('form'));
+    formDebugElement.triggerEventHandler('submit', null);
+    fixture.detectChanges();
+
+    if(component.complexSearchConditionInputFormComponent.saveData.id){
+      expect(spy.updateSearchCondition).toHaveBeenCalled();
+    }else{
+      expect(spy.addSearchCondition).toHaveBeenCalled();
+    }
   });
 
 });

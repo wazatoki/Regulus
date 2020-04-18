@@ -26,6 +26,8 @@ import { Subject } from 'rxjs';
 import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
 import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/group/group.spec';
 import { createTestInstance1 as createTestInstanceSaveData} from 'src/app/services/models/search/save-data.spec';
+import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
+import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -82,30 +84,8 @@ describe('ComplexSearchComponent', () => {
     component = fixture.componentInstance;
     
     spy = TestBed.get(ComplexSearchService);
-    spy.initSaveDataObj.and.returnValue({
-      id: '',
-      patternName: '',
-      category: '',
-      isDisclose: false,
-      discloseGroupIDs: [],
-      ownerID: '',
-      conditionData: {
-        searchStrings: [],
-        displayItemList: [],
-        searchConditionList: [],
-        orderConditionList: [],
-      },
-      owner: {
-        id: '',
-        name: '',
-      },
-    });
-    spy.initConditionDataObj.and.returnValue({
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    });
+    spy.initSaveDataObj.and.returnValue(createInitSaveData());
+    spy.initConditionDataObj.and.returnValue(createInitConditionData());
     spy.updateSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
     spy.addSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
     fixture.detectChanges();

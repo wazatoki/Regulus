@@ -163,7 +163,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     this.orderConditionFormArray.removeAt(i);
   }
 
-  clickSave() {
+  onSubmit() {
     this.createSaveData();
     if (this.saveData.id) {
       this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {

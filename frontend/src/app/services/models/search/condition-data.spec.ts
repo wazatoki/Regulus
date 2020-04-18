@@ -21,3 +21,12 @@ export function createTestInstance1(): ConditionData {
         searchStrings: ['name']
     };
 }
+
+export function createInitConditionData(): ConditionData {
+    return {
+        searchStrings: [],
+        displayItemList: [],
+        searchConditionList: [],
+        orderConditionList: [],
+      }
+}

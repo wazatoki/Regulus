@@ -1,5 +1,5 @@
 <div fxFlex="95%">
-    <form [formGroup]='form'>
+    <form [formGroup]='form' (ngSubmit)="onSubmit()">
         <mat-dialog-content>
 
             <mat-card class="category">

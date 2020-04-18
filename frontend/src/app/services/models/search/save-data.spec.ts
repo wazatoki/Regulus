@@ -1,6 +1,6 @@
 import { SaveData } from './save-data';
 import { createTestInstance1 as createStaffInstance1} from 'src/app/services/models/staff/staff.spec';
-import { createTestInstance1 as createConditionData } from 'src/app/services/models/search/condition-data.spec';
+import { createTestInstance1 as createConditionData, createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 
 describe('Category', () => {
     it('should create an instance', () => {
@@ -40,3 +40,20 @@ export function createTestArray(): SaveData[]{
         createTestInstance2(),
     ]
 }
+
+export function createInitSaveData(): SaveData {
+    return {
+        id: '',
+        patternName: '',
+        category: '',
+        isDisclose: false,
+        discloseGroupIDs: [],
+        ownerID: '',
+        conditionData: createInitConditionData(),
+        owner: {
+          id: '',
+          name: '',
+        },
+      }
+}
+
