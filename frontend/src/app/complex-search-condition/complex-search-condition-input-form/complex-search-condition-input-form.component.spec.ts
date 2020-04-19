@@ -220,6 +220,36 @@ describe('ComplexSearchConditionInputFormComponent', () => {
     expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
   });
 
+  it('should delete condition', () => {
+
+    component.complexSearchConditionInputFormComponent.isShowDisplayItem = false;
+    component.complexSearchConditionInputFormComponent.isShowOrderCondition = false;
+    component.complexSearchConditionInputFormComponent.isShowSaveCondition = false;
+    fixture.detectChanges();
+
+
+    component.complexSearchConditionInputFormComponent.pushSearchCondition();
+    component.complexSearchConditionInputFormComponent.pushSearchCondition();
+    fixture.detectChanges();
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('fieldid1');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[1] as FormGroup).get('fieldSelected').setValue('fieldid2');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[1] as FormGroup).get('conditionValue').setValue('value2');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[1] as FormGroup).get('matchTypeSelected').setValue('unmatch');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[1] as FormGroup).get('operatorSelected').setValue('or');
+    fixture.detectChanges();
+
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".search-condition .item-list .delete-button button"));
+    const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
+    deleteEl0.click();
+
+    fixture.detectChanges();
+
+    expect((component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').value).toEqual('fieldid2');
+  });
+
 });
 
 
