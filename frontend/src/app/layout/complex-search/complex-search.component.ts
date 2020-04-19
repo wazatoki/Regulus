@@ -67,8 +67,7 @@ export class ComplexSearchComponent implements OnInit {
     this.groupList.forEach(g => {
       this.discloseGroupFormArray.push(this.fb.control(''));
     })
-    this.fromDisplayItemArray = this.displayItemList;
-    this.selectedDisplayItemArray = [];
+    this.initSelectedDisplayItems();
 
     // saveDataの編集のときは値をフォームに反映する
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
@@ -261,6 +260,14 @@ export class ComplexSearchComponent implements OnInit {
       data.orderConditionList = this.createOrderCondition();
     }
     return data;
+  }
+
+  initSelectedDisplayItems() {
+    this.fromDisplayItemArray = [];
+    this.displayItemList.forEach(item => {
+      this.fromDisplayItemArray.push(item)
+    })
+    this.selectedDisplayItemArray = [];
   }
 
 }// end of class

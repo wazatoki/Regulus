@@ -25,9 +25,5 @@ export class ComplexSearchDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onSearch(data: ConditionData): void {
-    this.dialogRef.close();
-  }
-
 }
 

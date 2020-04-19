@@ -5,6 +5,7 @@ import { SaveData } from 'src/app/services/models/search/save-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
+import { ComplexSearchConditionInputFormComponent } from 'src/app/complex-search-condition/complex-search-condition-input-form/complex-search-condition-input-form.component';
 
 @Component({
   selector: 'app-complex-search-condition-master',
@@ -16,6 +17,14 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   displayedColumns: string[];
   dataSource: MatTableDataSource<SaveData>;
   selection: SelectionModel<SaveData>;
+
+  openInputForm(): void {
+    this.dialog.open(ComplexSearchConditionInputFormComponent, {
+      data: {
+        
+      },
+    })
+  }
 
   deleteItems(): void {
     if(this.selection.selected.length === 0){

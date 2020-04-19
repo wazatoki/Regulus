@@ -4,7 +4,7 @@ import { ComplexSearchConditionInputFormComponent } from './complex-search-condi
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LayoutModule } from 'src/app/layout/layout.module';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatInputModule } from '@angular/material/input';
@@ -20,8 +20,6 @@ import { ViewChild, Component, DebugElement } from '@angular/core';
 
 import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec'
 import { createTestArray as createFielsAttrTeatArray } from 'src/app/services/models/search/field-attr.spec';
-import { ceateTestArray as createSearchConditionArray } from 'src/app/services/models/search/search-condition.spec'
-import { ceateTestArray as createOrderConditionArray } from 'src/app/services/models/search/order-condition.spec'
 import { ceateTestArray as createGroupArray } from 'src/app/services/models/group/group.spec';
 import { createTestInstance1 as createSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
@@ -47,7 +45,7 @@ describe('ComplexSearchConditionInputFormComponent', () => {
 
   beforeEach(async(() => {
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
+      ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -81,6 +79,10 @@ describe('ComplexSearchConditionInputFormComponent', () => {
           useValue: complexSearchServiceSpy
         },
         {
+          provide: MatDialogRef,
+          useValue: MatDialogRef
+        },
+        {
           provide: MatDialog,
           useValue: {}
         },
@@ -109,7 +111,7 @@ describe('ComplexSearchConditionInputFormComponent', () => {
   it('should select category', async () => {
     const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-category-name"));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
-    
+
     selectEl.click();
     fixture.detectChanges();
 
@@ -117,10 +119,11 @@ describe('ComplexSearchConditionInputFormComponent', () => {
       const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
       inquiryOptions[0].nativeElement.click()
       fixture.detectChanges();
-
-      expect(component.complexSearchConditionInputFormComponent.isShowDisplayItem).toBe(true)
-      expect(component.complexSearchConditionInputFormComponent.isShowOrderCondition).toBe(true)
     });
+
+    expect(component.complexSearchConditionInputFormComponent.isShowDisplayItem).toBe(true)
+    expect(component.complexSearchConditionInputFormComponent.isShowOrderCondition).toBe(true)
+
   });
 
   it('should click add condition button', () => {
@@ -170,19 +173,31 @@ describe('ComplexSearchConditionInputFormComponent', () => {
     formDebugElement.triggerEventHandler('submit', null);
     fixture.detectChanges();
 
-    if(component.complexSearchConditionInputFormComponent.saveData.id){
+    if (component.complexSearchConditionInputFormComponent.saveData.id) {
       expect(spy.updateSearchCondition).toHaveBeenCalled();
-    }else{
+    } else {
       expect(spy.addSearchCondition).toHaveBeenCalled();
     }
   });
 
-  it('should create save data', () => {
+  it('should create save data', async() => {
 
     component.complexSearchConditionInputFormComponent.isShowDisplayItem = true;
     component.complexSearchConditionInputFormComponent.isShowOrderCondition = true;
     component.complexSearchConditionInputFormComponent.isShowSaveCondition = true;
     fixture.detectChanges();
+
+    const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-category-name"));
+    const selectEl: HTMLSelectElement = selectDe.nativeElement;
+
+    selectEl.click();
+    fixture.detectChanges();
+
+    await fixture.whenStable().then(() => {
+      const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
+      inquiryOptions[0].nativeElement.click()
+      fixture.detectChanges();
+    });
 
     const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
     const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
@@ -212,11 +227,11 @@ describe('ComplexSearchConditionInputFormComponent', () => {
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(false);
     expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
-    expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.complexSearchConditionInputFormComponent.searchConditionList[0]);
+    expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.complexSearchConditionInputFormComponent.selectedCategory.searchItems.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
     expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
-    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.complexSearchConditionInputFormComponent.orderConditionList[1]);
+    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.complexSearchConditionInputFormComponent.selectedCategory.searchItems.orderConditionList[1]);
     expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
   });
 
@@ -277,6 +292,62 @@ describe('ComplexSearchConditionInputFormComponent', () => {
     expect((component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').value).toEqual('fieldid2');
   });
 
+  it('should clear form', async () => {
+    const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-category-name"));
+    const selectEl: HTMLSelectElement = selectDe.nativeElement;
+
+    selectEl.click();
+    fixture.detectChanges();
+
+    await fixture.whenStable().then(() => {
+      const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
+      inquiryOptions[0].nativeElement.click()
+      fixture.detectChanges();
+    });
+
+    await fixture.whenStable().then(() => {
+      const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
+      const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
+      patternNameEl.value = 'sample pattern name';
+      patternNameEl.dispatchEvent(new Event('input'));
+      const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+      const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
+      isDiscloseEl.click();
+      const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+      const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
+      const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
+      groupEl0.click();
+      groupEl1.click();
+
+      component.complexSearchConditionInputFormComponent.pushSearchCondition();
+      component.complexSearchConditionInputFormComponent.pushOrderCondition();
+      (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('fieldid1');
+      (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
+      (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
+      (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
+      (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('fieldid2');
+      (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
+      fixture.detectChanges();
+    });
+
+    await fixture.whenStable().then(() => {
+      component.complexSearchConditionInputFormComponent.pushOrderCondition();
+      component.complexSearchConditionInputFormComponent.pushOrderCondition();
+      fixture.detectChanges();
+      (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('fieldid1');
+      (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
+      (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[1] as FormGroup).get('orderFieldSelected').setValue('fieldid2');
+      (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[1] as FormGroup).get('orderFieldKeyWordSelected').setValue('desc');
+      fixture.detectChanges();
+    });
+
+    component.complexSearchConditionInputFormComponent.onClearClick();
+    fixture.detectChanges();
+    expect(selectEl.textContent).not.toContain('TEST_CATEGORY_1');
+    
+
+  });
+
 });
 
 
@@ -284,24 +355,16 @@ describe('ComplexSearchConditionInputFormComponent', () => {
   template: `
   <app-complex-search-condition-input-form
     [categories]="categories"
-    [displayItemList]="displayItemList"
-    [searchConditionList]="searchConditionList"
-    [orderConditionList]="orderConditionList"
-    [groupList]="groupList"
     [saveData]="saveData"
   >
   </app-complex-search-condition-input-form>`
 })
 class TestHostComponent {
 
-  @ViewChild(ComplexSearchConditionInputFormComponent, {static: true})
+  @ViewChild(ComplexSearchConditionInputFormComponent, { static: true })
   complexSearchConditionInputFormComponent: ComplexSearchConditionInputFormComponent;
 
   categories: Category[] = ceateTestArrayForMasterMaintenanceTest();
-  displayItemList: FieldAttr[] = createFielsAttrTeatArray();
-  searchConditionList: FieldAttr[] = createFielsAttrTeatArray();
-  orderConditionList: FieldAttr[] = createFielsAttrTeatArray();
-  groupList: Group[] = createGroupArray();
   saveData: SaveData = createSaveData();
 }
 

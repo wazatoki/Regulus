@@ -12,7 +12,7 @@ export function createTestInstance1(): SaveData {
     return {
         id: 'saveID1',
         patternName: 'saveName1',
-        category: 'test-category-1',
+        category: 'testCategory1',
         owner: createStaffInstance1(),
         ownerID: 'ownerID1',
         discloseGroupIDs: ['test-group-id-1', 'test-group-id-2'],
@@ -25,7 +25,7 @@ export function createTestInstance2(): SaveData {
     return {
         id: 'saveID2',
         patternName: 'saveName2',
-        category: 'test-category-2',
+        category: 'testCategory2',
         owner: createStaffInstance1(),
         ownerID: 'ownerID1',
         discloseGroupIDs: ['groupID1'],

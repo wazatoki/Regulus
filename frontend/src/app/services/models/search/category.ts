@@ -1,7 +1,7 @@
+import { ComplexSearchItems } from './complex-search-items'
+
 export class Category {
     name: string
     viewValue: string
-    isShowDisplayItem: boolean
-    isShowOrderCondition: boolean
-    isShowSaveCondition: boolean
+    searchItems: ComplexSearchItems
 }

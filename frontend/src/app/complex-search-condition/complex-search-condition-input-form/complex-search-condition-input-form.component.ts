@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FieldAttr } from 'src/app/services/models/search/field-attr';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { Group } from 'src/app/services/models/group/group';
@@ -18,12 +18,17 @@ import { Category } from 'src/app/services/models/search/category';
 })
 export class ComplexSearchConditionInputFormComponent implements OnInit {
 
-  
-  selectedDisplayItemArray: FieldAttr[];
-  fromDisplayItemArray: FieldAttr[];
+
+  selectedCategory: Category;
+  selectedDisplayItemArray: FieldAttr[] = [];
+  fromDisplayItemArray: FieldAttr[] = [];
   isShowDisplayItem: boolean = false;
   isShowOrderCondition: boolean = false;
   isShowSaveCondition: boolean = true;
+  groupList: Group[] = [];
+  displayItemList: FieldAttr[] = [];
+  searchConditionList: FieldAttr[] = [];
+  orderConditionList: FieldAttr[] = [];
 
   form: FormGroup;
 
@@ -49,36 +54,18 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
   }
 
   @Input() categories: Category[];
-  @Input() displayItemList: FieldAttr[] = [];
-  @Input() searchConditionList: FieldAttr[] = [];
-  @Input() orderConditionList: FieldAttr[] = [];
-  @Input() groupList: Group[] = [];
   @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private complexSearchDataShereService: ComplexSearchService
+    private complexSearchDataShereService: ComplexSearchService,
+    private dialogRef: MatDialogRef<ComplexSearchConditionInputFormComponent>,
   ) {
-    this.form = this.fb.group({
-      searchCondition: this.fb.array([]),
-      orderCondition: this.fb.array([]),
-      saveCondition: this.fb.group({
-        category: this.fb.control(''),
-        patternName: this.fb.control(''),
-        isDisclose: this.fb.control(''),
-        discloseGroups: this.fb.array([]),
-      }),
-    });
+    this.form = this.initForm();
   }
 
   ngOnInit() {
-    this.groupList.forEach(g => {
-      this.discloseGroupFormArray.push(this.fb.control(''));
-    })
-    this.fromDisplayItemArray = this.displayItemList;
-    this.selectedDisplayItemArray = [];
-
     // saveDataの編集のときは値をフォームに反映する
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
       this.setSavedDataToForm()
@@ -86,15 +73,24 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
   }
 
   onSelectCategory() {
-    const category = this.categories.find((c) => {
+    this.selectedCategory = this.categories.find((c) => {
       return (c.name === this.categorySelected.value)
     })
 
-    this.isShowDisplayItem = category.isShowDisplayItem
-    this.isShowOrderCondition = category.isShowOrderCondition
+    this.initGroupList()
+
+    this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem
+    this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition
+    this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
+    this.orderConditionList = this.selectedCategory.searchItems.orderConditionList
+    this.initSelectedDisplayItems();
   }
 
   setSavedDataToForm() {
+    // カテゴリーの反映
+    this.categorySelected.setValue(this.saveData.category)
+    this.onSelectCategory()
+
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
     this.discloseGroupFormArray.controls.forEach((v, i) => {
@@ -112,7 +108,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
 
       this.selectedDisplayItemArray = this.saveData.conditionData.displayItemList;
       this.fromDisplayItemArray = [];
-      this.displayItemList.filter(item => {
+      this.selectedCategory.searchItems.displayItemList.filter(item => {
         const flag = this.saveData.conditionData.displayItemList.some(savedItem => {
           return savedItem.id !== item.id
         });
@@ -192,7 +188,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
 
-      this.searchConditionList.forEach((v, i) => {
+      this.selectedCategory.searchItems.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
@@ -212,7 +208,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     const result: OrderCondition[] = [];
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
-      this.orderConditionList.forEach((v, i) => {
+      this.selectedCategory.searchItems.orderConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('orderFieldSelected').value) {
           field = v;
         }
@@ -259,6 +255,55 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
       data.orderConditionList = this.createOrderCondition();
     }
     return data;
+  }
+
+  onCancelClick(): void {
+    this.dialogRef.close();
+  }
+
+  onClearClick(): void {
+    this.form = this.initForm()
+    this.selectedDisplayItemArray = [];
+    this.fromDisplayItemArray = [];
+  }
+
+  initForm(): FormGroup {
+    return this.fb.group({
+      searchCondition: this.fb.array([]),
+      orderCondition: this.fb.array([]),
+      saveCondition: this.fb.group({
+        category: this.fb.control(''),
+        patternName: this.fb.control(''),
+        isDisclose: this.fb.control(''),
+        discloseGroups: this.fb.array([]),
+      }),
+    });
+  }
+
+  initSelectedDisplayItems() {
+    if (this.selectedCategory) {
+      this.fromDisplayItemArray = [];
+      this.selectedCategory.searchItems.displayItemList.forEach(item => {
+        this.fromDisplayItemArray.push(item)
+      })
+      this.selectedDisplayItemArray = [];
+    } else {
+      this.fromDisplayItemArray = [];
+      this.selectedDisplayItemArray = [];
+    }
+  }
+  initGroupList() {
+    if (this.selectedCategory) {
+      this.discloseGroupFormArray.clear();
+      this.selectedCategory.searchItems.groupList.forEach(g => {
+        this.discloseGroupFormArray.push(this.fb.control(''));
+      })
+      this.groupList = this.selectedCategory.searchItems.groupList
+    }else{
+      this.discloseGroupFormArray.clear();
+      this.groupList = [];
+    }
+
   }
 
 }
