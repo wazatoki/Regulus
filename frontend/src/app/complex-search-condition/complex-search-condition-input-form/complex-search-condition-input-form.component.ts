@@ -73,6 +73,12 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.groupList.forEach(g => {
+      this.discloseGroupFormArray.push(this.fb.control(''));
+    })
+    this.fromDisplayItemArray = this.displayItemList;
+    this.selectedDisplayItemArray = [];
+
     // saveDataの編集のときは値をフォームに反映する
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
       this.setSavedDataToForm()
@@ -185,6 +191,7 @@ export class ComplexSearchConditionInputFormComponent implements OnInit {
     const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
+
       this.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;

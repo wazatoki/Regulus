@@ -29,8 +29,6 @@ import { createInitConditionData } from 'src/app/services/models/search/conditio
 
 import { Category } from 'src/app/services/models/search/category';
 import { FieldAttr } from 'src/app/services/models/search/field-attr';
-import { SearchCondition } from 'src/app/services/models/search/search-condition';
-import { OrderCondition } from 'src/app/services/models/search/order-condition';
 import { Group } from 'src/app/services/models/group/group';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { By } from '@angular/platform-browser';
@@ -43,6 +41,7 @@ describe('ComplexSearchConditionInputFormComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   let spy: jasmine.SpyObj<ComplexSearchService>;
+  let saveData: SaveData
   // let component: ComplexSearchConditionInputFormComponent;
   // let fixture: ComponentFixture<ComplexSearchConditionInputFormComponent>;
 
@@ -178,6 +177,49 @@ describe('ComplexSearchConditionInputFormComponent', () => {
     }
   });
 
+  it('should create save data', () => {
+
+    component.complexSearchConditionInputFormComponent.isShowDisplayItem = true;
+    component.complexSearchConditionInputFormComponent.isShowOrderCondition = true;
+    component.complexSearchConditionInputFormComponent.isShowSaveCondition = true;
+    fixture.detectChanges();
+
+    const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
+    const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
+    patternNameEl.value = 'sample pattern name';
+    patternNameEl.dispatchEvent(new Event('input'));
+    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+    const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
+    isDiscloseEl.click();
+    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+    const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
+    const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
+    groupEl0.click();
+    groupEl1.click();
+
+    component.complexSearchConditionInputFormComponent.pushSearchCondition();
+    component.complexSearchConditionInputFormComponent.pushOrderCondition();
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('fieldid1');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
+    (component.complexSearchConditionInputFormComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
+    (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('fieldid2');
+    (component.complexSearchConditionInputFormComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
+    fixture.detectChanges();
+
+    component.complexSearchConditionInputFormComponent.createSaveData();
+    saveData = component.complexSearchConditionInputFormComponent.saveData;
+    expect(saveData.patternName).toBe('sample pattern name');
+    expect(saveData.isDisclose).toBe(false);
+    expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
+    expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.complexSearchConditionInputFormComponent.searchConditionList[0]);
+    expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
+    expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
+    expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
+    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.complexSearchConditionInputFormComponent.orderConditionList[1]);
+    expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
+  });
+
 });
 
 
@@ -200,8 +242,8 @@ class TestHostComponent {
 
   categories: Category[] = ceateTestArrayForMasterMaintenanceTest();
   displayItemList: FieldAttr[] = createFielsAttrTeatArray();
-  searchConditionList: SearchCondition[] = createSearchConditionArray();
-  orderConditionList: OrderCondition[] = createOrderConditionArray();
+  searchConditionList: FieldAttr[] = createFielsAttrTeatArray();
+  orderConditionList: FieldAttr[] = createFielsAttrTeatArray();
   groupList: Group[] = createGroupArray();
   saveData: SaveData = createSaveData();
 }
