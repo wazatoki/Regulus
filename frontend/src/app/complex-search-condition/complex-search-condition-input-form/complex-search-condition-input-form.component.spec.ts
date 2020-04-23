@@ -19,15 +19,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { ViewChild, Component, DebugElement } from '@angular/core';
 
 import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec'
-import { createTestArray as createFielsAttrTeatArray } from 'src/app/services/models/search/field-attr.spec';
-import { ceateTestArray as createGroupArray } from 'src/app/services/models/group/group.spec';
 import { createTestInstance1 as createSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 
 import { Category } from 'src/app/services/models/search/category';
-import { FieldAttr } from 'src/app/services/models/search/field-attr';
-import { Group } from 'src/app/services/models/group/group';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { By } from '@angular/platform-browser';
 import { ComplexSearchConditionItemComponent } from 'src/app/layout/complex-search/complex-search-condition-item/complex-search-condition-item.component';

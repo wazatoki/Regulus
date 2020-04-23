@@ -14,13 +14,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ComplexSearchConditionSearchComponent } from './complex-search-condition-search/complex-search-condition-search.component';
 import { ComplexSearchConditionInputFormComponent } from './complex-search-condition-input-form/complex-search-condition-input-form.component';
+import { ComplexSearchConditionInputFormDialogComponent } from './complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
 
 
 @NgModule({
   declarations: [
     ComplexSearchConditionMasterComponent,
     ComplexSearchConditionSearchComponent,
-    ComplexSearchConditionInputFormComponent
+    ComplexSearchConditionInputFormComponent,
+    ComplexSearchConditionInputFormDialogComponent
   ],
   imports: [
     CommonModule,

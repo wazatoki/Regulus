@@ -1,0 +1,135 @@
+<div fxFlex="95%">
+    <form [formGroup]='form' (ngSubmit)="onSubmit()">
+        <mat-dialog-content>
+
+            <mat-card class="category">
+                <mat-card-header>
+                    <mat-card-title>カテゴリー</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-form-field>
+                        <mat-select class="select-category-name" (selectionChange)="onSelectCategory()"
+                            [formControl]="categorySelected">
+                            <mat-option class="option-select-category-name" *ngFor="let category of categories"
+                                [(value)]="category.name">
+                                {{category.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="display-item" *ngIf="isShowDisplayItem">
+                <mat-card-header>
+                    <mat-card-title>表示項目</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div>
+                        <div class="item-list-container">
+                            <div cdkDropList #displayItemFromList="cdkDropList" [cdkDropListData]="fromDisplayItemArray"
+                                [cdkDropListConnectedTo]="[displayItemToList]"
+                                (cdkDropListDropped)="displayItemDrop($event)" class="item-list">
+                                <div class="item-box" *ngFor="let item of fromDisplayItemArray; let i=index" cdkDrag>
+                                    <span>{{item.viewValue}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-list-container">
+                            <div cdkDropList #displayItemToList="cdkDropList"
+                                [cdkDropListData]="selectedDisplayItemArray"
+                                [cdkDropListConnectedTo]="[displayItemFromList]"
+                                (cdkDropListDropped)="displayItemDrop($event)" class="item-list">
+                                <div class="item-box" *ngFor="let item of selectedDisplayItemArray; let i=index"
+                                    cdkDrag>
+                                    <span>{{item.viewValue}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="search-condition">
+                <mat-card-header>
+                    <mat-card-title>
+                        検索条件
+                        <button type="button" mat-stroked-button (click)="pushSearchCondition()"
+                            class="push-search-condition">追加</button>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)"
+                        formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
+                        <div class="item-box" *ngFor="let formGroup of searchConditionFormArray.controls; let i=index"
+                            cdkDrag>
+
+                            <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup"
+                                (onDelete)="removeSearchCondition(i)">
+                            </app-complex-search-condition-item>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="order-condition" *ngIf="isShowOrderCondition">
+                <mat-card-header>
+                    <mat-card-title>
+                        並び順
+                        <button type="button" mat-stroked-button (click)="pushOrderCondition()"
+                            class="push-order-condition">追加</button>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)"
+                        formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
+                        <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index"
+                            cdkDrag>
+
+                            <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup"
+                                (onDelete)="removeOrderCondition(i)">
+                            </app-complex-search-order-item>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="save-condition" *ngIf="isShowSaveCondition">
+                <mat-card-header>
+                    <mat-card-title>保存条件</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div formGroupName="saveCondition">
+                        <mat-form-field appearance="standard">
+                            <mat-label>検索パターン名称</mat-label>
+                            <input class="pattern-name" matInput formControlName="patternName">
+                        </mat-form-field>
+                        <mat-checkbox class="is-disclose" formControlName="isDisclose">公開する</mat-checkbox>
+                        <div class="disclosure-destination" formArrayName="discloseGroups">
+                            <div class="disclosure-destination-group"
+                                *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
+                                <mat-checkbox [formControlName]="i">
+                                    {{groupList[i].name}}
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+        </mat-dialog-content>
+
+        <div mat-dialog-actions class="form-container">
+            <mat-grid-list cols="4" rowHeight="40">
+                <mat-grid-tile>
+                    <app-cancel (clicked)="onCancelClick()"></app-cancel>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="2">
+                    <app-clear (clicked)="onClearClick()"></app-clear>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <app-submit [buttonLabelType]="save"></app-submit>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+    </form>
+</div>
