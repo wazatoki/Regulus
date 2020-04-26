@@ -46,6 +46,15 @@
                 <td mat-cell *matCellDef="let saveData"> {{saveData.owner.name}} </td>
             </ng-container>
 
+            <!-- action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let saveData">
+                    <app-update (updateClicked)="onUpdateClicked(saveData)"></app-update>
+                </td>
+               
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
         </table>

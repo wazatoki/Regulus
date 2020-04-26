@@ -63,7 +63,7 @@ describe('MakerService', () => {
 
     const id: Map<string, string> = new Map();
     id.set('id', 'testid');
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker', id);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/id', id);
   });
 
   it('findByCondition method', () => {
@@ -176,7 +176,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/ComplexSearchItems');
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/complexSearchItems');
   });
 
 });
