@@ -23,7 +23,7 @@ type MakerRepo struct {
 }
 
 // Select select maker data by condition from database
-func (m *MakerRepo) Select(queryItems ...*query.ConditionItem) ([]makerEntity.Maker, error) {
+func (m *MakerRepo) Select(queryItems ...*query.SearchConditionItem) ([]makerEntity.Maker, error) {
 	meSlice := []makerEntity.Maker{}
 	queries := []qm.QueryMod{}
 	var q qm.QueryMod
@@ -221,7 +221,7 @@ func (m *MakerRepo) columnName(fieldName query.FieldEnum) string {
 	}
 }
 
-func (m *MakerRepo) createQueryMod(queryItem *query.ConditionItem) qm.QueryMod {
+func (m *MakerRepo) createQueryMod(queryItem *query.SearchConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
@@ -238,14 +238,14 @@ func (m *MakerRepo) createQueryMod(queryItem *query.ConditionItem) qm.QueryMod {
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(makers []makerEntity.Maker, orderItems []query.OrderItem) []makerEntity.Maker {
+func Sort(makers []makerEntity.Maker, orderItems []query.OrderConditionItem) []makerEntity.Maker {
 	sort.Slice(makers, func(i int, j int) bool {
 		return compare(makers[i], makers[j], orderItems, 0)
 	})
 	return makers
 }
 
-func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []query.OrderItem, orderIndex int) bool {
+func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []query.OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false
@@ -257,7 +257,7 @@ func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []qu
 			orderIndex++
 			return compare(maker1, maker2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderType == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
 			return maker1.Name > maker2.Name
 		}
 		return maker1.Name < maker2.Name
@@ -267,7 +267,7 @@ func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []qu
 			orderIndex++
 			return compare(maker1, maker2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderType == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
 			return maker1.Name > maker2.Name
 		}
 		return maker1.Name < maker2.Name

@@ -5,6 +5,15 @@ import (
 )
 
 /*
+Category is struct as search category
+*/
+type Category struct {
+	Name        string             `json:"name"`
+	ViewValue   string             `json:"viewValue"`
+	SearchItems ComplexSearchItems `json:" searchItems"`
+}
+
+/*
 ComplexSearchItems is struct as search condition display
 */
 type ComplexSearchItems struct {
@@ -29,9 +38,9 @@ type FieldAttr struct {
 }
 
 /*
-ConditionItem is query condition
+SearchConditionItem is query condition
 */
-type ConditionItem struct {
+type SearchConditionItem struct {
 	Field          FieldAttr     `json:"field"`
 	ConditionValue string        `json:"conditionValue"`
 	MatchType      MatchTypeEnum `json:"matchType"` // match, unmatch, pertialmatch, gt, ge, le, lt
@@ -39,34 +48,21 @@ type ConditionItem struct {
 }
 
 /*
-OrderItem is order condition
+OrderConditionItem is order condition
 */
-type OrderItem struct {
-	OrderField FieldAttr     `json:"orderField"`
-	OrderType  OrderTypeEnum `json:"orderType"` // asc, desc
+type OrderConditionItem struct {
+	OrderField        FieldAttr     `json:"orderField"`
+	OrderFieldKeyWord OrderTypeEnum `json:"orderType"` // asc, desc
 }
 
 /*
 ConditionData is query condition
 */
 type ConditionData struct {
-	SearchStrings       []string        `json:"searchStrings"`
-	DisplayItemList     []FieldAttr     `json:"displayItemList"`
-	SearchConditionList []ConditionItem `json:"searchConditionList"`
-	OrderConditionList  []OrderItem     `json:"orderConditionList"`
-}
-
-/*
-SaveData is save query save data
-*/
-type SaveData struct {
-	ID             string        `json:"id"`
-	PatternName    string        `json:"patternName"`
-	Category       string        `json:"category"`
-	IsDisclose     bool          `json:"isDisclose"`
-	DiscloseGroups []string      `json:"discloseGroups"`
-	OwnerID        string        `json:"ownerID"`
-	ConditionData  ConditionData `json:"conditionData"`
+	SearchStrings       []string              `json:"searchStrings"`
+	DisplayItemList     []FieldAttr           `json:"displayItemList"`
+	SearchConditionList []SearchConditionItem `json:"searchConditionList"`
+	OrderConditionList  []OrderConditionItem  `json:"orderConditionList"`
 }
 
 /*

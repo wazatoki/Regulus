@@ -1,10 +1,18 @@
 package search
 
-// FieldAttr 検索用のフィールド属性情報を保持する構造体
-type FieldAttr struct {
-	id         string
-	entityName string
-	fieldName  string
-	viewValue  string
-	fieldType  string
+import (
+	"regulus/app/domain/vo/query"
+)
+
+/*
+SaveData is save query save data
+*/
+type SaveData struct {
+	ID             string              `json:"id"`
+	PatternName    string              `json:"patternName"`
+	Category       string              `json:"category"`
+	IsDisclose     bool                `json:"isDisclose"`
+	DiscloseGroups []string            `json:"discloseGroups"`
+	OwnerID        string              `json:"ownerID"`
+	ConditionData  query.ConditionData `json:"conditionData"`
 }

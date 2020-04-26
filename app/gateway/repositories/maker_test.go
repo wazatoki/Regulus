@@ -271,9 +271,9 @@ func TestMakerRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*query.ConditionItem
+		queryItems []*query.SearchConditionItem
 	}
-	qi1 := query.ConditionItem{
+	qi1 := query.SearchConditionItem{
 		Field: query.FieldAttr{
 			ID:         "id1",
 			EntityName: "Maker",
@@ -285,7 +285,7 @@ func TestMakerRepo_Select(t *testing.T) {
 		MatchType:      "pertialmatch",
 		Operator:       "and",
 	}
-	qi2 := query.ConditionItem{
+	qi2 := query.SearchConditionItem{
 		Field: query.FieldAttr{
 			ID:         "id1",
 			EntityName: "Maker",
@@ -328,7 +328,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.ConditionItem{
+				queryItems: []*query.SearchConditionItem{
 					&qi1,
 				},
 			},
@@ -346,7 +346,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.ConditionItem{
+				queryItems: []*query.SearchConditionItem{
 					&qi1,
 					&qi2,
 				},
@@ -446,7 +446,7 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 func TestSort(t *testing.T) {
 	type args struct {
 		makers     []makerEntity.Maker
-		orderItems []query.OrderItem
+		orderItems []query.OrderConditionItem
 	}
 	unsortMakers := []makerEntity.Maker{
 		{
@@ -471,7 +471,7 @@ func TestSort(t *testing.T) {
 			name: "sort by asc",
 			args: args{
 				makers: unsortMakers,
-				orderItems: []query.OrderItem{
+				orderItems: []query.OrderConditionItem{
 					{
 						OrderField: query.FieldAttr{
 							ID:         "id1",
@@ -480,7 +480,7 @@ func TestSort(t *testing.T) {
 							FieldType:  query.String,
 							ViewValue:  "makerName",
 						},
-						OrderType: query.Asc,
+						OrderFieldKeyWord: query.Asc,
 					},
 				},
 			},
@@ -503,7 +503,7 @@ func TestSort(t *testing.T) {
 			name: "sort by desc",
 			args: args{
 				makers: unsortMakers,
-				orderItems: []query.OrderItem{
+				orderItems: []query.OrderConditionItem{
 					{
 						OrderField: query.FieldAttr{
 							ID:         "id1",
@@ -512,7 +512,7 @@ func TestSort(t *testing.T) {
 							FieldType:  query.String,
 							ViewValue:  "makerName",
 						},
-						OrderType: query.Desc,
+						OrderFieldKeyWord: query.Desc,
 					},
 				},
 			},
