@@ -2,12 +2,6 @@ import { SearchCondition } from './search-condition';
 import { createTestInstance1 as createFieldAttr1,
     createTestInstance2 as createFieldAttr2} from './field-attr.spec';
 
-describe('Category', () => {
-    it('should create an instance', () => {
-        expect(new SearchCondition()).toBeTruthy();
-    });
-});
-
 export function createTestInstance1(): SearchCondition {
     return {
         field: createFieldAttr1(),

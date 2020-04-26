@@ -2,12 +2,6 @@ import { ComplexSearchItems } from './complex-search-items';
 import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
 import { ceateTestArray as createTestGroupArray } from 'src/app/services/models/group/group.spec';
 
-describe('Category', () => {
-    it('should create an instance', () => {
-        expect(new ComplexSearchItems()).toBeTruthy();
-    });
-});
-
 export function createTestInstance1(): ComplexSearchItems {
     return {
         displayItemList: createTestArray(),

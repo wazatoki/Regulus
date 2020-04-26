@@ -5,12 +5,6 @@ import {
     createTestInstance3,
 } from 'src/app/services/models/search/complex-search-items.spec';
 
-describe('Category', () => {
-    it('should create an instance', () => {
-        expect(new Category()).toBeTruthy();
-    });
-});
-
 export function ceateTestArrayForMasterMaintenanceTest(): Category[] {
     return [
         {

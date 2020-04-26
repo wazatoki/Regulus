@@ -1,4 +1,4 @@
-export class Staff {
+export interface Staff {
     id: string
     name: string
 }

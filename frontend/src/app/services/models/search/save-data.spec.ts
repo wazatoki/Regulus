@@ -2,12 +2,6 @@ import { SaveData } from './save-data';
 import { createTestInstance1 as createStaffInstance1} from 'src/app/services/models/staff/staff.spec';
 import { createTestInstance1 as createConditionData, createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 
-describe('Category', () => {
-    it('should create an instance', () => {
-        expect(new SaveData()).toBeTruthy();
-    });
-});
-
 export function createTestInstance1(): SaveData {
     return {
         id: 'saveID1',

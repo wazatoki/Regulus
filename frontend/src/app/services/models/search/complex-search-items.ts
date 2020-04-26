@@ -6,7 +6,7 @@ import { Group } from '../group/group';
 ComplexSearchItems 検索フォームを構築する際に必要な選択肢アイテム
 
 */
-export class ComplexSearchItems {
+export interface ComplexSearchItems {
     displayItemList: FieldAttr[]
     searchConditionList: FieldAttr[]
     orderConditionList: FieldAttr[]

@@ -5,7 +5,7 @@ import { FieldAttr } from './field-attr';
 OrderCondition 並び順設定のためのパーツ
 
 */
-export class OrderCondition {
+export interface OrderCondition {
     orderField: FieldAttr
     orderFieldKeyWord: string
 }

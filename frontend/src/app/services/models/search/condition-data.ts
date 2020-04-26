@@ -7,7 +7,7 @@ import { OrderCondition } from './order-condition';
 ConditionData 検索実行の際サーバーに送るデータ構造
 
 */
-export class ConditionData {
+export interface ConditionData {
     searchStrings: string[]
     displayItemList: FieldAttr[]
     searchConditionList: SearchCondition[]

@@ -1,11 +1,5 @@
 import { Staff } from './staff';
 
-describe('Staff', () => {
-  it('should create an instance', () => {
-    expect(new Staff()).toBeTruthy();
-  });
-});
-
 export function createTestInstance1(): Staff {
   return {
     id: 'test-group-id-1',

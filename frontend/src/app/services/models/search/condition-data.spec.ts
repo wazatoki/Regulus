@@ -7,12 +7,6 @@ import {
 import { ceateTestArray as createSearchConditionArray } from './search-condition.spec';
 import { ceateTestArray as createOrderConditionArray } from './order-condition.spec';
 
-describe('Category', () => {
-    it('should create an instance', () => {
-        expect(new ConditionData()).toBeTruthy();
-    });
-});
-
 export function createTestInstance1(): ConditionData {
     return {
         displayItemList: createFieldAttrArray(),

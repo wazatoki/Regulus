@@ -1,6 +1,6 @@
 import { ComplexSearchItems } from './complex-search-items'
 
-export class Category {
+export interface Category {
     name: string
     viewValue: string
     searchItems: ComplexSearchItems
