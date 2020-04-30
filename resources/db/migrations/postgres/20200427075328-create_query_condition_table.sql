@@ -1,13 +1,16 @@
 
 -- +migrate Up
-create table staff_group (
+create table query_condition (
 	id text PRIMARY KEY,
 	del boolean DEFAULT false,
 	created_at timestamp,
 	cre_staff_id text,
 	updated_at timestamp,
 	update_staff_id text,
-	name text NOT NULL
+	pattern_name text NOT NULL,
+	category_name text NOT NULL,
+	is_disclose boolean NOT NULL,
+	owner_id text NOT NULL
 );
 -- +migrate Down
-drop table staff_group;
+drop table query_condition;

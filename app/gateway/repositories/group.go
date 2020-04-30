@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-	groupEntity "regulus/app/domain/entities/group"
+	groupEntity "regulus/app/domain/entities"
 	"regulus/app/infrastructures/sqlboiler"
 
 	"github.com/jmoiron/sqlx"

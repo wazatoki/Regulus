@@ -1,7 +1,7 @@
 package maker
 
 import (
-	makerEntity "regulus/app/domain/entities/maker"
+	makerEntity "regulus/app/domain/entities"
 )
 
 // persistance API用のインターフェース

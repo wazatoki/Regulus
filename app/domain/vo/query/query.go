@@ -1,47 +1,19 @@
 package query
 
-import (
-	"regulus/app/domain/entities/group"
-)
-
-/*
-Category is struct as search category
-*/
-type Category struct {
-	Name        string             `json:"name"`
-	ViewValue   string             `json:"viewValue"`
-	SearchItems ComplexSearchItems `json:" searchItems"`
-}
-
-/*
-ComplexSearchItems is struct as search condition display
-*/
-type ComplexSearchItems struct {
-	DisplayItemList      []FieldAttr   `json:"displayItemList"`
-	SearchConditionList  []FieldAttr   `json:"searchConditionList"`
-	OrderConditionList   []FieldAttr   `json:"orderConditionList"`
-	IsShowDisplayItem    bool          `json:"isShowDisplayItem"`
-	IsShowOrderCondition bool          `json:"isShowOrderCondition"`
-	IsShowSaveCondition  bool          `json:"isShowSaveCondition"`
-	GroupList            []group.Group `json:"groupList"`
-}
-
 /*
 FieldAttr is query field attribute
 */
 type FieldAttr struct {
-	ID         string        `json:"id"`
-	EntityName EntityEnum    `json:"entityName"`
-	FieldName  FieldEnum     `json:"fieldName"`
-	ViewValue  string        `json:"viewValue"`
-	FieldType  ValueTypeEnum `json:"fieldType"`
+	ID        string        `json:"id"`
+	ViewValue string        `json:"viewValue"`
+	FieldType ValueTypeEnum `json:"fieldType"`
 }
 
 /*
 SearchConditionItem is query condition
 */
 type SearchConditionItem struct {
-	Field          FieldAttr     `json:"field"`
+	SearchField    FieldAttr     `json:"searchField"`
 	ConditionValue string        `json:"conditionValue"`
 	MatchType      MatchTypeEnum `json:"matchType"` // match, unmatch, pertialmatch, gt, ge, le, lt
 	Operator       OperatorEnum  `json:"operator"`  // and, or
@@ -66,25 +38,22 @@ type ConditionData struct {
 }
 
 /*
-EntityEnum is entity name by snake case
-*/
-type EntityEnum string
-
-/*
-FieldEnum is field name by snake case
-*/
-type FieldEnum string
-
-/*
 ValueTypeEnum is a const type of field value
 */
 type ValueTypeEnum string
 
 const (
-	// String is field value type name
-	String ValueTypeEnum = "string"
-	// Number is field value type name
-	Number ValueTypeEnum = "number"
+	// STRING is field value type name
+	STRING ValueTypeEnum = "string"
+
+	// NUMBER is field value type name
+	NUMBER ValueTypeEnum = "number"
+
+	// BOOLEAN is field value type name
+	BOOLEAN ValueTypeEnum = "boolean"
+
+	// ARRAY is field value type name
+	ARRAY ValueTypeEnum = "array"
 )
 
 /*

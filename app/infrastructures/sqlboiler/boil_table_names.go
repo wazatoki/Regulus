@@ -4,13 +4,23 @@
 package sqlboiler
 
 var TableNames = struct {
-	GorpMigrations string
-	Maker          string
-	Staff          string
-	StaffGroup     string
+	GorpMigrations               string
+	Maker                        string
+	QueryCondition               string
+	QueryConditionDiscloseGroups string
+	QueryDisplayItems            string
+	QueryOrderConditionItems     string
+	QuerySearchConditionItems    string
+	Staff                        string
+	StaffGroup                   string
 }{
-	GorpMigrations: "gorp_migrations",
-	Maker:          "maker",
-	Staff:          "staff",
-	StaffGroup:     "staff_group",
+	GorpMigrations:               "gorp_migrations",
+	Maker:                        "maker",
+	QueryCondition:               "query_condition",
+	QueryConditionDiscloseGroups: "query_condition_disclose_groups",
+	QueryDisplayItems:            "query_display_items",
+	QueryOrderConditionItems:     "query_order_condition_items",
+	QuerySearchConditionItems:    "query_search_condition_items",
+	Staff:                        "staff",
+	StaffGroup:                   "staff_group",
 }

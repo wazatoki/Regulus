@@ -10,6 +10,16 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("Makers", testMakersUpsert)
 
+	t.Run("QueryConditions", testQueryConditionsUpsert)
+
+	t.Run("QueryConditionDiscloseGroups", testQueryConditionDiscloseGroupsUpsert)
+
+	t.Run("QueryDisplayItems", testQueryDisplayItemsUpsert)
+
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsUpsert)
+
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsUpsert)
+
 	t.Run("Staffs", testStaffsUpsert)
 
 	t.Run("StaffGroups", testStaffGroupsUpsert)

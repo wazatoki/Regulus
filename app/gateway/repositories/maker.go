@@ -3,13 +3,12 @@ package repositories
 import (
 	"context"
 	"errors"
-	makerEntity "regulus/app/domain/entities/maker"
+	makerEntity "regulus/app/domain/entities"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 	"sort"
 
 	"regulus/app/domain/vo/query"
-	makerEnum "regulus/app/domain/vo/query/enum/maker"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/null"
@@ -212,7 +211,7 @@ func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
 	return id, err
 }
 
-func (m *MakerRepo) columnName(fieldName query.FieldEnum) string {
+func (m *MakerRepo) columnName(fieldName string) string {
 	switch fieldName {
 	case "Name":
 		return "name"
@@ -225,13 +224,13 @@ func (m *MakerRepo) createQueryMod(queryItem *query.SearchConditionItem) qm.Quer
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
-	switch queryItem.Field.EntityName {
+	switch queryItem.SearchField.ID {
 	default:
 		if queryItem.Operator == "or" {
-			return qm.Or(m.columnName(queryItem.Field.FieldName)+" "+mt+" ?", val)
+			return qm.Or(m.columnName(queryItem.SearchField.ID)+" "+mt+" ?", val)
 		}
 		//queryItem.Operator = "and"
-		return qm.And(m.columnName(queryItem.Field.FieldName)+" "+mt+" ?", val)
+		return qm.And(m.columnName(queryItem.SearchField.ID)+" "+mt+" ?", val)
 	}
 }
 
@@ -251,8 +250,8 @@ func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []qu
 		return false
 	}
 
-	switch orderItems[orderIndex].OrderField.FieldName {
-	case makerEnum.Name: // 基本的にはこれしか選択されてない
+	switch orderItems[orderIndex].OrderField.ID {
+	case "maker-name": // 基本的にはこれしか選択されてない
 		if maker1.Name == maker2.Name {
 			orderIndex++
 			return compare(maker1, maker2, orderItems, orderIndex)

@@ -1,7 +1,7 @@
-package group
+package entities
 
 // Group 利用者グループを示す構造体
 type Group struct {
-	ID   string
-	Name string
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }

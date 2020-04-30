@@ -2,9 +2,8 @@ package repositories
 
 import (
 	"reflect"
-	makerEntity "regulus/app/domain/entities/maker"
+	makerEntity "regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
-	makerEnum "regulus/app/domain/vo/query/enum/maker"
 	"regulus/app/infrastructures/viper"
 	"testing"
 
@@ -274,24 +273,20 @@ func TestMakerRepo_Select(t *testing.T) {
 		queryItems []*query.SearchConditionItem
 	}
 	qi1 := query.SearchConditionItem{
-		Field: query.FieldAttr{
-			ID:         "id1",
-			EntityName: "Maker",
-			FieldName:  "Name",
-			ViewValue:  "MakerName",
-			FieldType:  query.String,
+		SearchField: query.FieldAttr{
+			ID:        "id1",
+			ViewValue: "MakerName",
+			FieldType: query.STRING,
 		},
 		ConditionValue: "1",
 		MatchType:      "pertialmatch",
 		Operator:       "and",
 	}
 	qi2 := query.SearchConditionItem{
-		Field: query.FieldAttr{
-			ID:         "id1",
-			EntityName: "Maker",
-			FieldName:  "Name",
-			ViewValue:  "MakerName",
-			FieldType:  query.String,
+		SearchField: query.FieldAttr{
+			ID:        "id1",
+			ViewValue: "MakerName",
+			FieldType: query.STRING,
 		},
 		ConditionValue: "2",
 		MatchType:      "pertialmatch",
@@ -474,11 +469,9 @@ func TestSort(t *testing.T) {
 				orderItems: []query.OrderConditionItem{
 					{
 						OrderField: query.FieldAttr{
-							ID:         "id1",
-							EntityName: "",
-							FieldName:  makerEnum.Name,
-							FieldType:  query.String,
-							ViewValue:  "makerName",
+							ID:        "id1",
+							FieldType: query.STRING,
+							ViewValue: "makerName",
 						},
 						OrderFieldKeyWord: query.Asc,
 					},
@@ -506,11 +499,9 @@ func TestSort(t *testing.T) {
 				orderItems: []query.OrderConditionItem{
 					{
 						OrderField: query.FieldAttr{
-							ID:         "id1",
-							EntityName: "",
-							FieldName:  makerEnum.Name,
-							FieldType:  query.String,
-							ViewValue:  "makerName",
+							ID:        "id1",
+							FieldType: query.STRING,
+							ViewValue: "makerName",
 						},
 						OrderFieldKeyWord: query.Desc,
 					},
