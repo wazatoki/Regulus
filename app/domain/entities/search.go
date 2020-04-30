@@ -12,11 +12,28 @@ var Categories = []Category{
 		Name:      "search",
 		ViewValue: "検索",
 		SearchItems: ComplexSearchItems{
-			SearchConditionList:  []query.FieldAttr{},
-			IsShowDisplayItem:    false,
-			IsShowOrderCondition: false,
-			IsShowSaveCondition:  false,
-			Groups:               nil,
+			SearchConditionList: []query.FieldAttr{
+				query.QueryConditionPatternName,
+				query.QueryConditionCategoryViewValue,
+				query.QueryConditionIsDisclose,
+				query.QueryConditionDiscloseGroups,
+				query.QueryConditionOwner,
+			},
+			DisplayItemList:    []query.FieldAttr{},
+			OrderConditionList: []query.FieldAttr{},
+			Groups:             nil,
+		},
+	},
+	{
+		Name:      "group",
+		ViewValue: "利用者グループ",
+		SearchItems: ComplexSearchItems{
+			SearchConditionList: []query.FieldAttr{
+				query.GroupName,
+			},
+			DisplayItemList:    []query.FieldAttr{},
+			OrderConditionList: []query.FieldAttr{},
+			Groups:             nil,
 		},
 	},
 }
@@ -34,13 +51,10 @@ type Category struct {
 ComplexSearchItems is struct as search condition display
 */
 type ComplexSearchItems struct {
-	DisplayItemList      []query.FieldAttr `json:"displayItemList"`
-	SearchConditionList  []query.FieldAttr `json:"searchConditionList"`
-	OrderConditionList   []query.FieldAttr `json:"orderConditionList"`
-	IsShowDisplayItem    bool              `json:"isShowDisplayItem"`
-	IsShowOrderCondition bool              `json:"isShowOrderCondition"`
-	IsShowSaveCondition  bool              `json:"isShowSaveCondition"`
-	Groups               []Group           `json:"groups"`
+	DisplayItemList     []query.FieldAttr `json:"displayItemList"`
+	SearchConditionList []query.FieldAttr `json:"searchConditionList"`
+	OrderConditionList  []query.FieldAttr `json:"orderConditionList"`
+	Groups              []StaffGroup      `json:"groups"`
 }
 
 /*
@@ -51,7 +65,7 @@ type QueryCondition struct {
 	PatternName    string              `json:"patternName"`
 	Category       Category            `json:"category"`
 	IsDisclose     bool                `json:"isDisclose"`
-	DiscloseGroups []Group             `json:"discloseGroups"`
+	DiscloseGroups []StaffGroup        `json:"discloseGroups"`
 	Owner          Staff               `json:"owner"`
 	ConditionData  query.ConditionData `json:"conditionData"`
 }

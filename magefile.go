@@ -25,7 +25,7 @@ func Test() error {
 	return nil
 }
 
-// SqlMigrateUp execute sql-migrate down
+// SqlMigrateDown execute sql-migrate down
 func SqlMigrateDown() error {
 	out, err := exec.Command("sql-migrate", "down", "-config=./resources/db/dbconfig.yml").Output()
 	fmt.Println(string(out))

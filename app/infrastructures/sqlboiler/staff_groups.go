@@ -30,6 +30,7 @@ type StaffGroup struct {
 	CreStaffID    null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt     null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	UpdateStaffID null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
+	StaffID       string      `boil:"staff_id" json:"staff_id" toml:"staff_id" yaml:"staff_id"`
 	Name          string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 
 	R *staffGroupR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -43,6 +44,7 @@ var StaffGroupColumns = struct {
 	CreStaffID    string
 	UpdatedAt     string
 	UpdateStaffID string
+	StaffID       string
 	Name          string
 }{
 	ID:            "id",
@@ -51,6 +53,7 @@ var StaffGroupColumns = struct {
 	CreStaffID:    "cre_staff_id",
 	UpdatedAt:     "updated_at",
 	UpdateStaffID: "update_staff_id",
+	StaffID:       "staff_id",
 	Name:          "name",
 }
 
@@ -63,23 +66,32 @@ var StaffGroupWhere = struct {
 	CreStaffID    whereHelpernull_String
 	UpdatedAt     whereHelpernull_Time
 	UpdateStaffID whereHelpernull_String
+	StaffID       whereHelperstring
 	Name          whereHelperstring
 }{
-	ID:            whereHelperstring{field: "\"staff_group\".\"id\""},
-	Del:           whereHelpernull_Bool{field: "\"staff_group\".\"del\""},
-	CreatedAt:     whereHelpernull_Time{field: "\"staff_group\".\"created_at\""},
-	CreStaffID:    whereHelpernull_String{field: "\"staff_group\".\"cre_staff_id\""},
-	UpdatedAt:     whereHelpernull_Time{field: "\"staff_group\".\"updated_at\""},
-	UpdateStaffID: whereHelpernull_String{field: "\"staff_group\".\"update_staff_id\""},
-	Name:          whereHelperstring{field: "\"staff_group\".\"name\""},
+	ID:            whereHelperstring{field: "\"staff_groups\".\"id\""},
+	Del:           whereHelpernull_Bool{field: "\"staff_groups\".\"del\""},
+	CreatedAt:     whereHelpernull_Time{field: "\"staff_groups\".\"created_at\""},
+	CreStaffID:    whereHelpernull_String{field: "\"staff_groups\".\"cre_staff_id\""},
+	UpdatedAt:     whereHelpernull_Time{field: "\"staff_groups\".\"updated_at\""},
+	UpdateStaffID: whereHelpernull_String{field: "\"staff_groups\".\"update_staff_id\""},
+	StaffID:       whereHelperstring{field: "\"staff_groups\".\"staff_id\""},
+	Name:          whereHelperstring{field: "\"staff_groups\".\"name\""},
 }
 
 // StaffGroupRels is where relationship names are stored.
 var StaffGroupRels = struct {
-}{}
+	QueryConditions string
+	Staffs          string
+}{
+	QueryConditions: "QueryConditions",
+	Staffs:          "Staffs",
+}
 
 // staffGroupR is where relationships are stored.
 type staffGroupR struct {
+	QueryConditions QueryConditionSlice
+	Staffs          StaffSlice
 }
 
 // NewStruct creates a new relationship struct
@@ -91,8 +103,8 @@ func (*staffGroupR) NewStruct() *staffGroupR {
 type staffGroupL struct{}
 
 var (
-	staffGroupAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
-	staffGroupColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
+	staffGroupAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
+	staffGroupColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
 	staffGroupColumnsWithDefault    = []string{"del"}
 	staffGroupPrimaryKeyColumns     = []string{"id"}
 )
@@ -311,7 +323,7 @@ func (q staffGroupQuery) One(ctx context.Context, exec boil.ContextExecutor) (*S
 		if errors.Cause(err) == sql.ErrNoRows {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "sqlboiler: failed to execute a one query for staff_group")
+		return nil, errors.Wrap(err, "sqlboiler: failed to execute a one query for staff_groups")
 	}
 
 	if err := o.doAfterSelectHooks(ctx, exec); err != nil {
@@ -350,7 +362,7 @@ func (q staffGroupQuery) Count(ctx context.Context, exec boil.ContextExecutor) (
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to count staff_group rows")
+		return 0, errors.Wrap(err, "sqlboiler: failed to count staff_groups rows")
 	}
 
 	return count, nil
@@ -366,15 +378,569 @@ func (q staffGroupQuery) Exists(ctx context.Context, exec boil.ContextExecutor) 
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return false, errors.Wrap(err, "sqlboiler: failed to check if staff_group exists")
+		return false, errors.Wrap(err, "sqlboiler: failed to check if staff_groups exists")
 	}
 
 	return count > 0, nil
 }
 
+// QueryConditions retrieves all the query_condition's QueryConditions with an executor.
+func (o *StaffGroup) QueryConditions(mods ...qm.QueryMod) queryConditionQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.InnerJoin("\"join_query_conditions_staff_groups\" on \"query_conditions\".\"id\" = \"join_query_conditions_staff_groups\".\"query_conditions_id\""),
+		qm.Where("\"join_query_conditions_staff_groups\".\"staff_groups_id\"=?", o.ID),
+	)
+
+	query := QueryConditions(queryMods...)
+	queries.SetFrom(query.Query, "\"query_conditions\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"query_conditions\".*"})
+	}
+
+	return query
+}
+
+// Staffs retrieves all the staff's Staffs with an executor.
+func (o *StaffGroup) Staffs(mods ...qm.QueryMod) staffQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.InnerJoin("\"join_staffs_staff_groups\" on \"staffs\".\"id\" = \"join_staffs_staff_groups\".\"staffs_id\""),
+		qm.Where("\"join_staffs_staff_groups\".\"staff_groups_id\"=?", o.ID),
+	)
+
+	query := Staffs(queryMods...)
+	queries.SetFrom(query.Query, "\"staffs\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"staffs\".*"})
+	}
+
+	return query
+}
+
+// LoadQueryConditions allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (staffGroupL) LoadQueryConditions(ctx context.Context, e boil.ContextExecutor, singular bool, maybeStaffGroup interface{}, mods queries.Applicator) error {
+	var slice []*StaffGroup
+	var object *StaffGroup
+
+	if singular {
+		object = maybeStaffGroup.(*StaffGroup)
+	} else {
+		slice = *maybeStaffGroup.(*[]*StaffGroup)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &staffGroupR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &staffGroupR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.Select("\"query_conditions\".*, \"a\".\"staff_groups_id\""),
+		qm.From("\"query_conditions\""),
+		qm.InnerJoin("\"join_query_conditions_staff_groups\" as \"a\" on \"query_conditions\".\"id\" = \"a\".\"query_conditions_id\""),
+		qm.WhereIn("\"a\".\"staff_groups_id\" in ?", args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load query_conditions")
+	}
+
+	var resultSlice []*QueryCondition
+
+	var localJoinCols []string
+	for results.Next() {
+		one := new(QueryCondition)
+		var localJoinCol string
+
+		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.PatternName, &one.CategoryName, &one.IsDisclose, &one.OwnerID, &localJoinCol)
+		if err != nil {
+			return errors.Wrap(err, "failed to scan eager loaded results for query_conditions")
+		}
+		if err = results.Err(); err != nil {
+			return errors.Wrap(err, "failed to plebian-bind eager loaded slice query_conditions")
+		}
+
+		resultSlice = append(resultSlice, one)
+		localJoinCols = append(localJoinCols, localJoinCol)
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on query_conditions")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for query_conditions")
+	}
+
+	if len(queryConditionAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.QueryConditions = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &queryConditionR{}
+			}
+			foreign.R.StaffGroups = append(foreign.R.StaffGroups, object)
+		}
+		return nil
+	}
+
+	for i, foreign := range resultSlice {
+		localJoinCol := localJoinCols[i]
+		for _, local := range slice {
+			if local.ID == localJoinCol {
+				local.R.QueryConditions = append(local.R.QueryConditions, foreign)
+				if foreign.R == nil {
+					foreign.R = &queryConditionR{}
+				}
+				foreign.R.StaffGroups = append(foreign.R.StaffGroups, local)
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadStaffs allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (staffGroupL) LoadStaffs(ctx context.Context, e boil.ContextExecutor, singular bool, maybeStaffGroup interface{}, mods queries.Applicator) error {
+	var slice []*StaffGroup
+	var object *StaffGroup
+
+	if singular {
+		object = maybeStaffGroup.(*StaffGroup)
+	} else {
+		slice = *maybeStaffGroup.(*[]*StaffGroup)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &staffGroupR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &staffGroupR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.Select("\"staffs\".*, \"a\".\"staff_groups_id\""),
+		qm.From("\"staffs\""),
+		qm.InnerJoin("\"join_staffs_staff_groups\" as \"a\" on \"staffs\".\"id\" = \"a\".\"staffs_id\""),
+		qm.WhereIn("\"a\".\"staff_groups_id\" in ?", args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load staffs")
+	}
+
+	var resultSlice []*Staff
+
+	var localJoinCols []string
+	for results.Next() {
+		one := new(Staff)
+		var localJoinCol string
+
+		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.StaffAccountID, &one.Password, &one.Name, &localJoinCol)
+		if err != nil {
+			return errors.Wrap(err, "failed to scan eager loaded results for staffs")
+		}
+		if err = results.Err(); err != nil {
+			return errors.Wrap(err, "failed to plebian-bind eager loaded slice staffs")
+		}
+
+		resultSlice = append(resultSlice, one)
+		localJoinCols = append(localJoinCols, localJoinCol)
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on staffs")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for staffs")
+	}
+
+	if len(staffAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.Staffs = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &staffR{}
+			}
+			foreign.R.StaffGroups = append(foreign.R.StaffGroups, object)
+		}
+		return nil
+	}
+
+	for i, foreign := range resultSlice {
+		localJoinCol := localJoinCols[i]
+		for _, local := range slice {
+			if local.ID == localJoinCol {
+				local.R.Staffs = append(local.R.Staffs, foreign)
+				if foreign.R == nil {
+					foreign.R = &staffR{}
+				}
+				foreign.R.StaffGroups = append(foreign.R.StaffGroups, local)
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// AddQueryConditions adds the given related objects to the existing relationships
+// of the staff_group, optionally inserting them as new records.
+// Appends related to o.R.QueryConditions.
+// Sets related.R.StaffGroups appropriately.
+func (o *StaffGroup) AddQueryConditions(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*QueryCondition) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		}
+	}
+
+	for _, rel := range related {
+		query := "insert into \"join_query_conditions_staff_groups\" (\"staff_groups_id\", \"query_conditions_id\") values ($1, $2)"
+		values := []interface{}{o.ID, rel.ID}
+
+		if boil.DebugMode {
+			fmt.Fprintln(boil.DebugWriter, query)
+			fmt.Fprintln(boil.DebugWriter, values)
+		}
+
+		_, err = exec.ExecContext(ctx, query, values...)
+		if err != nil {
+			return errors.Wrap(err, "failed to insert into join table")
+		}
+	}
+	if o.R == nil {
+		o.R = &staffGroupR{
+			QueryConditions: related,
+		}
+	} else {
+		o.R.QueryConditions = append(o.R.QueryConditions, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &queryConditionR{
+				StaffGroups: StaffGroupSlice{o},
+			}
+		} else {
+			rel.R.StaffGroups = append(rel.R.StaffGroups, o)
+		}
+	}
+	return nil
+}
+
+// SetQueryConditions removes all previously related items of the
+// staff_group replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.StaffGroups's QueryConditions accordingly.
+// Replaces o.R.QueryConditions with related.
+// Sets related.R.StaffGroups's QueryConditions accordingly.
+func (o *StaffGroup) SetQueryConditions(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*QueryCondition) error {
+	query := "delete from \"join_query_conditions_staff_groups\" where \"staff_groups_id\" = $1"
+	values := []interface{}{o.ID}
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, query)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+
+	_, err := exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+
+	removeQueryConditionsFromStaffGroupsSlice(o, related)
+	if o.R != nil {
+		o.R.QueryConditions = nil
+	}
+	return o.AddQueryConditions(ctx, exec, insert, related...)
+}
+
+// RemoveQueryConditions relationships from objects passed in.
+// Removes related items from R.QueryConditions (uses pointer comparison, removal does not keep order)
+// Sets related.R.StaffGroups.
+func (o *StaffGroup) RemoveQueryConditions(ctx context.Context, exec boil.ContextExecutor, related ...*QueryCondition) error {
+	var err error
+	query := fmt.Sprintf(
+		"delete from \"join_query_conditions_staff_groups\" where \"staff_groups_id\" = $1 and \"query_conditions_id\" in (%s)",
+		strmangle.Placeholders(dialect.UseIndexPlaceholders, len(related), 2, 1),
+	)
+	values := []interface{}{o.ID}
+	for _, rel := range related {
+		values = append(values, rel.ID)
+	}
+
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, query)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+
+	_, err = exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+	removeQueryConditionsFromStaffGroupsSlice(o, related)
+	if o.R == nil {
+		return nil
+	}
+
+	for _, rel := range related {
+		for i, ri := range o.R.QueryConditions {
+			if rel != ri {
+				continue
+			}
+
+			ln := len(o.R.QueryConditions)
+			if ln > 1 && i < ln-1 {
+				o.R.QueryConditions[i] = o.R.QueryConditions[ln-1]
+			}
+			o.R.QueryConditions = o.R.QueryConditions[:ln-1]
+			break
+		}
+	}
+
+	return nil
+}
+
+func removeQueryConditionsFromStaffGroupsSlice(o *StaffGroup, related []*QueryCondition) {
+	for _, rel := range related {
+		if rel.R == nil {
+			continue
+		}
+		for i, ri := range rel.R.StaffGroups {
+			if o.ID != ri.ID {
+				continue
+			}
+
+			ln := len(rel.R.StaffGroups)
+			if ln > 1 && i < ln-1 {
+				rel.R.StaffGroups[i] = rel.R.StaffGroups[ln-1]
+			}
+			rel.R.StaffGroups = rel.R.StaffGroups[:ln-1]
+			break
+		}
+	}
+}
+
+// AddStaffs adds the given related objects to the existing relationships
+// of the staff_group, optionally inserting them as new records.
+// Appends related to o.R.Staffs.
+// Sets related.R.StaffGroups appropriately.
+func (o *StaffGroup) AddStaffs(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Staff) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		}
+	}
+
+	for _, rel := range related {
+		query := "insert into \"join_staffs_staff_groups\" (\"staff_groups_id\", \"staffs_id\") values ($1, $2)"
+		values := []interface{}{o.ID, rel.ID}
+
+		if boil.DebugMode {
+			fmt.Fprintln(boil.DebugWriter, query)
+			fmt.Fprintln(boil.DebugWriter, values)
+		}
+
+		_, err = exec.ExecContext(ctx, query, values...)
+		if err != nil {
+			return errors.Wrap(err, "failed to insert into join table")
+		}
+	}
+	if o.R == nil {
+		o.R = &staffGroupR{
+			Staffs: related,
+		}
+	} else {
+		o.R.Staffs = append(o.R.Staffs, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &staffR{
+				StaffGroups: StaffGroupSlice{o},
+			}
+		} else {
+			rel.R.StaffGroups = append(rel.R.StaffGroups, o)
+		}
+	}
+	return nil
+}
+
+// SetStaffs removes all previously related items of the
+// staff_group replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.StaffGroups's Staffs accordingly.
+// Replaces o.R.Staffs with related.
+// Sets related.R.StaffGroups's Staffs accordingly.
+func (o *StaffGroup) SetStaffs(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Staff) error {
+	query := "delete from \"join_staffs_staff_groups\" where \"staff_groups_id\" = $1"
+	values := []interface{}{o.ID}
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, query)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+
+	_, err := exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+
+	removeStaffsFromStaffGroupsSlice(o, related)
+	if o.R != nil {
+		o.R.Staffs = nil
+	}
+	return o.AddStaffs(ctx, exec, insert, related...)
+}
+
+// RemoveStaffs relationships from objects passed in.
+// Removes related items from R.Staffs (uses pointer comparison, removal does not keep order)
+// Sets related.R.StaffGroups.
+func (o *StaffGroup) RemoveStaffs(ctx context.Context, exec boil.ContextExecutor, related ...*Staff) error {
+	var err error
+	query := fmt.Sprintf(
+		"delete from \"join_staffs_staff_groups\" where \"staff_groups_id\" = $1 and \"staffs_id\" in (%s)",
+		strmangle.Placeholders(dialect.UseIndexPlaceholders, len(related), 2, 1),
+	)
+	values := []interface{}{o.ID}
+	for _, rel := range related {
+		values = append(values, rel.ID)
+	}
+
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, query)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+
+	_, err = exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+	removeStaffsFromStaffGroupsSlice(o, related)
+	if o.R == nil {
+		return nil
+	}
+
+	for _, rel := range related {
+		for i, ri := range o.R.Staffs {
+			if rel != ri {
+				continue
+			}
+
+			ln := len(o.R.Staffs)
+			if ln > 1 && i < ln-1 {
+				o.R.Staffs[i] = o.R.Staffs[ln-1]
+			}
+			o.R.Staffs = o.R.Staffs[:ln-1]
+			break
+		}
+	}
+
+	return nil
+}
+
+func removeStaffsFromStaffGroupsSlice(o *StaffGroup, related []*Staff) {
+	for _, rel := range related {
+		if rel.R == nil {
+			continue
+		}
+		for i, ri := range rel.R.StaffGroups {
+			if o.ID != ri.ID {
+				continue
+			}
+
+			ln := len(rel.R.StaffGroups)
+			if ln > 1 && i < ln-1 {
+				rel.R.StaffGroups[i] = rel.R.StaffGroups[ln-1]
+			}
+			rel.R.StaffGroups = rel.R.StaffGroups[:ln-1]
+			break
+		}
+	}
+}
+
 // StaffGroups retrieves all the records using an executor.
 func StaffGroups(mods ...qm.QueryMod) staffGroupQuery {
-	mods = append(mods, qm.From("\"staff_group\""))
+	mods = append(mods, qm.From("\"staff_groups\""))
 	return staffGroupQuery{NewQuery(mods...)}
 }
 
@@ -388,7 +954,7 @@ func FindStaffGroup(ctx context.Context, exec boil.ContextExecutor, iD string, s
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"staff_group\" where \"id\"=$1", sel,
+		"select %s from \"staff_groups\" where \"id\"=$1", sel,
 	)
 
 	q := queries.Raw(query, iD)
@@ -398,7 +964,7 @@ func FindStaffGroup(ctx context.Context, exec boil.ContextExecutor, iD string, s
 		if errors.Cause(err) == sql.ErrNoRows {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "sqlboiler: unable to select from staff_group")
+		return nil, errors.Wrap(err, "sqlboiler: unable to select from staff_groups")
 	}
 
 	return staffGroupObj, nil
@@ -408,7 +974,7 @@ func FindStaffGroup(ctx context.Context, exec boil.ContextExecutor, iD string, s
 // See boil.Columns.InsertColumnSet documentation to understand column list inference for inserts.
 func (o *StaffGroup) Insert(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) error {
 	if o == nil {
-		return errors.New("sqlboiler: no staff_group provided for insertion")
+		return errors.New("sqlboiler: no staff_groups provided for insertion")
 	}
 
 	var err error
@@ -451,9 +1017,9 @@ func (o *StaffGroup) Insert(ctx context.Context, exec boil.ContextExecutor, colu
 			return err
 		}
 		if len(wl) != 0 {
-			cache.query = fmt.Sprintf("INSERT INTO \"staff_group\" (\"%s\") %%sVALUES (%s)%%s", strings.Join(wl, "\",\""), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
+			cache.query = fmt.Sprintf("INSERT INTO \"staff_groups\" (\"%s\") %%sVALUES (%s)%%s", strings.Join(wl, "\",\""), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
 		} else {
-			cache.query = "INSERT INTO \"staff_group\" %sDEFAULT VALUES%s"
+			cache.query = "INSERT INTO \"staff_groups\" %sDEFAULT VALUES%s"
 		}
 
 		var queryOutput, queryReturning string
@@ -480,7 +1046,7 @@ func (o *StaffGroup) Insert(ctx context.Context, exec boil.ContextExecutor, colu
 	}
 
 	if err != nil {
-		return errors.Wrap(err, "sqlboiler: unable to insert into staff_group")
+		return errors.Wrap(err, "sqlboiler: unable to insert into staff_groups")
 	}
 
 	if !cached {
@@ -521,10 +1087,10 @@ func (o *StaffGroup) Update(ctx context.Context, exec boil.ContextExecutor, colu
 			wl = strmangle.SetComplement(wl, []string{"created_at"})
 		}
 		if len(wl) == 0 {
-			return 0, errors.New("sqlboiler: unable to update staff_group, could not build whitelist")
+			return 0, errors.New("sqlboiler: unable to update staff_groups, could not build whitelist")
 		}
 
-		cache.query = fmt.Sprintf("UPDATE \"staff_group\" SET %s WHERE %s",
+		cache.query = fmt.Sprintf("UPDATE \"staff_groups\" SET %s WHERE %s",
 			strmangle.SetParamNames("\"", "\"", 1, wl),
 			strmangle.WhereClause("\"", "\"", len(wl)+1, staffGroupPrimaryKeyColumns),
 		)
@@ -544,12 +1110,12 @@ func (o *StaffGroup) Update(ctx context.Context, exec boil.ContextExecutor, colu
 	var result sql.Result
 	result, err = exec.ExecContext(ctx, cache.query, values...)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to update staff_group row")
+		return 0, errors.Wrap(err, "sqlboiler: unable to update staff_groups row")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by update for staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by update for staff_groups")
 	}
 
 	if !cached {
@@ -567,12 +1133,12 @@ func (q staffGroupQuery) UpdateAll(ctx context.Context, exec boil.ContextExecuto
 
 	result, err := q.Query.ExecContext(ctx, exec)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to update all for staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: unable to update all for staff_groups")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to retrieve rows affected for staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: unable to retrieve rows affected for staff_groups")
 	}
 
 	return rowsAff, nil
@@ -605,7 +1171,7 @@ func (o StaffGroupSlice) UpdateAll(ctx context.Context, exec boil.ContextExecuto
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := fmt.Sprintf("UPDATE \"staff_group\" SET %s WHERE %s",
+	sql := fmt.Sprintf("UPDATE \"staff_groups\" SET %s WHERE %s",
 		strmangle.SetParamNames("\"", "\"", 1, colNames),
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), len(colNames)+1, staffGroupPrimaryKeyColumns, len(o)))
 
@@ -630,7 +1196,7 @@ func (o StaffGroupSlice) UpdateAll(ctx context.Context, exec boil.ContextExecuto
 // See boil.Columns documentation for how to properly use updateColumns and insertColumns.
 func (o *StaffGroup) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
-		return errors.New("sqlboiler: no staff_group provided for upsert")
+		return errors.New("sqlboiler: no staff_groups provided for upsert")
 	}
 	if !boil.TimestampsAreSkipped(ctx) {
 		currTime := time.Now().In(boil.GetLocation())
@@ -694,7 +1260,7 @@ func (o *StaffGroup) Upsert(ctx context.Context, exec boil.ContextExecutor, upda
 		)
 
 		if updateOnConflict && len(update) == 0 {
-			return errors.New("sqlboiler: unable to upsert staff_group, could not build update column list")
+			return errors.New("sqlboiler: unable to upsert staff_groups, could not build update column list")
 		}
 
 		conflict := conflictColumns
@@ -702,7 +1268,7 @@ func (o *StaffGroup) Upsert(ctx context.Context, exec boil.ContextExecutor, upda
 			conflict = make([]string, len(staffGroupPrimaryKeyColumns))
 			copy(conflict, staffGroupPrimaryKeyColumns)
 		}
-		cache.query = buildUpsertQueryPostgres(dialect, "\"staff_group\"", updateOnConflict, ret, update, conflict, insert)
+		cache.query = buildUpsertQueryPostgres(dialect, "\"staff_groups\"", updateOnConflict, ret, update, conflict, insert)
 
 		cache.valueMapping, err = queries.BindMapping(staffGroupType, staffGroupMapping, insert)
 		if err != nil {
@@ -737,7 +1303,7 @@ func (o *StaffGroup) Upsert(ctx context.Context, exec boil.ContextExecutor, upda
 		_, err = exec.ExecContext(ctx, cache.query, vals...)
 	}
 	if err != nil {
-		return errors.Wrap(err, "sqlboiler: unable to upsert staff_group")
+		return errors.Wrap(err, "sqlboiler: unable to upsert staff_groups")
 	}
 
 	if !cached {
@@ -761,7 +1327,7 @@ func (o *StaffGroup) Delete(ctx context.Context, exec boil.ContextExecutor) (int
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), staffGroupPrimaryKeyMapping)
-	sql := "DELETE FROM \"staff_group\" WHERE \"id\"=$1"
+	sql := "DELETE FROM \"staff_groups\" WHERE \"id\"=$1"
 
 	if boil.DebugMode {
 		fmt.Fprintln(boil.DebugWriter, sql)
@@ -770,12 +1336,12 @@ func (o *StaffGroup) Delete(ctx context.Context, exec boil.ContextExecutor) (int
 
 	result, err := exec.ExecContext(ctx, sql, args...)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to delete from staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: unable to delete from staff_groups")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by delete for staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by delete for staff_groups")
 	}
 
 	if err := o.doAfterDeleteHooks(ctx, exec); err != nil {
@@ -795,12 +1361,12 @@ func (q staffGroupQuery) DeleteAll(ctx context.Context, exec boil.ContextExecuto
 
 	result, err := q.Query.ExecContext(ctx, exec)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to delete all from staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: unable to delete all from staff_groups")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for staff_groups")
 	}
 
 	return rowsAff, nil
@@ -826,7 +1392,7 @@ func (o StaffGroupSlice) DeleteAll(ctx context.Context, exec boil.ContextExecuto
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := "DELETE FROM \"staff_group\" WHERE " +
+	sql := "DELETE FROM \"staff_groups\" WHERE " +
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 1, staffGroupPrimaryKeyColumns, len(o))
 
 	if boil.DebugMode {
@@ -841,7 +1407,7 @@ func (o StaffGroupSlice) DeleteAll(ctx context.Context, exec boil.ContextExecuto
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for staff_group")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for staff_groups")
 	}
 
 	if len(staffGroupAfterDeleteHooks) != 0 {
@@ -881,7 +1447,7 @@ func (o *StaffGroupSlice) ReloadAll(ctx context.Context, exec boil.ContextExecut
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := "SELECT \"staff_group\".* FROM \"staff_group\" WHERE " +
+	sql := "SELECT \"staff_groups\".* FROM \"staff_groups\" WHERE " +
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 1, staffGroupPrimaryKeyColumns, len(*o))
 
 	q := queries.Raw(sql, args...)
@@ -899,7 +1465,7 @@ func (o *StaffGroupSlice) ReloadAll(ctx context.Context, exec boil.ContextExecut
 // StaffGroupExists checks if the StaffGroup row exists.
 func StaffGroupExists(ctx context.Context, exec boil.ContextExecutor, iD string) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"staff_group\" where \"id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"staff_groups\" where \"id\"=$1 limit 1)"
 
 	if boil.DebugMode {
 		fmt.Fprintln(boil.DebugWriter, sql)
@@ -910,7 +1476,7 @@ func StaffGroupExists(ctx context.Context, exec boil.ContextExecutor, iD string)
 
 	err := row.Scan(&exists)
 	if err != nil {
-		return false, errors.Wrap(err, "sqlboiler: unable to check if staff_group exists")
+		return false, errors.Wrap(err, "sqlboiler: unable to check if staff_groups exists")
 	}
 
 	return exists, nil

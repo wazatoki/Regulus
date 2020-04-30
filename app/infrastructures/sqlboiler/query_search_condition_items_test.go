@@ -494,6 +494,115 @@ func testQuerySearchConditionItemsInsertWhitelist(t *testing.T) {
 	}
 }
 
+func testQuerySearchConditionItemToOneQueryConditionUsingQueryCondition(t *testing.T) {
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var local QuerySearchConditionItem
+	var foreign QueryCondition
+
+	seed := randomize.NewSeed()
+	if err := randomize.Struct(seed, &local, querySearchConditionItemDBTypes, false, querySearchConditionItemColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize QuerySearchConditionItem struct: %s", err)
+	}
+	if err := randomize.Struct(seed, &foreign, queryConditionDBTypes, false, queryConditionColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize QueryCondition struct: %s", err)
+	}
+
+	if err := foreign.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	local.QueryConditionsID = foreign.ID
+	if err := local.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := local.QueryCondition().One(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if check.ID != foreign.ID {
+		t.Errorf("want: %v, got %v", foreign.ID, check.ID)
+	}
+
+	slice := QuerySearchConditionItemSlice{&local}
+	if err = local.L.LoadQueryCondition(ctx, tx, false, (*[]*QuerySearchConditionItem)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if local.R.QueryCondition == nil {
+		t.Error("struct should have been eager loaded")
+	}
+
+	local.R.QueryCondition = nil
+	if err = local.L.LoadQueryCondition(ctx, tx, true, &local, nil); err != nil {
+		t.Fatal(err)
+	}
+	if local.R.QueryCondition == nil {
+		t.Error("struct should have been eager loaded")
+	}
+}
+
+func testQuerySearchConditionItemToOneSetOpQueryConditionUsingQueryCondition(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a QuerySearchConditionItem
+	var b, c QueryCondition
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, querySearchConditionItemDBTypes, false, strmangle.SetComplement(querySearchConditionItemPrimaryKeyColumns, querySearchConditionItemColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &b, queryConditionDBTypes, false, strmangle.SetComplement(queryConditionPrimaryKeyColumns, queryConditionColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, queryConditionDBTypes, false, strmangle.SetComplement(queryConditionPrimaryKeyColumns, queryConditionColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	for i, x := range []*QueryCondition{&b, &c} {
+		err = a.SetQueryCondition(ctx, tx, i != 0, x)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if a.R.QueryCondition != x {
+			t.Error("relationship struct not set to correct value")
+		}
+
+		if x.R.QuerySearchConditionItems[0] != &a {
+			t.Error("failed to append to foreign relationship struct")
+		}
+		if a.QueryConditionsID != x.ID {
+			t.Error("foreign key was wrong value", a.QueryConditionsID)
+		}
+
+		zero := reflect.Zero(reflect.TypeOf(a.QueryConditionsID))
+		reflect.Indirect(reflect.ValueOf(&a.QueryConditionsID)).Set(zero)
+
+		if err = a.Reload(ctx, tx); err != nil {
+			t.Fatal("failed to reload", err)
+		}
+
+		if a.QueryConditionsID != x.ID {
+			t.Error("foreign key was wrong value", a.QueryConditionsID, x.ID)
+		}
+	}
+}
+
 func testQuerySearchConditionItemsReload(t *testing.T) {
 	t.Parallel()
 
@@ -568,7 +677,7 @@ func testQuerySearchConditionItemsSelect(t *testing.T) {
 }
 
 var (
-	querySearchConditionItemDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `QueryConditionID`: `text`, `SearchFieldID`: `text`, `ConditionValue`: `text`, `MatchType`: `text`, `Operator`: `text`, `RowOrder`: `integer`}
+	querySearchConditionItemDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `QueryConditionsID`: `text`, `SearchFieldID`: `text`, `ConditionValue`: `text`, `MatchType`: `text`, `Operator`: `text`, `RowOrder`: `integer`}
 	_                               = bytes.MinRead
 )
 

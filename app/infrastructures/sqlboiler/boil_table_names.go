@@ -4,23 +4,25 @@
 package sqlboiler
 
 var TableNames = struct {
-	GorpMigrations               string
-	Maker                        string
-	QueryCondition               string
-	QueryConditionDiscloseGroups string
-	QueryDisplayItems            string
-	QueryOrderConditionItems     string
-	QuerySearchConditionItems    string
-	Staff                        string
-	StaffGroup                   string
+	GorpMigrations                 string
+	JoinQueryConditionsStaffGroups string
+	JoinStaffsStaffGroups          string
+	Makers                         string
+	QueryConditions                string
+	QueryDisplayItems              string
+	QueryOrderConditionItems       string
+	QuerySearchConditionItems      string
+	StaffGroups                    string
+	Staffs                         string
 }{
-	GorpMigrations:               "gorp_migrations",
-	Maker:                        "maker",
-	QueryCondition:               "query_condition",
-	QueryConditionDiscloseGroups: "query_condition_disclose_groups",
-	QueryDisplayItems:            "query_display_items",
-	QueryOrderConditionItems:     "query_order_condition_items",
-	QuerySearchConditionItems:    "query_search_condition_items",
-	Staff:                        "staff",
-	StaffGroup:                   "staff_group",
+	GorpMigrations:                 "gorp_migrations",
+	JoinQueryConditionsStaffGroups: "join_query_conditions_staff_groups",
+	JoinStaffsStaffGroups:          "join_staffs_staff_groups",
+	Makers:                         "makers",
+	QueryConditions:                "query_conditions",
+	QueryDisplayItems:              "query_display_items",
+	QueryOrderConditionItems:       "query_order_condition_items",
+	QuerySearchConditionItems:      "query_search_condition_items",
+	StaffGroups:                    "staff_groups",
+	Staffs:                         "staffs",
 }

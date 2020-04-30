@@ -29,7 +29,7 @@ class FieldAttr {
 
 FieldAttr "1" -- "1" ValueTypeEnum : FieldType >
 
-class Group {
+class StaffGroup {
 	ID   string
 	Name string
 }
@@ -38,16 +38,13 @@ class ComplexSearchItems {
 	DisplayItemList      []FieldAttr
 	SearchConditionList  []FieldAttr
 	OrderConditionList   []FieldAttr
-	IsShowDisplayItem    bool
-	IsShowOrderCondition bool
-	IsShowSaveCondition  bool
-	Groups               []Group
+	Groups               []StaffGroup
 }
 
 ComplexSearchItems "1" -- "1..*" FieldAttr : DisplayItemList >
 ComplexSearchItems "1" -- "1..*" FieldAttr : SearchConditionList >
 ComplexSearchItems "1" -- "1..*" FieldAttr : OrderConditionList >
-ComplexSearchItems "1" -- "1..*" Group : GroupList >
+ComplexSearchItems "1" -- "1..*" StaffGroup : Groups >
 
 class Category {
 	Name        string
@@ -108,19 +105,21 @@ ConditionData "1" *-- "1..n" SearchConditionItem : SearchConditionList >
 ConditionData "1" *-- "1..n" OrderConditionItem : OrderConditionList >
 
 class Staff {
-	ID		string
-	Name	string
-	Groups	[]Group
+	ID       string
+	StaffAccountID  string
+	Password string
+	Name     string
+	Groups   []StaffGroup
 }
 
-Staff "1" -- "1..*" Group : Groups >
+Staff "1" -- "1..*" StaffGroup : Groups >
 
 class QueryCondition {
     ID             string
 	PatternName    string
 	Category       Category
 	IsDisclose     bool
-	DiscloseGroups []Group
+	DiscloseGroups []StaffGroup
 	Owner          Staff
 	ConditionData  ConditionData
 }
@@ -128,6 +127,118 @@ class QueryCondition {
 QueryCondition "1" -- "1" Category : Category >
 QueryCondition "1" -- "1" ConditionData : ConditionData >
 QueryCondition "1" -- "1" Staff : Owner >
+QueryCondition "1" -- "1..*" StaffGroup : DiscloseGroups >
+
+@enduml
+
+```
+
+```puml
+
+@startuml search entity diagram
+
+title: search entity
+
+left to right direction
+hide empty members
+
+entity query_order_condition_items {
+	id text primary key
+	del boolean default false
+	created_at timestamp
+	cre_staff_id text
+	updated_at timestamp
+	update_staff_id text
+    query_condition_id text not null
+	order_field_id text not null
+    order_field_key_word text not null
+    row_order integer not null
+}
+
+entity query_search_condition_items {
+	id text primary key
+	del boolean default false
+	created_at timestamp
+	cre_staff_id text
+	updated_at timestamp
+	update_staff_id text
+    query_condition_id text not null
+	search_field_id text not null
+    condition_value text not null
+    match_type text not null
+    operator text not null
+    row_order integer not null
+}
+
+entity query_display_items {
+	id text primary key
+	del boolean default false
+	created_at timestamp
+	cre_staff_id text
+	updated_at timestamp
+	update_staff_id text
+	query_conditions_id text not null
+	display_field_id text not null
+	row_order integer not null
+}
+
+entity join_staffs_staff_groups {
+	staffs_id text not null
+    staff_groups_id text not null
+}
+
+entity staff_groups {
+	id text primary key
+	del boolean default false
+	created_at timestamp
+	cre_staff_id text
+	updated_at timestamp
+	update_staff_id text
+	staff_id text not null
+	name text not null
+}
+
+entity staffs {
+	id text primary key
+	del boolean default false
+	created_at timestamp
+	cre_staff_id text
+	updated_at timestamp
+	update_staff_id text
+	staff_account_id text not null
+	password text not null
+	name text not null
+}
+
+staffs -- join_staffs_staff_groups : < staffs_id
+join_staffs_staff_groups -- staff_groups : staff_groups_id >
+
+entity join_query_conditions_staff_groups {
+    query_conditions_id text not null
+    staff_groups_id text not null
+}
+
+entity query_conditions {
+	id text primary key
+	del boolean default false
+	created_at timestamp
+	cre_staff_id text
+	updated_at timestamp
+	update_staff_id text
+	pattern_name text not null
+	category_name text not null
+	is_disclose boolean not null
+	owner_id text not null
+}
+
+query_conditions -- staffs : cre_staff_id >
+query_conditions -- staffs : update_staff_id >
+query_conditions -- staffs : owner_id >
+query_conditions -- join_query_conditions_staff_groups : < query_conditions_id
+join_query_conditions_staff_groups -- staff_groups : staff_groups_id >
+query_conditions --  query_display_items : < query_conditions_id
+query_conditions --  query_search_condition_items : < query_conditions_id
+query_conditions --  query_order_condition_items : < query_conditions_id
 
 @enduml
 ```

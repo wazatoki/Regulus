@@ -494,6 +494,630 @@ func testStaffGroupsInsertWhitelist(t *testing.T) {
 	}
 }
 
+func testStaffGroupToManyQueryConditions(t *testing.T) {
+	var err error
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c QueryCondition
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, true, staffGroupColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize StaffGroup struct: %s", err)
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = randomize.Struct(seed, &b, queryConditionDBTypes, false, queryConditionColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, queryConditionDBTypes, false, queryConditionColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = tx.Exec("insert into \"join_query_conditions_staff_groups\" (\"staff_groups_id\", \"query_conditions_id\") values ($1, $2)", a.ID, b.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = tx.Exec("insert into \"join_query_conditions_staff_groups\" (\"staff_groups_id\", \"query_conditions_id\") values ($1, $2)", a.ID, c.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := a.QueryConditions().All(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	bFound, cFound := false, false
+	for _, v := range check {
+		if v.ID == b.ID {
+			bFound = true
+		}
+		if v.ID == c.ID {
+			cFound = true
+		}
+	}
+
+	if !bFound {
+		t.Error("expected to find b")
+	}
+	if !cFound {
+		t.Error("expected to find c")
+	}
+
+	slice := StaffGroupSlice{&a}
+	if err = a.L.LoadQueryConditions(ctx, tx, false, (*[]*StaffGroup)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.QueryConditions); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	a.R.QueryConditions = nil
+	if err = a.L.LoadQueryConditions(ctx, tx, true, &a, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.QueryConditions); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	if t.Failed() {
+		t.Logf("%#v", check)
+	}
+}
+
+func testStaffGroupToManyStaffs(t *testing.T) {
+	var err error
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c Staff
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, true, staffGroupColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize StaffGroup struct: %s", err)
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = randomize.Struct(seed, &b, staffDBTypes, false, staffColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, staffDBTypes, false, staffColumnsWithDefault...); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = tx.Exec("insert into \"join_staffs_staff_groups\" (\"staff_groups_id\", \"staffs_id\") values ($1, $2)", a.ID, b.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = tx.Exec("insert into \"join_staffs_staff_groups\" (\"staff_groups_id\", \"staffs_id\") values ($1, $2)", a.ID, c.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := a.Staffs().All(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	bFound, cFound := false, false
+	for _, v := range check {
+		if v.ID == b.ID {
+			bFound = true
+		}
+		if v.ID == c.ID {
+			cFound = true
+		}
+	}
+
+	if !bFound {
+		t.Error("expected to find b")
+	}
+	if !cFound {
+		t.Error("expected to find c")
+	}
+
+	slice := StaffGroupSlice{&a}
+	if err = a.L.LoadStaffs(ctx, tx, false, (*[]*StaffGroup)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.Staffs); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	a.R.Staffs = nil
+	if err = a.L.LoadStaffs(ctx, tx, true, &a, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(a.R.Staffs); got != 2 {
+		t.Error("number of eager loaded records wrong, got:", got)
+	}
+
+	if t.Failed() {
+		t.Logf("%#v", check)
+	}
+}
+
+func testStaffGroupToManyAddOpQueryConditions(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c, d, e QueryCondition
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, false, strmangle.SetComplement(staffGroupPrimaryKeyColumns, staffGroupColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*QueryCondition{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, queryConditionDBTypes, false, strmangle.SetComplement(queryConditionPrimaryKeyColumns, queryConditionColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	foreignersSplitByInsertion := [][]*QueryCondition{
+		{&b, &c},
+		{&d, &e},
+	}
+
+	for i, x := range foreignersSplitByInsertion {
+		err = a.AddQueryConditions(ctx, tx, i != 0, x...)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		first := x[0]
+		second := x[1]
+
+		if first.R.StaffGroups[0] != &a {
+			t.Error("relationship was not added properly to the slice")
+		}
+		if second.R.StaffGroups[0] != &a {
+			t.Error("relationship was not added properly to the slice")
+		}
+
+		if a.R.QueryConditions[i*2] != first {
+			t.Error("relationship struct slice not set to correct value")
+		}
+		if a.R.QueryConditions[i*2+1] != second {
+			t.Error("relationship struct slice not set to correct value")
+		}
+
+		count, err := a.QueryConditions().Count(ctx, tx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := int64((i + 1) * 2); count != want {
+			t.Error("want", want, "got", count)
+		}
+	}
+}
+
+func testStaffGroupToManySetOpQueryConditions(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c, d, e QueryCondition
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, false, strmangle.SetComplement(staffGroupPrimaryKeyColumns, staffGroupColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*QueryCondition{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, queryConditionDBTypes, false, strmangle.SetComplement(queryConditionPrimaryKeyColumns, queryConditionColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.SetQueryConditions(ctx, tx, false, &b, &c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.QueryConditions().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.SetQueryConditions(ctx, tx, true, &d, &e)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.QueryConditions().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	// The following checks cannot be implemented since we have no handle
+	// to these when we call Set(). Leaving them here as wishful thinking
+	// and to let people know there's dragons.
+	//
+	// if len(b.R.StaffGroups) != 0 {
+	// 	t.Error("relationship was not removed properly from the slice")
+	// }
+	// if len(c.R.StaffGroups) != 0 {
+	// 	t.Error("relationship was not removed properly from the slice")
+	// }
+	if d.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the slice")
+	}
+	if e.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the slice")
+	}
+
+	if a.R.QueryConditions[0] != &d {
+		t.Error("relationship struct slice not set to correct value")
+	}
+	if a.R.QueryConditions[1] != &e {
+		t.Error("relationship struct slice not set to correct value")
+	}
+}
+
+func testStaffGroupToManyRemoveOpQueryConditions(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c, d, e QueryCondition
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, false, strmangle.SetComplement(staffGroupPrimaryKeyColumns, staffGroupColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*QueryCondition{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, queryConditionDBTypes, false, strmangle.SetComplement(queryConditionPrimaryKeyColumns, queryConditionColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.AddQueryConditions(ctx, tx, true, foreigners...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.QueryConditions().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 4 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.RemoveQueryConditions(ctx, tx, foreigners[:2]...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.QueryConditions().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	if len(b.R.StaffGroups) != 0 {
+		t.Error("relationship was not removed properly from the slice")
+	}
+	if len(c.R.StaffGroups) != 0 {
+		t.Error("relationship was not removed properly from the slice")
+	}
+	if d.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+	if e.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+
+	if len(a.R.QueryConditions) != 2 {
+		t.Error("should have preserved two relationships")
+	}
+
+	// Removal doesn't do a stable deletion for performance so we have to flip the order
+	if a.R.QueryConditions[1] != &d {
+		t.Error("relationship to d should have been preserved")
+	}
+	if a.R.QueryConditions[0] != &e {
+		t.Error("relationship to e should have been preserved")
+	}
+}
+
+func testStaffGroupToManyAddOpStaffs(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c, d, e Staff
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, false, strmangle.SetComplement(staffGroupPrimaryKeyColumns, staffGroupColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*Staff{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, staffDBTypes, false, strmangle.SetComplement(staffPrimaryKeyColumns, staffColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	foreignersSplitByInsertion := [][]*Staff{
+		{&b, &c},
+		{&d, &e},
+	}
+
+	for i, x := range foreignersSplitByInsertion {
+		err = a.AddStaffs(ctx, tx, i != 0, x...)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		first := x[0]
+		second := x[1]
+
+		if first.R.StaffGroups[0] != &a {
+			t.Error("relationship was not added properly to the slice")
+		}
+		if second.R.StaffGroups[0] != &a {
+			t.Error("relationship was not added properly to the slice")
+		}
+
+		if a.R.Staffs[i*2] != first {
+			t.Error("relationship struct slice not set to correct value")
+		}
+		if a.R.Staffs[i*2+1] != second {
+			t.Error("relationship struct slice not set to correct value")
+		}
+
+		count, err := a.Staffs().Count(ctx, tx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := int64((i + 1) * 2); count != want {
+			t.Error("want", want, "got", count)
+		}
+	}
+}
+
+func testStaffGroupToManySetOpStaffs(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c, d, e Staff
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, false, strmangle.SetComplement(staffGroupPrimaryKeyColumns, staffGroupColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*Staff{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, staffDBTypes, false, strmangle.SetComplement(staffPrimaryKeyColumns, staffColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = c.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.SetStaffs(ctx, tx, false, &b, &c)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.Staffs().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.SetStaffs(ctx, tx, true, &d, &e)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.Staffs().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	// The following checks cannot be implemented since we have no handle
+	// to these when we call Set(). Leaving them here as wishful thinking
+	// and to let people know there's dragons.
+	//
+	// if len(b.R.StaffGroups) != 0 {
+	// 	t.Error("relationship was not removed properly from the slice")
+	// }
+	// if len(c.R.StaffGroups) != 0 {
+	// 	t.Error("relationship was not removed properly from the slice")
+	// }
+	if d.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the slice")
+	}
+	if e.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the slice")
+	}
+
+	if a.R.Staffs[0] != &d {
+		t.Error("relationship struct slice not set to correct value")
+	}
+	if a.R.Staffs[1] != &e {
+		t.Error("relationship struct slice not set to correct value")
+	}
+}
+
+func testStaffGroupToManyRemoveOpStaffs(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a StaffGroup
+	var b, c, d, e Staff
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, staffGroupDBTypes, false, strmangle.SetComplement(staffGroupPrimaryKeyColumns, staffGroupColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	foreigners := []*Staff{&b, &c, &d, &e}
+	for _, x := range foreigners {
+		if err = randomize.Struct(seed, x, staffDBTypes, false, strmangle.SetComplement(staffPrimaryKeyColumns, staffColumnsWithoutDefault)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	err = a.AddStaffs(ctx, tx, true, foreigners...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err := a.Staffs().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 4 {
+		t.Error("count was wrong:", count)
+	}
+
+	err = a.RemoveStaffs(ctx, tx, foreigners[:2]...)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	count, err = a.Staffs().Count(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count != 2 {
+		t.Error("count was wrong:", count)
+	}
+
+	if len(b.R.StaffGroups) != 0 {
+		t.Error("relationship was not removed properly from the slice")
+	}
+	if len(c.R.StaffGroups) != 0 {
+		t.Error("relationship was not removed properly from the slice")
+	}
+	if d.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+	if e.R.StaffGroups[0] != &a {
+		t.Error("relationship was not added properly to the foreign struct")
+	}
+
+	if len(a.R.Staffs) != 2 {
+		t.Error("should have preserved two relationships")
+	}
+
+	// Removal doesn't do a stable deletion for performance so we have to flip the order
+	if a.R.Staffs[1] != &d {
+		t.Error("relationship to d should have been preserved")
+	}
+	if a.R.Staffs[0] != &e {
+		t.Error("relationship to e should have been preserved")
+	}
+}
+
 func testStaffGroupsReload(t *testing.T) {
 	t.Parallel()
 
@@ -568,7 +1192,7 @@ func testStaffGroupsSelect(t *testing.T) {
 }
 
 var (
-	staffGroupDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `Name`: `text`}
+	staffGroupDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `StaffID`: `text`, `Name`: `text`}
 	_                 = bytes.MinRead
 )
 

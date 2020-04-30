@@ -10,6 +10,6 @@ type Persistance interface {
 	//Update(*group.Group) error
 	//Delete(string) error
 	//SelectByID(string) (*group.Group, error)
-	SelectAll() ([]entities.Group, error)
+	SelectAll() ([]entities.StaffGroup, error)
 	//Select(string) ([]group.Group, error)
 }

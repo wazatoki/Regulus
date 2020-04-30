@@ -15,8 +15,8 @@ type GroupRepo struct {
 }
 
 // SelectAll select all group data without not del from database
-func (g *GroupRepo) SelectAll() ([]groupEntity.Group, error) {
-	geSlice := []groupEntity.Group{}
+func (g *GroupRepo) SelectAll() ([]groupEntity.StaffGroup, error) {
+	geSlice := []groupEntity.StaffGroup{}
 
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
@@ -28,8 +28,8 @@ func (g *GroupRepo) SelectAll() ([]groupEntity.Group, error) {
 		if err == nil {
 
 			for _, group := range groups {
-				var ge *groupEntity.Group
-				ge = &groupEntity.Group{}
+				var ge *groupEntity.StaffGroup
+				ge = &groupEntity.StaffGroup{}
 
 				ge.ID = group.ID
 				ge.Name = group.Name

@@ -30,6 +30,7 @@ type Maker struct {
 	CreStaffID    null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt     null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	UpdateStaffID null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
+	StaffID       string      `boil:"staff_id" json:"staff_id" toml:"staff_id" yaml:"staff_id"`
 	Name          string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 
 	R *makerR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -43,6 +44,7 @@ var MakerColumns = struct {
 	CreStaffID    string
 	UpdatedAt     string
 	UpdateStaffID string
+	StaffID       string
 	Name          string
 }{
 	ID:            "id",
@@ -51,6 +53,7 @@ var MakerColumns = struct {
 	CreStaffID:    "cre_staff_id",
 	UpdatedAt:     "updated_at",
 	UpdateStaffID: "update_staff_id",
+	StaffID:       "staff_id",
 	Name:          "name",
 }
 
@@ -109,15 +112,17 @@ var MakerWhere = struct {
 	CreStaffID    whereHelpernull_String
 	UpdatedAt     whereHelpernull_Time
 	UpdateStaffID whereHelpernull_String
+	StaffID       whereHelperstring
 	Name          whereHelperstring
 }{
-	ID:            whereHelperstring{field: "\"maker\".\"id\""},
-	Del:           whereHelpernull_Bool{field: "\"maker\".\"del\""},
-	CreatedAt:     whereHelpernull_Time{field: "\"maker\".\"created_at\""},
-	CreStaffID:    whereHelpernull_String{field: "\"maker\".\"cre_staff_id\""},
-	UpdatedAt:     whereHelpernull_Time{field: "\"maker\".\"updated_at\""},
-	UpdateStaffID: whereHelpernull_String{field: "\"maker\".\"update_staff_id\""},
-	Name:          whereHelperstring{field: "\"maker\".\"name\""},
+	ID:            whereHelperstring{field: "\"makers\".\"id\""},
+	Del:           whereHelpernull_Bool{field: "\"makers\".\"del\""},
+	CreatedAt:     whereHelpernull_Time{field: "\"makers\".\"created_at\""},
+	CreStaffID:    whereHelpernull_String{field: "\"makers\".\"cre_staff_id\""},
+	UpdatedAt:     whereHelpernull_Time{field: "\"makers\".\"updated_at\""},
+	UpdateStaffID: whereHelpernull_String{field: "\"makers\".\"update_staff_id\""},
+	StaffID:       whereHelperstring{field: "\"makers\".\"staff_id\""},
+	Name:          whereHelperstring{field: "\"makers\".\"name\""},
 }
 
 // MakerRels is where relationship names are stored.
@@ -137,8 +142,8 @@ func (*makerR) NewStruct() *makerR {
 type makerL struct{}
 
 var (
-	makerAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
-	makerColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
+	makerAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
+	makerColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
 	makerColumnsWithDefault    = []string{"del"}
 	makerPrimaryKeyColumns     = []string{"id"}
 )
@@ -357,7 +362,7 @@ func (q makerQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Maker,
 		if errors.Cause(err) == sql.ErrNoRows {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "sqlboiler: failed to execute a one query for maker")
+		return nil, errors.Wrap(err, "sqlboiler: failed to execute a one query for makers")
 	}
 
 	if err := o.doAfterSelectHooks(ctx, exec); err != nil {
@@ -396,7 +401,7 @@ func (q makerQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to count maker rows")
+		return 0, errors.Wrap(err, "sqlboiler: failed to count makers rows")
 	}
 
 	return count, nil
@@ -412,7 +417,7 @@ func (q makerQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return false, errors.Wrap(err, "sqlboiler: failed to check if maker exists")
+		return false, errors.Wrap(err, "sqlboiler: failed to check if makers exists")
 	}
 
 	return count > 0, nil
@@ -420,7 +425,7 @@ func (q makerQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool
 
 // Makers retrieves all the records using an executor.
 func Makers(mods ...qm.QueryMod) makerQuery {
-	mods = append(mods, qm.From("\"maker\""))
+	mods = append(mods, qm.From("\"makers\""))
 	return makerQuery{NewQuery(mods...)}
 }
 
@@ -434,7 +439,7 @@ func FindMaker(ctx context.Context, exec boil.ContextExecutor, iD string, select
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"maker\" where \"id\"=$1", sel,
+		"select %s from \"makers\" where \"id\"=$1", sel,
 	)
 
 	q := queries.Raw(query, iD)
@@ -444,7 +449,7 @@ func FindMaker(ctx context.Context, exec boil.ContextExecutor, iD string, select
 		if errors.Cause(err) == sql.ErrNoRows {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "sqlboiler: unable to select from maker")
+		return nil, errors.Wrap(err, "sqlboiler: unable to select from makers")
 	}
 
 	return makerObj, nil
@@ -454,7 +459,7 @@ func FindMaker(ctx context.Context, exec boil.ContextExecutor, iD string, select
 // See boil.Columns.InsertColumnSet documentation to understand column list inference for inserts.
 func (o *Maker) Insert(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) error {
 	if o == nil {
-		return errors.New("sqlboiler: no maker provided for insertion")
+		return errors.New("sqlboiler: no makers provided for insertion")
 	}
 
 	var err error
@@ -497,9 +502,9 @@ func (o *Maker) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 			return err
 		}
 		if len(wl) != 0 {
-			cache.query = fmt.Sprintf("INSERT INTO \"maker\" (\"%s\") %%sVALUES (%s)%%s", strings.Join(wl, "\",\""), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
+			cache.query = fmt.Sprintf("INSERT INTO \"makers\" (\"%s\") %%sVALUES (%s)%%s", strings.Join(wl, "\",\""), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
 		} else {
-			cache.query = "INSERT INTO \"maker\" %sDEFAULT VALUES%s"
+			cache.query = "INSERT INTO \"makers\" %sDEFAULT VALUES%s"
 		}
 
 		var queryOutput, queryReturning string
@@ -526,7 +531,7 @@ func (o *Maker) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	}
 
 	if err != nil {
-		return errors.Wrap(err, "sqlboiler: unable to insert into maker")
+		return errors.Wrap(err, "sqlboiler: unable to insert into makers")
 	}
 
 	if !cached {
@@ -567,10 +572,10 @@ func (o *Maker) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 			wl = strmangle.SetComplement(wl, []string{"created_at"})
 		}
 		if len(wl) == 0 {
-			return 0, errors.New("sqlboiler: unable to update maker, could not build whitelist")
+			return 0, errors.New("sqlboiler: unable to update makers, could not build whitelist")
 		}
 
-		cache.query = fmt.Sprintf("UPDATE \"maker\" SET %s WHERE %s",
+		cache.query = fmt.Sprintf("UPDATE \"makers\" SET %s WHERE %s",
 			strmangle.SetParamNames("\"", "\"", 1, wl),
 			strmangle.WhereClause("\"", "\"", len(wl)+1, makerPrimaryKeyColumns),
 		)
@@ -590,12 +595,12 @@ func (o *Maker) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 	var result sql.Result
 	result, err = exec.ExecContext(ctx, cache.query, values...)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to update maker row")
+		return 0, errors.Wrap(err, "sqlboiler: unable to update makers row")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by update for maker")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by update for makers")
 	}
 
 	if !cached {
@@ -613,12 +618,12 @@ func (q makerQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 
 	result, err := q.Query.ExecContext(ctx, exec)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to update all for maker")
+		return 0, errors.Wrap(err, "sqlboiler: unable to update all for makers")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to retrieve rows affected for maker")
+		return 0, errors.Wrap(err, "sqlboiler: unable to retrieve rows affected for makers")
 	}
 
 	return rowsAff, nil
@@ -651,7 +656,7 @@ func (o MakerSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := fmt.Sprintf("UPDATE \"maker\" SET %s WHERE %s",
+	sql := fmt.Sprintf("UPDATE \"makers\" SET %s WHERE %s",
 		strmangle.SetParamNames("\"", "\"", 1, colNames),
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), len(colNames)+1, makerPrimaryKeyColumns, len(o)))
 
@@ -676,7 +681,7 @@ func (o MakerSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 // See boil.Columns documentation for how to properly use updateColumns and insertColumns.
 func (o *Maker) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
-		return errors.New("sqlboiler: no maker provided for upsert")
+		return errors.New("sqlboiler: no makers provided for upsert")
 	}
 	if !boil.TimestampsAreSkipped(ctx) {
 		currTime := time.Now().In(boil.GetLocation())
@@ -740,7 +745,7 @@ func (o *Maker) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnC
 		)
 
 		if updateOnConflict && len(update) == 0 {
-			return errors.New("sqlboiler: unable to upsert maker, could not build update column list")
+			return errors.New("sqlboiler: unable to upsert makers, could not build update column list")
 		}
 
 		conflict := conflictColumns
@@ -748,7 +753,7 @@ func (o *Maker) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnC
 			conflict = make([]string, len(makerPrimaryKeyColumns))
 			copy(conflict, makerPrimaryKeyColumns)
 		}
-		cache.query = buildUpsertQueryPostgres(dialect, "\"maker\"", updateOnConflict, ret, update, conflict, insert)
+		cache.query = buildUpsertQueryPostgres(dialect, "\"makers\"", updateOnConflict, ret, update, conflict, insert)
 
 		cache.valueMapping, err = queries.BindMapping(makerType, makerMapping, insert)
 		if err != nil {
@@ -783,7 +788,7 @@ func (o *Maker) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnC
 		_, err = exec.ExecContext(ctx, cache.query, vals...)
 	}
 	if err != nil {
-		return errors.Wrap(err, "sqlboiler: unable to upsert maker")
+		return errors.Wrap(err, "sqlboiler: unable to upsert makers")
 	}
 
 	if !cached {
@@ -807,7 +812,7 @@ func (o *Maker) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, e
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), makerPrimaryKeyMapping)
-	sql := "DELETE FROM \"maker\" WHERE \"id\"=$1"
+	sql := "DELETE FROM \"makers\" WHERE \"id\"=$1"
 
 	if boil.DebugMode {
 		fmt.Fprintln(boil.DebugWriter, sql)
@@ -816,12 +821,12 @@ func (o *Maker) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, e
 
 	result, err := exec.ExecContext(ctx, sql, args...)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to delete from maker")
+		return 0, errors.Wrap(err, "sqlboiler: unable to delete from makers")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by delete for maker")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by delete for makers")
 	}
 
 	if err := o.doAfterDeleteHooks(ctx, exec); err != nil {
@@ -841,12 +846,12 @@ func (q makerQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 
 	result, err := q.Query.ExecContext(ctx, exec)
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: unable to delete all from maker")
+		return 0, errors.Wrap(err, "sqlboiler: unable to delete all from makers")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for maker")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for makers")
 	}
 
 	return rowsAff, nil
@@ -872,7 +877,7 @@ func (o MakerSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := "DELETE FROM \"maker\" WHERE " +
+	sql := "DELETE FROM \"makers\" WHERE " +
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 1, makerPrimaryKeyColumns, len(o))
 
 	if boil.DebugMode {
@@ -887,7 +892,7 @@ func (o MakerSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (i
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for maker")
+		return 0, errors.Wrap(err, "sqlboiler: failed to get rows affected by deleteall for makers")
 	}
 
 	if len(makerAfterDeleteHooks) != 0 {
@@ -927,7 +932,7 @@ func (o *MakerSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) e
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := "SELECT \"maker\".* FROM \"maker\" WHERE " +
+	sql := "SELECT \"makers\".* FROM \"makers\" WHERE " +
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 1, makerPrimaryKeyColumns, len(*o))
 
 	q := queries.Raw(sql, args...)
@@ -945,7 +950,7 @@ func (o *MakerSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) e
 // MakerExists checks if the Maker row exists.
 func MakerExists(ctx context.Context, exec boil.ContextExecutor, iD string) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"maker\" where \"id\"=$1 limit 1)"
+	sql := "select exists(select 1 from \"makers\" where \"id\"=$1 limit 1)"
 
 	if boil.DebugMode {
 		fmt.Fprintln(boil.DebugWriter, sql)
@@ -956,7 +961,7 @@ func MakerExists(ctx context.Context, exec boil.ContextExecutor, iD string) (boo
 
 	err := row.Scan(&exists)
 	if err != nil {
-		return false, errors.Wrap(err, "sqlboiler: unable to check if maker exists")
+		return false, errors.Wrap(err, "sqlboiler: unable to check if makers exists")
 	}
 
 	return exists, nil

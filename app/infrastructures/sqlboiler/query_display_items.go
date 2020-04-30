@@ -24,40 +24,40 @@ import (
 
 // QueryDisplayItem is an object representing the database table.
 type QueryDisplayItem struct {
-	ID               string      `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Del              null.Bool   `boil:"del" json:"del,omitempty" toml:"del" yaml:"del,omitempty"`
-	CreatedAt        null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	CreStaffID       null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
-	UpdatedAt        null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	UpdateStaffID    null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
-	QueryConditionID null.String `boil:"query_condition_id" json:"query_condition_id,omitempty" toml:"query_condition_id" yaml:"query_condition_id,omitempty"`
-	DisplayFieldID   string      `boil:"display_field_id" json:"display_field_id" toml:"display_field_id" yaml:"display_field_id"`
-	RowOrder         int         `boil:"row_order" json:"row_order" toml:"row_order" yaml:"row_order"`
+	ID                string      `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Del               null.Bool   `boil:"del" json:"del,omitempty" toml:"del" yaml:"del,omitempty"`
+	CreatedAt         null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	CreStaffID        null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
+	UpdatedAt         null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	UpdateStaffID     null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
+	QueryConditionsID string      `boil:"query_conditions_id" json:"query_conditions_id" toml:"query_conditions_id" yaml:"query_conditions_id"`
+	DisplayFieldID    string      `boil:"display_field_id" json:"display_field_id" toml:"display_field_id" yaml:"display_field_id"`
+	RowOrder          int         `boil:"row_order" json:"row_order" toml:"row_order" yaml:"row_order"`
 
 	R *queryDisplayItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L queryDisplayItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var QueryDisplayItemColumns = struct {
-	ID               string
-	Del              string
-	CreatedAt        string
-	CreStaffID       string
-	UpdatedAt        string
-	UpdateStaffID    string
-	QueryConditionID string
-	DisplayFieldID   string
-	RowOrder         string
+	ID                string
+	Del               string
+	CreatedAt         string
+	CreStaffID        string
+	UpdatedAt         string
+	UpdateStaffID     string
+	QueryConditionsID string
+	DisplayFieldID    string
+	RowOrder          string
 }{
-	ID:               "id",
-	Del:              "del",
-	CreatedAt:        "created_at",
-	CreStaffID:       "cre_staff_id",
-	UpdatedAt:        "updated_at",
-	UpdateStaffID:    "update_staff_id",
-	QueryConditionID: "query_condition_id",
-	DisplayFieldID:   "display_field_id",
-	RowOrder:         "row_order",
+	ID:                "id",
+	Del:               "del",
+	CreatedAt:         "created_at",
+	CreStaffID:        "cre_staff_id",
+	UpdatedAt:         "updated_at",
+	UpdateStaffID:     "update_staff_id",
+	QueryConditionsID: "query_conditions_id",
+	DisplayFieldID:    "display_field_id",
+	RowOrder:          "row_order",
 }
 
 // Generated where
@@ -79,33 +79,37 @@ func (w whereHelperint) IN(slice []int) qm.QueryMod {
 }
 
 var QueryDisplayItemWhere = struct {
-	ID               whereHelperstring
-	Del              whereHelpernull_Bool
-	CreatedAt        whereHelpernull_Time
-	CreStaffID       whereHelpernull_String
-	UpdatedAt        whereHelpernull_Time
-	UpdateStaffID    whereHelpernull_String
-	QueryConditionID whereHelpernull_String
-	DisplayFieldID   whereHelperstring
-	RowOrder         whereHelperint
+	ID                whereHelperstring
+	Del               whereHelpernull_Bool
+	CreatedAt         whereHelpernull_Time
+	CreStaffID        whereHelpernull_String
+	UpdatedAt         whereHelpernull_Time
+	UpdateStaffID     whereHelpernull_String
+	QueryConditionsID whereHelperstring
+	DisplayFieldID    whereHelperstring
+	RowOrder          whereHelperint
 }{
-	ID:               whereHelperstring{field: "\"query_display_items\".\"id\""},
-	Del:              whereHelpernull_Bool{field: "\"query_display_items\".\"del\""},
-	CreatedAt:        whereHelpernull_Time{field: "\"query_display_items\".\"created_at\""},
-	CreStaffID:       whereHelpernull_String{field: "\"query_display_items\".\"cre_staff_id\""},
-	UpdatedAt:        whereHelpernull_Time{field: "\"query_display_items\".\"updated_at\""},
-	UpdateStaffID:    whereHelpernull_String{field: "\"query_display_items\".\"update_staff_id\""},
-	QueryConditionID: whereHelpernull_String{field: "\"query_display_items\".\"query_condition_id\""},
-	DisplayFieldID:   whereHelperstring{field: "\"query_display_items\".\"display_field_id\""},
-	RowOrder:         whereHelperint{field: "\"query_display_items\".\"row_order\""},
+	ID:                whereHelperstring{field: "\"query_display_items\".\"id\""},
+	Del:               whereHelpernull_Bool{field: "\"query_display_items\".\"del\""},
+	CreatedAt:         whereHelpernull_Time{field: "\"query_display_items\".\"created_at\""},
+	CreStaffID:        whereHelpernull_String{field: "\"query_display_items\".\"cre_staff_id\""},
+	UpdatedAt:         whereHelpernull_Time{field: "\"query_display_items\".\"updated_at\""},
+	UpdateStaffID:     whereHelpernull_String{field: "\"query_display_items\".\"update_staff_id\""},
+	QueryConditionsID: whereHelperstring{field: "\"query_display_items\".\"query_conditions_id\""},
+	DisplayFieldID:    whereHelperstring{field: "\"query_display_items\".\"display_field_id\""},
+	RowOrder:          whereHelperint{field: "\"query_display_items\".\"row_order\""},
 }
 
 // QueryDisplayItemRels is where relationship names are stored.
 var QueryDisplayItemRels = struct {
-}{}
+	QueryCondition string
+}{
+	QueryCondition: "QueryCondition",
+}
 
 // queryDisplayItemR is where relationships are stored.
 type queryDisplayItemR struct {
+	QueryCondition *QueryCondition
 }
 
 // NewStruct creates a new relationship struct
@@ -117,8 +121,8 @@ func (*queryDisplayItemR) NewStruct() *queryDisplayItemR {
 type queryDisplayItemL struct{}
 
 var (
-	queryDisplayItemAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_condition_id", "display_field_id", "row_order"}
-	queryDisplayItemColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_condition_id", "display_field_id", "row_order"}
+	queryDisplayItemAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_conditions_id", "display_field_id", "row_order"}
+	queryDisplayItemColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_conditions_id", "display_field_id", "row_order"}
 	queryDisplayItemColumnsWithDefault    = []string{"del"}
 	queryDisplayItemPrimaryKeyColumns     = []string{"id"}
 )
@@ -396,6 +400,168 @@ func (q queryDisplayItemQuery) Exists(ctx context.Context, exec boil.ContextExec
 	}
 
 	return count > 0, nil
+}
+
+// QueryCondition pointed to by the foreign key.
+func (o *QueryDisplayItem) QueryCondition(mods ...qm.QueryMod) queryConditionQuery {
+	queryMods := []qm.QueryMod{
+		qm.Where("\"id\" = ?", o.QueryConditionsID),
+	}
+
+	queryMods = append(queryMods, mods...)
+
+	query := QueryConditions(queryMods...)
+	queries.SetFrom(query.Query, "\"query_conditions\"")
+
+	return query
+}
+
+// LoadQueryCondition allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for an N-1 relationship.
+func (queryDisplayItemL) LoadQueryCondition(ctx context.Context, e boil.ContextExecutor, singular bool, maybeQueryDisplayItem interface{}, mods queries.Applicator) error {
+	var slice []*QueryDisplayItem
+	var object *QueryDisplayItem
+
+	if singular {
+		object = maybeQueryDisplayItem.(*QueryDisplayItem)
+	} else {
+		slice = *maybeQueryDisplayItem.(*[]*QueryDisplayItem)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &queryDisplayItemR{}
+		}
+		args = append(args, object.QueryConditionsID)
+
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &queryDisplayItemR{}
+			}
+
+			for _, a := range args {
+				if a == obj.QueryConditionsID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.QueryConditionsID)
+
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(qm.From(`query_conditions`), qm.WhereIn(`query_conditions.id in ?`, args...))
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load QueryCondition")
+	}
+
+	var resultSlice []*QueryCondition
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice QueryCondition")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results of eager load for query_conditions")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for query_conditions")
+	}
+
+	if len(queryDisplayItemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(resultSlice) == 0 {
+		return nil
+	}
+
+	if singular {
+		foreign := resultSlice[0]
+		object.R.QueryCondition = foreign
+		if foreign.R == nil {
+			foreign.R = &queryConditionR{}
+		}
+		foreign.R.QueryDisplayItems = append(foreign.R.QueryDisplayItems, object)
+		return nil
+	}
+
+	for _, local := range slice {
+		for _, foreign := range resultSlice {
+			if local.QueryConditionsID == foreign.ID {
+				local.R.QueryCondition = foreign
+				if foreign.R == nil {
+					foreign.R = &queryConditionR{}
+				}
+				foreign.R.QueryDisplayItems = append(foreign.R.QueryDisplayItems, local)
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// SetQueryCondition of the queryDisplayItem to the related item.
+// Sets o.R.QueryCondition to related.
+// Adds o to related.R.QueryDisplayItems.
+func (o *QueryDisplayItem) SetQueryCondition(ctx context.Context, exec boil.ContextExecutor, insert bool, related *QueryCondition) error {
+	var err error
+	if insert {
+		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
+			return errors.Wrap(err, "failed to insert into foreign table")
+		}
+	}
+
+	updateQuery := fmt.Sprintf(
+		"UPDATE \"query_display_items\" SET %s WHERE %s",
+		strmangle.SetParamNames("\"", "\"", 1, []string{"query_conditions_id"}),
+		strmangle.WhereClause("\"", "\"", 2, queryDisplayItemPrimaryKeyColumns),
+	)
+	values := []interface{}{related.ID, o.ID}
+
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, updateQuery)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+
+	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+		return errors.Wrap(err, "failed to update local table")
+	}
+
+	o.QueryConditionsID = related.ID
+	if o.R == nil {
+		o.R = &queryDisplayItemR{
+			QueryCondition: related,
+		}
+	} else {
+		o.R.QueryCondition = related
+	}
+
+	if related.R == nil {
+		related.R = &queryConditionR{
+			QueryDisplayItems: QueryDisplayItemSlice{o},
+		}
+	} else {
+		related.R.QueryDisplayItems = append(related.R.QueryDisplayItems, o)
+	}
+
+	return nil
 }
 
 // QueryDisplayItems retrieves all the records using an executor.

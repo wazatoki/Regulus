@@ -30,7 +30,7 @@ type QueryOrderConditionItem struct {
 	CreStaffID        null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt         null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	UpdateStaffID     null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
-	QueryConditionID  null.String `boil:"query_condition_id" json:"query_condition_id,omitempty" toml:"query_condition_id" yaml:"query_condition_id,omitempty"`
+	QueryConditionsID string      `boil:"query_conditions_id" json:"query_conditions_id" toml:"query_conditions_id" yaml:"query_conditions_id"`
 	OrderFieldID      string      `boil:"order_field_id" json:"order_field_id" toml:"order_field_id" yaml:"order_field_id"`
 	OrderFieldKeyWord string      `boil:"order_field_key_word" json:"order_field_key_word" toml:"order_field_key_word" yaml:"order_field_key_word"`
 	RowOrder          int         `boil:"row_order" json:"row_order" toml:"row_order" yaml:"row_order"`
@@ -46,7 +46,7 @@ var QueryOrderConditionItemColumns = struct {
 	CreStaffID        string
 	UpdatedAt         string
 	UpdateStaffID     string
-	QueryConditionID  string
+	QueryConditionsID string
 	OrderFieldID      string
 	OrderFieldKeyWord string
 	RowOrder          string
@@ -57,7 +57,7 @@ var QueryOrderConditionItemColumns = struct {
 	CreStaffID:        "cre_staff_id",
 	UpdatedAt:         "updated_at",
 	UpdateStaffID:     "update_staff_id",
-	QueryConditionID:  "query_condition_id",
+	QueryConditionsID: "query_conditions_id",
 	OrderFieldID:      "order_field_id",
 	OrderFieldKeyWord: "order_field_key_word",
 	RowOrder:          "row_order",
@@ -72,7 +72,7 @@ var QueryOrderConditionItemWhere = struct {
 	CreStaffID        whereHelpernull_String
 	UpdatedAt         whereHelpernull_Time
 	UpdateStaffID     whereHelpernull_String
-	QueryConditionID  whereHelpernull_String
+	QueryConditionsID whereHelperstring
 	OrderFieldID      whereHelperstring
 	OrderFieldKeyWord whereHelperstring
 	RowOrder          whereHelperint
@@ -83,7 +83,7 @@ var QueryOrderConditionItemWhere = struct {
 	CreStaffID:        whereHelpernull_String{field: "\"query_order_condition_items\".\"cre_staff_id\""},
 	UpdatedAt:         whereHelpernull_Time{field: "\"query_order_condition_items\".\"updated_at\""},
 	UpdateStaffID:     whereHelpernull_String{field: "\"query_order_condition_items\".\"update_staff_id\""},
-	QueryConditionID:  whereHelpernull_String{field: "\"query_order_condition_items\".\"query_condition_id\""},
+	QueryConditionsID: whereHelperstring{field: "\"query_order_condition_items\".\"query_conditions_id\""},
 	OrderFieldID:      whereHelperstring{field: "\"query_order_condition_items\".\"order_field_id\""},
 	OrderFieldKeyWord: whereHelperstring{field: "\"query_order_condition_items\".\"order_field_key_word\""},
 	RowOrder:          whereHelperint{field: "\"query_order_condition_items\".\"row_order\""},
@@ -91,10 +91,14 @@ var QueryOrderConditionItemWhere = struct {
 
 // QueryOrderConditionItemRels is where relationship names are stored.
 var QueryOrderConditionItemRels = struct {
-}{}
+	QueryCondition string
+}{
+	QueryCondition: "QueryCondition",
+}
 
 // queryOrderConditionItemR is where relationships are stored.
 type queryOrderConditionItemR struct {
+	QueryCondition *QueryCondition
 }
 
 // NewStruct creates a new relationship struct
@@ -106,8 +110,8 @@ func (*queryOrderConditionItemR) NewStruct() *queryOrderConditionItemR {
 type queryOrderConditionItemL struct{}
 
 var (
-	queryOrderConditionItemAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_condition_id", "order_field_id", "order_field_key_word", "row_order"}
-	queryOrderConditionItemColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_condition_id", "order_field_id", "order_field_key_word", "row_order"}
+	queryOrderConditionItemAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_conditions_id", "order_field_id", "order_field_key_word", "row_order"}
+	queryOrderConditionItemColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "query_conditions_id", "order_field_id", "order_field_key_word", "row_order"}
 	queryOrderConditionItemColumnsWithDefault    = []string{"del"}
 	queryOrderConditionItemPrimaryKeyColumns     = []string{"id"}
 )
@@ -385,6 +389,168 @@ func (q queryOrderConditionItemQuery) Exists(ctx context.Context, exec boil.Cont
 	}
 
 	return count > 0, nil
+}
+
+// QueryCondition pointed to by the foreign key.
+func (o *QueryOrderConditionItem) QueryCondition(mods ...qm.QueryMod) queryConditionQuery {
+	queryMods := []qm.QueryMod{
+		qm.Where("\"id\" = ?", o.QueryConditionsID),
+	}
+
+	queryMods = append(queryMods, mods...)
+
+	query := QueryConditions(queryMods...)
+	queries.SetFrom(query.Query, "\"query_conditions\"")
+
+	return query
+}
+
+// LoadQueryCondition allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for an N-1 relationship.
+func (queryOrderConditionItemL) LoadQueryCondition(ctx context.Context, e boil.ContextExecutor, singular bool, maybeQueryOrderConditionItem interface{}, mods queries.Applicator) error {
+	var slice []*QueryOrderConditionItem
+	var object *QueryOrderConditionItem
+
+	if singular {
+		object = maybeQueryOrderConditionItem.(*QueryOrderConditionItem)
+	} else {
+		slice = *maybeQueryOrderConditionItem.(*[]*QueryOrderConditionItem)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &queryOrderConditionItemR{}
+		}
+		args = append(args, object.QueryConditionsID)
+
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &queryOrderConditionItemR{}
+			}
+
+			for _, a := range args {
+				if a == obj.QueryConditionsID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.QueryConditionsID)
+
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(qm.From(`query_conditions`), qm.WhereIn(`query_conditions.id in ?`, args...))
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load QueryCondition")
+	}
+
+	var resultSlice []*QueryCondition
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice QueryCondition")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results of eager load for query_conditions")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for query_conditions")
+	}
+
+	if len(queryOrderConditionItemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(resultSlice) == 0 {
+		return nil
+	}
+
+	if singular {
+		foreign := resultSlice[0]
+		object.R.QueryCondition = foreign
+		if foreign.R == nil {
+			foreign.R = &queryConditionR{}
+		}
+		foreign.R.QueryOrderConditionItems = append(foreign.R.QueryOrderConditionItems, object)
+		return nil
+	}
+
+	for _, local := range slice {
+		for _, foreign := range resultSlice {
+			if local.QueryConditionsID == foreign.ID {
+				local.R.QueryCondition = foreign
+				if foreign.R == nil {
+					foreign.R = &queryConditionR{}
+				}
+				foreign.R.QueryOrderConditionItems = append(foreign.R.QueryOrderConditionItems, local)
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// SetQueryCondition of the queryOrderConditionItem to the related item.
+// Sets o.R.QueryCondition to related.
+// Adds o to related.R.QueryOrderConditionItems.
+func (o *QueryOrderConditionItem) SetQueryCondition(ctx context.Context, exec boil.ContextExecutor, insert bool, related *QueryCondition) error {
+	var err error
+	if insert {
+		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
+			return errors.Wrap(err, "failed to insert into foreign table")
+		}
+	}
+
+	updateQuery := fmt.Sprintf(
+		"UPDATE \"query_order_condition_items\" SET %s WHERE %s",
+		strmangle.SetParamNames("\"", "\"", 1, []string{"query_conditions_id"}),
+		strmangle.WhereClause("\"", "\"", 2, queryOrderConditionItemPrimaryKeyColumns),
+	)
+	values := []interface{}{related.ID, o.ID}
+
+	if boil.DebugMode {
+		fmt.Fprintln(boil.DebugWriter, updateQuery)
+		fmt.Fprintln(boil.DebugWriter, values)
+	}
+
+	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+		return errors.Wrap(err, "failed to update local table")
+	}
+
+	o.QueryConditionsID = related.ID
+	if o.R == nil {
+		o.R = &queryOrderConditionItemR{
+			QueryCondition: related,
+		}
+	} else {
+		o.R.QueryCondition = related
+	}
+
+	if related.R == nil {
+		related.R = &queryConditionR{
+			QueryOrderConditionItems: QueryOrderConditionItemSlice{o},
+		}
+	} else {
+		related.R.QueryOrderConditionItems = append(related.R.QueryOrderConditionItems, o)
+	}
+
+	return nil
 }
 
 // QueryOrderConditionItems retrieves all the records using an executor.
