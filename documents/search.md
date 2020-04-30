@@ -133,6 +133,10 @@ QueryCondition "1" -- "1..*" StaffGroup : DiscloseGroups >
 
 ```
 
+- Categoryは永続化対象外
+- ConditionData.SearchStringsは永続化対象外
+
+
 ```puml
 
 @startuml search entity diagram
