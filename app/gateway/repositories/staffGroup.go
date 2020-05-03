@@ -2,21 +2,16 @@ package repositories
 
 import (
 	"context"
-	groupEntity "regulus/app/domain/entities"
+	"regulus/app/domain/entities"
 	"regulus/app/infrastructures/sqlboiler"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
-// GroupRepo repository struct
-type GroupRepo struct {
-	database db
-}
-
 // SelectAll select all group data without not del from database
-func (g *GroupRepo) SelectAll() ([]groupEntity.StaffGroup, error) {
-	geSlice := []groupEntity.StaffGroup{}
+func (g *StaffGroupRepo) SelectAll() ([]entities.StaffGroup, error) {
+	geSlice := []entities.StaffGroup{}
 
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
@@ -28,8 +23,8 @@ func (g *GroupRepo) SelectAll() ([]groupEntity.StaffGroup, error) {
 		if err == nil {
 
 			for _, group := range groups {
-				var ge *groupEntity.StaffGroup
-				ge = &groupEntity.StaffGroup{}
+				var ge *entities.StaffGroup
+				ge = &entities.StaffGroup{}
 
 				ge.ID = group.ID
 				ge.Name = group.Name
@@ -44,7 +39,21 @@ func (g *GroupRepo) SelectAll() ([]groupEntity.StaffGroup, error) {
 	return geSlice, err
 }
 
-// NewGroupRepo constructor
-func NewGroupRepo() *GroupRepo {
-	return &GroupRepo{database: createDB()}
+// StaffGroupObjectMap data mapper sqlboiler object to entities object
+func StaffGroupObjectMap(sg *sqlboiler.StaffGroup) (eg entities.StaffGroup) {
+	eg = entities.StaffGroup{
+		ID:   sg.ID,
+		Name: sg.Name,
+	}
+	return
+}
+
+// NewStaffGroupRepo constructor
+func NewStaffGroupRepo() *StaffGroupRepo {
+	return &StaffGroupRepo{database: createDB()}
+}
+
+// StaffGroupRepo repository struct
+type StaffGroupRepo struct {
+	database db
 }

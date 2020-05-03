@@ -568,7 +568,7 @@ func testMakersSelect(t *testing.T) {
 }
 
 var (
-	makerDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `StaffID`: `text`, `Name`: `text`}
+	makerDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `Name`: `text`}
 	_            = bytes.MinRead
 )
 

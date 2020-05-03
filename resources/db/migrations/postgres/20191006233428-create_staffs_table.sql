@@ -7,7 +7,7 @@ create table staffs (
 	, cre_staff_id text
 	, updated_at timestamp
 	, update_staff_id text
-	, staff_account_id text not null
+	, account_id text not null
 	, password text not null
 	, name text not null
 )

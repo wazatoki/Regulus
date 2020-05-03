@@ -24,64 +24,64 @@ import (
 
 // Staff is an object representing the database table.
 type Staff struct {
-	ID             string      `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Del            null.Bool   `boil:"del" json:"del,omitempty" toml:"del" yaml:"del,omitempty"`
-	CreatedAt      null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	CreStaffID     null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
-	UpdatedAt      null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	UpdateStaffID  null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
-	StaffAccountID string      `boil:"staff_account_id" json:"staff_account_id" toml:"staff_account_id" yaml:"staff_account_id"`
-	Password       string      `boil:"password" json:"password" toml:"password" yaml:"password"`
-	Name           string      `boil:"name" json:"name" toml:"name" yaml:"name"`
+	ID            string      `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Del           null.Bool   `boil:"del" json:"del,omitempty" toml:"del" yaml:"del,omitempty"`
+	CreatedAt     null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	CreStaffID    null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
+	UpdatedAt     null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	UpdateStaffID null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
+	AccountID     string      `boil:"account_id" json:"account_id" toml:"account_id" yaml:"account_id"`
+	Password      string      `boil:"password" json:"password" toml:"password" yaml:"password"`
+	Name          string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 
 	R *staffR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L staffL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var StaffColumns = struct {
-	ID             string
-	Del            string
-	CreatedAt      string
-	CreStaffID     string
-	UpdatedAt      string
-	UpdateStaffID  string
-	StaffAccountID string
-	Password       string
-	Name           string
+	ID            string
+	Del           string
+	CreatedAt     string
+	CreStaffID    string
+	UpdatedAt     string
+	UpdateStaffID string
+	AccountID     string
+	Password      string
+	Name          string
 }{
-	ID:             "id",
-	Del:            "del",
-	CreatedAt:      "created_at",
-	CreStaffID:     "cre_staff_id",
-	UpdatedAt:      "updated_at",
-	UpdateStaffID:  "update_staff_id",
-	StaffAccountID: "staff_account_id",
-	Password:       "password",
-	Name:           "name",
+	ID:            "id",
+	Del:           "del",
+	CreatedAt:     "created_at",
+	CreStaffID:    "cre_staff_id",
+	UpdatedAt:     "updated_at",
+	UpdateStaffID: "update_staff_id",
+	AccountID:     "account_id",
+	Password:      "password",
+	Name:          "name",
 }
 
 // Generated where
 
 var StaffWhere = struct {
-	ID             whereHelperstring
-	Del            whereHelpernull_Bool
-	CreatedAt      whereHelpernull_Time
-	CreStaffID     whereHelpernull_String
-	UpdatedAt      whereHelpernull_Time
-	UpdateStaffID  whereHelpernull_String
-	StaffAccountID whereHelperstring
-	Password       whereHelperstring
-	Name           whereHelperstring
+	ID            whereHelperstring
+	Del           whereHelpernull_Bool
+	CreatedAt     whereHelpernull_Time
+	CreStaffID    whereHelpernull_String
+	UpdatedAt     whereHelpernull_Time
+	UpdateStaffID whereHelpernull_String
+	AccountID     whereHelperstring
+	Password      whereHelperstring
+	Name          whereHelperstring
 }{
-	ID:             whereHelperstring{field: "\"staffs\".\"id\""},
-	Del:            whereHelpernull_Bool{field: "\"staffs\".\"del\""},
-	CreatedAt:      whereHelpernull_Time{field: "\"staffs\".\"created_at\""},
-	CreStaffID:     whereHelpernull_String{field: "\"staffs\".\"cre_staff_id\""},
-	UpdatedAt:      whereHelpernull_Time{field: "\"staffs\".\"updated_at\""},
-	UpdateStaffID:  whereHelpernull_String{field: "\"staffs\".\"update_staff_id\""},
-	StaffAccountID: whereHelperstring{field: "\"staffs\".\"staff_account_id\""},
-	Password:       whereHelperstring{field: "\"staffs\".\"password\""},
-	Name:           whereHelperstring{field: "\"staffs\".\"name\""},
+	ID:            whereHelperstring{field: "\"staffs\".\"id\""},
+	Del:           whereHelpernull_Bool{field: "\"staffs\".\"del\""},
+	CreatedAt:     whereHelpernull_Time{field: "\"staffs\".\"created_at\""},
+	CreStaffID:    whereHelpernull_String{field: "\"staffs\".\"cre_staff_id\""},
+	UpdatedAt:     whereHelpernull_Time{field: "\"staffs\".\"updated_at\""},
+	UpdateStaffID: whereHelpernull_String{field: "\"staffs\".\"update_staff_id\""},
+	AccountID:     whereHelperstring{field: "\"staffs\".\"account_id\""},
+	Password:      whereHelperstring{field: "\"staffs\".\"password\""},
+	Name:          whereHelperstring{field: "\"staffs\".\"name\""},
 }
 
 // StaffRels is where relationship names are stored.
@@ -114,8 +114,8 @@ func (*staffR) NewStruct() *staffR {
 type staffL struct{}
 
 var (
-	staffAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_account_id", "password", "name"}
-	staffColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_account_id", "password", "name"}
+	staffAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "account_id", "password", "name"}
+	staffColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "account_id", "password", "name"}
 	staffColumnsWithDefault    = []string{"del"}
 	staffPrimaryKeyColumns     = []string{"id"}
 )

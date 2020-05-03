@@ -3,6 +3,7 @@ module regulus
 go 1.13
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.4.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20191001013358-cfbb681360f0 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect

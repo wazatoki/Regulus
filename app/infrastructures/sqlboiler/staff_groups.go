@@ -604,7 +604,7 @@ func (staffGroupL) LoadStaffs(ctx context.Context, e boil.ContextExecutor, singu
 		one := new(Staff)
 		var localJoinCol string
 
-		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.StaffAccountID, &one.Password, &one.Name, &localJoinCol)
+		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.AccountID, &one.Password, &one.Name, &localJoinCol)
 		if err != nil {
 			return errors.Wrap(err, "failed to scan eager loaded results for staffs")
 		}

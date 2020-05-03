@@ -1689,7 +1689,7 @@ func testStaffsSelect(t *testing.T) {
 }
 
 var (
-	staffDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `StaffAccountID`: `text`, `Password`: `text`, `Name`: `text`}
+	staffDBTypes = map[string]string{`ID`: `text`, `Del`: `boolean`, `CreatedAt`: `timestamp without time zone`, `CreStaffID`: `text`, `UpdatedAt`: `timestamp without time zone`, `UpdateStaffID`: `text`, `AccountID`: `text`, `Password`: `text`, `Name`: `text`}
 	_            = bytes.MinRead
 )
 

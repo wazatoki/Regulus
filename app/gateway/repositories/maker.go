@@ -184,6 +184,7 @@ func (m *MakerRepo) Update(makerEntity *makerEntity.Maker) error {
 		maker, _ := sqlboiler.FindMaker(context.Background(), db.DB, makerEntity.ID)
 		maker.Name = makerEntity.Name
 		var err error
+
 		_, err = maker.Update(context.Background(), db.DB, boil.Infer())
 		return err
 	})

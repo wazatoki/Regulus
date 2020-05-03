@@ -76,6 +76,8 @@ const (
 	Le MatchTypeEnum = "le"
 	// Lt is const value of lt
 	Lt MatchTypeEnum = "lt"
+	// In is const value of lt
+	In MatchTypeEnum = "in"
 )
 
 /*

@@ -13,7 +13,7 @@ import (
 func connectDB() *sqlx.DB {
 	db := createDB()
 	con, _ := db.Open()
-	con.Exec("delete from maker")
+	con.Exec("delete from makers")
 	return con
 }
 
@@ -58,7 +58,7 @@ func TestMakerRepo_Insert(t *testing.T) {
 			got, _ := m.Insert(tt.args.makerEntity)
 
 			maker := makerEntity.Maker{}
-			con.Get(&maker, "select id, name from maker limit 1")
+			con.Get(&maker, "select id, name from makers limit 1")
 
 			if got == "" {
 				t.Errorf("MakerRepo.Insert() = %v, want not ''", got)
@@ -103,7 +103,7 @@ func TestMakerRepo_Update(t *testing.T) {
 			con := connectDB()
 			defer con.Close()
 
-			con.Exec("insert into maker (id, name) values('id1', 'testname1')")
+			con.Exec("insert into makers (id, name) values('id1', 'testname1')")
 			m := &MakerRepo{
 				database: tt.fields.database,
 			}
@@ -111,7 +111,7 @@ func TestMakerRepo_Update(t *testing.T) {
 			m.Update(tt.args.makerEntity)
 
 			maker := makerEntity.Maker{}
-			con.Get(&maker, "select id, name from maker limit 1")
+			con.Get(&maker, "select id, name from makers limit 1")
 
 			if maker.Name != tt.args.makerEntity.Name {
 				t.Errorf("MakerRepo.Update() id = %v, name = %v, wantName %v", maker.ID, maker.Name, tt.args.makerEntity.Name)
@@ -149,7 +149,7 @@ func TestMakerRepo_Dalete(t *testing.T) {
 			con := connectDB()
 			defer con.Close()
 
-			con.Exec("insert into maker (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
+			con.Exec("insert into makers (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
 
 			m := &MakerRepo{
 				database: tt.fields.database,
@@ -159,7 +159,7 @@ func TestMakerRepo_Dalete(t *testing.T) {
 
 			maker := makerEntity.Maker{}
 
-			con.Get(&maker, "select id, name from maker where del = true")
+			con.Get(&maker, "select id, name from makers where del = true")
 
 			if maker.ID != "id1" {
 				t.Errorf("MakerRepo.Dalete() deleted id = %v, wantErr %v", maker.ID, "id1")
@@ -202,7 +202,7 @@ func TestMakerRepo_SelectByID(t *testing.T) {
 			con := connectDB()
 			defer con.Close()
 
-			con.Exec("insert into maker (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
+			con.Exec("insert into makers (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
 
 			m := &MakerRepo{
 				database: tt.fields.database,
@@ -252,7 +252,7 @@ func TestMakerRepo_SelectAll(t *testing.T) {
 			con := connectDB()
 			defer con.Close()
 
-			con.Exec("insert into maker (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
+			con.Exec("insert into makers (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
 
 			m := &MakerRepo{
 				database: tt.fields.database,
@@ -359,7 +359,7 @@ func TestMakerRepo_Select(t *testing.T) {
 		con := connectDB()
 		defer con.Close()
 
-		con.Exec("insert into maker (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', true),('id3', 'testname3', false)")
+		con.Exec("insert into makers (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', true),('id3', 'testname3', false)")
 
 		t.Run(tt.name, func(t *testing.T) {
 			m := &MakerRepo{
@@ -419,7 +419,7 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 		con := connectDB()
 		defer con.Close()
 
-		con.Exec("insert into maker (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', false),('id3', 'testname3', false)")
+		con.Exec("insert into makers (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', false),('id3', 'testname3', false)")
 
 		t.Run(tt.name, func(t *testing.T) {
 			m := &MakerRepo{

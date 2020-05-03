@@ -30,7 +30,6 @@ type Maker struct {
 	CreStaffID    null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt     null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	UpdateStaffID null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
-	StaffID       string      `boil:"staff_id" json:"staff_id" toml:"staff_id" yaml:"staff_id"`
 	Name          string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 
 	R *makerR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -44,7 +43,6 @@ var MakerColumns = struct {
 	CreStaffID    string
 	UpdatedAt     string
 	UpdateStaffID string
-	StaffID       string
 	Name          string
 }{
 	ID:            "id",
@@ -53,7 +51,6 @@ var MakerColumns = struct {
 	CreStaffID:    "cre_staff_id",
 	UpdatedAt:     "updated_at",
 	UpdateStaffID: "update_staff_id",
-	StaffID:       "staff_id",
 	Name:          "name",
 }
 
@@ -112,7 +109,6 @@ var MakerWhere = struct {
 	CreStaffID    whereHelpernull_String
 	UpdatedAt     whereHelpernull_Time
 	UpdateStaffID whereHelpernull_String
-	StaffID       whereHelperstring
 	Name          whereHelperstring
 }{
 	ID:            whereHelperstring{field: "\"makers\".\"id\""},
@@ -121,7 +117,6 @@ var MakerWhere = struct {
 	CreStaffID:    whereHelpernull_String{field: "\"makers\".\"cre_staff_id\""},
 	UpdatedAt:     whereHelpernull_Time{field: "\"makers\".\"updated_at\""},
 	UpdateStaffID: whereHelpernull_String{field: "\"makers\".\"update_staff_id\""},
-	StaffID:       whereHelperstring{field: "\"makers\".\"staff_id\""},
 	Name:          whereHelperstring{field: "\"makers\".\"name\""},
 }
 
@@ -142,8 +137,8 @@ func (*makerR) NewStruct() *makerR {
 type makerL struct{}
 
 var (
-	makerAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
-	makerColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
+	makerAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
+	makerColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
 	makerColumnsWithDefault    = []string{"del"}
 	makerPrimaryKeyColumns     = []string{"id"}
 )
