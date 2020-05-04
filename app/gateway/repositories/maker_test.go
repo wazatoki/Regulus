@@ -10,11 +10,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func connectDB() *sqlx.DB {
+func setUpMakerTest() *sqlx.DB {
 	db := createDB()
 	con, _ := db.Open()
 	con.Exec("delete from makers")
 	return con
+}
+
+func tearDownMakerTest(con *sqlx.DB) {
+	con.Close()
 }
 
 func TestMakerRepo_Insert(t *testing.T) {
@@ -49,8 +53,8 @@ func TestMakerRepo_Insert(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := connectDB()
-			defer con.Close()
+			con := setUpMakerTest()
+			defer tearDownMakerTest(con)
 
 			m := &MakerRepo{
 				database: tt.fields.database,
@@ -100,8 +104,8 @@ func TestMakerRepo_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := connectDB()
-			defer con.Close()
+			con := setUpMakerTest()
+			defer tearDownMakerTest(con)
 
 			con.Exec("insert into makers (id, name) values('id1', 'testname1')")
 			m := &MakerRepo{
@@ -146,8 +150,8 @@ func TestMakerRepo_Dalete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := connectDB()
-			defer con.Close()
+			con := setUpMakerTest()
+			defer tearDownMakerTest(con)
 
 			con.Exec("insert into makers (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
 
@@ -199,8 +203,8 @@ func TestMakerRepo_SelectByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := connectDB()
-			defer con.Close()
+			con := setUpMakerTest()
+			defer tearDownMakerTest(con)
 
 			con.Exec("insert into makers (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
 
@@ -249,8 +253,8 @@ func TestMakerRepo_SelectAll(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := connectDB()
-			defer con.Close()
+			con := setUpMakerTest()
+			defer tearDownMakerTest(con)
 
 			con.Exec("insert into makers (id, name) values('id1', 'testname1'),('id2', 'testname2'),('id3', 'testname3')")
 
@@ -356,8 +360,8 @@ func TestMakerRepo_Select(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		con := connectDB()
-		defer con.Close()
+		con := setUpMakerTest()
+		defer tearDownMakerTest(con)
 
 		con.Exec("insert into makers (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', true),('id3', 'testname3', false)")
 
@@ -416,8 +420,8 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		con := connectDB()
-		defer con.Close()
+		con := setUpMakerTest()
+		defer tearDownMakerTest(con)
 
 		con.Exec("insert into makers (id, name, del) values('id1', 'testname1', false),('id2', 'testname2', false),('id3', 'testname3', false)")
 

@@ -917,7 +917,7 @@ func (queryConditionL) LoadStaffGroups(ctx context.Context, e boil.ContextExecut
 		one := new(StaffGroup)
 		var localJoinCol string
 
-		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.StaffID, &one.Name, &localJoinCol)
+		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.Name, &localJoinCol)
 		if err != nil {
 			return errors.Wrap(err, "failed to scan eager loaded results for staff_groups")
 		}

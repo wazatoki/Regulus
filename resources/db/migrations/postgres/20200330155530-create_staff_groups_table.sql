@@ -7,7 +7,6 @@ create table staff_groups (
 	, cre_staff_id text
 	, updated_at timestamp
 	, update_staff_id text
-	, staff_id text not null
 	,name text not null
 )
 ;

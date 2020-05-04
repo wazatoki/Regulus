@@ -30,7 +30,6 @@ type StaffGroup struct {
 	CreStaffID    null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt     null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	UpdateStaffID null.String `boil:"update_staff_id" json:"update_staff_id,omitempty" toml:"update_staff_id" yaml:"update_staff_id,omitempty"`
-	StaffID       string      `boil:"staff_id" json:"staff_id" toml:"staff_id" yaml:"staff_id"`
 	Name          string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 
 	R *staffGroupR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -44,7 +43,6 @@ var StaffGroupColumns = struct {
 	CreStaffID    string
 	UpdatedAt     string
 	UpdateStaffID string
-	StaffID       string
 	Name          string
 }{
 	ID:            "id",
@@ -53,7 +51,6 @@ var StaffGroupColumns = struct {
 	CreStaffID:    "cre_staff_id",
 	UpdatedAt:     "updated_at",
 	UpdateStaffID: "update_staff_id",
-	StaffID:       "staff_id",
 	Name:          "name",
 }
 
@@ -66,7 +63,6 @@ var StaffGroupWhere = struct {
 	CreStaffID    whereHelpernull_String
 	UpdatedAt     whereHelpernull_Time
 	UpdateStaffID whereHelpernull_String
-	StaffID       whereHelperstring
 	Name          whereHelperstring
 }{
 	ID:            whereHelperstring{field: "\"staff_groups\".\"id\""},
@@ -75,7 +71,6 @@ var StaffGroupWhere = struct {
 	CreStaffID:    whereHelpernull_String{field: "\"staff_groups\".\"cre_staff_id\""},
 	UpdatedAt:     whereHelpernull_Time{field: "\"staff_groups\".\"updated_at\""},
 	UpdateStaffID: whereHelpernull_String{field: "\"staff_groups\".\"update_staff_id\""},
-	StaffID:       whereHelperstring{field: "\"staff_groups\".\"staff_id\""},
 	Name:          whereHelperstring{field: "\"staff_groups\".\"name\""},
 }
 
@@ -103,8 +98,8 @@ func (*staffGroupR) NewStruct() *staffGroupR {
 type staffGroupL struct{}
 
 var (
-	staffGroupAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
-	staffGroupColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "staff_id", "name"}
+	staffGroupAllColumns            = []string{"id", "del", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
+	staffGroupColumnsWithoutDefault = []string{"id", "created_at", "cre_staff_id", "updated_at", "update_staff_id", "name"}
 	staffGroupColumnsWithDefault    = []string{"del"}
 	staffGroupPrimaryKeyColumns     = []string{"id"}
 )

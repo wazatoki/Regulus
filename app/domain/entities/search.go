@@ -9,31 +9,23 @@ Categories 検索パターン作成時に使用するカテゴリーリスト
 */
 var Categories = []Category{
 	{
-		Name:      "search",
-		ViewValue: "検索",
+		Name:      "staff",
+		ViewValue: "利用者",
 		SearchItems: ComplexSearchItems{
-			SearchConditionList: []query.FieldAttr{
-				query.QueryConditionPatternName,
-				query.QueryConditionCategoryViewValue,
-				query.QueryConditionIsDisclose,
-				query.QueryConditionDiscloseGroups,
-				query.QueryConditionOwner,
-			},
-			DisplayItemList:    []query.FieldAttr{},
-			OrderConditionList: []query.FieldAttr{},
-			Groups:             nil,
+			SearchConditionList: query.StaffSearchConditionList,
+			DisplayItemList:     []query.FieldAttr{},
+			OrderConditionList:  []query.FieldAttr{},
+			Groups:              nil,
 		},
 	},
 	{
-		Name:      "group",
+		Name:      "staff-group",
 		ViewValue: "利用者グループ",
 		SearchItems: ComplexSearchItems{
-			SearchConditionList: []query.FieldAttr{
-				query.GroupName,
-			},
-			DisplayItemList:    []query.FieldAttr{},
-			OrderConditionList: []query.FieldAttr{},
-			Groups:             nil,
+			SearchConditionList: query.StaffGroupSearchConditionList,
+			DisplayItemList:     []query.FieldAttr{},
+			OrderConditionList:  []query.FieldAttr{},
+			Groups:              nil,
 		},
 	},
 }
