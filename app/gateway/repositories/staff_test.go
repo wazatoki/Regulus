@@ -59,10 +59,35 @@ func createExpectedStaff3Entity() entities.Staff {
 	}
 }
 
+func createExpectedStaff4Entity() entities.Staff {
+	return entities.Staff{
+		ID:        "staffid4",
+		AccountID: "42345",
+		Name:      "name 4",
+		Password:  "password 4",
+		Groups: []entities.StaffGroup{
+			createExpectedStaffGroup3Entity(),
+		},
+	}
+}
+
+func createExpectedStaff5Entity() entities.Staff {
+	return entities.Staff{
+		ID:        "staffid5",
+		AccountID: "52345",
+		Name:      "name 5",
+		Password:  "password 5",
+		Groups: []entities.StaffGroup{
+			createExpectedStaffGroup1Entity(),
+		},
+	}
+}
+
 func createExpectedStaffEntity1Slice() []entities.Staff {
 	return []entities.Staff{
 		createExpectedStaff1Entity(),
 		createExpectedStaff3Entity(),
+		createExpectedStaff4Entity(),
 	}
 }
 
@@ -70,14 +95,18 @@ func insertStaffTestData(con *sqlx.DB) {
 	staffstr := "insert into staffs (id, account_id, name, password) "
 	staffstr += "values('staffid1', '12345', 'name 1', 'password 1'), "
 	staffstr += "('staffid2', '22345', 'name 2', 'password 2'), "
-	staffstr += "('staffid3', '32345', 'name 3', 'password 3')"
+	staffstr += "('staffid3', '32345', 'name 3', 'password 3'),"
+	staffstr += "('staffid4', '42345', 'name 4', 'password 4'),"
+	staffstr += "('staffid5', '52345', 'name 5', 'password 5')"
 	con.Exec(staffstr)
 	insertStaffGroupTestData(con)
 	groupstr := "insert into join_staffs_staff_groups (staffs_id, staff_groups_id) "
 	groupstr += "values('staffid1', 'staffgroupid1'), "
 	groupstr += "('staffid1', 'staffgroupid2'), "
 	groupstr += "('staffid2', 'staffgroupid1'), "
-	groupstr += "('staffid3', 'staffgroupid2')"
+	groupstr += "('staffid3', 'staffgroupid2'),"
+	groupstr += "('staffid4', 'staffgroupid3'),"
+	groupstr += "('staffid5', 'staffgroupid1')"
 	con.Exec(groupstr)
 }
 
@@ -152,6 +181,16 @@ func TestStaffRepo_Select(t *testing.T) {
 						ConditionValue: "[\"staffgroupid2\"]",
 						MatchType:      query.In,
 						Operator:       query.And,
+					},
+					{
+						SearchField: query.FieldAttr{
+							ID:        "groups",
+							ViewValue: "所属グループ",
+							FieldType: query.ARRAY,
+						},
+						ConditionValue: "[\"staffgroupid3\"]",
+						MatchType:      query.In,
+						Operator:       query.Or,
 					},
 				},
 			},

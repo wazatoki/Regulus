@@ -36,6 +36,13 @@ func createExpectedStaffGroup2Entity() entities.StaffGroup {
 	}
 }
 
+func createExpectedStaffGroup3Entity() entities.StaffGroup {
+	return entities.StaffGroup{
+		ID:   "staffgroupid3",
+		Name: "staff group name 3",
+	}
+}
+
 func createExpectedStaffGroupEntity1Slice() []entities.StaffGroup {
 	return []entities.StaffGroup{
 		createExpectedStaffGroup1Entity(),
@@ -44,7 +51,13 @@ func createExpectedStaffGroupEntity1Slice() []entities.StaffGroup {
 }
 
 func insertStaffGroupTestData(con *sqlx.DB) {
-	con.Exec("insert into staff_groups (id, name) values('staffgroupid1', 'staff group name 1'), ('staffgroupid2', 'staff group name 2')")
+	sql := "insert into staff_groups "
+	sql += "(id, name) "
+	sql += "values"
+	sql += "('staffgroupid1', 'staff group name 1'), "
+	sql += "('staffgroupid2', 'staff group name 2'),"
+	sql += "('staffgroupid3', 'staff group name 3')"
+	con.Exec(sql)
 }
 
 func TestStaffGroupObjectMap(t *testing.T) {
