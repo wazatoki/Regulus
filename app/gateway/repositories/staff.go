@@ -13,38 +13,68 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
-// SelectByID select staaff data by id from database
-func (s *StaffRepo) SelectByID(id string) (entities.Staff, error) {
-	if id == "" {
-		return entities.Staff{}, errors.New("id must be required")
+// SelectByIDs select staff data by id list from database
+func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err error) {
+	if len(ids) == 0 {
+		return nil, errors.New("id list must be required")
 	}
 
-	var es entities.Staff
+	var convertedIDs []interface{} = make([]interface{}, len(ids))
+	for i, d := range ids {
+		convertedIDs[i] = d
+	}
 
-	err := s.database.WithDbContext(func(db *sqlx.DB) error {
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
-			qm.Where("staffs."+sqlboiler.StaffColumns.Del+" !=?", true),
-			qm.And("staffs."+sqlboiler.StaffColumns.ID+" =?", id),
+			qm.Where(sqlboiler.StaffColumns.Del+" !=?", true),
+			qm.AndIn(sqlboiler.MakerColumns.ID+" in ?", convertedIDs...),
 			qm.Load(sqlboiler.StaffRels.StaffGroups),
 		}
-		fetchedStaff, err := sqlboiler.Staffs(queries...).One(context.Background(), db.DB)
+
+		fetchedStaffs, err := sqlboiler.Staffs(queries...).All(context.Background(), db.DB)
+
 		if err == nil {
-			es = StaffObjectMap(fetchedStaff)
+
+			for _, fs := range fetchedStaffs {
+				staffs = append(staffs, StaffObjectMap(fs))
+			}
 		}
 
 		return err
 	})
 
-	return es, err
+	return
+}
+
+// SelectByID select staaff data by id from database
+func (s *StaffRepo) SelectByID(id string) (staff entities.Staff, err error) {
+	if id == "" {
+		return entities.Staff{}, errors.New("id must be required")
+	}
+
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where(sqlboiler.StaffColumns.Del+" !=?", true),
+			qm.And(sqlboiler.StaffColumns.ID+" =?", id),
+			qm.Load(sqlboiler.StaffRels.StaffGroups),
+		}
+		fetchedStaff, err := sqlboiler.Staffs(queries...).One(context.Background(), db.DB)
+		if err == nil {
+			staff = StaffObjectMap(fetchedStaff)
+		}
+
+		return err
+	})
+
+	return
 }
 
 // SelectAll select all staff data without not del from database
 func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
-	staffs = []entities.Staff{}
 
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
-			qm.Where("staffs."+sqlboiler.StaffColumns.Del+"!=?", true),
+			qm.Where(sqlboiler.StaffColumns.Del+"!=?", true),
 			qm.Load(sqlboiler.StaffRels.StaffGroups),
 		}
 
@@ -65,7 +95,6 @@ func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
 
 // Select select staff data by condition from database
 func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []entities.Staff, err error) {
-	staffs = []entities.Staff{}
 	queries := s.createQueryModSlice()
 	var q qm.QueryMod
 
