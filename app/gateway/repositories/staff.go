@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"errors"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
@@ -11,6 +12,31 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// SelectByID select staaff data by id from database
+func (s *StaffRepo) SelectByID(id string) (entities.Staff, error) {
+	if id == "" {
+		return entities.Staff{}, errors.New("id must be required")
+	}
+
+	var es entities.Staff
+
+	err := s.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where("staffs."+sqlboiler.StaffColumns.Del+" !=?", true),
+			qm.And("staffs."+sqlboiler.StaffColumns.ID+" =?", id),
+			qm.Load(sqlboiler.StaffRels.StaffGroups),
+		}
+		fetchedStaff, err := sqlboiler.Staffs(queries...).One(context.Background(), db.DB)
+		if err == nil {
+			es = StaffObjectMap(fetchedStaff)
+		}
+
+		return err
+	})
+
+	return es, err
+}
 
 // SelectAll select all staff data without not del from database
 func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
