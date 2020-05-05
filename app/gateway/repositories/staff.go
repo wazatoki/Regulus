@@ -12,20 +12,45 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
-// Select select maker data by condition from database
-func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) ([]entities.Staff, error) {
-	staffs := []entities.Staff{}
+// SelectAll select all staff data without not del from database
+func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
+	staffs = []entities.Staff{}
+
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where("staffs."+sqlboiler.StaffColumns.Del+"!=?", true),
+			qm.Load(sqlboiler.StaffRels.StaffGroups),
+		}
+
+		fetchedStaffs, err := sqlboiler.Staffs(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+
+			for _, fs := range fetchedStaffs {
+				staffs = append(staffs, StaffObjectMap(fs))
+			}
+		}
+
+		return err
+	})
+
+	return
+}
+
+// Select select staff data by condition from database
+func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []entities.Staff, err error) {
+	staffs = []entities.Staff{}
 	queries := s.createQueryModSlice()
 	var q qm.QueryMod
 
-	err := s.database.WithDbContext(func(db *sqlx.DB) error {
-		q = qm.Where(sqlboiler.StaffGroupRels.Staffs + "." + sqlboiler.StaffColumns.ID + " IS NOT NULL")
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
+		q = qm.Where("staffs." + sqlboiler.StaffColumns.ID + " IS NOT NULL")
 
 		for _, queryItem := range queryItems {
 			q = qm.Expr(q, s.createQueryModWhere(queryItem))
 		}
 
-		q = qm.Expr(q, qm.And(sqlboiler.StaffGroupRels.Staffs+"."+sqlboiler.StaffColumns.Del+" != ?", true))
+		q = qm.Expr(q, qm.And("staffs."+sqlboiler.StaffColumns.Del+" != ?", true))
 
 		queries = append(queries, q, qm.Load(sqlboiler.StaffRels.StaffGroups))
 
@@ -41,7 +66,7 @@ func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) ([]entities
 		return err
 	})
 
-	return staffs, err
+	return
 }
 
 func (s *StaffRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm.QueryMod {
@@ -51,14 +76,14 @@ func (s *StaffRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm
 	switch queryItem.SearchField.ID {
 	case "account-id":
 		if queryItem.Operator == query.Or {
-			return qm.Or(sqlboiler.StaffGroupRels.Staffs+"."+sqlboiler.StaffColumns.AccountID+" "+mt+" ?", val)
+			return qm.Or("staffs."+sqlboiler.StaffColumns.AccountID+" "+mt+" ?", val)
 		}
-		return qm.And(sqlboiler.StaffGroupRels.Staffs+"."+sqlboiler.StaffColumns.AccountID+" "+mt+" ?", val)
+		return qm.And("staffs."+sqlboiler.StaffColumns.AccountID+" "+mt+" ?", val)
 	case "name":
 		if queryItem.Operator == query.Or {
-			return qm.Or(sqlboiler.StaffGroupRels.Staffs+"."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
+			return qm.Or("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 		}
-		return qm.And(sqlboiler.StaffGroupRels.Staffs+"."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
+		return qm.And("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 	case "groups":
 		var ids []interface{}
 		json.Unmarshal([]byte(val), &ids)
@@ -72,11 +97,11 @@ func (s *StaffRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm
 		}
 		return qm.And("sg.name"+" "+mt+" ?", val)
 	default:
-		if queryItem.Operator == "or" {
-			return qm.Or(sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
+		if queryItem.Operator == query.Or {
+			return qm.Or("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 		}
-		//queryItem.Operator = "and"
-		return qm.And(sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
+		// queryItem.Operator == and
+		return qm.And("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 	}
 }
 
@@ -84,6 +109,7 @@ func (s *StaffRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 	qslice = []qm.QueryMod{}
 	qslice = append(
 		qslice,
+		qm.Select("distinct staffs.*"),
 		qm.InnerJoin("join_staffs_staff_groups jsg on staffs.id = jsg.staffs_id"),
 		qm.InnerJoin("staff_groups sg on jsg.staff_groups_id = sg.id"),
 	)

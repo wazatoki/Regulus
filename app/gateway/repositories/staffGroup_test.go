@@ -4,6 +4,7 @@ import (
 	"context"
 	"reflect"
 	"regulus/app/domain/entities"
+	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
 
@@ -14,7 +15,7 @@ import (
 func setUpStaffGroupTest() *sqlx.DB {
 	db := createDB()
 	con, _ := db.Open()
-	con.Exec("delete from staff_groups")
+
 	return con
 }
 
@@ -50,16 +51,6 @@ func createExpectedStaffGroupEntity1Slice() []entities.StaffGroup {
 	}
 }
 
-func insertStaffGroupTestData(con *sqlx.DB) {
-	sql := "insert into staff_groups "
-	sql += "(id, name) "
-	sql += "values"
-	sql += "('staffgroupid1', 'staff group name 1'), "
-	sql += "('staffgroupid2', 'staff group name 2'),"
-	sql += "('staffgroupid3', 'staff group name 3')"
-	con.Exec(sql)
-}
-
 func TestStaffGroupObjectMap(t *testing.T) {
 	type args struct {
 		sg *sqlboiler.StaffGroup
@@ -79,13 +70,72 @@ func TestStaffGroupObjectMap(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			con := setUpStaffGroupTest()
 			defer tearDownStaffGroupTest(con)
-
-			insertStaffGroupTestData(con)
+			setupTestData()
 
 			tt.args.sg, _ = sqlboiler.StaffGroups(qm.Where("id=?", "staffgroupid1")).One(context.Background(), con)
 
 			if gotEg := StaffGroupObjectMap(tt.args.sg); !reflect.DeepEqual(gotEg, tt.wantEg) {
 				t.Errorf("StaffGroupObjectMap() = %v, want %v", gotEg, tt.wantEg)
+			}
+		})
+	}
+}
+
+func TestStaffGroupRepo_Select(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		queryItems []*query.SearchConditionItem
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []entities.StaffGroup
+		wantErr bool
+	}{
+		{
+			name: "select staff group with condition",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryItems: []*query.SearchConditionItem{
+					{
+						SearchField: query.FieldAttr{
+							ID:        "name",
+							ViewValue: "グループ名称",
+							FieldType: query.STRING,
+						},
+						ConditionValue: "name 1",
+						MatchType:      query.Pertialmatch,
+						Operator:       query.And,
+					},
+				},
+			},
+			want: []entities.StaffGroup{
+				createExpectedStaffGroup1Entity(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
+			setupTestData()
+
+			g := &StaffGroupRepo{
+				database: tt.fields.database,
+			}
+			got, err := g.Select(tt.args.queryItems...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("StaffGroupRepo.Select() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StaffGroupRepo.Select() = %v, want %v", got, tt.want)
 			}
 		})
 	}

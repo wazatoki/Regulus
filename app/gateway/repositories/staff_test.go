@@ -15,9 +15,7 @@ import (
 func setUpStaffTest() *sqlx.DB {
 	db := createDB()
 	con, _ := db.Open()
-	con.Exec("delete from staffs")
-	con.Exec("delete from staff_groups")
-	con.Exec("delete from join_staffs_staff_groups")
+
 	return con
 }
 
@@ -91,23 +89,14 @@ func createExpectedStaffEntity1Slice() []entities.Staff {
 	}
 }
 
-func insertStaffTestData(con *sqlx.DB) {
-	staffstr := "insert into staffs (id, account_id, name, password) "
-	staffstr += "values('staffid1', '12345', 'name 1', 'password 1'), "
-	staffstr += "('staffid2', '22345', 'name 2', 'password 2'), "
-	staffstr += "('staffid3', '32345', 'name 3', 'password 3'),"
-	staffstr += "('staffid4', '42345', 'name 4', 'password 4'),"
-	staffstr += "('staffid5', '52345', 'name 5', 'password 5')"
-	con.Exec(staffstr)
-	insertStaffGroupTestData(con)
-	groupstr := "insert into join_staffs_staff_groups (staffs_id, staff_groups_id) "
-	groupstr += "values('staffid1', 'staffgroupid1'), "
-	groupstr += "('staffid1', 'staffgroupid2'), "
-	groupstr += "('staffid2', 'staffgroupid1'), "
-	groupstr += "('staffid3', 'staffgroupid2'),"
-	groupstr += "('staffid4', 'staffgroupid3'),"
-	groupstr += "('staffid5', 'staffgroupid1')"
-	con.Exec(groupstr)
+func createExpectedStaffEntity2Slice() []entities.Staff {
+	return []entities.Staff{
+		createExpectedStaff1Entity(),
+		createExpectedStaff2Entity(),
+		createExpectedStaff3Entity(),
+		createExpectedStaff4Entity(),
+		createExpectedStaff5Entity(),
+	}
 }
 
 func TestStaffObjectMap(t *testing.T) {
@@ -130,7 +119,7 @@ func TestStaffObjectMap(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			con := setUpStaffTest()
 			defer tearDownStaffTest(con)
-			insertStaffTestData(con)
+			setupTestData()
 
 			tt.args.ss, _ = sqlboiler.Staffs(qm.Where("id=?", "staffid1"), qm.Load(sqlboiler.StaffRels.StaffGroups)).One(context.Background(), con)
 
@@ -156,7 +145,7 @@ func TestStaffRepo_Select(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "select with condition",
+			name: "select staff with condition",
 			fields: fields{
 				database: createDB(),
 			},
@@ -202,7 +191,7 @@ func TestStaffRepo_Select(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			con := setUpStaffTest()
 			defer tearDownStaffTest(con)
-			insertStaffTestData(con)
+			setupTestData()
 
 			s := &StaffRepo{
 				database: tt.fields.database,
@@ -214,6 +203,46 @@ func TestStaffRepo_Select(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("StaffRepo.Select() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStaffRepo_SelectAll(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	tests := []struct {
+		name       string
+		fields     fields
+		wantStaffs []entities.Staff
+		wantErr    bool
+	}{
+		{
+			name: "it should get 5entities as select all ",
+			fields: fields{
+				database: createDB(),
+			},
+			wantStaffs: createExpectedStaffEntity2Slice(),
+			wantErr:    false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffTest()
+			defer tearDownStaffTest(con)
+			setupTestData()
+
+			s := &StaffRepo{
+				database: tt.fields.database,
+			}
+			gotStaffs, err := s.SelectAll()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("StaffRepo.SelectAll() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotStaffs, tt.wantStaffs) {
+				t.Errorf("StaffRepo.SelectAll() = %v, want %v", gotStaffs, tt.wantStaffs)
 			}
 		})
 	}
