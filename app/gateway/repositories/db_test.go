@@ -4,9 +4,11 @@ import (
 	"log"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/sqlboiler/boil"
 )
 
 func setupTestData() {
+	boil.DebugMode = true
 	db := createDB()
 	con, _ := db.Open()
 	defer con.DB.Close()
@@ -26,6 +28,7 @@ func insertTestDataToJoinStaffsStaffGroups(con *sqlx.DB) {
 	sql += "values"
 	sql += "('staffid1', 'staffgroupid1'), "
 	sql += "('staffid1', 'staffgroupid2'), "
+	sql += "('staffid1', 'staffgroupid4'), "
 	sql += "('staffid2', 'staffgroupid1'), "
 	sql += "('staffid3', 'staffgroupid2'), "
 	sql += "('staffid4', 'staffgroupid3'), "
@@ -41,11 +44,12 @@ func insertTestDataToStaffGroups(con *sqlx.DB) {
 	var err error
 	var sql string
 	sql = "insert into staff_groups "
-	sql += "(id, name) "
+	sql += "(id, name, del) "
 	sql += "values"
-	sql += "('staffgroupid1', 'staff group name 1'), "
-	sql += "('staffgroupid2', 'staff group name 2'),"
-	sql += "('staffgroupid3', 'staff group name 3')"
+	sql += "('staffgroupid1', 'staff group name 1', false), "
+	sql += "('staffgroupid2', 'staff group name 2', false),"
+	sql += "('staffgroupid3', 'staff group name 3', false),"
+	sql += "('staffgroupid4', 'staff group name 4', true)"
 	_, err = con.Exec(sql)
 	if err != nil {
 		log.Fatal("insertStaffGroupTestData " + err.Error())

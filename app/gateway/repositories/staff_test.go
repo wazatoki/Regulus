@@ -121,7 +121,7 @@ func TestStaffObjectMap(t *testing.T) {
 			defer tearDownStaffTest(con)
 			setupTestData()
 
-			tt.args.ss, _ = sqlboiler.Staffs(qm.Where("id=?", "staffid1"), qm.Load(sqlboiler.StaffRels.StaffGroups)).One(context.Background(), con)
+			tt.args.ss, _ = sqlboiler.Staffs(qm.Where("id=?", "staffid1"), qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true"))).One(context.Background(), con)
 
 			if gotEs := StaffObjectMap(tt.args.ss); !reflect.DeepEqual(gotEs, tt.wantEs) {
 				t.Errorf("StaffObjectMap() = %v, want %v", gotEs, tt.wantEs)
@@ -249,6 +249,7 @@ func TestStaffRepo_SelectAll(t *testing.T) {
 }
 
 func TestStaffRepo_SelectByID(t *testing.T) {
+
 	type fields struct {
 		database db
 	}
@@ -405,7 +406,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 			}
 			want.ID = gotID
 
-			got, _ := sqlboiler.Staffs(qm.Where("id=?", want.ID), qm.Load(sqlboiler.StaffRels.StaffGroups)).One(context.Background(), con)
+			got, _ := sqlboiler.Staffs(qm.Where("id=?", want.ID), qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true"))).One(context.Background(), con)
 			resultEntity := StaffObjectMap(got)
 
 			if !reflect.DeepEqual(resultEntity, want) {
@@ -459,13 +460,62 @@ func TestStaffRepo_Update(t *testing.T) {
 				t.Errorf("StaffRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			got, _ := sqlboiler.Staffs(qm.Where("id=?", beforeStaff.ID), qm.Load(sqlboiler.StaffRels.StaffGroups)).One(context.Background(), con)
+			got, _ := sqlboiler.Staffs(qm.Where("id=?", beforeStaff.ID), qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true"))).One(context.Background(), con)
 			resultEntity := StaffObjectMap(got)
 
 			if !reflect.DeepEqual(resultEntity, *tt.args.staff) {
 				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, tt.args.staff)
 			}
 
+		})
+	}
+}
+
+func TestStaffRepo_Dalete(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should return nil as called delete",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				id: "staffid2",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffTest()
+			defer tearDownStaffTest(con)
+			setupTestData()
+
+			s := &StaffRepo{
+				database: tt.fields.database,
+			}
+			if err := s.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+				t.Errorf("StaffRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			got, _ := sqlboiler.Staffs(
+				qm.Where("id=?", "staffid2"),
+				qm.And("del != true"),
+				qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
+			).One(context.Background(), con)
+
+			if got != nil {
+				t.Errorf("StaffRepo.Dalete() = %v, want %v", got, nil)
+			}
 		})
 	}
 }

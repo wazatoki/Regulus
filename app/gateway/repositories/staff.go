@@ -11,9 +11,27 @@ import (
 	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// Dalete delete data to database
+func (s *StaffRepo) Dalete(id string) error {
+	if id == "" {
+		return errors.New("id must be required")
+	}
+
+	err := s.database.WithDbContext(func(db *sqlx.DB) error {
+		sqlStaff, _ := sqlboiler.FindStaff(context.Background(), db.DB, id)
+		sqlStaff.Del = null.BoolFrom(true)
+		var err error
+		_, err = sqlStaff.Update(context.Background(), db.DB, boil.Infer())
+		return err
+	})
+
+	return err
+}
 
 // Update update data to database
 func (s *StaffRepo) Update(staff *entities.Staff) (err error) {
@@ -92,7 +110,7 @@ func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err erro
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.StaffColumns.Del+" !=?", true),
 			qm.AndIn(sqlboiler.MakerColumns.ID+" in ?", convertedIDs...),
-			qm.Load(sqlboiler.StaffRels.StaffGroups),
+			qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 		}
 
 		fetchedStaffs, err := sqlboiler.Staffs(queries...).All(context.Background(), db.DB)
@@ -120,7 +138,7 @@ func (s *StaffRepo) SelectByID(id string) (staff entities.Staff, err error) {
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.StaffColumns.Del+" !=?", true),
 			qm.And(sqlboiler.StaffColumns.ID+" =?", id),
-			qm.Load(sqlboiler.StaffRels.StaffGroups),
+			qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 		}
 		fetchedStaff, err := sqlboiler.Staffs(queries...).One(context.Background(), db.DB)
 		if err == nil {
@@ -139,7 +157,7 @@ func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.StaffColumns.Del+"!=?", true),
-			qm.Load(sqlboiler.StaffRels.StaffGroups),
+			qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 		}
 
 		fetchedStaffs, err := sqlboiler.Staffs(queries...).All(context.Background(), db.DB)
@@ -171,7 +189,7 @@ func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []e
 
 		q = qm.Expr(q, qm.And("staffs."+sqlboiler.StaffColumns.Del+" != ?", true))
 
-		queries = append(queries, q, qm.Load(sqlboiler.StaffRels.StaffGroups))
+		queries = append(queries, q, qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")))
 
 		fetchedStaffs, err := sqlboiler.Staffs(queries...).All(context.Background(), db.DB)
 
