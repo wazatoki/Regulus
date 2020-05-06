@@ -357,7 +357,6 @@ func TestStaffRepo_Insert(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		wantId  string
 		wantErr bool
 	}{
 		{
@@ -411,6 +410,60 @@ func TestStaffRepo_Insert(t *testing.T) {
 
 			if !reflect.DeepEqual(resultEntity, want) {
 				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, want)
+			}
+
+		})
+	}
+}
+
+func TestStaffRepo_Update(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		staff *entities.Staff
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should update to database as called update",
+			fields: fields{
+				database: createDB(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffTest()
+			defer tearDownStaffTest(con)
+			setupTestData()
+			beforeStaff := createExpectedStaff1Entity()
+			tt.args.staff = &beforeStaff
+			tt.args.staff.AccountID = "1234512345"
+			tt.args.staff.Name = "name 1name 1"
+			tt.args.staff.Password = "password 1password 1"
+			tt.args.staff.Groups = []entities.StaffGroup{
+				createExpectedStaffGroup2Entity(),
+				createExpectedStaffGroup3Entity(),
+			}
+
+			s := &StaffRepo{
+				database: tt.fields.database,
+			}
+			if err := s.Update(tt.args.staff); (err != nil) != tt.wantErr {
+				t.Errorf("StaffRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			got, _ := sqlboiler.Staffs(qm.Where("id=?", beforeStaff.ID), qm.Load(sqlboiler.StaffRels.StaffGroups)).One(context.Background(), con)
+			resultEntity := StaffObjectMap(got)
+
+			if !reflect.DeepEqual(resultEntity, *tt.args.staff) {
+				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, tt.args.staff)
 			}
 
 		})

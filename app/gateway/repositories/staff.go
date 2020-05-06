@@ -15,6 +15,36 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
+// Update update data to database
+func (s *StaffRepo) Update(staff *entities.Staff) (err error) {
+	if staff.ID == "" {
+		return errors.New("ID must be required")
+	}
+
+	sqlStaff := &sqlboiler.Staff{
+		ID:        staff.ID,
+		AccountID: staff.AccountID,
+		Name:      staff.Name,
+		Password:  staff.Password,
+	}
+
+	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.Groups))
+	for i, g := range staff.Groups {
+		sqlStaffGroups[i] = &sqlboiler.StaffGroup{
+			ID: g.ID,
+		}
+	}
+
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
+		var err error
+		_, err = sqlStaff.Update(context.Background(), db.DB, boil.Infer())
+		sqlStaff.SetStaffGroups(context.Background(), db.DB, false, sqlStaffGroups...)
+		return err
+	})
+
+	return err
+}
+
 // Insert insert data to database
 func (s *StaffRepo) Insert(staff *entities.Staff) (id string, err error) {
 	id = ""
@@ -37,7 +67,6 @@ func (s *StaffRepo) Insert(staff *entities.Staff) (id string, err error) {
 
 		err = sqlStaff.Insert(context.Background(), db.DB, boil.Infer())
 		sqlStaff.SetStaffGroups(context.Background(), db.DB, false, sqlStaffGroups...)
-
 		return err
 	})
 
