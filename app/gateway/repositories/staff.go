@@ -6,12 +6,47 @@ import (
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
+	"regulus/app/utils"
 
 	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// Insert insert data to database
+func (s *StaffRepo) Insert(staff *entities.Staff) (id string, err error) {
+	id = ""
+	sqlStaff := &sqlboiler.Staff{
+		ID:        utils.CreateID(),
+		AccountID: staff.AccountID,
+		Name:      staff.Name,
+		Password:  staff.Password,
+	}
+
+	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.Groups))
+	for i, g := range staff.Groups {
+		sqlStaffGroups[i] = &sqlboiler.StaffGroup{
+			ID: g.ID,
+		}
+	}
+
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
+		var err error
+
+		err = sqlStaff.Insert(context.Background(), db.DB, boil.Infer())
+		sqlStaff.SetStaffGroups(context.Background(), db.DB, false, sqlStaffGroups...)
+
+		return err
+	})
+
+	if err == nil {
+		id = sqlStaff.ID
+	}
+
+	return
+}
 
 // SelectByIDs select staff data by id list from database
 func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err error) {
