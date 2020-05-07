@@ -341,3 +341,52 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 		})
 	}
 }
+
+func TestStaffGroupRepo_Dalete(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should return nil as called delete",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				id: "staffgroupid2",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
+			setupTestData()
+
+			g := &StaffGroupRepo{
+				database: tt.fields.database,
+			}
+			if err := g.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+				t.Errorf("StaffGroupRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			got, _ := sqlboiler.StaffGroups(
+				qm.Where("id=?", "staffgroupid2"),
+				qm.And("del != true"),
+			).One(context.Background(), con)
+
+			if got != nil {
+				t.Errorf("StaffRepo.Dalete() = %v, want %v", got, nil)
+			}
+		})
+	}
+}

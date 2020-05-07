@@ -9,9 +9,27 @@ import (
 	"regulus/app/utils"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// Dalete delete data to database
+func (g *StaffGroupRepo) Dalete(id string) error {
+	if id == "" {
+		return errors.New("id must be required")
+	}
+
+	err := g.database.WithDbContext(func(db *sqlx.DB) error {
+		sqlStaffGroup, _ := sqlboiler.FindStaffGroup(context.Background(), db.DB, id)
+		sqlStaffGroup.Del = null.BoolFrom(true)
+		var err error
+		_, err = sqlStaffGroup.Update(context.Background(), db.DB, boil.Infer())
+		return err
+	})
+
+	return err
+}
 
 // Update update data to database
 func (g *StaffGroupRepo) Update(staffGroup *entities.StaffGroup) (err error) {
