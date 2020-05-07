@@ -169,8 +169,8 @@ func TestStaffGroupRepo_SelectByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := setUpStaffTest()
-			defer tearDownStaffTest(con)
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
 			setupTestData()
 
 			g := &StaffGroupRepo{
@@ -222,8 +222,8 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := setUpStaffTest()
-			defer tearDownStaffTest(con)
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
 			setupTestData()
 
 			g := &StaffGroupRepo{
@@ -270,8 +270,8 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := setUpStaffTest()
-			defer tearDownStaffTest(con)
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
 			setupTestData()
 			want := entities.StaffGroup{
 				ID:   "staffgroupid3",
@@ -292,6 +292,51 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 
 			if !reflect.DeepEqual(resultEntity, want) {
 				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, want)
+			}
+		})
+	}
+}
+
+func TestStaffGroupRepo_Update(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		staffGroup *entities.StaffGroup
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should update to database as called update",
+			fields: fields{
+				database: createDB(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
+			setupTestData()
+			beforeStaffGroup := createExpectedStaffGroup1Entity()
+			tt.args.staffGroup = &beforeStaffGroup
+			tt.args.staffGroup.Name = "staff group name 5"
+			g := &StaffGroupRepo{
+				database: tt.fields.database,
+			}
+			if err := g.Update(tt.args.staffGroup); (err != nil) != tt.wantErr {
+				t.Errorf("StaffGroupRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			got, _ := sqlboiler.StaffGroups(qm.Where("id=?", beforeStaffGroup.ID)).One(context.Background(), con)
+			resultEntity := StaffGroupObjectMap(got)
+
+			if !reflect.DeepEqual(resultEntity, *tt.args.staffGroup) {
+				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, tt.args.staffGroup)
 			}
 		})
 	}
