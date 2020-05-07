@@ -109,7 +109,7 @@ func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err erro
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.StaffColumns.Del+" !=?", true),
-			qm.AndIn(sqlboiler.MakerColumns.ID+" in ?", convertedIDs...),
+			qm.AndIn(sqlboiler.StaffColumns.ID+" in ?", convertedIDs...),
 			qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 		}
 

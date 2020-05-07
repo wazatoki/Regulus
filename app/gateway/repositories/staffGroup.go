@@ -11,6 +11,38 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
+// SelectByIDs select staff data by id list from database
+func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []entities.StaffGroup, err error) {
+	if len(ids) == 0 {
+		return nil, errors.New("id list must be required")
+	}
+
+	var convertedIDs []interface{} = make([]interface{}, len(ids))
+	for i, d := range ids {
+		convertedIDs[i] = d
+	}
+
+	err = g.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where(sqlboiler.StaffGroupColumns.Del+" !=?", true),
+			qm.AndIn(sqlboiler.StaffGroupColumns.ID+" in ?", convertedIDs...),
+		}
+
+		fetchedStaffGroups, err := sqlboiler.StaffGroups(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+
+			for _, fs := range fetchedStaffGroups {
+				staffGroups = append(staffGroups, StaffGroupObjectMap(fs))
+			}
+		}
+
+		return err
+	})
+
+	return
+}
+
 // SelectByID select staaffGroup data by id from database
 func (g *StaffGroupRepo) SelectByID(id string) (staffGroup entities.StaffGroup, err error) {
 	if id == "" {

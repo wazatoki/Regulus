@@ -187,3 +187,56 @@ func TestStaffGroupRepo_SelectByID(t *testing.T) {
 		})
 	}
 }
+
+func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		ids []string
+	}
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		wantStaffGroups []entities.StaffGroup
+		wantErr         bool
+	}{
+		{
+			name: "it should get specified entities as select by ids",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				ids: []string{
+					"staffgroupid1",
+					"staffgroupid2",
+				},
+			},
+			wantStaffGroups: []entities.StaffGroup{
+				createExpectedStaffGroup1Entity(),
+				createExpectedStaffGroup2Entity(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffTest()
+			defer tearDownStaffTest(con)
+			setupTestData()
+
+			g := &StaffGroupRepo{
+				database: tt.fields.database,
+			}
+			gotStaffGroups, err := g.SelectByIDs(tt.args.ids)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("StaffGroupRepo.SelectByIDs() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotStaffGroups, tt.wantStaffGroups) {
+				t.Errorf("StaffGroupRepo.SelectByIDs() = %v, want %v", gotStaffGroups, tt.wantStaffGroups)
+			}
+		})
+	}
+}
