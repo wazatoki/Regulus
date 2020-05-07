@@ -24,11 +24,31 @@ type Postgresql struct {
 func (postgresql *Postgresql) WithDbContext(fn func(db *sqlx.DB) error) error {
 	d, err := postgresql.Open()
 	defer d.Close()
+
+	// db openでエラー
 	if err != nil {
 		return err
 	}
 
-	return fn(d)
+	// transaction開始
+	var tx *sqlx.Tx
+	tx, err = d.Beginx()
+	if err != nil {
+		return err
+	}
+
+	// 処理を実行
+	err = fn(d)
+	// 処理中にエラーだったらロールバック
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// コミット
+	tx.Commit()
+
+	return err
 }
 
 // Open 接続情報は設定ファイルから読み込み

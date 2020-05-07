@@ -95,8 +95,6 @@ func (m *MakerRepo) SelectByIDs(ids []string) ([]makerEntity.Maker, error) {
 		return nil, errors.New("id list must be required")
 	}
 
-	boil.DebugMode = true
-
 	meSlice := []makerEntity.Maker{}
 
 	var convertedIDs []interface{} = make([]interface{}, len(ids))
