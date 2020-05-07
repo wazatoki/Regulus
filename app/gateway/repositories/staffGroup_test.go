@@ -240,3 +240,59 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 		})
 	}
 }
+
+func TestStaffGroupRepo_Insert(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		staffGroup *entities.StaffGroup
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should insert to database as called insert",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				&entities.StaffGroup{
+					ID:   "staffgroupid3",
+					Name: "staff group name 5",
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffTest()
+			defer tearDownStaffTest(con)
+			setupTestData()
+			want := entities.StaffGroup{
+				ID:   "staffgroupid3",
+				Name: "staff group name 5",
+			}
+			g := &StaffGroupRepo{
+				database: tt.fields.database,
+			}
+			gotID, err := g.Insert(tt.args.staffGroup)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("StaffGroupRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			want.ID = gotID
+
+			got, _ := sqlboiler.StaffGroups(qm.Where("id=?", want.ID)).One(context.Background(), con)
+			resultEntity := StaffGroupObjectMap(got)
+
+			if !reflect.DeepEqual(resultEntity, want) {
+				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, want)
+			}
+		})
+	}
+}
