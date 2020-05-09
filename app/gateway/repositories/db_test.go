@@ -18,6 +18,52 @@ func setupTestData() {
 	insertTestDataToStaffs(con)
 	insertTestDataToStaffGroups(con)
 	insertTestDataToJoinStaffsStaffGroups(con)
+	insertTestDataToQueryCondition(con)
+	insertTestDataToQuerySearchConditionItems(con)
+	inserTestDataToJoinQueryConditionsStaffGroups(con)
+}
+
+func insertTestDataToQueryCondition(con *sqlx.DB) {
+	var err error
+	var sql string
+	sql = "insert into query_conditions "
+	sql += "(id, pattern_name, category_name, is_disclose, owner_id) "
+	sql += "values"
+	sql += "('queryConditionid1', 'patternName1', 'staff', false, 'staffid1')"
+	_, err = con.Exec(sql)
+	if err != nil {
+		log.Println(sql)
+		log.Fatal("insert into query_conditions " + err.Error())
+	}
+}
+
+func insertTestDataToQuerySearchConditionItems(con *sqlx.DB) {
+	var err error
+	var sql string
+	sql = "insert into query_search_condition_items "
+	sql += "(id, query_conditions_id, search_field_id, condition_value, match_type, operator, row_order) "
+	sql += "values"
+	sql += "('searchConditionItem1', 'queryConditionid1', 'account-id', '123', 'pertialmatch', 'and', 1)"
+	_, err = con.Exec(sql)
+	if err != nil {
+		log.Println(sql)
+		log.Fatal("insert into query_search_condition_items " + err.Error())
+	}
+}
+
+func inserTestDataToJoinQueryConditionsStaffGroups(con *sqlx.DB) {
+	var err error
+	var sql string
+	sql = "insert into join_query_conditions_staff_groups "
+	sql += "(query_conditions_id, staff_groups_id) "
+	sql += "values"
+	sql += "('queryConditionid1', 'staffgroupid1'),"
+	sql += "('queryConditionid1', 'staffgroupid2')"
+	_, err = con.Exec(sql)
+	if err != nil {
+		log.Println(sql)
+		log.Fatal("insert into join_query_conditions_staff_groups " + err.Error())
+	}
 }
 
 func insertTestDataToJoinStaffsStaffGroups(con *sqlx.DB) {
@@ -75,6 +121,20 @@ func insertTestDataToStaffs(con *sqlx.DB) {
 
 func tearDownTestData(con *sqlx.DB) {
 	var err error
+
+	_, err = con.Exec("delete from join_query_conditions_staff_groups")
+	if err != nil {
+		log.Fatal("delete from join_query_conditions_staff_groups " + err.Error())
+	}
+	_, err = con.Exec("delete from query_search_condition_items")
+	if err != nil {
+		log.Fatal("delete from query_search_condition_items " + err.Error())
+	}
+	_, err = con.Exec("delete from query_conditions")
+	if err != nil {
+		log.Fatal("delete from query_conditions " + err.Error())
+	}
+
 	_, err = con.Exec("delete from join_staffs_staff_groups")
 	if err != nil {
 		log.Fatal("delete from join_staffs_staff_groups " + err.Error())

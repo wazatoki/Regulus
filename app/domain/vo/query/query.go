@@ -80,6 +80,30 @@ const (
 	In MatchTypeEnum = "in"
 )
 
+// StrToEnum convert string to Enum
+func (m *MatchTypeEnum) StrToEnum(s string) MatchTypeEnum {
+	switch s {
+	case string(Match):
+		return Match
+	case string(Unmatch):
+		return Unmatch
+	case string(Pertialmatch):
+		return Pertialmatch
+	case string(Gt):
+		return Gt
+	case string(Ge):
+		return Ge
+	case string(Le):
+		return Le
+	case string(Lt):
+		return Lt
+	case string(In):
+		return In
+	default:
+		return Match
+	}
+}
+
 /*
 OperatorEnum is a const type of Operator
 */
@@ -92,6 +116,18 @@ const (
 	Or OperatorEnum = "or"
 )
 
+// StrToEnum StrToEnum convert string to Enum
+func (o *OperatorEnum) StrToEnum(s string) OperatorEnum {
+	switch s {
+	case string(And):
+		return And
+	case string(Or):
+		return Or
+	default:
+		return And
+	}
+}
+
 /*
 OrderTypeEnum is a const type of OrderType
 */
@@ -103,3 +139,14 @@ const (
 	// Desc is const value of desc
 	Desc OrderTypeEnum = "desc"
 )
+
+func (o *OrderTypeEnum) StrToEnum(s string) OrderTypeEnum {
+	switch s {
+	case string(Asc):
+		return Asc
+	case string(Desc):
+		return Desc
+	default:
+		return Asc
+	}
+}
