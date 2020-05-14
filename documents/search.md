@@ -246,3 +246,40 @@ query_conditions --  query_order_condition_items : < query_conditions_id
 
 @enduml
 ```
+
+```puml
+@startuml
+
+start
+
+repeat
+	if (検索条件の種類がDB依存である ?) then(yes)
+		repeat
+		:検索クエリの組み立て;
+		repeat while (次の検索条件もDB依存 ?) is (yes)
+		:DBからデータを取得;
+	else (no)
+		:DBから全件を取得;
+		:データセットの作成;
+	endif
+
+	:結果セットがnilの場合は
+	全件取得;
+	:論理演算処理;
+	note
+		* andの場合は最終結果をもとに条件にマッチするデータを残す
+		* orの場合は得られたデータのうち、最終結果に含まれないデータを追加する 
+	end note
+	:最新の演算結果を結果セットとして
+	スライスで保持;
+
+repeat while (最後の検索条件ではない ?) is (yes)
+
+stop
+
+@enduml
+
+```
+論理演算処理
+* andの場合は最終結果をもとに条件にマッチするデータを残す
+* orの場合は得られたデータのうち、最終結果に含まれないデータを追加する 

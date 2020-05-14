@@ -75,6 +75,7 @@ func (g *StaffGroupRepo) Insert(staffGroup *entities.StaffGroup) (id string, err
 
 // SelectByIDs select staff data by id list from database
 func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []entities.StaffGroup, err error) {
+	staffGroups = []entities.StaffGroup{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}

@@ -29,7 +29,8 @@ func insertTestDataToQueryCondition(con *sqlx.DB) {
 	sql = "insert into query_conditions "
 	sql += "(id, pattern_name, category_name, is_disclose, owner_id) "
 	sql += "values"
-	sql += "('queryConditionid1', 'patternName1', 'staff', false, 'staffid1')"
+	sql += "('queryConditionid1', 'patternName1', 'staff', false, 'staffid1'),"
+	sql += "('queryConditionid2', 'patternName2', 'staff', false, 'staffid1')"
 	_, err = con.Exec(sql)
 	if err != nil {
 		log.Println(sql)
@@ -43,7 +44,8 @@ func insertTestDataToQuerySearchConditionItems(con *sqlx.DB) {
 	sql = "insert into query_search_condition_items "
 	sql += "(id, query_conditions_id, search_field_id, condition_value, match_type, operator, row_order) "
 	sql += "values"
-	sql += "('searchConditionItem1', 'queryConditionid1', 'account-id', '123', 'pertialmatch', 'and', 1)"
+	sql += "('searchConditionItem1', 'queryConditionid1', 'account-id', '123', 'pertialmatch', 'and', 1),"
+	sql += "('searchConditionItem2', 'queryConditionid2', 'account-id', '123', 'pertialmatch', 'and', 1)"
 	_, err = con.Exec(sql)
 	if err != nil {
 		log.Println(sql)
@@ -58,7 +60,9 @@ func inserTestDataToJoinQueryConditionsStaffGroups(con *sqlx.DB) {
 	sql += "(query_conditions_id, staff_groups_id) "
 	sql += "values"
 	sql += "('queryConditionid1', 'staffgroupid1'),"
-	sql += "('queryConditionid1', 'staffgroupid2')"
+	sql += "('queryConditionid1', 'staffgroupid2'),"
+	sql += "('queryConditionid2', 'staffgroupid1'),"
+	sql += "('queryConditionid2', 'staffgroupid2')"
 	_, err = con.Exec(sql)
 	if err != nil {
 		log.Println(sql)

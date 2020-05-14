@@ -97,6 +97,7 @@ func (s *StaffRepo) Insert(staff *entities.Staff) (id string, err error) {
 
 // SelectByIDs select staff data by id list from database
 func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err error) {
+	staffs = []entities.Staff{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -153,7 +154,7 @@ func (s *StaffRepo) SelectByID(id string) (staff entities.Staff, err error) {
 
 // SelectAll select all staff data without not del from database
 func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
-
+	staffs = []entities.Staff{}
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.StaffColumns.Del+"!=?", true),
@@ -177,6 +178,7 @@ func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
 
 // Select select staff data by condition from database
 func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []entities.Staff, err error) {
+	staffs = []entities.Staff{}
 	queries := s.createQueryModSlice()
 	var q qm.QueryMod
 

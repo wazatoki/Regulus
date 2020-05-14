@@ -1,10 +1,198 @@
 package repositories
 
 import (
+	"context"
+	"encoding/json"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
+	"strings"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// SelectAll select all query condition data without not del from database
+func (q *QueryConditionRepo) SelectAll() (queryConditions []entities.QueryCondition, err error) {
+	queryConditions = []entities.QueryCondition{}
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := q.createQueryModSlice()
+		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
+		if err == nil {
+			for _, fqc := range fetchedQueryConditions {
+				queryConditions = append(queryConditions, QueryConditionObjectMap(fqc))
+			}
+		}
+
+		return err
+	})
+
+	return
+}
+
+// Select select query condition data by condition from database
+func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (resultQueryConditions []entities.QueryCondition, err error) {
+	tempQueryConditions := []entities.QueryCondition{}
+	addQueryConditions := []entities.QueryCondition{}
+	var allQueryConditions []entities.QueryCondition
+	var queries []qm.QueryMod
+	var qmod qm.QueryMod
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+
+		var selectAllerr error
+		allQueryConditions, selectAllerr = q.SelectAll()
+		if selectAllerr != nil {
+			return selectAllerr
+		}
+
+		resultQueryConditions = allQueryConditions
+
+		for i, queryItem := range queryItems {
+
+			operator := queryItem.Operator
+
+			if q.isDependentDB(queryItem) {
+				queries = q.createQueryModSlice()
+				// DBに依存する条件が続く場合はまとめてクエリを作成する
+				j := i
+				for ; j < len(queryItems); j++ {
+					qmod = qm.Expr(qmod, q.createQueryModWhere(queryItems[j]))
+					if j < len(queryItems)-1 && !q.isDependentDB(queryItems[j+1]) {
+						break
+					}
+				}
+				i = j
+				qmod = qm.Expr(qmod, qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true))
+				queries = append(queries, qmod,
+					qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")))
+				fetchedStaffs, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
+				if err == nil {
+					for _, fs := range fetchedStaffs {
+						tempQueryConditions = append(tempQueryConditions, QueryConditionObjectMap(fs))
+					}
+				}
+			} else {
+				for _, item := range allQueryConditions {
+					if queryItem.SearchField.ID == "query-condition-category-view-value" {
+						switch queryItem.MatchType {
+						case query.Match:
+							if item.Category.Name == queryItem.ConditionValue {
+								tempQueryConditions = append(tempQueryConditions, item)
+							}
+						case query.Unmatch:
+							if item.Category.Name != queryItem.ConditionValue {
+								tempQueryConditions = append(tempQueryConditions, item)
+							}
+						default: // query.Pertialmatch
+							if strings.Contains(item.Category.Name, queryItem.ConditionValue) {
+								tempQueryConditions = append(tempQueryConditions, item)
+							}
+						}
+					}
+				}
+			}
+
+			if operator == query.Or {
+				addQueryConditions = []entities.QueryCondition{}
+				for _, tempItem := range tempQueryConditions {
+					isMatchResult := false
+					for _, resultItem := range resultQueryConditions {
+						if resultItem.ID == tempItem.ID {
+							isMatchResult = true
+							break
+						}
+					}
+					if !isMatchResult {
+						// 最新の結果と一致しなかったものの集合を作る
+						addQueryConditions = append(addQueryConditions, tempItem)
+					}
+				}
+				// 最終結果に反映
+				resultQueryConditions = append(resultQueryConditions, addQueryConditions...)
+			} else { // operator == And
+				addQueryConditions = []entities.QueryCondition{}
+				for _, resultItem := range resultQueryConditions {
+					isMatchResult := false
+					for _, tempItem := range tempQueryConditions {
+						if resultItem.ID == tempItem.ID {
+							isMatchResult = true
+							break
+						}
+					}
+					if isMatchResult {
+						// 最新の結果と一致したものだけの集合を作る
+						addQueryConditions = append(addQueryConditions, resultItem)
+					}
+				}
+				// 最終結果に反映
+				resultQueryConditions = addQueryConditions
+			}
+
+		}
+		return err
+	})
+
+	return
+}
+
+func (q *QueryConditionRepo) isDependentDB(queryItem *query.SearchConditionItem) bool {
+	switch queryItem.SearchField.ID {
+	case "query-condition-category-view-value":
+		return false
+	default:
+		return true
+	}
+}
+
+func (q *QueryConditionRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm.QueryMod {
+
+	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
+
+	switch queryItem.SearchField.ID {
+	case "query-condition-pattern-name":
+		if queryItem.Operator == query.Or {
+			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
+		}
+		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
+	case "query-condition-is-disclose":
+		if queryItem.Operator == query.Or {
+			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.IsDisclose+" "+mt+" ?", val)
+		}
+		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.IsDisclose+" "+mt+" ?", val)
+	case "query-condition-disclose-groups":
+		var ids []interface{}
+		json.Unmarshal([]byte(val), &ids)
+		if queryItem.Operator == query.Or {
+			return qm.OrIn("sg.id"+" "+mt+" ?", ids...)
+		}
+		return qm.AndIn("sg.id"+" "+mt+" ?", ids...)
+	default:
+		if queryItem.Operator == query.Or {
+			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
+		}
+		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
+		// queryItem.Operator == and
+	}
+}
+
+func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
+	qslice = []qm.QueryMod{}
+	qslice = append(
+		qslice,
+		qm.Select("distinct query_conditions.*"),
+		qm.InnerJoin("join_query_conditions_staff_groups jqcsg on query_conditions.id = jqcsg.query_conditions_id"),
+		qm.InnerJoin("staff_groups sg on jqcsg.staff_groups_id = sg.id"),
+		qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+		qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true")),
+		qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true")),
+		qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true")),
+		qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+		qm.Where("query_conditions."+sqlboiler.QueryConditionColumns.ID+" IS NOT NULL"),
+	)
+	return
+}
 
 // QueryConditionObjectMap data mapper sqlboiler object to entities object
 func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc entities.QueryCondition) {
