@@ -55,6 +55,8 @@ func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (r
 
 			if q.isDependentDB(queryItem) {
 				queries = q.createQueryModSlice()
+				qmod = qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true)
+
 				// DBに依存する条件が続く場合はまとめてクエリを作成する
 				j := i
 				for ; j < len(queryItems); j++ {
@@ -64,9 +66,8 @@ func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (r
 					}
 				}
 				i = j
-				qmod = qm.Expr(qmod, qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true))
-				queries = append(queries, qmod,
-					qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")))
+
+				queries = append(queries, qmod)
 				fetchedStaffs, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
 				if err == nil {
 					for _, fs := range fetchedStaffs {
@@ -75,7 +76,7 @@ func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (r
 				}
 			} else {
 				for _, item := range allQueryConditions {
-					if queryItem.SearchField.ID == "query-condition-category-view-value" {
+					if queryItem.SearchField.ID == "category-view-value" {
 						switch queryItem.MatchType {
 						case query.Match:
 							if item.Category.Name == queryItem.ConditionValue {
@@ -139,7 +140,7 @@ func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (r
 
 func (q *QueryConditionRepo) isDependentDB(queryItem *query.SearchConditionItem) bool {
 	switch queryItem.SearchField.ID {
-	case "query-condition-category-view-value":
+	case "category-view-value":
 		return false
 	default:
 		return true
@@ -151,23 +152,28 @@ func (q *QueryConditionRepo) createQueryModWhere(queryItem *query.SearchConditio
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
 	switch queryItem.SearchField.ID {
-	case "query-condition-pattern-name":
+	case "pattern-name":
 		if queryItem.Operator == query.Or {
 			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
 		}
 		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
-	case "query-condition-is-disclose":
+	case "is-disclose":
 		if queryItem.Operator == query.Or {
 			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.IsDisclose+" "+mt+" ?", val)
 		}
 		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.IsDisclose+" "+mt+" ?", val)
-	case "query-condition-disclose-groups":
+	case "disclose-groups":
 		var ids []interface{}
 		json.Unmarshal([]byte(val), &ids)
 		if queryItem.Operator == query.Or {
 			return qm.OrIn("sg.id"+" "+mt+" ?", ids...)
 		}
 		return qm.AndIn("sg.id"+" "+mt+" ?", ids...)
+	case "owner":
+		if queryItem.Operator == query.Or {
+			return qm.Or("owner."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
+		}
+		return qm.And("owner."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 	default:
 		if queryItem.Operator == query.Or {
 			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
@@ -184,12 +190,14 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 		qm.Select("distinct query_conditions.*"),
 		qm.InnerJoin("join_query_conditions_staff_groups jqcsg on query_conditions.id = jqcsg.query_conditions_id"),
 		qm.InnerJoin("staff_groups sg on jqcsg.staff_groups_id = sg.id"),
-		qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
-		qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true")),
-		qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true")),
-		qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true")),
-		qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+		qm.InnerJoin("staffs owner on query_conditions.owner_id = owner.id"),
 		qm.Where("query_conditions."+sqlboiler.QueryConditionColumns.ID+" IS NOT NULL"),
+		qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+		qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
+		qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
+		qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
+		qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+		//qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 	)
 	return
 }

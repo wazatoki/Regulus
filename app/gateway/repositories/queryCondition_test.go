@@ -23,26 +23,40 @@ func tearDownQueryConditionTest(con *sqlx.DB) {
 	con.Close()
 }
 
-func createExpectedQueryCondition1Entity() entities.QueryCondition {
+func createExpectedQueryCondition0Entity() entities.QueryCondition {
 	return entities.QueryCondition{
-		ID:          "queryConditionid1",
-		PatternName: "patternName1",
-		Category: entities.Category{
-			Name:      "staff",
-			ViewValue: "利用者",
-			SearchItems: entities.ComplexSearchItems{
-				SearchConditionList: query.StaffSearchConditionList,
-				DisplayItemList:     []query.FieldAttr{},
-				OrderConditionList:  []query.FieldAttr{},
-				Groups:              nil,
-			},
-		},
+		ID:          "queryConditionid0",
+		PatternName: "patternName0",
+		Category:    entities.Categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
 					SearchField:    query.StaffSearchConditionList[0],
-					ConditionValue: "123",
+					ConditionValue: "1",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff1Entity(),
+	}
+}
+
+func createExpectedQueryCondition1Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid1",
+		PatternName: "patternName1",
+		Category:    entities.Categories[0],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffSearchConditionList[0],
+					ConditionValue: "2",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
 				},
@@ -59,22 +73,13 @@ func createExpectedQueryCondition2Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid2",
 		PatternName: "patternName2",
-		Category: entities.Category{
-			Name:      "staff",
-			ViewValue: "利用者",
-			SearchItems: entities.ComplexSearchItems{
-				SearchConditionList: query.StaffSearchConditionList,
-				DisplayItemList:     []query.FieldAttr{},
-				OrderConditionList:  []query.FieldAttr{},
-				Groups:              nil,
-			},
-		},
+		Category:    entities.Categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
 					SearchField:    query.StaffSearchConditionList[0],
-					ConditionValue: "123",
+					ConditionValue: "3",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
 				},
@@ -91,22 +96,13 @@ func createExpectedQueryCondition3Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid3",
 		PatternName: "patternName3",
-		Category: entities.Category{
-			Name:      "staff",
-			ViewValue: "利用者",
-			SearchItems: entities.ComplexSearchItems{
-				SearchConditionList: query.StaffSearchConditionList,
-				DisplayItemList:     []query.FieldAttr{},
-				OrderConditionList:  []query.FieldAttr{},
-				Groups:              nil,
-			},
-		},
+		Category:    entities.Categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
 					SearchField:    query.StaffSearchConditionList[0],
-					ConditionValue: "123",
+					ConditionValue: "4",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
 				},
@@ -116,6 +112,144 @@ func createExpectedQueryCondition3Entity() entities.QueryCondition {
 		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
 		IsDisclose:     false,
 		Owner:          createExpectedStaff1Entity(),
+	}
+}
+
+func createExpectedQueryCondition4Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid4",
+		PatternName: "patternName4",
+		Category:    entities.Categories[0],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffSearchConditionList[0],
+					ConditionValue: "5",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff1Entity(),
+	}
+}
+
+func createExpectedQueryCondition5Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid5",
+		PatternName: "patternName5",
+		Category:    entities.Categories[1],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffGroupSearchConditionList[0],
+					ConditionValue: "1",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff2Entity(),
+	}
+}
+
+func createExpectedQueryCondition6Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid6",
+		PatternName: "patternName6",
+		Category:    entities.Categories[1],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffGroupSearchConditionList[0],
+					ConditionValue: "2",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff2Entity(),
+	}
+}
+
+func createExpectedQueryCondition7Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid7",
+		PatternName: "patternName7",
+		Category:    entities.Categories[1],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffGroupSearchConditionList[0],
+					ConditionValue: "3",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff2Entity(),
+	}
+}
+
+func createExpectedQueryCondition8Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid8",
+		PatternName: "patternName8",
+		Category:    entities.Categories[1],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffGroupSearchConditionList[0],
+					ConditionValue: "4",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff2Entity(),
+	}
+}
+
+func createExpectedQueryCondition9Entity() entities.QueryCondition {
+	return entities.QueryCondition{
+		ID:          "queryConditionid9",
+		PatternName: "patternName9",
+		Category:    entities.Categories[1],
+		ConditionData: query.ConditionData{
+			DisplayItemList: []query.FieldAttr{},
+			SearchConditionList: []query.SearchConditionItem{
+				{
+					SearchField:    query.StaffGroupSearchConditionList[0],
+					ConditionValue: "5",
+					MatchType:      query.Pertialmatch,
+					Operator:       query.And,
+				},
+			},
+			OrderConditionList: []query.OrderConditionItem{},
+		},
+		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		IsDisclose:     false,
+		Owner:          createExpectedStaff2Entity(),
 	}
 }
 
@@ -163,20 +297,17 @@ func TestQueryConditionRepo_SelectAll(t *testing.T) {
 		database db
 	}
 	tests := []struct {
-		name                string
-		fields              fields
-		wantQueryConditions []entities.QueryCondition
-		wantErr             bool
+		name    string
+		fields  fields
+		want    int
+		wantErr bool
 	}{
 		{
-			name: "it should get 3entities as select all ",
+			name: "it should get 10entities as select all ",
 			fields: fields{
 				database: createDB(),
 			},
-			wantQueryConditions: []entities.QueryCondition{
-				createExpectedQueryCondition1Entity(),
-				createExpectedQueryCondition2Entity(),
-			},
+			want:    10,
 			wantErr: false,
 		},
 	}
@@ -195,7 +326,68 @@ func TestQueryConditionRepo_SelectAll(t *testing.T) {
 				t.Errorf("QueryConditionRepo.SelectAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if diff := cmp.Diff(gotQueryConditions, tt.wantQueryConditions); diff != "" {
+			if len(gotQueryConditions) != tt.want {
+				t.Errorf("want = %v, got length = %v", tt.want, len(gotQueryConditions))
+			}
+		})
+	}
+}
+
+func TestQueryConditionRepo_Select(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		queryItems []*query.SearchConditionItem
+	}
+	tests := []struct {
+		name                      string
+		fields                    fields
+		args                      args
+		wantResultQueryConditions []entities.QueryCondition
+		wantErr                   bool
+	}{
+		{
+			name: "should get sprcified entity as select by condition",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryItems: []*query.SearchConditionItem{
+					{
+						SearchField:    query.QueryConditionSearchConditionList[0],
+						ConditionValue: "5",
+						MatchType:      query.Pertialmatch,
+						Operator:       query.And,
+					},
+					{
+						SearchField:    query.QueryConditionSearchConditionList[4],
+						ConditionValue: "2",
+						MatchType:      query.Pertialmatch,
+						Operator:       query.And,
+					},
+				},
+			},
+			wantResultQueryConditions: []entities.QueryCondition{
+				createExpectedQueryCondition5Entity(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			gotResultQueryConditions, err := q.Select(tt.args.queryItems...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.Select() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			// if !reflect.DeepEqual(gotResultQueryConditions, tt.wantResultQueryConditions) {
+			// 	t.Errorf("QueryConditionRepo.Select() = %v, want %v", gotResultQueryConditions, tt.wantResultQueryConditions)
+			// }
+			if diff := cmp.Diff(gotResultQueryConditions, tt.wantResultQueryConditions); diff != "" {
 				t.Errorf("differs = %s", diff)
 			}
 		})
