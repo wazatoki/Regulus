@@ -444,3 +444,57 @@ func TestQueryConditionRepo_SelectByID(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		ids []string
+	}
+	tests := []struct {
+		name                string
+		fields              fields
+		args                args
+		wantQueryConditions []entities.QueryCondition
+		wantErr             bool
+	}{
+		{
+			name: "should get sprcified entity as select by ids",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				ids: []string{
+					"queryConditionid0",
+					"queryConditionid1",
+				},
+			},
+			wantQueryConditions: []entities.QueryCondition{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			gotQueryConditions, err := q.SelectByIDs(tt.args.ids)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.SelectByIDs() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotQueryConditions, tt.wantQueryConditions) {
+				t.Errorf("QueryConditionRepo.SelectByIDs() = %v, want %v", gotQueryConditions, tt.wantQueryConditions)
+			}
+		})
+	}
+}

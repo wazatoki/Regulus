@@ -13,6 +13,44 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
+// SelectByIDs select staff data by id list from database
+func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []entities.QueryCondition, err error) {
+	queryConditions = []entities.QueryCondition{}
+	if len(ids) == 0 {
+		return nil, errors.New("id list must be required")
+	}
+
+	var convertedIDs []interface{} = make([]interface{}, len(ids))
+	for i, d := range ids {
+		convertedIDs[i] = d
+	}
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where(sqlboiler.QueryConditionColumns.Del+" !=?", true),
+			qm.AndIn(sqlboiler.QueryConditionColumns.ID+" in ?", convertedIDs...),
+			qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+			qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
+			qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
+			qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
+			qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+		}
+
+		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+
+			for _, fq := range fetchedQueryConditions {
+				queryConditions = append(queryConditions, QueryConditionObjectMap(fq))
+			}
+		}
+
+		return err
+	})
+
+	return
+}
+
 // SelectByID select staaff data by id from database
 func (q *QueryConditionRepo) SelectByID(id string) (queryCondition entities.QueryCondition, err error) {
 	if id == "" {
