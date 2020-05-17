@@ -498,3 +498,92 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryConditionRepo_Insert(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		queryCondition entities.QueryCondition
+	}
+	tests := []struct {
+		name       string
+		fields     fields
+		args       args
+		wantEntity entities.QueryCondition
+		wantErr    bool
+	}{
+		{
+			name: "should insert to database as called insert",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryCondition: entities.QueryCondition{
+					PatternName:    "testPatternName",
+					Category:       entities.Categories[0],
+					IsDisclose:     true,
+					DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+					ConditionData: query.ConditionData{
+						DisplayItemList: []query.FieldAttr{},
+						SearchConditionList: []query.SearchConditionItem{
+							{
+								SearchField:    query.StaffSearchConditionList[0],
+								ConditionValue: "aaa",
+								MatchType:      query.Match,
+								Operator:       query.And,
+							},
+							{
+								SearchField:    query.StaffSearchConditionList[1],
+								ConditionValue: "bbb",
+								MatchType:      query.Unmatch,
+								Operator:       query.And,
+							},
+						},
+						OrderConditionList: []query.OrderConditionItem{},
+					},
+					Owner: createExpectedStaff1Entity(),
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			con := setUpStaffTest()
+			defer tearDownStaffTest(con)
+			setupTestData()
+			tt.wantEntity = entities.QueryCondition{
+				PatternName:    tt.args.queryCondition.PatternName,
+				Category:       tt.args.queryCondition.Category,
+				IsDisclose:     tt.args.queryCondition.IsDisclose,
+				ConditionData:  tt.args.queryCondition.ConditionData,
+				DiscloseGroups: tt.args.queryCondition.DiscloseGroups,
+				Owner:          tt.args.queryCondition.Owner,
+			}
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			gotID, err := q.Insert(tt.args.queryCondition)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			tt.wantEntity.ID = gotID
+			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", tt.wantEntity.ID),
+				qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+				qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+			).One(context.Background(), con)
+			resultEntity := QueryConditionObjectMap(got)
+
+			if diff := cmp.Diff(resultEntity, tt.wantEntity); diff != "" {
+				t.Errorf("differs = %s", diff)
+			}
+		})
+	}
+}

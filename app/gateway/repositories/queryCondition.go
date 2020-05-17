@@ -7,11 +7,93 @@ import (
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
+	"regulus/app/utils"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// Insert insert data to database
+func (q *QueryConditionRepo) Insert(queryCondition entities.QueryCondition) (id string, err error) {
+	id = ""
+	sqlQueryCondition := &sqlboiler.QueryCondition{
+		ID:           utils.CreateID(),
+		CategoryName: queryCondition.Category.Name,
+		IsDisclose:   queryCondition.IsDisclose,
+		OwnerID:      queryCondition.Owner.ID,
+		PatternName:  queryCondition.PatternName,
+	}
+
+	sqlQueryDisplayItems := make([]*sqlboiler.QueryDisplayItem,
+		len(queryCondition.ConditionData.DisplayItemList))
+	sqlQuerySearchConditionItems := make([]*sqlboiler.QuerySearchConditionItem,
+		len(queryCondition.ConditionData.SearchConditionList))
+	sqlQueryOrderConditionItems := make([]*sqlboiler.QueryOrderConditionItem,
+		len(queryCondition.ConditionData.OrderConditionList))
+	sqlDiscloseGroups := make([]*sqlboiler.StaffGroup, len(queryCondition.DiscloseGroups))
+
+	for i, d := range queryCondition.ConditionData.DisplayItemList {
+		sqlQueryDisplayItems[i] = &sqlboiler.QueryDisplayItem{
+			ID:                utils.CreateID(),
+			QueryConditionsID: sqlQueryCondition.ID,
+			DisplayFieldID:    d.ID,
+			RowOrder:          i,
+		}
+	}
+
+	for i, s := range queryCondition.ConditionData.SearchConditionList {
+		sqlQuerySearchConditionItems[i] = &sqlboiler.QuerySearchConditionItem{
+			ID:                utils.CreateID(),
+			QueryConditionsID: sqlQueryCondition.ID,
+			SearchFieldID:     s.SearchField.ID,
+			ConditionValue:    s.ConditionValue,
+			MatchType:         string(s.MatchType),
+			Operator:          string(s.Operator),
+			RowOrder:          i,
+		}
+	}
+
+	for i, o := range queryCondition.ConditionData.OrderConditionList {
+		sqlQueryOrderConditionItems[i] = &sqlboiler.QueryOrderConditionItem{
+			ID:                utils.CreateID(),
+			QueryConditionsID: sqlQueryCondition.ID,
+			OrderFieldID:      o.OrderField.ID,
+			OrderFieldKeyWord: string(o.OrderFieldKeyWord),
+			RowOrder:          i,
+		}
+	}
+
+	for i, g := range queryCondition.DiscloseGroups {
+		sqlDiscloseGroups[i] = &sqlboiler.StaffGroup{
+			ID: g.ID,
+		}
+	}
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+		var err error
+
+		err = sqlQueryCondition.Insert(context.Background(), db.DB, boil.Infer())
+		for _, d := range sqlQueryDisplayItems {
+			err = d.Insert(context.Background(), db.DB, boil.Infer())
+		}
+		for _, s := range sqlQuerySearchConditionItems {
+			err = s.Insert(context.Background(), db.DB, boil.Infer())
+		}
+		for _, o := range sqlQueryOrderConditionItems {
+			err = o.Insert(context.Background(), db.DB, boil.Infer())
+		}
+		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
+		return err
+	})
+
+	if err == nil {
+		id = sqlQueryCondition.ID
+	}
+
+	return
+}
 
 // SelectByIDs select staff data by id list from database
 func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []entities.QueryCondition, err error) {
