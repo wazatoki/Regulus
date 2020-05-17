@@ -361,8 +361,8 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 						Operator:       query.And,
 					},
 					{
-						SearchField:    query.QueryConditionSearchConditionList[4],
-						ConditionValue: "2",
+						SearchField:    query.QueryConditionSearchConditionList[1],
+						ConditionValue: "利用者グ",
 						MatchType:      query.Pertialmatch,
 						Operator:       query.And,
 					},

@@ -28,6 +28,16 @@ var Categories = []Category{
 			Groups:              nil,
 		},
 	},
+	{
+		Name:      "query-condition",
+		ViewValue: "検索条件管理",
+		SearchItems: ComplexSearchItems{
+			SearchConditionList: query.StaffGroupSearchConditionList,
+			DisplayItemList:     []query.FieldAttr{},
+			OrderConditionList:  []query.FieldAttr{},
+			Groups:              nil,
+		},
+	},
 }
 
 /*
