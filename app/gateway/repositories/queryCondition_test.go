@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"reflect"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
@@ -376,6 +377,11 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
@@ -384,11 +390,56 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 				t.Errorf("QueryConditionRepo.Select() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			// if !reflect.DeepEqual(gotResultQueryConditions, tt.wantResultQueryConditions) {
-			// 	t.Errorf("QueryConditionRepo.Select() = %v, want %v", gotResultQueryConditions, tt.wantResultQueryConditions)
-			// }
 			if diff := cmp.Diff(gotResultQueryConditions, tt.wantResultQueryConditions); diff != "" {
 				t.Errorf("differs = %s", diff)
+			}
+		})
+	}
+}
+
+func TestQueryConditionRepo_SelectByID(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name               string
+		fields             fields
+		args               args
+		wantQueryCondition entities.QueryCondition
+		wantErr            bool
+	}{
+		{
+			name: "should get sprcified entity as select by id",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				id: "queryConditionid0",
+			},
+			wantQueryCondition: createExpectedQueryCondition0Entity(),
+			wantErr:            false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			gotQueryCondition, err := q.SelectByID(tt.args.id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.SelectByID() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotQueryCondition, tt.wantQueryCondition) {
+				t.Errorf("QueryConditionRepo.SelectByID() = %v, want %v", gotQueryCondition, tt.wantQueryCondition)
 			}
 		})
 	}

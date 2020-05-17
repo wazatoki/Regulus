@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
@@ -11,6 +12,33 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
+
+// SelectByID select staaff data by id from database
+func (q *QueryConditionRepo) SelectByID(id string) (queryCondition entities.QueryCondition, err error) {
+	if id == "" {
+		return entities.QueryCondition{}, errors.New("id must be required")
+	}
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where(sqlboiler.QueryConditionColumns.Del+" !=?", true),
+			qm.And(sqlboiler.QueryConditionColumns.ID+" =?", id),
+			qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+			qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
+			qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
+			qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
+			qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+		}
+		fetchedQueryCondition, err := sqlboiler.QueryConditions(queries...).One(context.Background(), db.DB)
+		if err == nil {
+			queryCondition = QueryConditionObjectMap(fetchedQueryCondition)
+		}
+
+		return err
+	})
+
+	return
+}
 
 // SelectAll select all query condition data without not del from database
 func (q *QueryConditionRepo) SelectAll() (queryConditions []entities.QueryCondition, err error) {
