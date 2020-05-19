@@ -15,6 +15,106 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
+// Update update data to database
+func (q *QueryConditionRepo) Update(queryCondition entities.QueryCondition) (err error) {
+	if queryCondition.ID == "" {
+		return errors.New("ID must be required")
+	}
+
+	sqlQueryCondition := &sqlboiler.QueryCondition{
+		ID:           queryCondition.ID,
+		CategoryName: queryCondition.Category.Name,
+		IsDisclose:   queryCondition.IsDisclose,
+		OwnerID:      queryCondition.Owner.ID,
+		PatternName:  queryCondition.PatternName,
+	}
+	sqlQueryDisplayItems := make([]*sqlboiler.QueryDisplayItem,
+		len(queryCondition.ConditionData.DisplayItemList))
+	sqlQuerySearchConditionItems := make([]*sqlboiler.QuerySearchConditionItem,
+		len(queryCondition.ConditionData.SearchConditionList))
+	sqlQueryOrderConditionItems := make([]*sqlboiler.QueryOrderConditionItem,
+		len(queryCondition.ConditionData.OrderConditionList))
+	sqlDiscloseGroups := make([]*sqlboiler.StaffGroup, len(queryCondition.DiscloseGroups))
+	for i, d := range queryCondition.ConditionData.DisplayItemList {
+		sqlQueryDisplayItems[i] = &sqlboiler.QueryDisplayItem{
+			ID:                utils.CreateID(),
+			QueryConditionsID: sqlQueryCondition.ID,
+			DisplayFieldID:    d.ID,
+			RowOrder:          i,
+		}
+	}
+
+	for i, s := range queryCondition.ConditionData.SearchConditionList {
+		sqlQuerySearchConditionItems[i] = &sqlboiler.QuerySearchConditionItem{
+			ID:                utils.CreateID(),
+			QueryConditionsID: sqlQueryCondition.ID,
+			SearchFieldID:     s.SearchField.ID,
+			ConditionValue:    s.ConditionValue,
+			MatchType:         string(s.MatchType),
+			Operator:          string(s.Operator),
+			RowOrder:          i,
+		}
+	}
+
+	for i, o := range queryCondition.ConditionData.OrderConditionList {
+		sqlQueryOrderConditionItems[i] = &sqlboiler.QueryOrderConditionItem{
+			ID:                utils.CreateID(),
+			QueryConditionsID: sqlQueryCondition.ID,
+			OrderFieldID:      o.OrderField.ID,
+			OrderFieldKeyWord: string(o.OrderFieldKeyWord),
+			RowOrder:          i,
+		}
+	}
+
+	for i, g := range queryCondition.DiscloseGroups {
+		sqlDiscloseGroups[i] = &sqlboiler.StaffGroup{
+			ID: g.ID,
+		}
+	}
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+		var err error
+
+		/*
+		 元の検索条件を論理削除
+		*/
+		displayUpdateCols := map[string]interface{}{
+			sqlboiler.QueryDisplayItemColumns.Del: true,
+		}
+		displayItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
+		_, err = sqlboiler.QueryDisplayItems(displayItemQuery).UpdateAll(context.Background(), db.DB, displayUpdateCols)
+
+		searchUpdateCols := map[string]interface{}{
+			sqlboiler.QuerySearchConditionItemColumns.Del: true,
+		}
+		searchItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
+		_, err = sqlboiler.QuerySearchConditionItems(searchItemQuery).UpdateAll(context.Background(), db.DB, searchUpdateCols)
+
+		orderUpdateCols := map[string]interface{}{
+			sqlboiler.QueryOrderConditionItemColumns.Del: true,
+		}
+		orderItemQuery := qm.Where(sqlboiler.QueryOrderConditionItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
+		_, err = sqlboiler.QueryOrderConditionItems(orderItemQuery).UpdateAll(context.Background(), db.DB, orderUpdateCols)
+
+		// update
+		_, err = sqlQueryCondition.Update(context.Background(), db.DB, boil.Infer())
+		for _, d := range sqlQueryDisplayItems {
+			err = d.Insert(context.Background(), db.DB, boil.Infer())
+		}
+		for _, s := range sqlQuerySearchConditionItems {
+			err = s.Insert(context.Background(), db.DB, boil.Infer())
+		}
+		for _, o := range sqlQueryOrderConditionItems {
+			err = o.Insert(context.Background(), db.DB, boil.Infer())
+		}
+		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
+		return err
+
+	})
+
+	return err
+}
+
 // Insert insert data to database
 func (q *QueryConditionRepo) Insert(queryCondition entities.QueryCondition) (id string, err error) {
 	id = ""

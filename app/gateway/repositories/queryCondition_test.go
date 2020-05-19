@@ -587,3 +587,69 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryConditionRepo_Update(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		queryCondition entities.QueryCondition
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should update to database as called update",
+			fields: fields{
+				database: createDB(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpStaffGroupTest()
+			defer tearDownStaffGroupTest(con)
+			setupTestData()
+
+			beforeQueryCondition := createExpectedQueryCondition0Entity()
+			beforeQueryCondition.PatternName = "changed pattern name"
+			beforeQueryCondition.ConditionData = query.ConditionData{
+				DisplayItemList: []query.FieldAttr{},
+				SearchConditionList: []query.SearchConditionItem{
+					{
+						SearchField:    query.StaffSearchConditionList[1],
+						ConditionValue: "2",
+						MatchType:      query.Unmatch,
+						Operator:       query.And,
+					},
+				},
+				OrderConditionList: []query.OrderConditionItem{},
+			}
+			beforeQueryCondition.IsDisclose = true
+			tt.args.queryCondition = beforeQueryCondition
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			if err := q.Update(tt.args.queryCondition); (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", beforeQueryCondition.ID),
+				qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+				qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+			).One(context.Background(), con)
+			resultEntity := QueryConditionObjectMap(got)
+
+			if diff := cmp.Diff(resultEntity, beforeQueryCondition); diff != "" {
+				t.Errorf("differs = %s", diff)
+			}
+		})
+	}
+}
