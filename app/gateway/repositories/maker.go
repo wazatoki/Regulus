@@ -11,7 +11,6 @@ import (
 	"regulus/app/domain/vo/query"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
@@ -163,7 +162,7 @@ func (m *MakerRepo) Dalete(id string) error {
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
 		maker, _ := sqlboiler.FindMaker(context.Background(), db.DB, id)
-		maker.Del = null.BoolFrom(true)
+		maker.Del = true
 		var err error
 		_, err = maker.Update(context.Background(), db.DB, boil.Infer())
 		return err

@@ -9,7 +9,6 @@ import (
 	"regulus/app/utils"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
@@ -22,7 +21,7 @@ func (g *StaffGroupRepo) Dalete(id string) error {
 
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
 		sqlStaffGroup, _ := sqlboiler.FindStaffGroup(context.Background(), db.DB, id)
-		sqlStaffGroup.Del = null.BoolFrom(true)
+		sqlStaffGroup.Del = true
 		var err error
 		_, err = sqlStaffGroup.Update(context.Background(), db.DB, boil.Infer())
 		return err

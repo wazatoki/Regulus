@@ -25,7 +25,7 @@ import (
 // Maker is an object representing the database table.
 type Maker struct {
 	ID            string      `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Del           null.Bool   `boil:"del" json:"del,omitempty" toml:"del" yaml:"del,omitempty"`
+	Del           bool        `boil:"del" json:"del" toml:"del" yaml:"del"`
 	CreatedAt     null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
 	CreStaffID    null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt     null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
@@ -56,28 +56,14 @@ var MakerColumns = struct {
 
 // Generated where
 
-type whereHelpernull_Bool struct{ field string }
+type whereHelperbool struct{ field string }
 
-func (w whereHelpernull_Bool) EQ(x null.Bool) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Bool) NEQ(x null.Bool) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Bool) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Bool) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-func (w whereHelpernull_Bool) LT(x null.Bool) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Bool) LTE(x null.Bool) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Bool) GT(x null.Bool) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Bool) GTE(x null.Bool) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
+func (w whereHelperbool) EQ(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperbool) NEQ(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperbool) LT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperbool) LTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperbool) GT(x bool) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperbool) GTE(x bool) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
 
 type whereHelpernull_String struct{ field string }
 
@@ -104,7 +90,7 @@ func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
 
 var MakerWhere = struct {
 	ID            whereHelperstring
-	Del           whereHelpernull_Bool
+	Del           whereHelperbool
 	CreatedAt     whereHelpernull_Time
 	CreStaffID    whereHelpernull_String
 	UpdatedAt     whereHelpernull_Time
@@ -112,7 +98,7 @@ var MakerWhere = struct {
 	Name          whereHelperstring
 }{
 	ID:            whereHelperstring{field: "\"makers\".\"id\""},
-	Del:           whereHelpernull_Bool{field: "\"makers\".\"del\""},
+	Del:           whereHelperbool{field: "\"makers\".\"del\""},
 	CreatedAt:     whereHelpernull_Time{field: "\"makers\".\"created_at\""},
 	CreStaffID:    whereHelpernull_String{field: "\"makers\".\"cre_staff_id\""},
 	UpdatedAt:     whereHelpernull_Time{field: "\"makers\".\"updated_at\""},

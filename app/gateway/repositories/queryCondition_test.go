@@ -551,8 +551,8 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			con := setUpStaffTest()
-			defer tearDownStaffTest(con)
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
 			setupTestData()
 			tt.wantEntity = entities.QueryCondition{
 				PatternName:    tt.args.queryCondition.PatternName,
@@ -573,6 +573,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 			}
 			tt.wantEntity.ID = gotID
 			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", tt.wantEntity.ID),
+				qm.And("del != ?", true),
 				qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
 				qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
 				qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
@@ -611,8 +612,8 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			con := setUpStaffGroupTest()
-			defer tearDownStaffGroupTest(con)
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
 			setupTestData()
 
 			beforeQueryCondition := createExpectedQueryCondition0Entity()
@@ -639,6 +640,7 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 				t.Errorf("QueryConditionRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", beforeQueryCondition.ID),
+				qm.And("del != ?", true),
 				qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
 				qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
 				qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
@@ -649,6 +651,58 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 
 			if diff := cmp.Diff(resultEntity, beforeQueryCondition); diff != "" {
 				t.Errorf("differs = %s", diff)
+			}
+		})
+	}
+}
+
+func TestQueryConditionRepo_Dalete(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "should return nil as called delete",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				id: "queryConditionid1",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			if err := q.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", tt.args.id),
+				qm.And("del != ?", true),
+				qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
+				qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
+				qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
+			).One(context.Background(), con)
+			if got != nil {
+				t.Errorf("id: %v is not deleted. got is %v", tt.args.id, got.Del)
 			}
 		})
 	}

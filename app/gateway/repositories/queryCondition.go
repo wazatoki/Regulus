@@ -15,6 +15,26 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
+// Dalete delete data to database
+func (q *QueryConditionRepo) Dalete(id string) error {
+	if id == "" {
+		return errors.New("id must be required")
+	}
+
+	err := q.database.WithDbContext(func(db *sqlx.DB) error {
+
+		updateCols := map[string]interface{}{
+			sqlboiler.QueryConditionColumns.Del: true,
+		}
+		query := qm.Where(sqlboiler.QueryConditionColumns.ID+" = ?", id)
+		_, err := sqlboiler.QueryConditions(query).UpdateAll(context.Background(), db.DB, updateCols)
+
+		return err
+	})
+
+	return err
+}
+
 // Update update data to database
 func (q *QueryConditionRepo) Update(queryCondition entities.QueryCondition) (err error) {
 	if queryCondition.ID == "" {

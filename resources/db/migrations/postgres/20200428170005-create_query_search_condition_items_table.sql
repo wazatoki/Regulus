@@ -2,7 +2,7 @@
 -- +migrate Up
 create table query_search_condition_items (
 	id text primary key
-	, del boolean default false
+	, del boolean not null default false
 	, created_at timestamp
 	, cre_staff_id text
 	, updated_at timestamp

@@ -2,7 +2,7 @@
 -- +migrate Up
 create table query_conditions (
 	id text primary key
-	, del boolean default false
+	, del boolean not null default false
 	, created_at timestamp
 	, cre_staff_id text REFERENCES staffs (id)
 	, updated_at timestamp

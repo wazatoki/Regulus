@@ -25,7 +25,7 @@ import (
 // QueryDisplayItem is an object representing the database table.
 type QueryDisplayItem struct {
 	ID                string      `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Del               null.Bool   `boil:"del" json:"del,omitempty" toml:"del" yaml:"del,omitempty"`
+	Del               bool        `boil:"del" json:"del" toml:"del" yaml:"del"`
 	CreatedAt         null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
 	CreStaffID        null.String `boil:"cre_staff_id" json:"cre_staff_id,omitempty" toml:"cre_staff_id" yaml:"cre_staff_id,omitempty"`
 	UpdatedAt         null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
@@ -80,7 +80,7 @@ func (w whereHelperint) IN(slice []int) qm.QueryMod {
 
 var QueryDisplayItemWhere = struct {
 	ID                whereHelperstring
-	Del               whereHelpernull_Bool
+	Del               whereHelperbool
 	CreatedAt         whereHelpernull_Time
 	CreStaffID        whereHelpernull_String
 	UpdatedAt         whereHelpernull_Time
@@ -90,7 +90,7 @@ var QueryDisplayItemWhere = struct {
 	RowOrder          whereHelperint
 }{
 	ID:                whereHelperstring{field: "\"query_display_items\".\"id\""},
-	Del:               whereHelpernull_Bool{field: "\"query_display_items\".\"del\""},
+	Del:               whereHelperbool{field: "\"query_display_items\".\"del\""},
 	CreatedAt:         whereHelpernull_Time{field: "\"query_display_items\".\"created_at\""},
 	CreStaffID:        whereHelpernull_String{field: "\"query_display_items\".\"cre_staff_id\""},
 	UpdatedAt:         whereHelpernull_Time{field: "\"query_display_items\".\"updated_at\""},

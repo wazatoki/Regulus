@@ -11,7 +11,6 @@ import (
 	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
@@ -24,7 +23,7 @@ func (s *StaffRepo) Dalete(id string) error {
 
 	err := s.database.WithDbContext(func(db *sqlx.DB) error {
 		sqlStaff, _ := sqlboiler.FindStaff(context.Background(), db.DB, id)
-		sqlStaff.Del = null.BoolFrom(true)
+		sqlStaff.Del = true
 		var err error
 		_, err = sqlStaff.Update(context.Background(), db.DB, boil.Infer())
 		return err
