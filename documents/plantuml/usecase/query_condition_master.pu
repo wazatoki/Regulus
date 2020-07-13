@@ -1,0 +1,35 @@
+@startuml maker_master
+
+title query condition master
+
+left to right direction
+
+rectangle system {
+    (検索)
+    (更新フォームopen)
+    (更新)
+    
+    (削除)
+
+    (新規作成フォームopen)
+    (新規作成)
+    
+}
+
+:master_admin_user: -- (新規作成フォームopen)
+(新規作成フォームopen) -> (新規作成) : extend
+
+:master_admin_user: -- (検索)
+(検索) -> (更新フォームopen) : extend
+(更新フォームopen) -> (更新) : extend
+
+(検索) -> (削除) : extend
+
+(新規作成フォームopen) -- :db:
+(更新フォームopen) -- :db:
+(新規作成) -- :db:
+(更新) -- :db:
+(削除) -- :db:
+(検索) -- :db:
+
+@enduml
