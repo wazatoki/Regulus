@@ -19,20 +19,10 @@ export class ComplexSearchConditionService {
     return this.http.get<ComplexSearchItems>('/complexSearchCondition/complexSearchItems')
   }
 
-  findById(id: string): Observable<SaveData> {
-    const data: Map<string, string> = new Map();
-    data.set('id', id);
-    return this.http.get<SaveData>( '/complexSearchCondition/id', data );
-  }
-
   findByCondition(condition: ConditionData): Observable<SaveData[]> {
     const data: Map<string, string> = new Map();
     data.set('condition',JSON.stringify(condition));
     return this.http.get<SaveData[]>('/complexSearchCondition', data);
-  }
-
-  findAll(): Observable<SaveData[]> {
-    return this.http.get<SaveData[]>( '/complexSearchCondition' );
   }
 
   add(data: SaveData): Observable<SaveData> {

@@ -339,7 +339,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*query.SearchConditionItem
+		queryItems []query.SearchConditionItem
 	}
 	tests := []struct {
 		name                      string
@@ -354,7 +354,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.SearchConditionItem{
+				queryItems: []query.SearchConditionItem{
 					{
 						SearchField:    query.QueryConditionSearchConditionList[0],
 						ConditionValue: "5",
@@ -566,7 +566,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			gotID, err := q.Insert(tt.args.queryCondition)
+			gotID, err := q.Insert(&tt.args.queryCondition)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -636,7 +636,7 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			if err := q.Update(tt.args.queryCondition); (err != nil) != tt.wantErr {
+			if err := q.Update(&tt.args.queryCondition); (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", beforeQueryCondition.ID),
@@ -689,7 +689,7 @@ func TestQueryConditionRepo_Dalete(t *testing.T) {
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			if err := q.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+			if err := q.Delete(tt.args.id); (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 

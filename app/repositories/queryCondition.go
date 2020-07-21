@@ -15,8 +15,8 @@ import (
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
-// Dalete delete data to database
-func (q *QueryConditionRepo) Dalete(id string) error {
+// Delete delete data to database
+func (q *QueryConditionRepo) Delete(id string) error {
 	if id == "" {
 		return errors.New("id must be required")
 	}
@@ -36,7 +36,7 @@ func (q *QueryConditionRepo) Dalete(id string) error {
 }
 
 // Update update data to database
-func (q *QueryConditionRepo) Update(queryCondition entities.QueryCondition) (err error) {
+func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (err error) {
 	if queryCondition.ID == "" {
 		return errors.New("ID must be required")
 	}
@@ -136,7 +136,7 @@ func (q *QueryConditionRepo) Update(queryCondition entities.QueryCondition) (err
 }
 
 // Insert insert data to database
-func (q *QueryConditionRepo) Insert(queryCondition entities.QueryCondition) (id string, err error) {
+func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id string, err error) {
 	id = ""
 	sqlQueryCondition := &sqlboiler.QueryCondition{
 		ID:           utils.CreateID(),
@@ -300,7 +300,7 @@ func (q *QueryConditionRepo) SelectAll() (queryConditions []entities.QueryCondit
 }
 
 // Select select query condition data by condition from database
-func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (resultQueryConditions []entities.QueryCondition, err error) {
+func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []entities.QueryCondition, err error) {
 	tempQueryConditions := []entities.QueryCondition{}
 	addQueryConditions := []entities.QueryCondition{}
 	var allQueryConditions []entities.QueryCondition
@@ -406,7 +406,7 @@ func (q *QueryConditionRepo) Select(queryItems ...*query.SearchConditionItem) (r
 	return
 }
 
-func (q *QueryConditionRepo) isDependentDB(queryItem *query.SearchConditionItem) bool {
+func (q *QueryConditionRepo) isDependentDB(queryItem query.SearchConditionItem) bool {
 	switch queryItem.SearchField.ID {
 	case "category-view-value":
 		return false
@@ -415,7 +415,7 @@ func (q *QueryConditionRepo) isDependentDB(queryItem *query.SearchConditionItem)
 	}
 }
 
-func (q *QueryConditionRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm.QueryMod {
+func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 

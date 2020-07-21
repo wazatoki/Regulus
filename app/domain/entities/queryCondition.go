@@ -32,7 +32,7 @@ var Categories = []Category{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
 		SearchItems: ComplexSearchItems{
-			SearchConditionList: query.StaffGroupSearchConditionList,
+			SearchConditionList: query.QueryConditionSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
 			Groups:              nil,

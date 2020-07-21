@@ -76,26 +76,6 @@ describe('ComplexSearchConditionService', () => {
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/complexSearchItems');
   });
 
-  it('should call httpService.get with /complexSearchCondition/id and id when called findById method', () => {
-    const testData: SaveData = createTestInstanceSaveData();
-    complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
-    httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData);
-    httpServiceSpy.get.and.returnValue(stubValue);
-
-    let result: SaveData;
-
-    complexSearchConditionService.findById('saveID1').subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(testData);
-
-    const id: Map<string, string> = new Map();
-    id.set('id', 'saveID1');
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/id', id);
-  });
-
   it('should call httpService.get with /complexSearchCondition and condition when called findByCondition method', () => {
     const testData: SaveData[] = createTestArraySaveData();
     complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
@@ -115,24 +95,6 @@ describe('ComplexSearchConditionService', () => {
     const data: Map<string, string> = new Map();
     data.set('condition', JSON.stringify(condition));
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition', data);
-  });
-
-  it('should call httpService.get with /complexSearchCondition when called findAll method', () => {
-    const testData: SaveData[] = createTestArraySaveData();
-    complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
-    httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData);
-    httpServiceSpy.get.and.returnValue(stubValue);
-
-    let result: SaveData[];
-
-    complexSearchConditionService.findAll().subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(testData);
-
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition');
   });
 
   it('should call httpService.post with /complexSearchCondition when called add method', () => {

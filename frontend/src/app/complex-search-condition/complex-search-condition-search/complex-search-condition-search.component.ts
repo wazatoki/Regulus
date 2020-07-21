@@ -1,8 +1,13 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import { ComplexSearchDialogComponent } from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 import { SaveData } from 'src/app/services/models/search/save-data';
-import { ConditionData, splitStrings } from 'src/app/services/models/search/condition-data';
+import { ConditionData, mapCondition, splitStrings } from 'src/app/services/models/search/condition-data';
 import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
+import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
 
 @Component({
   selector: 'app-complex-search-condition-search',
@@ -12,8 +17,22 @@ import { ComplexSearchService } from 'src/app/services/share/complex-search.serv
 export class ComplexSearchConditionSearchComponent implements OnInit {
 
   private condition: ConditionData;
+  private complexSearchSubscription: Subscription;
+  private saveData: SaveData;
+  private dialogRef: MatDialogRef<ComplexSearchDialogComponent>;
 
   @Output() fetched: EventEmitter<SaveData[]> = new EventEmitter();
+
+  openComplexSearch() {
+    this.complexSearchConditionService.findComplexSearchItems().subscribe((data: ComplexSearchItems) => {
+      const aData: any = data;
+      aData.saveData = this.saveData;
+      // aData.saveData = this.testData(); // 検証用
+      this.dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
+        data: aData,
+      });
+    });
+  }
 
   onSearch(searchStrings: string) {
 
@@ -29,12 +48,30 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
       }
     );
   }
+
+  ngOnDestroy() {
+    // prevent memory leak when component destroyed
+    this.complexSearchSubscription.unsubscribe();
+  }
+
+  defineDialogSearch() {
+    // 検索条件設定ダイアログで検索ボタンをクリックしたら検索条件を変更して検索を実行する。
+    this.complexSearchSubscription = this.complexSearchService.complexSearchOrdered$.subscribe(
+      (data: ConditionData) => {
+        mapCondition(data, this.condition);
+        this.search();
+        this.dialogRef.close();
+      }
+    );
+  }
   
   constructor(
     private complexSearchConditionService: ComplexSearchConditionService,
-    private complexsearchService: ComplexSearchService,
+    private complexSearchService: ComplexSearchService,
+    private dialog: MatDialog
     ) {
-      this.condition = complexsearchService.initConditionDataObj();
+      this.condition = complexSearchService.initConditionDataObj();
+      this.defineDialogSearch();
     }
 
   ngOnInit() {

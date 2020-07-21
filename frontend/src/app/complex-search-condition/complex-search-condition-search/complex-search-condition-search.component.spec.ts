@@ -6,7 +6,8 @@ import { LayoutModule } from 'src/app/layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { SaveData } from 'src/app/services/models/search/save-data';
-import { of } from 'rxjs';
+import { ConditionData } from 'src/app/services/models/search/condition-data';
+import { of, Subject } from 'rxjs';
 
 import { createTestArray } from 'src/app/services/models/search/save-data.spec';
 
@@ -19,7 +20,8 @@ describe('ComplexSearchConditionSearchComponent', () => {
   beforeEach(async(() => {
 
     const complexSearchConditionServiceSpy = jasmine.createSpyObj('ComplexSearchConditionService', ['findByCondition']);
-    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService', ['initConditionDataObj']);
+    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
+    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
       declarations: [ ComplexSearchConditionSearchComponent ],
@@ -43,6 +45,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     });
+    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
 
     fixture = TestBed.createComponent(ComplexSearchConditionSearchComponent);
     component = fixture.componentInstance;

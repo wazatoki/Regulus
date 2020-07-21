@@ -35,8 +35,7 @@ require (
 	github.com/volatiletech/null v8.0.0+incompatible
 	github.com/volatiletech/sqlboiler v3.5.0+incompatible
 	go.uber.org/zap v1.10.0
-	golang.org/x/crypto v0.0.0-20191001170739-f9e2070545dc // indirect
-	golang.org/x/sys v0.0.0-20191002091554-b397fe3ad8ed // indirect
+	golang.org/x/tools v0.0.0-20200714190737-9048b464a08d // indirect
 	google.golang.org/appengine v1.6.4 // indirect
 	gopkg.in/gorp.v1 v1.7.2 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
