@@ -12,6 +12,15 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ComplexSearchConditionSearchComponent } from './complex-search-condition-search/complex-search-condition-search.component';
 import { ComplexSearchConditionInputFormDialogComponent } from './complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
 
@@ -32,10 +41,20 @@ import { ComplexSearchConditionInputFormDialogComponent } from './complex-search
     MatTableModule,
     MatCheckboxModule,
     MatPaginatorModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatGridListModule,
+    MatDialogModule,
+    DragDropModule
   ],
   entryComponents: [
     NoticeDialogComponent,
     ComplexSearchDialogComponent,
+    ComplexSearchConditionInputFormDialogComponent,
   ]
 })
 export class ComplexSearchConditionModule { }

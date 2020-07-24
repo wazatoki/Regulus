@@ -7,8 +7,9 @@ import (
 )
 
 func defineRouting(e *echo.Echo) {
-	//apiPath := "/api/"
+	apiPath := "/api/"
 	e.GET("/", handlers.Root)
 	e.GET("/index", handlers.Index)
-	//e.GET(apiPath+"maker/ComplexSearchItems", handle.MakerComplexSearchItems)
+	e.GET(apiPath+"complexSearchCondition", handlers.FindQueryConditionByCondition)
+	e.GET(apiPath+"complexSearchCondition/categories", handlers.FindAllComplexConditionSearchCategories)
 }

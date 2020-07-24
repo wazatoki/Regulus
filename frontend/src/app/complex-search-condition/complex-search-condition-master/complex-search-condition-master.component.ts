@@ -19,7 +19,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   selection: SelectionModel<SaveData>;
 
 
-  onUpdateClicked(saveData: SaveData): void {
+onUpdateClicked(saveData: SaveData): void {
     this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
       data: {
         categories: [],
@@ -29,12 +29,16 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   }
 
   openInputForm(): void {
-    this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
-      data: {
-        categories: [],
-        saveData: null,
-      },
-    })
+
+    this.complexSearchConditionService.findAllCategories().subscribe( categories => {
+      this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
+        data: {
+          categories: categories,
+          saveData: null,
+        },
+      })
+    });
+    
   }
 
   deleteItems(): void {

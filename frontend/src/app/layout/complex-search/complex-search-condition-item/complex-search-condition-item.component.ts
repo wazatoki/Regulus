@@ -41,6 +41,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   matchTypes: matchTypeAttr[];
+  selectedFieldType: string;
 
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
@@ -73,12 +74,17 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     })
 
     if (f) {
+      
+      this.selectedFieldType = f.fieldType;
+
       switch (f.fieldType) {
         case 'number':
           this.matchTypes = this.matchTypesForNumber;
           break;
         case 'string':
           this.matchTypes = this.matchTypesForString;
+          break;
+        case 'boolean':
           break;
 
         default:

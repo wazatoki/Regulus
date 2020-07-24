@@ -181,13 +181,13 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
   }
 
-  initGroupList() {
-    if (this.selectedCategory) {
+  initGroups() {
+    if (this.selectedCategory && this.selectedCategory.searchItems.groups) {
       this.discloseGroupFormArray.clear();
-      this.selectedCategory.searchItems.groupList.forEach(g => {
+      this.selectedCategory.searchItems.groups.forEach(g => {
         this.discloseGroupFormArray.push(this.fb.control(''));
       })
-      this.groupList = this.selectedCategory.searchItems.groupList
+      this.groupList = this.selectedCategory.searchItems.groups
     } else {
       this.discloseGroupFormArray.clear();
       this.groupList = [];
@@ -200,7 +200,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       return (c.name === this.categorySelected.value)
     })
 
-    this.initGroupList()
+    this.initGroups()
 
     this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem
     this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition

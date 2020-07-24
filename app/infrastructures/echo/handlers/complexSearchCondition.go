@@ -19,12 +19,12 @@ func FindQueryConditionByCondition(c echo.Context) error {
 	var conditionData *domainQuery.ConditionData
 	conditionData = &domainQuery.ConditionData{}
 	e := json.Unmarshal([]byte(c.QueryParam("condition")), conditionData)
-	if e == nil {
-		return c.JSON(http.StatusInternalServerError, "")
+	if e != nil {
+		return c.JSON(http.StatusInternalServerError, "request unmarshal error")
 	}
 	result, err := query.Find(repo, conditionData)
-	if err == nil {
-		return c.JSON(http.StatusInternalServerError, "")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "data fetch error")
 	}
 	return c.JSON(http.StatusOK, result)
 }

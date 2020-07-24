@@ -105,10 +105,11 @@ describe('HttpService', () => {
         expect(data).toEqual(testData)
       });
 
-    const req = httpTestingController.expectOne('http://localhost:9876/api/data');
+    const req = httpTestingController.expectOne('http://localhost:9876/api/data?id=idstring');
+    
     expect(req.request.method).toEqual('GET');
     const params: HttpParams = new HttpParams();
-    params.set('id', 'idstring')
+    params.append('id', 'idstring')
     expect(req.request.params.toString).toEqual(params.toString)
     req.flush(testData);
   });

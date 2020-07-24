@@ -46,7 +46,7 @@ Category is struct as search category
 type Category struct {
 	Name        string             `json:"name"`
 	ViewValue   string             `json:"viewValue"`
-	SearchItems ComplexSearchItems `json:" searchItems"`
+	SearchItems ComplexSearchItems `json:"searchItems"`
 }
 
 /*
