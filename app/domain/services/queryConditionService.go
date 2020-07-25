@@ -8,6 +8,136 @@ import (
 )
 
 /*
+CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
+*/
+func CreateCategories(groups []entities.StaffGroup) (categories []entities.Category) {
+
+	categories = []entities.Category{}
+
+	categories = append(categories, createQueryConditionCategory(groups))
+
+	categories = append(categories, createStaffCategory(groups))
+
+	categories = append(categories, createStaffGroupCategory(groups))
+
+	return
+}
+
+func createQueryConditionCategory(groups []entities.StaffGroup) (category entities.Category) {
+
+	optionItems := []query.OptionItem{}
+
+	for _, g := range groups {
+		optionItems = append(optionItems, query.OptionItem{ID: g.ID, ViewValue: g.Name})
+	}
+
+	category = entities.Category{
+		Name:      "query-condition",
+		ViewValue: "検索条件管理",
+		SearchItems: entities.ComplexSearchItems{
+			SearchConditionList: []query.FieldAttr{
+				{
+					ID:        "pattern-name",
+					ViewValue: "検索パターン名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "category-view-value",
+					ViewValue: "カテゴリー名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "is-disclose",
+					ViewValue: "公開",
+					FieldType: query.BOOLEAN,
+				},
+				{
+					ID:          "disclose-groups",
+					ViewValue:   "公開先グループ",
+					FieldType:   query.ARRAY,
+					OptionItems: optionItems,
+				},
+				{
+					ID:        "owner",
+					ViewValue: "所有者",
+					FieldType: query.STRING,
+				},
+			},
+			DisplayItemList:    []query.FieldAttr{},
+			OrderConditionList: []query.FieldAttr{},
+			Groups:             groups,
+		},
+	}
+
+	return
+}
+
+func createStaffCategory(groups []entities.StaffGroup) (category entities.Category) {
+	category = entities.Category{
+		Name:      "staff",
+		ViewValue: "利用者",
+		SearchItems: entities.ComplexSearchItems{
+			SearchConditionList: []query.FieldAttr{
+				{
+					ID:        "account-id",
+					ViewValue: "利用者ID",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "name",
+					ViewValue: "利用者名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "groups",
+					ViewValue: "所属グループ",
+					FieldType: query.ARRAY,
+				},
+				{
+					ID:        "group-name",
+					ViewValue: "所属グループ名",
+					FieldType: query.STRING,
+				},
+			},
+			DisplayItemList:    []query.FieldAttr{},
+			OrderConditionList: []query.FieldAttr{},
+			Groups:             groups,
+		},
+	}
+	return
+}
+
+func createStaffGroupCategory(groups []entities.StaffGroup) (category entities.Category) {
+	category = entities.Category{
+		Name:      "staff-group",
+		ViewValue: "利用者グループ",
+		SearchItems: entities.ComplexSearchItems{
+			SearchConditionList: []query.FieldAttr{
+				{
+					ID:        "name",
+					ViewValue: "グループ名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "staff-name",
+					ViewValue: "利用者名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "staff-account-id",
+					ViewValue: "利用者ID",
+					FieldType: query.STRING,
+				},
+			},
+			DisplayItemList:    []query.FieldAttr{},
+			OrderConditionList: []query.FieldAttr{},
+			Groups:             groups,
+		},
+	}
+	return
+}
+
+/*
 Sort is sort maker slice by orderItems
 */
 func Sort(queryConditions []entities.QueryCondition, orderItems ...query.OrderConditionItem) []entities.QueryCondition {

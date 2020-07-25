@@ -5,42 +5,6 @@ import (
 )
 
 /*
-Categories 検索パターン作成時に使用するカテゴリーリスト
-*/
-var Categories = []Category{
-	{
-		Name:      "staff",
-		ViewValue: "利用者",
-		SearchItems: ComplexSearchItems{
-			SearchConditionList: query.StaffSearchConditionList,
-			DisplayItemList:     []query.FieldAttr{},
-			OrderConditionList:  []query.FieldAttr{},
-			Groups:              nil,
-		},
-	},
-	{
-		Name:      "staff-group",
-		ViewValue: "利用者グループ",
-		SearchItems: ComplexSearchItems{
-			SearchConditionList: query.StaffGroupSearchConditionList,
-			DisplayItemList:     []query.FieldAttr{},
-			OrderConditionList:  []query.FieldAttr{},
-			Groups:              nil,
-		},
-	},
-	{
-		Name:      "query-condition",
-		ViewValue: "検索条件管理",
-		SearchItems: ComplexSearchItems{
-			SearchConditionList: query.QueryConditionSearchConditionList,
-			DisplayItemList:     []query.FieldAttr{},
-			OrderConditionList:  []query.FieldAttr{},
-			Groups:              nil,
-		},
-	},
-}
-
-/*
 Category is struct as search category
 */
 type Category struct {

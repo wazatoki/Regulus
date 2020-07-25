@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FieldAttr } from '../../../services/models/search/field-attr';
+import { OptionItem } from '../../../services/models/search/option-item';
 
 @Component({
   selector: 'app-complex-search-condition-item',
@@ -41,6 +42,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   matchTypes: matchTypeAttr[];
+  optionItems: OptionItem[];
   selectedFieldType: string;
 
   @Input() fields: FieldAttr[] = [];
@@ -74,8 +76,9 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     })
 
     if (f) {
-      
+
       this.selectedFieldType = f.fieldType;
+      this.optionItems = f.optionItems
 
       switch (f.fieldType) {
         case 'number':
@@ -85,6 +88,8 @@ export class ComplexSearchConditionItemComponent implements OnInit {
           this.matchTypes = this.matchTypesForString;
           break;
         case 'boolean':
+          break;
+        case 'array':
           break;
 
         default:

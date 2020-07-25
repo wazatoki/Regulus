@@ -24,16 +24,118 @@ func tearDownQueryConditionTest(con *sqlx.DB) {
 	con.Close()
 }
 
+var staffSearchConditionList = []query.FieldAttr{
+	{
+		ID:        "account-id",
+		ViewValue: "利用者ID",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "name",
+		ViewValue: "利用者名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "groups",
+		ViewValue: "所属グループ",
+		FieldType: query.ARRAY,
+	},
+	{
+		ID:        "group-name",
+		ViewValue: "所属グループ名",
+		FieldType: query.STRING,
+	},
+}
+
+var staffGroupSearchConditionList = []query.FieldAttr{
+	{
+		ID:        "name",
+		ViewValue: "グループ名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "staff-name",
+		ViewValue: "利用者名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "staff-account-id",
+		ViewValue: "利用者ID",
+		FieldType: query.STRING,
+	},
+}
+
+var queryConditionSearchConditionList = []query.FieldAttr{
+	{
+		ID:        "pattern-name",
+		ViewValue: "検索パターン名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "category-view-value",
+		ViewValue: "カテゴリー名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "is-disclose",
+		ViewValue: "公開",
+		FieldType: query.BOOLEAN,
+	},
+	{
+		ID:        "disclose-groups",
+		ViewValue: "公開先グループ",
+		FieldType: query.ARRAY,
+	},
+	{
+		ID:        "owner",
+		ViewValue: "所有者",
+		FieldType: query.STRING,
+	},
+}
+
+var categories = []entities.Category{
+	{
+		Name:      "staff",
+		ViewValue: "利用者",
+		SearchItems: entities.ComplexSearchItems{
+			SearchConditionList: staffSearchConditionList,
+			DisplayItemList:     []query.FieldAttr{},
+			OrderConditionList:  []query.FieldAttr{},
+			Groups:              createExpectedStaffGroupEntity2Slice(),
+		},
+	},
+	{
+		Name:      "staff-group",
+		ViewValue: "利用者グループ",
+		SearchItems: entities.ComplexSearchItems{
+			SearchConditionList: staffGroupSearchConditionList,
+			DisplayItemList:     []query.FieldAttr{},
+			OrderConditionList:  []query.FieldAttr{},
+			Groups:              createExpectedStaffGroupEntity2Slice(),
+		},
+	},
+	{
+		Name:      "query-condition",
+		ViewValue: "検索条件管理",
+		SearchItems: entities.ComplexSearchItems{
+			SearchConditionList: queryConditionSearchConditionList,
+			DisplayItemList:     []query.FieldAttr{},
+			OrderConditionList:  []query.FieldAttr{},
+			Groups:              nil,
+		},
+	},
+}
+
 func createExpectedQueryCondition0Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid0",
 		PatternName: "patternName0",
-		Category:    entities.Categories[0],
+		Category:    categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffSearchConditionList[0],
+					SearchField:    staffSearchConditionList[0],
 					ConditionValue: "1",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -51,12 +153,12 @@ func createExpectedQueryCondition1Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid1",
 		PatternName: "patternName1",
-		Category:    entities.Categories[0],
+		Category:    categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffSearchConditionList[0],
+					SearchField:    staffSearchConditionList[0],
 					ConditionValue: "2",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -74,12 +176,12 @@ func createExpectedQueryCondition2Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid2",
 		PatternName: "patternName2",
-		Category:    entities.Categories[0],
+		Category:    categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffSearchConditionList[0],
+					SearchField:    staffSearchConditionList[0],
 					ConditionValue: "3",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -97,12 +199,12 @@ func createExpectedQueryCondition3Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid3",
 		PatternName: "patternName3",
-		Category:    entities.Categories[0],
+		Category:    categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffSearchConditionList[0],
+					SearchField:    staffSearchConditionList[0],
 					ConditionValue: "4",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -120,12 +222,12 @@ func createExpectedQueryCondition4Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid4",
 		PatternName: "patternName4",
-		Category:    entities.Categories[0],
+		Category:    categories[0],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffSearchConditionList[0],
+					SearchField:    staffSearchConditionList[0],
 					ConditionValue: "5",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -143,12 +245,12 @@ func createExpectedQueryCondition5Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid5",
 		PatternName: "patternName5",
-		Category:    entities.Categories[1],
+		Category:    categories[1],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffGroupSearchConditionList[0],
+					SearchField:    staffGroupSearchConditionList[0],
 					ConditionValue: "1",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -166,12 +268,12 @@ func createExpectedQueryCondition6Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid6",
 		PatternName: "patternName6",
-		Category:    entities.Categories[1],
+		Category:    categories[1],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffGroupSearchConditionList[0],
+					SearchField:    staffGroupSearchConditionList[0],
 					ConditionValue: "2",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -189,12 +291,12 @@ func createExpectedQueryCondition7Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid7",
 		PatternName: "patternName7",
-		Category:    entities.Categories[1],
+		Category:    categories[1],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffGroupSearchConditionList[0],
+					SearchField:    staffGroupSearchConditionList[0],
 					ConditionValue: "3",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -212,12 +314,12 @@ func createExpectedQueryCondition8Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid8",
 		PatternName: "patternName8",
-		Category:    entities.Categories[1],
+		Category:    categories[1],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffGroupSearchConditionList[0],
+					SearchField:    staffGroupSearchConditionList[0],
 					ConditionValue: "4",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -235,12 +337,12 @@ func createExpectedQueryCondition9Entity() entities.QueryCondition {
 	return entities.QueryCondition{
 		ID:          "queryConditionid9",
 		PatternName: "patternName9",
-		Category:    entities.Categories[1],
+		Category:    categories[1],
 		ConditionData: query.ConditionData{
 			DisplayItemList: []query.FieldAttr{},
 			SearchConditionList: []query.SearchConditionItem{
 				{
-					SearchField:    query.StaffGroupSearchConditionList[0],
+					SearchField:    staffGroupSearchConditionList[0],
 					ConditionValue: "5",
 					MatchType:      query.Pertialmatch,
 					Operator:       query.And,
@@ -356,13 +458,13 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 			args: args{
 				queryItems: []query.SearchConditionItem{
 					{
-						SearchField:    query.QueryConditionSearchConditionList[0],
+						SearchField:    queryConditionSearchConditionList[0],
 						ConditionValue: "5",
 						MatchType:      query.Pertialmatch,
 						Operator:       query.And,
 					},
 					{
-						SearchField:    query.QueryConditionSearchConditionList[1],
+						SearchField:    queryConditionSearchConditionList[1],
 						ConditionValue: "利用者グ",
 						MatchType:      query.Pertialmatch,
 						Operator:       query.And,
@@ -521,20 +623,20 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 			args: args{
 				queryCondition: entities.QueryCondition{
 					PatternName:    "testPatternName",
-					Category:       entities.Categories[0],
+					Category:       categories[0],
 					IsDisclose:     true,
 					DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
 					ConditionData: query.ConditionData{
 						DisplayItemList: []query.FieldAttr{},
 						SearchConditionList: []query.SearchConditionItem{
 							{
-								SearchField:    query.StaffSearchConditionList[0],
+								SearchField:    staffSearchConditionList[0],
 								ConditionValue: "aaa",
 								MatchType:      query.Match,
 								Operator:       query.And,
 							},
 							{
-								SearchField:    query.StaffSearchConditionList[1],
+								SearchField:    staffSearchConditionList[1],
 								ConditionValue: "bbb",
 								MatchType:      query.Unmatch,
 								Operator:       query.And,
@@ -622,7 +724,7 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 				DisplayItemList: []query.FieldAttr{},
 				SearchConditionList: []query.SearchConditionItem{
 					{
-						SearchField:    query.StaffSearchConditionList[1],
+						SearchField:    staffSearchConditionList[1],
 						ConditionValue: "2",
 						MatchType:      query.Unmatch,
 						Operator:       query.And,

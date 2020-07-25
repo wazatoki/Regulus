@@ -11,6 +11,7 @@ export function createTestInstance1(): FieldAttr {
         id: 'fieldid1',
         viewValue: 'ID',
         fieldType: 'string',
+        optionItems: []
     }
 }
 export function createTestInstance2(): FieldAttr {
@@ -18,6 +19,7 @@ export function createTestInstance2(): FieldAttr {
         id: 'fieldid2',
         viewValue: 'NAME',
         fieldType: 'string',
+        optionItems: []
     }
 }
 

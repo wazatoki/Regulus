@@ -44,6 +44,16 @@
             <mat-checkbox class="checkbox-value" [formControl]="conditionValue"></mat-checkbox>
         </mat-grid-tile>
 
+        <mat-grid-tile [colspan]="2" *ngSwitchCase="'array'">
+            <mat-form-field>
+                <mat-select class="select-value" [formControl]="conditionValue">
+                    <mat-option class="option-select-value" *ngFor="let optionItem of optionItems" [value]="optionItem.id">
+                        {{optionItem.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-grid-tile>
+
         <mat-grid-tile *ngSwitchDefault>
             <mat-form-field>
                 <input matInput class="input-value" [formControl]="conditionValue">

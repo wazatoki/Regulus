@@ -4,9 +4,18 @@ package query
 FieldAttr is query field attribute
 */
 type FieldAttr struct {
-	ID        string        `json:"id"`
-	ViewValue string        `json:"viewValue"`
-	FieldType ValueTypeEnum `json:"fieldType"`
+	ID          string        `json:"id"`
+	ViewValue   string        `json:"viewValue"`
+	FieldType   ValueTypeEnum `json:"fieldType"`
+	OptionItems []OptionItem  `json:"optionItems"`
+}
+
+/*
+OptionItem is option for select-ish tag select or radio, checkbox
+*/
+type OptionItem struct {
+	ID        string `json:"id"`
+	ViewValue string `json:"viewValue"`
 }
 
 /*
@@ -140,6 +149,9 @@ const (
 	Desc OrderTypeEnum = "desc"
 )
 
+/*
+StrToEnum is a convert method from string to enum
+*/
 func (o *OrderTypeEnum) StrToEnum(s string) OrderTypeEnum {
 	switch s {
 	case string(Asc):

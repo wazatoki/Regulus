@@ -51,6 +51,14 @@ func createExpectedStaffGroupEntity1Slice() []entities.StaffGroup {
 	}
 }
 
+func createExpectedStaffGroupEntity2Slice() []entities.StaffGroup {
+	return []entities.StaffGroup{
+		createExpectedStaffGroup1Entity(),
+		createExpectedStaffGroup2Entity(),
+		createExpectedStaffGroup3Entity(),
+	}
+}
+
 func TestStaffGroupObjectMap(t *testing.T) {
 	type args struct {
 		sg *sqlboiler.StaffGroup

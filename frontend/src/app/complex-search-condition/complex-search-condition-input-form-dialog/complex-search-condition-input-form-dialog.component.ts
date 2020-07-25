@@ -271,6 +271,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
 
     if (this.isShowSaveCondition) {
+      this.data.saveData.category = this.selectedCategory.name
       this.data.saveData.patternName = this.saveConditions.get('patternName').value;
       this.data.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
       this.discloseGroupFormArray.controls.forEach((v, i) => {

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"regulus/app/domain/entities"
+	"regulus/app/domain/services"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
@@ -478,7 +479,10 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc entities.QueryC
 	var searchConditionList []query.SearchConditionItem
 	var orderConditionList []query.OrderConditionItem
 
-	for _, category = range entities.Categories {
+	r := NewStaffGroupRepo()
+	groups, _ := r.SelectAll()
+
+	for _, category = range services.CreateCategories(groups) {
 		if category.Name == sqc.CategoryName {
 			break
 		}
