@@ -11,5 +11,6 @@ func defineRouting(e *echo.Echo) {
 	e.GET("/", handlers.Root)
 	e.GET("/index", handlers.Index)
 	e.GET(apiPath+"complexSearchCondition", handlers.FindQueryConditionByCondition)
+	e.POST(apiPath+"complexSearchCondition", handlers.AddQueryCondition)
 	e.GET(apiPath+"complexSearchCondition/categories", handlers.FindAllComplexConditionSearchCategories)
 }

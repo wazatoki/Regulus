@@ -232,15 +232,27 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
+      const conditionValue = (fieldType: string) => {
+        if (fieldType == 'boolean'){
+          if(formGroup.get('conditionValue').value){
+            return 'true';
+          }else{
+            return 'false';
+          }
+        }else{
+          return formGroup.get('conditionValue').value;
+        }
+      }
 
       this.selectedCategory.searchItems.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
+      
       const condition: SearchCondition = {
         field: field,
-        conditionValue: formGroup.get('conditionValue').value,
+        conditionValue: conditionValue(field.fieldType),
         matchType: formGroup.get('matchTypeSelected').value,
         operator: formGroup.get('operatorSelected').value,
       };
@@ -271,9 +283,14 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
 
     if (this.isShowSaveCondition) {
-      this.data.saveData.category = this.selectedCategory.name
+      this.data.saveData.category = this.selectedCategory
       this.data.saveData.patternName = this.saveConditions.get('patternName').value;
-      this.data.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
+      if (this.saveConditions.get('isDisclose').value){
+        this.data.saveData.isDisclose = true;  
+      }else{
+        this.data.saveData.isDisclose = false;
+      }
+      
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
           this.data.saveData.discloseGroupIDs.push(this.groupList[i].id);

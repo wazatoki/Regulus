@@ -20,7 +20,7 @@ export class ComplexSearchService {
     return {
       id: '',
       patternName: '',
-      category: '',
+      category: null,
       isDisclose: false,
       discloseGroupIDs: [],
       ownerID: '',
@@ -46,11 +46,11 @@ export class ComplexSearchService {
   }
 
   addSearchCondition(data: SaveData):Observable<SaveData>{
-    return this.http.post<SaveData>( '/complexSearch', data );
+    return this.http.post<SaveData>( '/complexSearchCondition', data );
   }
 
   updateSearchCondition(data: SaveData):Observable<SaveData>{
-    return this.http.put<SaveData>( '/complexSearch', data );
+    return this.http.put<SaveData>( '/complexSearchCondition', data );
   }
   
   constructor( private http: HttpService ) { }

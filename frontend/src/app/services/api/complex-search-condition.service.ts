@@ -25,13 +25,13 @@ export class ComplexSearchConditionService {
     return this.http.get<SaveData[]>('/complexSearchCondition', data);
   }
 
-  add(data: SaveData): Observable<SaveData> {
-    return this.http.post<SaveData>( '/complexSearchCondition', data );
-  }
+  // add(data: SaveData): Observable<SaveData> {
+  //   return this.http.post<SaveData>( '/complexSearchCondition', data );
+  // }
 
-  update(data: SaveData): Observable<SaveData> {
-    return this.http.put<SaveData>( '/complexSearchCondition', data );
-  }
+  // update(data: SaveData): Observable<SaveData> {
+  //   return this.http.put<SaveData>( '/complexSearchCondition', data );
+  // }
 
   delete(data: string[]): Observable<SaveData[]> {
     return this.http.delete<SaveData>('/complexSearchCondition/delete', data);
