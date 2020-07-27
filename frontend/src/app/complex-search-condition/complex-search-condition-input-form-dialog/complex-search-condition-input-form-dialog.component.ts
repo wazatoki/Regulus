@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Category } from 'src/app/services/models/search/category';
 import { SaveData } from 'src/app/services/models/search/save-data';
-import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl, Validators } from '@angular/forms';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { FieldAttr } from 'src/app/services/models/search/field-attr';
 import { Group } from 'src/app/services/models/group/group';
@@ -303,20 +303,36 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    this.createSaveData();
-    if (this.data.saveData.id) {
-      this.complexSearchDataShereService.updateSearchCondition(this.data.saveData).subscribe(data => {
-        this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '検索条件を保存しました。' }
+    
+    if(this.form.valid){
+      
+      this.createSaveData();
+      
+      if (this.data.saveData.id) {
+      
+        this.complexSearchDataShereService.updateSearchCondition(this.data.saveData).subscribe(data => {
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '検索条件を保存しました。' }
+          });
         });
-      });
-    } else {
-      this.complexSearchDataShereService.addSearchCondition(this.data.saveData).subscribe(data => {
-        this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '検索条件を保存しました。' }
+      
+        
+      } else {
+        
+        this.complexSearchDataShereService.addSearchCondition(this.data.saveData).subscribe(data => {
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '検索条件を保存しました。' }
+          });
         });
-      });
+        
+      }
+      
     }
+    
+  }
+  
+  getPatternNameErrorMessage() {
+    return this.saveConditions.get('patternName').hasError('required') ? '検索パターン名称は必須項目です。' : '';
   }
 
   initForm(): FormGroup {
@@ -325,7 +341,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({
         category: this.fb.control(''),
-        patternName: this.fb.control(''),
+        patternName: this.fb.control('', [Validators.required]),
         isDisclose: this.fb.control(''),
         discloseGroups: this.fb.array([]),
       }),

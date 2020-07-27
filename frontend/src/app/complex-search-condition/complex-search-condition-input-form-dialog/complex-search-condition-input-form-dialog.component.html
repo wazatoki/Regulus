@@ -101,7 +101,8 @@
                     <div formGroupName="saveCondition">
                         <mat-form-field appearance="standard">
                             <mat-label>検索パターン名称</mat-label>
-                            <input class="pattern-name" matInput formControlName="patternName">
+                            <input class="pattern-name" matInput formControlName="patternName" required>
+                            <mat-error *ngIf="saveConditions.get('patternName').invalid">{{getPatternNameErrorMessage()}}</mat-error>
                         </mat-form-field>
                         <mat-checkbox class="is-disclose" formControlName="isDisclose">公開する</mat-checkbox>
                         <div class="disclosure-destination" formArrayName="discloseGroups">
