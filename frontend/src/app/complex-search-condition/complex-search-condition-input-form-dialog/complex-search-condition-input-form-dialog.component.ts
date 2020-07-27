@@ -65,6 +65,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   onClearClick(): void {
     this.form = this.initForm()
+    this.onSelectCategory();
     this.selectedDisplayItemArray = [];
     this.fromDisplayItemArray = [];
   }
@@ -340,7 +341,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({
-        category: this.fb.control(''),
+        category: this.fb.control(this.categories[0].name),
         patternName: this.fb.control('', [Validators.required]),
         isDisclose: this.fb.control(''),
         discloseGroups: this.fb.array([]),
@@ -356,6 +357,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     private complexSearchDataShereService: ComplexSearchService,
   ) {
     this.form = this.initForm();
+    this.onSelectCategory();
   }
 
   ngOnInit() {
