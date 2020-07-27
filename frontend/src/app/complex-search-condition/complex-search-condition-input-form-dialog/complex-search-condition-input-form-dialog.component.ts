@@ -150,8 +150,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   pushSearchCondition() {
     this.searchConditionFormArray.push(new FormGroup({
-      fieldSelected: new FormControl(''),
-      conditionValue: new FormControl(''),
+      fieldSelected: new FormControl(this.searchConditionList[0].id),
+      conditionValue: new FormControl('', [Validators.required]),
       matchTypeSelected: new FormControl(''),
       operatorSelected: new FormControl(''),
     }));
@@ -208,6 +208,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
     this.orderConditionList = this.selectedCategory.searchItems.orderConditionList
     this.initSelectedDisplayItems();
+    this.searchConditionFormArray.clear();
+    this.orderConditionFormArray.clear();
   }
 
 

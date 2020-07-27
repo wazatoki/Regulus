@@ -69,6 +69,10 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       this.operatorSelected.setValue(this.operators[0]);
     }
   }
+  
+  getConditionValueErrorMessage() {
+    return this.conditionValue.hasError('required') ? '条件値は必須項目です。' : '';
+  }
 
   setMatchType(): void {
     const f = this.fields.find((field) => {
@@ -83,17 +87,24 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       switch (f.fieldType) {
         case 'number':
           this.matchTypes = this.matchTypesForNumber;
+          this.matchTypeSelected.setValue(this.matchTypes[0].name);
+          this.conditionValue.setValue('');
           break;
         case 'string':
           this.matchTypes = this.matchTypesForString;
+          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          this.conditionValue.setValue('');
           break;
         case 'boolean':
+          this.conditionValue.setValue('true');
           break;
         case 'array':
+          this.conditionValue.setValue('true');
           break;
 
         default:
           this.matchTypes = this.matchTypesForString;
+          this.matchTypeSelected.setValue(this.matchTypes[0].name)
           break;
       }
     } else { // 検索対象フィールドが選択されていないときなど。
