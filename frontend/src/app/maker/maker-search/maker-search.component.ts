@@ -26,7 +26,7 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
     
     if ( v ) {
       
-      v.category = 'maker'
+      v.category.name = 'maker'
       this.saveData = v;
 
       if( v.id ){

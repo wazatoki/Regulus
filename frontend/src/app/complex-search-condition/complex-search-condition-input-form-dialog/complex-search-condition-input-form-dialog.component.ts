@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Category } from 'src/app/services/models/search/category';
 import { SaveData } from 'src/app/services/models/search/save-data';
-import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl, Validators } from '@angular/forms';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { FieldAttr } from 'src/app/services/models/search/field-attr';
 import { Group } from 'src/app/services/models/group/group';
@@ -65,6 +65,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   onClearClick(): void {
     this.form = this.initForm()
+    this.onSelectCategory();
     this.selectedDisplayItemArray = [];
     this.fromDisplayItemArray = [];
   }
@@ -149,8 +150,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   pushSearchCondition() {
     this.searchConditionFormArray.push(new FormGroup({
-      fieldSelected: new FormControl(''),
-      conditionValue: new FormControl(''),
+      fieldSelected: new FormControl(this.searchConditionList[0].id),
+      conditionValue: new FormControl('', [Validators.required]),
       matchTypeSelected: new FormControl(''),
       operatorSelected: new FormControl(''),
     }));
@@ -207,6 +208,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
     this.orderConditionList = this.selectedCategory.searchItems.orderConditionList
     this.initSelectedDisplayItems();
+    this.searchConditionFormArray.clear();
+    this.orderConditionFormArray.clear();
   }
 
 
@@ -232,15 +235,27 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
+      const conditionValue = (fieldType: string) => {
+        if (fieldType == 'boolean'){
+          if(formGroup.get('conditionValue').value){
+            return 'true';
+          }else{
+            return 'false';
+          }
+        }else{
+          return formGroup.get('conditionValue').value;
+        }
+      }
 
       this.selectedCategory.searchItems.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
+      
       const condition: SearchCondition = {
         field: field,
-        conditionValue: formGroup.get('conditionValue').value,
+        conditionValue: conditionValue(field.fieldType),
         matchType: formGroup.get('matchTypeSelected').value,
         operator: formGroup.get('operatorSelected').value,
       };
@@ -271,9 +286,14 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
 
     if (this.isShowSaveCondition) {
-      this.data.saveData.category = this.selectedCategory.name
+      this.data.saveData.category = this.selectedCategory
       this.data.saveData.patternName = this.saveConditions.get('patternName').value;
-      this.data.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
+      if (this.saveConditions.get('isDisclose').value){
+        this.data.saveData.isDisclose = true;  
+      }else{
+        this.data.saveData.isDisclose = false;
+      }
+      
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
           this.data.saveData.discloseGroupIDs.push(this.groupList[i].id);
@@ -286,20 +306,36 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    this.createSaveData();
-    if (this.data.saveData.id) {
-      this.complexSearchDataShereService.updateSearchCondition(this.data.saveData).subscribe(data => {
-        this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '検索条件を保存しました。' }
+    
+    if(this.form.valid){
+      
+      this.createSaveData();
+      
+      if (this.data.saveData.id) {
+      
+        this.complexSearchDataShereService.updateSearchCondition(this.data.saveData).subscribe(data => {
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '検索条件を保存しました。' }
+          });
         });
-      });
-    } else {
-      this.complexSearchDataShereService.addSearchCondition(this.data.saveData).subscribe(data => {
-        this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '検索条件を保存しました。' }
+      
+        
+      } else {
+        
+        this.complexSearchDataShereService.addSearchCondition(this.data.saveData).subscribe(data => {
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '検索条件を保存しました。' }
+          });
         });
-      });
+        
+      }
+      
     }
+    
+  }
+  
+  getPatternNameErrorMessage() {
+    return this.saveConditions.get('patternName').hasError('required') ? '検索パターン名称は必須項目です。' : '';
   }
 
   initForm(): FormGroup {
@@ -307,8 +343,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({
-        category: this.fb.control(''),
-        patternName: this.fb.control(''),
+        category: this.fb.control(this.categories[0].name),
+        patternName: this.fb.control('', [Validators.required]),
         isDisclose: this.fb.control(''),
         discloseGroups: this.fb.array([]),
       }),
@@ -323,6 +359,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     private complexSearchDataShereService: ComplexSearchService,
   ) {
     this.form = this.initForm();
+    this.onSelectCategory();
   }
 
   ngOnInit() {

@@ -46,7 +46,7 @@ describe('MakerSearchComponent', () => {
     complexSearchServiceSpy.initSaveDataObj.and.returnValue({
       id: '',
       patternName: '',
-      category: '',
+      category: null,
       isDisclose: false,
       discloseGroupIDs: [],
       ownerID: '',

@@ -13,6 +13,7 @@
         <mat-grid-tile *ngSwitchCase="'number'">
             <mat-form-field>
                 <input matInput class="input-value" [formControl]="conditionValue">
+                <mat-error *ngIf="conditionValue.invalid">{{getConditionValueErrorMessage()}}</mat-error>
             </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile *ngSwitchCase="'number'">
@@ -28,6 +29,7 @@
         <mat-grid-tile *ngSwitchCase="'string'">
             <mat-form-field>
                 <input matInput class="input-value" [formControl]="conditionValue">
+                <mat-error *ngIf="conditionValue.invalid">{{getConditionValueErrorMessage()}}</mat-error>
             </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile *ngSwitchCase="'string'">
@@ -51,6 +53,7 @@
                         {{optionItem.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-error *ngIf="conditionValue.invalid">{{getConditionValueErrorMessage()}}</mat-error>
             </mat-form-field>
         </mat-grid-tile>
 

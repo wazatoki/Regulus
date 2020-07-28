@@ -23,3 +23,15 @@ func Find(queryRepo persistance, conditionData *query.ConditionData) ([]entities
 
 	return nil, err
 }
+
+/*
+
+Find は検索条件追加時のユースケースです。成功した場合は id を返却します。
+
+*/
+func AddCondition(queryRepo persistance, queryCondition *entities.QueryCondition) (string, error) {
+
+	id, err := queryRepo.Insert(queryCondition)
+
+	return id, err
+}

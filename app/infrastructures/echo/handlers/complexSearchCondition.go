@@ -12,6 +12,20 @@ import (
 	"github.com/labstack/echo"
 )
 
+func AddQueryCondition(c echo.Context) error {
+	repo := repositories.NewQueryConditionRepo()
+	condition := &entities.QueryCondition{}
+	e := c.Bind(condition)
+	if e != nil {
+		return e
+	}
+	id, err := query.AddCondition(repo, condition)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "data insert error")
+	}
+	return c.JSON(http.StatusOK, id)
+}
+
 /*
 FindQueryConditionByCondition return search result of query condition
 */
