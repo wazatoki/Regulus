@@ -1,13 +1,17 @@
 import { FieldAttr } from './field-attr';
 import { Group } from '../group/group';
-import { SaveData } from './save-data';
 
+/*
+
+ComplexSearchItems 検索フォームを構築する際に必要な選択肢アイテム
+
+*/
 export interface ComplexSearchItems {
-    displayItemList: FieldAttr[],
-    searchConditionList: FieldAttr[],
-    orderConditionList: FieldAttr[],
-    isShowDisplayItem: boolean,
-    isShowOrderCondition: boolean,
-    isShowSaveCondition: boolean,
-    groupList: Group[],
+    displayItemList: FieldAttr[]
+    searchConditionList: FieldAttr[]
+    orderConditionList: FieldAttr[]
+    isShowDisplayItem: boolean
+    isShowOrderCondition: boolean
+    isShowSaveCondition: boolean
+    groups: Group[]
 }

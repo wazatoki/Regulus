@@ -67,8 +67,7 @@ export class ComplexSearchComponent implements OnInit {
     this.groupList.forEach(g => {
       this.discloseGroupFormArray.push(this.fb.control(''));
     })
-    this.fromDisplayItemArray = this.displayItemList;
-    this.selectedDisplayItemArray = [];
+    this.initSelectedDisplayItems();
 
     // saveDataの編集のときは値をフォームに反映する
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
@@ -80,7 +79,7 @@ export class ComplexSearchComponent implements OnInit {
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
     this.discloseGroupFormArray.controls.forEach((v, i) => {
-      this.saveData.discloseGroups.forEach(id => {
+      this.saveData.discloseGroupIDs.forEach(id => {
         if (this.groupList[i].id === id) {
           v.setValue(true)
         }
@@ -141,14 +140,6 @@ export class ComplexSearchComponent implements OnInit {
 
   controlDrop(event: CdkDragDrop<AbstractControl[]>) {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    // if (event.previousContainer === event.container) {
-    //   moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    // } else {
-    //   transferArrayItem(event.previousContainer.data,
-    //     event.container.data,
-    //     event.previousIndex,
-    //     event.currentIndex);
-    // }
   }
 
   pushSearchCondition() {
@@ -247,7 +238,7 @@ export class ComplexSearchComponent implements OnInit {
       this.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
-          this.saveData.discloseGroups.push(this.groupList[i].id);
+          this.saveData.discloseGroupIDs.push(this.groupList[i].id);
         }
       });
     }
@@ -269,6 +260,14 @@ export class ComplexSearchComponent implements OnInit {
       data.orderConditionList = this.createOrderCondition();
     }
     return data;
+  }
+
+  initSelectedDisplayItems() {
+    this.fromDisplayItemArray = [];
+    this.displayItemList.forEach(item => {
+      this.fromDisplayItemArray.push(item)
+    })
+    this.selectedDisplayItemArray = [];
   }
 
 }// end of class

@@ -23,6 +23,12 @@ import { ComplexSearchService } from '../../services/share/complex-search.servic
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
+import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
+import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/group/group.spec';
+import { createTestInstance1 as createTestInstanceSaveData} from 'src/app/services/models/search/save-data.spec';
+import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
+import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
+
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
@@ -78,26 +84,8 @@ describe('ComplexSearchComponent', () => {
     component = fixture.componentInstance;
     
     spy = TestBed.get(ComplexSearchService);
-    spy.initSaveDataObj.and.returnValue({
-      id: '',
-      patternName: '',
-      category: '',
-      isDisclose: false,
-      discloseGroups: [],
-      ownerID: '',
-      conditionData: {
-        searchStrings: [],
-        displayItemList: [],
-        searchConditionList: [],
-        orderConditionList: [],
-      },
-    });
-    spy.initConditionDataObj.and.returnValue({
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    });
+    spy.initSaveDataObj.and.returnValue(createInitSaveData());
+    spy.initConditionDataObj.and.returnValue(createInitConditionData());
     spy.updateSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
     spy.addSearchCondition.and.returnValue(new Subject<SaveData>().asObservable());
     fixture.detectChanges();
@@ -122,7 +110,7 @@ describe('ComplexSearchComponent', () => {
 
     const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchConditionItemComponent));
 
-    expect(itemBoxDeArray.length).toBe(3);
+    expect(itemBoxDeArray.length).toBe(4);
   });
 
   it('should click add order button', () => {
@@ -140,7 +128,7 @@ describe('ComplexSearchComponent', () => {
 
     const itemBoxDeArray: DebugElement[] = fixture.debugElement.queryAll(By.directive(ComplexSearchOrderItemComponent));
 
-    expect(itemBoxDeArray.length).toBe(3);
+    expect(itemBoxDeArray.length).toBe(4);
   });
 
   it('should click save button', () => {
@@ -199,11 +187,11 @@ describe('ComplexSearchComponent', () => {
 
     component.searchComponent.pushSearchCondition();
     component.searchComponent.pushOrderCondition();
-    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('id1');
+    (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('fieldid1');
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
-    (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('id2');
+    (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('fieldid2');
     (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
     fixture.detectChanges();
 
@@ -211,7 +199,7 @@ describe('ComplexSearchComponent', () => {
     saveData = component.searchComponent.saveData;
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(false);
-    expect(saveData.discloseGroups).toEqual(['id1', 'id2']);
+    expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
     expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
@@ -295,127 +283,10 @@ class TestHostComponent {
   @ViewChild(ComplexSearchComponent, {static: true})
   searchComponent:ComplexSearchComponent;
 
-  displayItemList: FieldAttr[] = [
-    {
-      id: 'id1',
-      entityName: 'aaa',
-      fieldName: 'AAA',
-      viewValue: 'aaa-AAA',
-      fieldType: 'number',
-    },
-    {
-      id: 'id2',
-      entityName: 'bbb',
-      fieldName: 'BBB',
-      viewValue: 'bbb-BBB',
-      fieldType: 'string',
-    },
-  ];
-  searchConditionList: FieldAttr[] =  [
-    {
-      id: 'id1',
-      entityName: 'aaa',
-      fieldName: 'AAA',
-      viewValue: 'aaa-AAA',
-      fieldType: 'number',
-    },
-    {
-      id: 'id2',
-      entityName: 'bbb',
-      fieldName: 'BBB',
-      viewValue: 'bbb-BBB',
-      fieldType: 'string',
-    },
-    {
-      id: 'id3',
-      entityName: 'ccc',
-      fieldName: 'CCC',
-      viewValue: 'ccc-CCC',
-      fieldType: 'string',
-    },
-  ];
-  orderConditionList =  [
-    {
-      id: 'id1',
-      entityName: 'aaa',
-      fieldName: 'AAA',
-      viewValue: 'aaa-AAA',
-      fieldType: 'number',
-    },
-    {
-      id: 'id2',
-      entityName: 'bbb',
-      fieldName: 'BBB',
-      viewValue: 'bbb-BBB',
-      fieldType: 'string',
-    },
-    {
-      id: 'id3',
-      entityName: 'ccc',
-      fieldName: 'CCC',
-      viewValue: 'ccc-CCC',
-      fieldType: 'string',
-    },
-  ]
-  groupList: Group[] = [
-    {
-      id: 'id1',
-      name: 'name1',
-    },
-    {
-      id: 'id2',
-      name: 'name2',
-    },
-    {
-      id: 'id3',
-      name: 'name3',
-    },
-  ];
+  displayItemList: FieldAttr[] = createTestArray();
+  searchConditionList: FieldAttr[] = createTestArray();
+  orderConditionList = createTestArray();
+  groupList: Group[] = ceateTestArrayGroup();
 
-  saveData: SaveData = {
-    id: 'saveID1',
-    patternName: 'saveName1',
-    isDisclose: true,
-    discloseGroups: ['id1', 'id2'],
-    conditionData: {
-      displayItemList: [
-        {
-          id: 'id1',
-          entityName: 'aaa',
-          fieldName: 'AAA',
-          viewValue: 'aaa-AAA',
-          fieldType: 'number',
-        },
-      ],
-      searchConditionList: [
-        {
-          field: {
-            id: 'id1',
-            entityName: 'aaa',
-            fieldName: 'AAA',
-            viewValue: 'aaa-AAA',
-            fieldType: 'number',
-          },
-          conditionValue: 'aaa',
-          matchType : 'match',
-          operator: 'or'
-        },
-      ],
-      orderConditionList: [
-        {
-          orderField: {
-            id: 'id1',
-            entityName: 'aaa',
-            fieldName: 'AAA',
-            viewValue: 'aaa-AAA',
-            fieldType: 'number',
-          },
-          orderFieldKeyWord: 'desc',
-        },
-      ],
-      searchStrings: [],
-    },
-    ownerID: '',
-    category: '',
-  };
+  saveData: SaveData = createTestInstanceSaveData()
 }

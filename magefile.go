@@ -25,10 +25,11 @@ func Test() error {
 	return nil
 }
 
-// SqlMigrateUp execute sql-migrate down
+// SqlMigrateDown execute sql-migrate down
 func SqlMigrateDown() error {
-	cmd := exec.Command("sql-migrate", "down", "-config=./resources/db/dbconfig.yml")
-	if err := cmd.Run(); err != nil {
+	out, err := exec.Command("sql-migrate", "down", "-config=./resources/db/dbconfig.yml").Output()
+	fmt.Println(string(out))
+	if err != nil {
 		return err
 	}
 	return nil
@@ -36,8 +37,9 @@ func SqlMigrateDown() error {
 
 // SqlMigrateUp execute sql-migrate up
 func SqlMigrateUp() error {
-	cmd := exec.Command("sql-migrate", "up", "-config=./resources/db/dbconfig.yml")
-	if err := cmd.Run(); err != nil {
+	out, err := exec.Command("sql-migrate", "up", "-config=./resources/db/dbconfig.yml").Output()
+	fmt.Println(string(out))
+	if err != nil {
 		return err
 	}
 	return nil
@@ -46,8 +48,9 @@ func SqlMigrateUp() error {
 // SqlMigrateNew execute sql-migrate new. option is maigration file name.
 func SqlMigrateNew() error {
 
-	cmd := exec.Command("sql-migrate", "new", "-config=./resources/db/dbconfig.yml")
-	if err := cmd.Run(); err != nil {
+	out, err := exec.Command("sql-migrate", "new", "-config=./resources/db/dbconfig.yml").Output()
+	fmt.Println(string(out))
+	if err != nil {
 		return err
 	}
 	return nil
@@ -61,8 +64,9 @@ func DropDataAccessModel() {
 
 // CreateDataAccessModel create data access model
 func CreateDataAccessModel() error {
-	cmd := exec.Command("sqlboiler", "--output", "./app/infrastructures/sqlboiler", "--pkgname", "sqlboiler", "psql")
-	if err := cmd.Run(); err != nil {
+	out, err := exec.Command("sqlboiler", "--wipe", "--output", "./app/infrastructures/sqlboiler", "--pkgname", "sqlboiler", "psql").Output()
+	fmt.Println(string(out))
+	if err != nil {
 		return err
 	}
 	return nil
@@ -141,6 +145,9 @@ func Build() error {
 	rootDir = "." + separator + "frontend" + separator + "dist"
 	targetDir = "." + separator + "build" + separator + "resources"
 	copy(rootDir, targetDir)
+
+	// logフォルダ作成
+	os.Mkdir("."+separator+"build"+separator+"log", 0777)
 
 	fmt.Println("build finished !")
 

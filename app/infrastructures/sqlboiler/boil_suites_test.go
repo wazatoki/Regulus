@@ -14,78 +14,122 @@ import "testing"
 func TestParent(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrations)
 	t.Run("Makers", testMakers)
-	t.Run("Staffs", testStaffs)
+	t.Run("QueryConditions", testQueryConditions)
+	t.Run("QueryDisplayItems", testQueryDisplayItems)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItems)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItems)
 	t.Run("StaffGroups", testStaffGroups)
+	t.Run("Staffs", testStaffs)
 }
 
 func TestDelete(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsDelete)
 	t.Run("Makers", testMakersDelete)
-	t.Run("Staffs", testStaffsDelete)
+	t.Run("QueryConditions", testQueryConditionsDelete)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsDelete)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsDelete)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsDelete)
 	t.Run("StaffGroups", testStaffGroupsDelete)
+	t.Run("Staffs", testStaffsDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsQueryDeleteAll)
 	t.Run("Makers", testMakersQueryDeleteAll)
-	t.Run("Staffs", testStaffsQueryDeleteAll)
+	t.Run("QueryConditions", testQueryConditionsQueryDeleteAll)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsQueryDeleteAll)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsQueryDeleteAll)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsQueryDeleteAll)
 	t.Run("StaffGroups", testStaffGroupsQueryDeleteAll)
+	t.Run("Staffs", testStaffsQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsSliceDeleteAll)
 	t.Run("Makers", testMakersSliceDeleteAll)
-	t.Run("Staffs", testStaffsSliceDeleteAll)
+	t.Run("QueryConditions", testQueryConditionsSliceDeleteAll)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsSliceDeleteAll)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsSliceDeleteAll)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsSliceDeleteAll)
 	t.Run("StaffGroups", testStaffGroupsSliceDeleteAll)
+	t.Run("Staffs", testStaffsSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsExists)
 	t.Run("Makers", testMakersExists)
-	t.Run("Staffs", testStaffsExists)
+	t.Run("QueryConditions", testQueryConditionsExists)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsExists)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsExists)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsExists)
 	t.Run("StaffGroups", testStaffGroupsExists)
+	t.Run("Staffs", testStaffsExists)
 }
 
 func TestFind(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsFind)
 	t.Run("Makers", testMakersFind)
-	t.Run("Staffs", testStaffsFind)
+	t.Run("QueryConditions", testQueryConditionsFind)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsFind)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsFind)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsFind)
 	t.Run("StaffGroups", testStaffGroupsFind)
+	t.Run("Staffs", testStaffsFind)
 }
 
 func TestBind(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsBind)
 	t.Run("Makers", testMakersBind)
-	t.Run("Staffs", testStaffsBind)
+	t.Run("QueryConditions", testQueryConditionsBind)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsBind)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsBind)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsBind)
 	t.Run("StaffGroups", testStaffGroupsBind)
+	t.Run("Staffs", testStaffsBind)
 }
 
 func TestOne(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsOne)
 	t.Run("Makers", testMakersOne)
-	t.Run("Staffs", testStaffsOne)
+	t.Run("QueryConditions", testQueryConditionsOne)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsOne)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsOne)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsOne)
 	t.Run("StaffGroups", testStaffGroupsOne)
+	t.Run("Staffs", testStaffsOne)
 }
 
 func TestAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsAll)
 	t.Run("Makers", testMakersAll)
-	t.Run("Staffs", testStaffsAll)
+	t.Run("QueryConditions", testQueryConditionsAll)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsAll)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsAll)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsAll)
 	t.Run("StaffGroups", testStaffGroupsAll)
+	t.Run("Staffs", testStaffsAll)
 }
 
 func TestCount(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsCount)
 	t.Run("Makers", testMakersCount)
-	t.Run("Staffs", testStaffsCount)
+	t.Run("QueryConditions", testQueryConditionsCount)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsCount)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsCount)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsCount)
 	t.Run("StaffGroups", testStaffGroupsCount)
+	t.Run("Staffs", testStaffsCount)
 }
 
 func TestHooks(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsHooks)
 	t.Run("Makers", testMakersHooks)
-	t.Run("Staffs", testStaffsHooks)
+	t.Run("QueryConditions", testQueryConditionsHooks)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsHooks)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsHooks)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsHooks)
 	t.Run("StaffGroups", testStaffGroupsHooks)
+	t.Run("Staffs", testStaffsHooks)
 }
 
 func TestInsert(t *testing.T) {
@@ -93,15 +137,30 @@ func TestInsert(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsInsertWhitelist)
 	t.Run("Makers", testMakersInsert)
 	t.Run("Makers", testMakersInsertWhitelist)
-	t.Run("Staffs", testStaffsInsert)
-	t.Run("Staffs", testStaffsInsertWhitelist)
+	t.Run("QueryConditions", testQueryConditionsInsert)
+	t.Run("QueryConditions", testQueryConditionsInsertWhitelist)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsInsert)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsInsertWhitelist)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsInsert)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsInsertWhitelist)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsInsert)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsInsertWhitelist)
 	t.Run("StaffGroups", testStaffGroupsInsert)
 	t.Run("StaffGroups", testStaffGroupsInsertWhitelist)
+	t.Run("Staffs", testStaffsInsert)
+	t.Run("Staffs", testStaffsInsertWhitelist)
 }
 
 // TestToOne tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOne(t *testing.T) {}
+func TestToOne(t *testing.T) {
+	t.Run("QueryConditionToStaffUsingCreStaff", testQueryConditionToOneStaffUsingCreStaff)
+	t.Run("QueryConditionToStaffUsingOwner", testQueryConditionToOneStaffUsingOwner)
+	t.Run("QueryConditionToStaffUsingUpdateStaff", testQueryConditionToOneStaffUsingUpdateStaff)
+	t.Run("QueryDisplayItemToQueryConditionUsingQueryCondition", testQueryDisplayItemToOneQueryConditionUsingQueryCondition)
+	t.Run("QueryOrderConditionItemToQueryConditionUsingQueryCondition", testQueryOrderConditionItemToOneQueryConditionUsingQueryCondition)
+	t.Run("QuerySearchConditionItemToQueryConditionUsingQueryCondition", testQuerySearchConditionItemToOneQueryConditionUsingQueryCondition)
+}
 
 // TestOneToOne tests cannot be run in parallel
 // or deadlocks can occur.
@@ -109,15 +168,36 @@ func TestOneToOne(t *testing.T) {}
 
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToMany(t *testing.T) {}
+func TestToMany(t *testing.T) {
+	t.Run("QueryConditionToStaffGroups", testQueryConditionToManyStaffGroups)
+	t.Run("QueryConditionToQueryDisplayItems", testQueryConditionToManyQueryDisplayItems)
+	t.Run("QueryConditionToQueryOrderConditionItems", testQueryConditionToManyQueryOrderConditionItems)
+	t.Run("QueryConditionToQuerySearchConditionItems", testQueryConditionToManyQuerySearchConditionItems)
+	t.Run("StaffGroupToQueryConditions", testStaffGroupToManyQueryConditions)
+	t.Run("StaffGroupToStaffs", testStaffGroupToManyStaffs)
+	t.Run("StaffToStaffGroups", testStaffToManyStaffGroups)
+	t.Run("StaffToCreStaffQueryConditions", testStaffToManyCreStaffQueryConditions)
+	t.Run("StaffToOwnerQueryConditions", testStaffToManyOwnerQueryConditions)
+	t.Run("StaffToUpdateStaffQueryConditions", testStaffToManyUpdateStaffQueryConditions)
+}
 
 // TestToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOneSet(t *testing.T) {}
+func TestToOneSet(t *testing.T) {
+	t.Run("QueryConditionToStaffUsingCreStaffQueryConditions", testQueryConditionToOneSetOpStaffUsingCreStaff)
+	t.Run("QueryConditionToStaffUsingOwnerQueryConditions", testQueryConditionToOneSetOpStaffUsingOwner)
+	t.Run("QueryConditionToStaffUsingUpdateStaffQueryConditions", testQueryConditionToOneSetOpStaffUsingUpdateStaff)
+	t.Run("QueryDisplayItemToQueryConditionUsingQueryDisplayItems", testQueryDisplayItemToOneSetOpQueryConditionUsingQueryCondition)
+	t.Run("QueryOrderConditionItemToQueryConditionUsingQueryOrderConditionItems", testQueryOrderConditionItemToOneSetOpQueryConditionUsingQueryCondition)
+	t.Run("QuerySearchConditionItemToQueryConditionUsingQuerySearchConditionItems", testQuerySearchConditionItemToOneSetOpQueryConditionUsingQueryCondition)
+}
 
 // TestToOneRemove tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOneRemove(t *testing.T) {}
+func TestToOneRemove(t *testing.T) {
+	t.Run("QueryConditionToStaffUsingCreStaffQueryConditions", testQueryConditionToOneRemoveOpStaffUsingCreStaff)
+	t.Run("QueryConditionToStaffUsingUpdateStaffQueryConditions", testQueryConditionToOneRemoveOpStaffUsingUpdateStaff)
+}
 
 // TestOneToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
@@ -129,47 +209,92 @@ func TestOneToOneRemove(t *testing.T) {}
 
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManyAdd(t *testing.T) {}
+func TestToManyAdd(t *testing.T) {
+	t.Run("QueryConditionToStaffGroups", testQueryConditionToManyAddOpStaffGroups)
+	t.Run("QueryConditionToQueryDisplayItems", testQueryConditionToManyAddOpQueryDisplayItems)
+	t.Run("QueryConditionToQueryOrderConditionItems", testQueryConditionToManyAddOpQueryOrderConditionItems)
+	t.Run("QueryConditionToQuerySearchConditionItems", testQueryConditionToManyAddOpQuerySearchConditionItems)
+	t.Run("StaffGroupToQueryConditions", testStaffGroupToManyAddOpQueryConditions)
+	t.Run("StaffGroupToStaffs", testStaffGroupToManyAddOpStaffs)
+	t.Run("StaffToStaffGroups", testStaffToManyAddOpStaffGroups)
+	t.Run("StaffToCreStaffQueryConditions", testStaffToManyAddOpCreStaffQueryConditions)
+	t.Run("StaffToOwnerQueryConditions", testStaffToManyAddOpOwnerQueryConditions)
+	t.Run("StaffToUpdateStaffQueryConditions", testStaffToManyAddOpUpdateStaffQueryConditions)
+}
 
 // TestToManySet tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManySet(t *testing.T) {}
+func TestToManySet(t *testing.T) {
+	t.Run("QueryConditionToStaffGroups", testQueryConditionToManySetOpStaffGroups)
+	t.Run("StaffGroupToQueryConditions", testStaffGroupToManySetOpQueryConditions)
+	t.Run("StaffGroupToStaffs", testStaffGroupToManySetOpStaffs)
+	t.Run("StaffToStaffGroups", testStaffToManySetOpStaffGroups)
+	t.Run("StaffToCreStaffQueryConditions", testStaffToManySetOpCreStaffQueryConditions)
+	t.Run("StaffToUpdateStaffQueryConditions", testStaffToManySetOpUpdateStaffQueryConditions)
+}
 
 // TestToManyRemove tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManyRemove(t *testing.T) {}
+func TestToManyRemove(t *testing.T) {
+	t.Run("QueryConditionToStaffGroups", testQueryConditionToManyRemoveOpStaffGroups)
+	t.Run("StaffGroupToQueryConditions", testStaffGroupToManyRemoveOpQueryConditions)
+	t.Run("StaffGroupToStaffs", testStaffGroupToManyRemoveOpStaffs)
+	t.Run("StaffToStaffGroups", testStaffToManyRemoveOpStaffGroups)
+	t.Run("StaffToCreStaffQueryConditions", testStaffToManyRemoveOpCreStaffQueryConditions)
+	t.Run("StaffToUpdateStaffQueryConditions", testStaffToManyRemoveOpUpdateStaffQueryConditions)
+}
 
 func TestReload(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsReload)
 	t.Run("Makers", testMakersReload)
-	t.Run("Staffs", testStaffsReload)
+	t.Run("QueryConditions", testQueryConditionsReload)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsReload)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsReload)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsReload)
 	t.Run("StaffGroups", testStaffGroupsReload)
+	t.Run("Staffs", testStaffsReload)
 }
 
 func TestReloadAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsReloadAll)
 	t.Run("Makers", testMakersReloadAll)
-	t.Run("Staffs", testStaffsReloadAll)
+	t.Run("QueryConditions", testQueryConditionsReloadAll)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsReloadAll)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsReloadAll)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsReloadAll)
 	t.Run("StaffGroups", testStaffGroupsReloadAll)
+	t.Run("Staffs", testStaffsReloadAll)
 }
 
 func TestSelect(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsSelect)
 	t.Run("Makers", testMakersSelect)
-	t.Run("Staffs", testStaffsSelect)
+	t.Run("QueryConditions", testQueryConditionsSelect)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsSelect)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsSelect)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsSelect)
 	t.Run("StaffGroups", testStaffGroupsSelect)
+	t.Run("Staffs", testStaffsSelect)
 }
 
 func TestUpdate(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsUpdate)
 	t.Run("Makers", testMakersUpdate)
-	t.Run("Staffs", testStaffsUpdate)
+	t.Run("QueryConditions", testQueryConditionsUpdate)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsUpdate)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsUpdate)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsUpdate)
 	t.Run("StaffGroups", testStaffGroupsUpdate)
+	t.Run("Staffs", testStaffsUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("GorpMigrations", testGorpMigrationsSliceUpdateAll)
 	t.Run("Makers", testMakersSliceUpdateAll)
-	t.Run("Staffs", testStaffsSliceUpdateAll)
+	t.Run("QueryConditions", testQueryConditionsSliceUpdateAll)
+	t.Run("QueryDisplayItems", testQueryDisplayItemsSliceUpdateAll)
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsSliceUpdateAll)
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsSliceUpdateAll)
 	t.Run("StaffGroups", testStaffGroupsSliceUpdateAll)
+	t.Run("Staffs", testStaffsSliceUpdateAll)
 }

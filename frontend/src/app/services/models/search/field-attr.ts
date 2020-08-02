@@ -1,7 +1,8 @@
-export interface FieldAttr {
-    id: string,
-    entityName: string,
-    fieldName: string,
-    viewValue: string,
-    fieldType: string,
+import { OptionItem } from './option-item'
+
+export class FieldAttr {
+    id: string
+    viewValue: string
+    fieldType: string
+    optionItems: OptionItem[]
 }

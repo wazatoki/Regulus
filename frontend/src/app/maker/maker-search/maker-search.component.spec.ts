@@ -1,14 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { LayoutModule } from '../../layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MakerSearchComponent } from './maker-search.component';
 import { MakerService } from '../../services/api/maker.service';
-import { MakerCondition } from '../../services/models/maker/maker-condition';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
-import { SearchComponent } from 'src/app/layout/search/search.component';
 import { Maker } from '../../services/models/maker/maker';
 import { of,Subject } from 'rxjs';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
@@ -49,9 +46,9 @@ describe('MakerSearchComponent', () => {
     complexSearchServiceSpy.initSaveDataObj.and.returnValue({
       id: '',
       patternName: '',
-      category: '',
+      category: null,
       isDisclose: false,
-      discloseGroups: [],
+      discloseGroupIDs: [],
       ownerID: '',
       conditionData: {
         searchStrings: [],
@@ -59,6 +56,10 @@ describe('MakerSearchComponent', () => {
         searchConditionList: [],
         orderConditionList: [],
       },
+      owner: {
+        id: '',
+        name: '',
+      }
     });
     complexSearchServiceSpy.initConditionDataObj.and.returnValue({
       searchStrings: [],
@@ -84,7 +85,7 @@ describe('MakerSearchComponent', () => {
       isShowDisplayItem: false,
       isShowOrderCondition: false,
       isShowSaveCondition: false,
-      groupList: [],
+      groups: [],
     }
     const stubValue = of(complexSearchItems)
 
@@ -100,11 +101,11 @@ describe('MakerSearchComponent', () => {
       { id: 'testid2', name: 'Test Maker2' },
     ];
     const stubValue = of(testData)
-    const condition = {
-      searchStrings: [],
+    const condition: ConditionData = {
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
+      searchStrings: [],
     };
     makerServiceSpy.findByCondition.and.returnValue(stubValue);
     complexSearchServiceSpy.initConditionDataObj.and.returnValue(condition);

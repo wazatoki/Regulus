@@ -1,14 +1,16 @@
 package echo
 
 import (
-	"regulus/app/gateway/handle"
+	"regulus/app/infrastructures/echo/handlers"
 
 	"github.com/labstack/echo"
 )
 
 func defineRouting(e *echo.Echo) {
-	apiPath := "/api"
-	e.GET("/", root)
-	e.GET("/index", index)
-	e.GET(apiPath+"/maker/ComplexSearchItems", handle.MakerComplexSearchItems)
+	apiPath := "/api/"
+	e.GET("/", handlers.Root)
+	e.GET("/index", handlers.Index)
+	e.GET(apiPath+"complexSearchCondition", handlers.FindQueryConditionByCondition)
+	e.POST(apiPath+"complexSearchCondition", handlers.AddQueryCondition)
+	e.GET(apiPath+"complexSearchCondition/categories", handlers.FindAllComplexConditionSearchCategories)
 }

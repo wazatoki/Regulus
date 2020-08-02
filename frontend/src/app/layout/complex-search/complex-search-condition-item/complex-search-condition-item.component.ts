@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FieldAttr } from '../../../services/models/search/field-attr';
+import { OptionItem } from '../../../services/models/search/option-item';
 
 @Component({
   selector: 'app-complex-search-condition-item',
@@ -41,6 +42,8 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   matchTypes: matchTypeAttr[];
+  optionItems: OptionItem[];
+  selectedFieldType: string;
 
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
@@ -56,16 +59,19 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   ngOnInit() {
     // matchTypeの初期設定
     if (this.fieldSelected.value !== null && this.fieldSelected.value !== undefined && this.fieldSelected.value !== '') {
-      
       this.setMatchType();
 
     } else {
       this.matchTypes = this.matchTypesForString;
     }
     // operatorの初期設定
-    if(this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
+    if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
       this.operatorSelected.setValue(this.operators[0]);
     }
+  }
+  
+  getConditionValueErrorMessage() {
+    return this.conditionValue.hasError('required') ? '条件値は必須項目です。' : '';
   }
 
   setMatchType(): void {
@@ -73,10 +79,36 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       return (field.id === this.fieldSelected.value)
     })
 
-    if (f.fieldType === "string") {
+    if (f) {
+
+      this.selectedFieldType = f.fieldType;
+      this.optionItems = f.optionItems
+
+      switch (f.fieldType) {
+        case 'number':
+          this.matchTypes = this.matchTypesForNumber;
+          this.matchTypeSelected.setValue(this.matchTypes[0].name);
+          this.conditionValue.setValue('');
+          break;
+        case 'string':
+          this.matchTypes = this.matchTypesForString;
+          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          this.conditionValue.setValue('');
+          break;
+        case 'boolean':
+          this.conditionValue.setValue('true');
+          break;
+        case 'array':
+          this.conditionValue.setValue('true');
+          break;
+
+        default:
+          this.matchTypes = this.matchTypesForString;
+          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          break;
+      }
+    } else { // 検索対象フィールドが選択されていないときなど。
       this.matchTypes = this.matchTypesForString;
-    } else {
-      this.matchTypes = this.matchTypesForNumber;
     }
   }
 

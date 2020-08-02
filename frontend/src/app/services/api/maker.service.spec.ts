@@ -9,6 +9,9 @@ import { ComplexSearchItems } from '../models/search/complex-search-items';
 import { ConditionData } from '../models/search/condition-data';
 import { of } from 'rxjs';
 
+import { createTestInstance1 as createConditionData1 } from 'src/app/services/models/search/condition-data.spec';
+import { createTestInstance1 } from 'src/app/services/models/search/complex-search-items.spec';
+
 describe('MakerService', () => {
 
   let httpTestingController: HttpTestingController;
@@ -60,7 +63,7 @@ describe('MakerService', () => {
 
     const id: Map<string, string> = new Map();
     id.set('id', 'testid');
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker', id);
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/id', id);
   });
 
   it('findByCondition method', () => {
@@ -69,37 +72,8 @@ describe('MakerService', () => {
       { id: 'testid2', name: 'Test Maker2' },
     ];
     makerService = TestBed.get(MakerService);
-    const conditionData: ConditionData = {
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [
-        {
-          field: {
-            id: 'fieldid1',
-            entityName: 'maker',
-            fieldName: 'id',
-            viewValue: 'id',
-            fieldType: 'string',
-          },
-          conditionValue: 'testid',
-          matchType: 'match',
-          operator: 'and',
-        },
-        {
-          field: {
-            id: 'fieldid2',
-            entityName: 'maker',
-            fieldName: 'name',
-            viewValue: 'name',
-            fieldType: 'string',
-          },
-          conditionValue: 'Maker',
-          matchType: 'match',
-          operator: 'and',
-        }
-      ],
-      orderConditionList: [],
-    };
+    const conditionData: ConditionData = createConditionData1();
+    
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
@@ -189,63 +163,7 @@ describe('MakerService', () => {
   });
 
   it('findComplexSearchItems method', () => {
-    const testData: ComplexSearchItems = {
-      displayItemList: [
-        {
-          id: 'id1',
-          entityName: 'aaa',
-          fieldName: 'AAA',
-          viewValue: 'aaa-AAA',
-          fieldType: 'number',
-        },
-        {
-          id: 'id2',
-          entityName: 'bbb',
-          fieldName: 'BBB',
-          viewValue: 'bbb-BBB',
-          fieldType: 'string',
-        },
-      ],
-      searchConditionList: [
-        {
-          id: 'id1',
-          entityName: 'aaa',
-          fieldName: 'AAA',
-          viewValue: 'aaa-AAA',
-          fieldType: 'number',
-        },
-        {
-          id: 'id2',
-          entityName: 'bbb',
-          fieldName: 'BBB',
-          viewValue: 'bbb-BBB',
-          fieldType: 'string',
-        },
-      ],
-      orderConditionList: [
-        {
-          id: 'id1',
-          entityName: 'aaa',
-          fieldName: 'AAA',
-          viewValue: 'aaa-AAA',
-          fieldType: 'number',
-        },
-        {
-          id: 'id2',
-          entityName: 'bbb',
-          fieldName: 'BBB',
-          viewValue: 'bbb-BBB',
-          fieldType: 'string',
-        },
-      ],
-      isShowDisplayItem: true,
-      isShowOrderCondition: true,
-      isShowSaveCondition: true,
-      groupList: [
-        { id: 'id1', name: 'name1' },
-        { id: 'id2', name: 'name2' },
-      ],
-    };
+    const testData: ComplexSearchItems = createTestInstance1();
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData)
@@ -258,7 +176,7 @@ describe('MakerService', () => {
     })
 
     expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/ComplexSearchItems');
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/complexSearchItems');
   });
 
 });

@@ -9,7 +9,7 @@ package maker
 import (
 	"errors"
 	"reflect"
-	makerEntity "regulus/app/domain/entities/maker"
+	makerEntity "regulus/app/domain/entities"
 	"testing"
 )
 

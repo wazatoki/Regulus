@@ -14,11 +14,11 @@ export class HttpService {
   constructor(private client: HttpClient) { }
 
   private getHttpParams(data: Map<string, string>): HttpParams {
-    const params: HttpParams = new HttpParams();
+    let params: HttpParams = new HttpParams();
 
       data.forEach(
-        (key: string, value: string) => {
-          params.set(key, value);
+        (value: string, key: string, ) => {
+          params = params.append(key, value);
         }
       );
     return params;
@@ -42,7 +42,6 @@ export class HttpService {
   };
 
   get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
-
     return this.client.get<T>(`${this.API_URL}${path}`, { params: this.getHttpParams(data) })
       .pipe(
         retry(3),

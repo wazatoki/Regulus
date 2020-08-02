@@ -13,13 +13,13 @@ export class MakerService {
   constructor( private http: HttpService ) { }
 
   findComplexSearchItems(): Observable<ComplexSearchItems> {
-    return this.http.get<ComplexSearchItems>('/maker/ComplexSearchItems')
+    return this.http.get<ComplexSearchItems>('/maker/complexSearchItems')
   }
 
   findById(id: string): Observable<Maker> {
     const data: Map<string, string> = new Map();
     data.set('id', id);
-    return this.http.get<Maker>( '/maker', data );
+    return this.http.get<Maker>( '/maker/id', data );
   }
 
   findByCondition(condition: ConditionData): Observable<Maker[]> {

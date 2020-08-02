@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { of, Observable, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { MakerMasterComponent } from './maker-master.component';
 import { MakerSearchComponent } from '../maker-search/maker-search.component';
@@ -13,7 +12,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MakerService } from '../../services/api/maker.service';
-import { MakerCondition } from '../../services/models/maker/maker-condition'
 import { Maker } from '../../services/models/maker/maker';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from '../../layout/dialog/notice-dialog/notice-dialog.component';
@@ -48,7 +46,6 @@ describe('MakerMasterComponent', () => {
         { provide: MakerService, useValue: spy },
         { provide: MatDialog, useValue: dialogspy },
         { provide: HttpClient, useValue: {} },
-        MakerCondition,
       ],
     })
       .compileComponents();
@@ -156,7 +153,5 @@ describe('MakerMasterComponent', () => {
       expect(component.makerService.delete).toHaveBeenCalled();
 
     });
-    
-    
   });
 });

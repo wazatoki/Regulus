@@ -10,7 +10,15 @@ func TestUpsert(t *testing.T) {
 
 	t.Run("Makers", testMakersUpsert)
 
-	t.Run("Staffs", testStaffsUpsert)
+	t.Run("QueryConditions", testQueryConditionsUpsert)
+
+	t.Run("QueryDisplayItems", testQueryDisplayItemsUpsert)
+
+	t.Run("QueryOrderConditionItems", testQueryOrderConditionItemsUpsert)
+
+	t.Run("QuerySearchConditionItems", testQuerySearchConditionItemsUpsert)
 
 	t.Run("StaffGroups", testStaffGroupsUpsert)
+
+	t.Run("Staffs", testStaffsUpsert)
 }

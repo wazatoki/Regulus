@@ -166,17 +166,15 @@ class TestHostComponent {
     this.fields = [
       {
         id: 'id1',
-        entityName: 'aaa',
-        fieldName: 'AAA',
         viewValue: 'aaa-AAA',
         fieldType: 'number',
+        optionItems: null,
       },
       {
         id: 'id2',
-        entityName: 'bbb',
-        fieldName: 'BBB',
         viewValue: 'bbb-BBB',
         fieldType: 'string',
+        optionItems: null,
       },
     ];
   }
