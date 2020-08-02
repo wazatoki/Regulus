@@ -21,7 +21,7 @@ func AddQueryCondition(c echo.Context) error {
 	}
 	id, err := query.AddCondition(repo, condition)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "data insert error")
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, id)
 }
@@ -35,11 +35,11 @@ func FindQueryConditionByCondition(c echo.Context) error {
 	conditionData = &domainQuery.ConditionData{}
 	e := json.Unmarshal([]byte(c.QueryParam("condition")), conditionData)
 	if e != nil {
-		return c.JSON(http.StatusInternalServerError, "request unmarshal error")
+		return c.JSON(http.StatusInternalServerError, e.Error())
 	}
 	result, err := query.Find(repo, conditionData)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "data fetch error")
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
 }

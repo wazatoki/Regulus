@@ -9,6 +9,7 @@ import (
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
+	"regulus/app/utils/log"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
@@ -196,16 +197,37 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id
 		var err error
 
 		err = sqlQueryCondition.Insert(context.Background(), db.DB, boil.Infer())
+		if err != nil {
+			log.Error(err.Error())
+			return err
+		}
 		for _, d := range sqlQueryDisplayItems {
 			err = d.Insert(context.Background(), db.DB, boil.Infer())
+			if err != nil {
+				log.Error(err.Error())
+				return err
+			}
 		}
 		for _, s := range sqlQuerySearchConditionItems {
 			err = s.Insert(context.Background(), db.DB, boil.Infer())
+			if err != nil {
+				log.Error(err.Error())
+				return err
+			}
 		}
 		for _, o := range sqlQueryOrderConditionItems {
 			err = o.Insert(context.Background(), db.DB, boil.Infer())
+			if err != nil {
+				log.Error(err.Error())
+				return err
+			}
 		}
 		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
+
+		if err != nil {
+			log.Error(err.Error())
+		}
+
 		return err
 	})
 

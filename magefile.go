@@ -146,6 +146,9 @@ func Build() error {
 	targetDir = "." + separator + "build" + separator + "resources"
 	copy(rootDir, targetDir)
 
+	// logフォルダ作成
+	os.Mkdir("."+separator+"build"+separator+"log", 0777)
+
 	fmt.Println("build finished !")
 
 	return nil
