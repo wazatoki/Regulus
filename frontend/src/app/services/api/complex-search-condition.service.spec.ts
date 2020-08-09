@@ -97,40 +97,40 @@ describe('ComplexSearchConditionService', () => {
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition', data);
   });
 
-  it('should call httpService.post with /complexSearchCondition when called add method', () => {
-    const testData: SaveData = createTestInstanceSaveData();
-    testData.id = '';
-    const resultData: SaveData = createTestInstanceSaveData();
-    complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
-    httpServiceSpy = TestBed.get(HttpService);
-    httpServiceSpy.post.and.returnValue(of(resultData));
+  // it('should call httpService.post with /complexSearchCondition when called add method', () => {
+  //   const testData: SaveData = createTestInstanceSaveData();
+  //   testData.id = '';
+  //   const resultData: SaveData = createTestInstanceSaveData();
+  //   complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
+  //   httpServiceSpy = TestBed.get(HttpService);
+  //   httpServiceSpy.post.and.returnValue(of(resultData));
 
-    let result: SaveData;
+  //   let result: SaveData;
 
-    complexSearchConditionService.add(testData).subscribe(data => {
-      result = data
-    })
+  //   complexSearchConditionService.add(testData).subscribe(data => {
+  //     result = data
+  //   })
 
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.post).toHaveBeenCalledWith('/complexSearchCondition', testData);
-  });
+  //   expect(result).toEqual(resultData);
+  //   expect(httpServiceSpy.post).toHaveBeenCalledWith('/complexSearchCondition', testData);
+  // });
 
-  it('should call httpService.put with /complexSearchCondition when called update method', () => {
-    const testData: SaveData = createTestInstanceSaveData();
-    const resultData: SaveData = createTestInstanceSaveData();
-    complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
-    httpServiceSpy = TestBed.get(HttpService);
-    httpServiceSpy.put.and.returnValue(of(resultData));
+  // it('should call httpService.put with /complexSearchCondition when called update method', () => {
+  //   const testData: SaveData = createTestInstanceSaveData();
+  //   const resultData: SaveData = createTestInstanceSaveData();
+  //   complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
+  //   httpServiceSpy = TestBed.get(HttpService);
+  //   httpServiceSpy.put.and.returnValue(of(resultData));
 
-    let result: SaveData;
+  //   let result: SaveData;
 
-    complexSearchConditionService.update(testData).subscribe(data => {
-      result = data
-    })
+  //   complexSearchConditionService.update(testData).subscribe(data => {
+  //     result = data
+  //   })
 
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.put).toHaveBeenCalledWith('/complexSearchCondition', testData);
-  });
+  //   expect(result).toEqual(resultData);
+  //   expect(httpServiceSpy.put).toHaveBeenCalledWith('/complexSearchCondition', testData);
+  // });
 
   it('should call httpService.delete with /complexSearchCondition/delete when called delete method', () => {
     const testData: string[] = ['saveID1', 'saveID2'];

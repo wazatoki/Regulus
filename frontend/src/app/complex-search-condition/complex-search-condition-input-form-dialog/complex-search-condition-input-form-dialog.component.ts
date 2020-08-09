@@ -87,7 +87,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   setSavedDataToForm() {
     // カテゴリーの反映
-    this.categorySelected.setValue(this.saveData.category)
+    this.categorySelected.setValue(this.saveData.category.name)
     this.onSelectCategory()
 
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
@@ -197,19 +197,23 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   }
 
   onSelectCategory() {
-    this.selectedCategory = this.data.categories.find((c) => {
-      return (c.name === this.categorySelected.value)
-    })
 
-    this.initGroups()
+    if (this.categorySelected.value) {
+      this.selectedCategory = this.data.categories.find((c) => {
+        return (c.name === this.categorySelected.value)
+      })
+      this.initGroups()
 
-    this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem
-    this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition
-    this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
-    this.orderConditionList = this.selectedCategory.searchItems.orderConditionList
-    this.initSelectedDisplayItems();
-    this.searchConditionFormArray.clear();
-    this.orderConditionFormArray.clear();
+      if(this.selectedCategory){
+        this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem
+        this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition
+        this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
+        this.orderConditionList = this.selectedCategory.searchItems.orderConditionList
+        this.initSelectedDisplayItems();
+        this.searchConditionFormArray.clear();
+        this.orderConditionFormArray.clear();
+      }
+    }
   }
 
 
@@ -236,13 +240,13 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
       const conditionValue = (fieldType: string) => {
-        if (fieldType == 'boolean'){
-          if(formGroup.get('conditionValue').value){
+        if (fieldType == 'boolean') {
+          if (formGroup.get('conditionValue').value) {
             return 'true';
-          }else{
+          } else {
             return 'false';
           }
-        }else{
+        } else {
           return formGroup.get('conditionValue').value;
         }
       }
@@ -252,7 +256,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
           field = v;
         }
       });
-      
+
       const condition: SearchCondition = {
         field: field,
         conditionValue: conditionValue(field.fieldType),
@@ -288,12 +292,12 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     if (this.isShowSaveCondition) {
       this.data.saveData.category = this.selectedCategory
       this.data.saveData.patternName = this.saveConditions.get('patternName').value;
-      if (this.saveConditions.get('isDisclose').value){
-        this.data.saveData.isDisclose = true;  
-      }else{
+      if (this.saveConditions.get('isDisclose').value) {
+        this.data.saveData.isDisclose = true;
+      } else {
         this.data.saveData.isDisclose = false;
       }
-      
+
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
           this.data.saveData.discloseGroupIDs.push(this.groupList[i].id);
@@ -306,34 +310,33 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    
-    if(this.form.valid){
+
+    if (this.form.valid) {
       
       this.createSaveData();
-      
-      if (this.data.saveData.id) {
-      
-        this.complexSearchDataShereService.updateSearchCondition(this.data.saveData).subscribe(data => {
+
+      if (this.saveData.id) {
+        this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
           this.dialog.open(NoticeDialogComponent, {
             data: { contents: '検索条件を保存しました。' }
           });
         });
-      
-        
+
+
       } else {
-        
-        this.complexSearchDataShereService.addSearchCondition(this.data.saveData).subscribe(data => {
+
+        this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe(data => {
           this.dialog.open(NoticeDialogComponent, {
             data: { contents: '検索条件を保存しました。' }
           });
         });
-        
+
       }
-      
+
     }
-    
+
   }
-  
+
   getPatternNameErrorMessage() {
     return this.saveConditions.get('patternName').hasError('required') ? '検索パターン名称は必須項目です。' : '';
   }
