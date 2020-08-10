@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +17,7 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
       imports: [
+        ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
         LayoutModule,

@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import { ProductMasterComponent } from './product-master.component';
 import { LayoutModule } from '../../layout/layout.module';
+import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 
 @Component({selector: 'app-product-search', template: ''})
@@ -26,6 +27,7 @@ describe('ProductMasterComponent', () => {
       imports: [
         MatTableModule,
         LayoutModule,
+        RouterTestingModule,
       ]
     })
     .compileComponents();
