@@ -1,16 +1,19 @@
 <div class="login">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div>
+            <mat-form-field>
+                <input type="text" formControlName="userID" (keydown.enter)="onEnterUserID($event)" matInput placeholder="ユーザーID" appAutofocus>
+            </mat-form-field>
+        </div>
 
-    <form>
+        <div>
+            <mat-form-field>
+                <input type="password" formControlName="password" (keydown.enter)="onEnterPassword($event)"  matInput placeholder="パスワード">
+            </mat-form-field>
+        </div>
 
-        <mat-form-field>
-            <input type="text" matInput placeholder="利用者ID">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input type="password" matInput placeholder="パスワード">
-        </mat-form-field>
-
-        <input type="submit" value="Submit" />
+        <div>
+            <app-submit [focus]="isSubmitFocus" (focusout)="onSubmitFocusout()"></app-submit>
+        </div>
     </form>
-
 </div>

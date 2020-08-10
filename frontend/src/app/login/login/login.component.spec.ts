@@ -4,6 +4,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { LayoutModule } from '../../layout/layout.module';
+
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
@@ -16,6 +18,7 @@ describe('LoginComponent', () => {
       imports: [
         MatFormFieldModule,
         MatInputModule,
+        LayoutModule,
         NoopAnimationsModule,
       ],
     })

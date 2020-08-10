@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-submit',
@@ -8,6 +8,16 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class SubmitComponent implements OnInit {
 
   private buttonLabel: string;
+
+  onBlur(){
+    this.focusout.emit('');
+  }
+
+  @Input() set focus(a: boolean) {
+    if (a) {
+      this.el.nativeElement.querySelector('button').focus()
+    }
+  }
 
   @Input() set buttonLabelType(type: string) {
 
@@ -28,8 +38,10 @@ export class SubmitComponent implements OnInit {
   }
 
   @Output() clicked: EventEmitter<string> = new EventEmitter();
+  @Output() focusout: EventEmitter<string> = new EventEmitter();
 
-  constructor() {
+
+  constructor(private el: ElementRef) {
     this.buttonLabel = '送信'
   }
 

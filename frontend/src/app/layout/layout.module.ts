@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router'
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HeaderComponent } from './header/header.component';
@@ -37,7 +38,6 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
     LayoutContentsComponent,
     LayoutHeaderContentsComponent,
     LayoutHeaderSidebarContentsComponent,
-    AutofocusDirective,
     SearchComponent,
     CancelComponent,
     SubmitComponent,
@@ -51,9 +51,11 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
     ComplexSearchOrderItemComponent,
     ComplexSearchComponent,
     ComplexSearchDialogComponent,
+    AutofocusDirective,
   ],
   imports: [
     CommonModule,
+    RouterModule,
     FlexLayoutModule,
     MatFormFieldModule,
     MatInputModule,
@@ -83,6 +85,7 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
     UpdateComponent,
     ComplexSearchConditionItemComponent,
     ComplexSearchOrderItemComponent,
+    AutofocusDirective,
   ]
 })
 export class LayoutModule { }

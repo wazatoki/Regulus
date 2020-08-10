@@ -174,7 +174,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     expect(itemBoxDeArray.length).toBe(4);
   });
 
-  fit('should click save button', () => {
+  it('should click save button', () => {
     const spy: jasmine.SpyObj<ComplexSearchService> = TestBed.get(ComplexSearchService);
     component.isShowDisplayItem = true;
     component.isShowOrderCondition = true;
