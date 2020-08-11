@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class LoginStatusService {
 
   status: boolean
-  jwtToken: object
+  jwtToken: string
 
   constructor() {
     this.status = false;
