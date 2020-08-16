@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
-import { LoginStatusService } from './share/login-status.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ export class HttpService {
   readonly HOST_URL: string = 'http://' + window.location.host
   readonly API_URL: string = this.HOST_URL + '/api' 
 
-  constructor(private client: HttpClient, private loginStatus: LoginStatusService) { }
+  constructor(private client: HttpClient) { }
 
   private getHttpParams(data: Map<string, string>): HttpParams {
     let params: HttpParams = new HttpParams();
@@ -44,8 +43,7 @@ export class HttpService {
 
   get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
     return this.client.get<T>(`${this.API_URL}${path}`, {
-      params: this.getHttpParams(data),
-      headers: new HttpHeaders().set('Authorization', this.loginStatus.jwtToken),
+      params: this.getHttpParams(data)
     })
       .pipe(
         retry(3),
@@ -55,7 +53,7 @@ export class HttpService {
 
   post<T>(path: string, data: T): Observable<T> {
 
-    return this.client.post<T>(`${this.API_URL}${path}`, data, { headers: new HttpHeaders().set('Authorization', this.loginStatus.jwtToken) })
+    return this.client.post<T>(`${this.API_URL}${path}`, data)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -64,7 +62,7 @@ export class HttpService {
 
   put<T>(path: string, data: T): Observable<T> {
 
-    return this.client.put<T>(`${this.API_URL}${path}`, data, { headers: new HttpHeaders().set('Authorization', this.loginStatus.jwtToken) })
+    return this.client.put<T>(`${this.API_URL}${path}`, data)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -75,7 +73,6 @@ export class HttpService {
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': this.loginStatus.jwtToken
       }),
       body: new Array<string>(),
     };

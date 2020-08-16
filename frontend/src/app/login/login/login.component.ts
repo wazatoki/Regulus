@@ -1,5 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoginService } from '../../services/api/login.service';
 
 @Component({
   selector: 'app-login',
@@ -8,18 +11,26 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm = new FormGroup({
-    userID: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
-  });
+  loginForm: FormGroup;
   htmlEl: HTMLElement;
   isSubmitFocus: boolean = false;
 
+  returnUrl: string;
+  error = '';
+
   onSubmit() {
-    if (this.loginForm.valid){
-      console.log(this.loginForm.value)
-      
+    if (this.loginForm.invalid) {
+      return;
     }
+
+    this.loginService.login(this.loginForm.value).pipe(first()).subscribe(
+      data => {
+        this.router.navigate([this.returnUrl])
+      },
+      error => {
+        this.error = error
+      }
+    );
   }
 
   onEnterUserID(event: any) {
@@ -33,15 +44,31 @@ export class LoginComponent implements OnInit {
     this.isSubmitFocus = true;
   }
 
-  onSubmitFocusout(){
+  onSubmitFocusout() {
     this.isSubmitFocus = false;
   }
 
-  constructor(private el: ElementRef) {
-    this.htmlEl = this.el.nativeElement
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private loginService: LoginService,
+    private el: ElementRef) {
+
+    if (this.loginService.currentUserValue) {
+      this.router.navigate(['/']);
+    }
   }
 
   ngOnInit() {
+    this.loginForm = new FormGroup({
+      userID: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+    });
+
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+    this.htmlEl = this.el.nativeElement
   }
 
 }
