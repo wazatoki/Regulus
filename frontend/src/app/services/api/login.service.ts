@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { HttpService } from '../http.service';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Staff } from '../models/staff/staff'
 
 @Injectable({
@@ -25,9 +25,26 @@ export class LoginService {
     return this.currentUserTokenSubject.value;
   }
 
-  login(data: { userID: string, password: string }): Observable<boolean> {
+  private handleError(error: HttpErrorResponse) {
+    console.log(error)
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.error}`);
+    }
+    // return an observable with a user-facing error message
+    return throwError(
+      'Something bad happened; please try again later.');
+  };
 
-    return this.http.post<any>('/login', data).pipe(map(data => {
+  login(data: { id: string, password: string }): Observable<boolean> {
+
+    return this.client.post<any>('http://' + window.location.host + '/login', data).pipe(map(data => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       if (data.jwtToken) {
         this.currentUserTokenSubject.next(data.jwtToken);
@@ -37,7 +54,9 @@ export class LoginService {
         return true
       }
       return false
-    }));
+    }),
+    catchError(this.handleError)
+    );
   }
 
   logout() {
@@ -49,7 +68,7 @@ export class LoginService {
   }
 
   constructor(
-    private http: HttpService) {
+    private client: HttpClient) {
 
     this.user = null;
     this.token = '';

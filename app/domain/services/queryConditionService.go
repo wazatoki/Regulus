@@ -10,7 +10,7 @@ import (
 /*
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
 */
-func CreateCategories(groups []entities.StaffGroup) (categories []entities.Category) {
+func CreateCategories(groups []*entities.StaffGroup) (categories []entities.Category) {
 
 	categories = []entities.Category{}
 
@@ -23,7 +23,7 @@ func CreateCategories(groups []entities.StaffGroup) (categories []entities.Categ
 	return
 }
 
-func createQueryConditionCategory(groups []entities.StaffGroup) (category entities.Category) {
+func createQueryConditionCategory(groups []*entities.StaffGroup) (category entities.Category) {
 
 	optionItems := []query.OptionItem{}
 
@@ -72,7 +72,7 @@ func createQueryConditionCategory(groups []entities.StaffGroup) (category entiti
 	return
 }
 
-func createStaffCategory(groups []entities.StaffGroup) (category entities.Category) {
+func createStaffCategory(groups []*entities.StaffGroup) (category entities.Category) {
 	category = entities.Category{
 		Name:      "staff",
 		ViewValue: "利用者",
@@ -107,7 +107,7 @@ func createStaffCategory(groups []entities.StaffGroup) (category entities.Catego
 	return
 }
 
-func createStaffGroupCategory(groups []entities.StaffGroup) (category entities.Category) {
+func createStaffGroupCategory(groups []*entities.StaffGroup) (category entities.Category) {
 	category = entities.Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",

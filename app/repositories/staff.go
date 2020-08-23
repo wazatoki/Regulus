@@ -95,8 +95,8 @@ func (s *StaffRepo) Insert(staff *entities.Staff) (id string, err error) {
 }
 
 // SelectByIDs select staff data by id list from database
-func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err error) {
-	staffs = []entities.Staff{}
+func (s *StaffRepo) SelectByIDs(ids []string) (staffs []*entities.Staff, err error) {
+	staffs = []*entities.Staff{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -129,9 +129,9 @@ func (s *StaffRepo) SelectByIDs(ids []string) (staffs []entities.Staff, err erro
 }
 
 // SelectByID select staaff data by id from database
-func (s *StaffRepo) SelectByID(id string) (staff entities.Staff, err error) {
+func (s *StaffRepo) SelectByID(id string) (staff *entities.Staff, err error) {
 	if id == "" {
-		return entities.Staff{}, errors.New("id must be required")
+		return nil, errors.New("id must be required")
 	}
 
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
@@ -151,9 +151,32 @@ func (s *StaffRepo) SelectByID(id string) (staff entities.Staff, err error) {
 	return
 }
 
+// SelectByAccountID select staaff data by accountID from database
+func (s *StaffRepo) SelectByAccountID(id string) (staff *entities.Staff, err error) {
+	if id == "" {
+		return nil, errors.New("accountID must be required")
+	}
+
+	err = s.database.WithDbContext(func(db *sqlx.DB) error {
+		queries := []qm.QueryMod{
+			qm.Where(sqlboiler.StaffColumns.Del+" !=?", true),
+			qm.And(sqlboiler.StaffColumns.AccountID+" =?", id),
+			qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
+		}
+		fetchedStaff, err := sqlboiler.Staffs(queries...).One(context.Background(), db.DB)
+		if err == nil {
+			staff = StaffObjectMap(fetchedStaff)
+		}
+
+		return err
+	})
+
+	return
+}
+
 // SelectAll select all staff data without not del from database
-func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
-	staffs = []entities.Staff{}
+func (s *StaffRepo) SelectAll() (staffs []*entities.Staff, err error) {
+	staffs = []*entities.Staff{}
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
 			qm.Where(sqlboiler.StaffColumns.Del+"!=?", true),
@@ -176,8 +199,8 @@ func (s *StaffRepo) SelectAll() (staffs []entities.Staff, err error) {
 }
 
 // Select select staff data by condition from database
-func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []entities.Staff, err error) {
-	staffs = []entities.Staff{}
+func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []*entities.Staff, err error) {
+	staffs = []*entities.Staff{}
 	queries := s.createQueryModSlice()
 	var q qm.QueryMod
 
@@ -255,12 +278,17 @@ func (s *StaffRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 }
 
 // StaffObjectMap data mapper sqlboiler object to entities object
-func StaffObjectMap(ss *sqlboiler.Staff) (es entities.Staff) {
-	groups := []entities.StaffGroup{}
+func StaffObjectMap(ss *sqlboiler.Staff) (es *entities.Staff) {
+
+	if ss == nil {
+		return nil
+	}
+
+	groups := []*entities.StaffGroup{}
 	for _, group := range ss.R.StaffGroups {
 		groups = append(groups, StaffGroupObjectMap(group))
 	}
-	es = entities.Staff{
+	es = &entities.Staff{
 		ID:        ss.ID,
 		AccountID: ss.AccountID,
 		Name:      ss.Name,

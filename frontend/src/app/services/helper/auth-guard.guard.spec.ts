@@ -1,14 +1,14 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { HttpService } from '../http.service';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { AuthGuardGuard } from './auth-guard.guard';
 
 describe('AuthGuardGuard', () => {
   beforeEach(() => {
 
-    const spy = jasmine.createSpyObj('HttpService', ['get', 'post', 'put', 'delete']);
+    const spy = jasmine.createSpyObj('HttpClient', ['get', 'post', 'put', 'delete']);
 
     TestBed.configureTestingModule({
       imports: [
@@ -16,7 +16,7 @@ describe('AuthGuardGuard', () => {
       ],
       providers: [
         AuthGuardGuard,
-        { provide: HttpService, useValue: spy },]
+        { provide: HttpClient, useValue: spy },]
     });
   });
 

@@ -25,7 +25,12 @@ export class LoginComponent implements OnInit {
 
     this.loginService.login(this.loginForm.value).pipe(first()).subscribe(
       data => {
-        this.router.navigate([this.returnUrl])
+        if(data){
+          this.router.navigate([this.returnUrl])
+        }else{
+          this.error = 'IDまたはパスワードが違います。'
+        }
+        
       },
       error => {
         this.error = error
@@ -61,7 +66,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = new FormGroup({
-      userID: new FormControl('', [Validators.required]),
+      id: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
 

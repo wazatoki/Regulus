@@ -31,3 +31,11 @@ func DbName() string {
 func DbPassword() string {
 	return viper.GetString("dbPassword")
 }
+
+func SecretKey() string {
+	return viper.GetString("secretKey")
+}
+
+func LoginExpTime() int64 {
+	return viper.GetInt64("loginExpTime")
+}

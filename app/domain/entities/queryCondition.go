@@ -20,7 +20,7 @@ type ComplexSearchItems struct {
 	DisplayItemList     []query.FieldAttr `json:"displayItemList"`
 	SearchConditionList []query.FieldAttr `json:"searchConditionList"`
 	OrderConditionList  []query.FieldAttr `json:"orderConditionList"`
-	Groups              []StaffGroup      `json:"groups"`
+	Groups              []*StaffGroup     `json:"groups"`
 }
 
 /*
@@ -31,7 +31,7 @@ type QueryCondition struct {
 	PatternName    string              `json:"patternName"`
 	Category       Category            `json:"category"`
 	IsDisclose     bool                `json:"isDisclose"`
-	DiscloseGroups []StaffGroup        `json:"discloseGroups"`
-	Owner          Staff               `json:"owner"`
+	DiscloseGroups []*StaffGroup       `json:"discloseGroups"`
+	Owner          *Staff              `json:"owner"`
 	ConditionData  query.ConditionData `json:"conditionData"`
 }

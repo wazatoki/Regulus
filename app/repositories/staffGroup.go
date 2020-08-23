@@ -73,8 +73,8 @@ func (g *StaffGroupRepo) Insert(staffGroup *entities.StaffGroup) (id string, err
 }
 
 // SelectByIDs select staff data by id list from database
-func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []entities.StaffGroup, err error) {
-	staffGroups = []entities.StaffGroup{}
+func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []*entities.StaffGroup, err error) {
+	staffGroups = []*entities.StaffGroup{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -106,9 +106,9 @@ func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []entities.Staff
 }
 
 // SelectByID select staaffGroup data by id from database
-func (g *StaffGroupRepo) SelectByID(id string) (staffGroup entities.StaffGroup, err error) {
+func (g *StaffGroupRepo) SelectByID(id string) (staffGroup *entities.StaffGroup, err error) {
 	if id == "" {
-		return entities.StaffGroup{}, errors.New("id must be required")
+		return &entities.StaffGroup{}, errors.New("id must be required")
 	}
 
 	err = g.database.WithDbContext(func(db *sqlx.DB) error {
@@ -128,8 +128,8 @@ func (g *StaffGroupRepo) SelectByID(id string) (staffGroup entities.StaffGroup, 
 }
 
 // SelectAll select all group data without not del from database
-func (g *StaffGroupRepo) SelectAll() ([]entities.StaffGroup, error) {
-	geSlice := []entities.StaffGroup{}
+func (g *StaffGroupRepo) SelectAll() ([]*entities.StaffGroup, error) {
+	geSlice := []*entities.StaffGroup{}
 
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
@@ -147,7 +147,7 @@ func (g *StaffGroupRepo) SelectAll() ([]entities.StaffGroup, error) {
 				ge.ID = group.ID
 				ge.Name = group.Name
 
-				geSlice = append(geSlice, *ge)
+				geSlice = append(geSlice, ge)
 			}
 		}
 
@@ -158,8 +158,8 @@ func (g *StaffGroupRepo) SelectAll() ([]entities.StaffGroup, error) {
 }
 
 // Select select staffGroup data by condition from database
-func (g *StaffGroupRepo) Select(queryItems ...*query.SearchConditionItem) ([]entities.StaffGroup, error) {
-	staffGroups := []entities.StaffGroup{}
+func (g *StaffGroupRepo) Select(queryItems ...*query.SearchConditionItem) ([]*entities.StaffGroup, error) {
+	staffGroups := []*entities.StaffGroup{}
 	queries := g.createQueryModSlice()
 	var q qm.QueryMod
 
@@ -230,8 +230,12 @@ func (g *StaffGroupRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 }
 
 // StaffGroupObjectMap data mapper sqlboiler object to entities object
-func StaffGroupObjectMap(sg *sqlboiler.StaffGroup) (eg entities.StaffGroup) {
-	eg = entities.StaffGroup{
+func StaffGroupObjectMap(sg *sqlboiler.StaffGroup) (eg *entities.StaffGroup) {
+
+	if sg == nil {
+		return nil
+	}
+	eg = &entities.StaffGroup{
 		ID:   sg.ID,
 		Name: sg.Name,
 	}

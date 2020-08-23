@@ -23,8 +23,8 @@ func tearDownStaffTest(con *sqlx.DB) {
 	con.Close()
 }
 
-func createExpectedStaff1Entity() entities.Staff {
-	return entities.Staff{
+func createExpectedStaff1Entity() *entities.Staff {
+	return &entities.Staff{
 		ID:        "staffid1",
 		AccountID: "12345",
 		Name:      "name 1",
@@ -33,64 +33,64 @@ func createExpectedStaff1Entity() entities.Staff {
 	}
 }
 
-func createExpectedStaff2Entity() entities.Staff {
-	return entities.Staff{
+func createExpectedStaff2Entity() *entities.Staff {
+	return &entities.Staff{
 		ID:        "staffid2",
 		AccountID: "22345",
 		Name:      "name 2",
 		Password:  "password 2",
-		Groups: []entities.StaffGroup{
+		Groups: []*entities.StaffGroup{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaff3Entity() entities.Staff {
-	return entities.Staff{
+func createExpectedStaff3Entity() *entities.Staff {
+	return &entities.Staff{
 		ID:        "staffid3",
 		AccountID: "32345",
 		Name:      "name 3",
 		Password:  "password 3",
-		Groups: []entities.StaffGroup{
+		Groups: []*entities.StaffGroup{
 			createExpectedStaffGroup2Entity(),
 		},
 	}
 }
 
-func createExpectedStaff4Entity() entities.Staff {
-	return entities.Staff{
+func createExpectedStaff4Entity() *entities.Staff {
+	return &entities.Staff{
 		ID:        "staffid4",
 		AccountID: "42345",
 		Name:      "name 4",
 		Password:  "password 4",
-		Groups: []entities.StaffGroup{
+		Groups: []*entities.StaffGroup{
 			createExpectedStaffGroup3Entity(),
 		},
 	}
 }
 
-func createExpectedStaff5Entity() entities.Staff {
-	return entities.Staff{
+func createExpectedStaff5Entity() *entities.Staff {
+	return &entities.Staff{
 		ID:        "staffid5",
 		AccountID: "52345",
 		Name:      "name 5",
 		Password:  "password 5",
-		Groups: []entities.StaffGroup{
+		Groups: []*entities.StaffGroup{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaffEntity1Slice() []entities.Staff {
-	return []entities.Staff{
+func createExpectedStaffEntity1Slice() []*entities.Staff {
+	return []*entities.Staff{
 		createExpectedStaff1Entity(),
 		createExpectedStaff3Entity(),
 		createExpectedStaff4Entity(),
 	}
 }
 
-func createExpectedStaffEntity2Slice() []entities.Staff {
-	return []entities.Staff{
+func createExpectedStaffEntity2Slice() []*entities.Staff {
+	return []*entities.Staff{
 		createExpectedStaff1Entity(),
 		createExpectedStaff2Entity(),
 		createExpectedStaff3Entity(),
@@ -107,7 +107,7 @@ func TestStaffObjectMap(t *testing.T) {
 	tests := []struct {
 		name   string
 		args   args
-		wantEs entities.Staff
+		wantEs *entities.Staff
 	}{
 		{
 			name:   "convert sqlboiler.staff to entities.staff",
@@ -141,7 +141,7 @@ func TestStaffRepo_Select(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []entities.Staff
+		want    []*entities.Staff
 		wantErr bool
 	}{
 		{
@@ -215,7 +215,7 @@ func TestStaffRepo_SelectAll(t *testing.T) {
 	tests := []struct {
 		name       string
 		fields     fields
-		wantStaffs []entities.Staff
+		wantStaffs []*entities.Staff
 		wantErr    bool
 	}{
 		{
@@ -260,7 +260,7 @@ func TestStaffRepo_SelectByID(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    entities.Staff
+		want    *entities.Staff
 		wantErr bool
 	}{
 		{
@@ -307,7 +307,7 @@ func TestStaffRepo_SelectByIDs(t *testing.T) {
 		name       string
 		fields     fields
 		args       args
-		wantStaffs []entities.Staff
+		wantStaffs []*entities.Staff
 		wantErr    bool
 	}{
 		{
@@ -371,7 +371,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 					AccountID: "62345",
 					Name:      "name 6",
 					Password:  "password 6",
-					Groups: []entities.StaffGroup{
+					Groups: []*entities.StaffGroup{
 						createExpectedStaffGroup1Entity(),
 						createExpectedStaffGroup2Entity(),
 					},
@@ -385,12 +385,12 @@ func TestStaffRepo_Insert(t *testing.T) {
 			con := setUpStaffTest()
 			defer tearDownStaffTest(con)
 			setupTestData()
-			want := entities.Staff{
+			want := &entities.Staff{
 				ID:        "",
 				AccountID: "62345",
 				Name:      "name 6",
 				Password:  "password 6",
-				Groups: []entities.StaffGroup{
+				Groups: []*entities.StaffGroup{
 					createExpectedStaffGroup1Entity(),
 					createExpectedStaffGroup2Entity(),
 				},
@@ -444,11 +444,11 @@ func TestStaffRepo_Update(t *testing.T) {
 			defer tearDownStaffTest(con)
 			setupTestData()
 			beforeStaff := createExpectedStaff1Entity()
-			tt.args.staff = &beforeStaff
+			tt.args.staff = beforeStaff
 			tt.args.staff.AccountID = "1234512345"
 			tt.args.staff.Name = "name 1name 1"
 			tt.args.staff.Password = "password 1password 1"
-			tt.args.staff.Groups = []entities.StaffGroup{
+			tt.args.staff.Groups = []*entities.StaffGroup{
 				createExpectedStaffGroup2Entity(),
 				createExpectedStaffGroup3Entity(),
 			}
@@ -463,7 +463,7 @@ func TestStaffRepo_Update(t *testing.T) {
 			got, _ := sqlboiler.Staffs(qm.Where("id=?", beforeStaff.ID), qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true"))).One(context.Background(), con)
 			resultEntity := StaffObjectMap(got)
 
-			if !reflect.DeepEqual(resultEntity, *tt.args.staff) {
+			if !reflect.DeepEqual(resultEntity, tt.args.staff) {
 				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, tt.args.staff)
 			}
 
@@ -515,6 +515,49 @@ func TestStaffRepo_Dalete(t *testing.T) {
 
 			if got != nil {
 				t.Errorf("StaffRepo.Dalete() = %v, want %v", got, nil)
+			}
+		})
+	}
+}
+
+func TestStaffRepo_SelectByAccountID(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name      string
+		fields    fields
+		args      args
+		wantStaff *entities.Staff
+		wantErr   bool
+	}{
+		{
+			name: "it should get specified entity as select by accountID",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				id: "12345",
+			},
+			wantStaff: createExpectedStaff1Entity(),
+			wantErr:   false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &StaffRepo{
+				database: tt.fields.database,
+			}
+			gotStaff, err := s.SelectByAccountID(tt.args.id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("StaffRepo.SelectByAccountID() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotStaff, tt.wantStaff) {
+				t.Errorf("StaffRepo.SelectByAccountID() = %v, want %v", gotStaff, tt.wantStaff)
 			}
 		})
 	}
