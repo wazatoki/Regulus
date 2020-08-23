@@ -255,6 +255,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 	}
 	type args struct {
 		staffGroup *entities.StaffGroup
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -268,10 +269,11 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				&entities.StaffGroup{
+				staffGroup: &entities.StaffGroup{
 					ID:   "staffgroupid3",
 					Name: "staff group name 5",
 				},
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -288,7 +290,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			gotID, err := g.Insert(tt.args.staffGroup)
+			gotID, err := g.Insert(tt.args.staffGroup, tt.args.operatorID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -311,6 +313,7 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 	}
 	type args struct {
 		staffGroup *entities.StaffGroup
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -334,10 +337,11 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 			beforeStaffGroup := createExpectedStaffGroup1Entity()
 			tt.args.staffGroup = beforeStaffGroup
 			tt.args.staffGroup.Name = "staff group name 5"
+			tt.args.operatorID = createExpectedStaff1Entity().ID
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			if err := g.Update(tt.args.staffGroup); (err != nil) != tt.wantErr {
+			if err := g.Update(tt.args.staffGroup, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, _ := sqlboiler.StaffGroups(qm.Where("id=?", beforeStaffGroup.ID)).One(context.Background(), con)
@@ -355,7 +359,8 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 		database db
 	}
 	type args struct {
-		id string
+		id         string
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -369,7 +374,8 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				id: "staffgroupid2",
+				id:         "staffgroupid2",
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -383,7 +389,7 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			if err := g.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+			if err := g.Dalete(tt.args.id, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 

@@ -11,7 +11,7 @@ import (
 Find は検索時のユースケースです。条件指定がない場合は全件検索の結果を返します。
 
 */
-func Find(queryRepo persistance, conditionData *query.ConditionData) ([]entities.QueryCondition, error) {
+func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*entities.QueryCondition, error) {
 
 	items, err := queryRepo.Select(conditionData.SearchConditionList...)
 
@@ -29,9 +29,9 @@ func Find(queryRepo persistance, conditionData *query.ConditionData) ([]entities
 Find は検索条件追加時のユースケースです。成功した場合は id を返却します。
 
 */
-func AddCondition(queryRepo persistance, queryCondition *entities.QueryCondition) (string, error) {
+func AddCondition(queryRepo persistance, queryCondition *entities.QueryCondition, operatorID string) (string, error) {
 
-	id, err := queryRepo.Insert(queryCondition)
+	id, err := queryRepo.Insert(queryCondition, operatorID)
 
 	return id, err
 }

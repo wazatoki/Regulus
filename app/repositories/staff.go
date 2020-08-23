@@ -11,12 +11,13 @@ import (
 	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
 // Dalete delete data to database
-func (s *StaffRepo) Dalete(id string) error {
+func (s *StaffRepo) Dalete(id string, operatorID string) error {
 	if id == "" {
 		return errors.New("id must be required")
 	}
@@ -24,6 +25,7 @@ func (s *StaffRepo) Dalete(id string) error {
 	err := s.database.WithDbContext(func(db *sqlx.DB) error {
 		sqlStaff, _ := sqlboiler.FindStaff(context.Background(), db.DB, id)
 		sqlStaff.Del = true
+		sqlStaff.UpdateStaffID = null.StringFrom(operatorID)
 		var err error
 		_, err = sqlStaff.Update(context.Background(), db.DB, boil.Infer())
 		return err
@@ -33,16 +35,17 @@ func (s *StaffRepo) Dalete(id string) error {
 }
 
 // Update update data to database
-func (s *StaffRepo) Update(staff *entities.Staff) (err error) {
+func (s *StaffRepo) Update(staff *entities.Staff, operatorID string) (err error) {
 	if staff.ID == "" {
 		return errors.New("ID must be required")
 	}
 
 	sqlStaff := &sqlboiler.Staff{
-		ID:        staff.ID,
-		AccountID: staff.AccountID,
-		Name:      staff.Name,
-		Password:  staff.Password,
+		ID:            staff.ID,
+		UpdateStaffID: null.StringFrom(operatorID),
+		AccountID:     staff.AccountID,
+		Name:          staff.Name,
+		Password:      staff.Password,
 	}
 
 	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.Groups))
@@ -63,13 +66,15 @@ func (s *StaffRepo) Update(staff *entities.Staff) (err error) {
 }
 
 // Insert insert data to database
-func (s *StaffRepo) Insert(staff *entities.Staff) (id string, err error) {
+func (s *StaffRepo) Insert(staff *entities.Staff, operatorID string) (id string, err error) {
 	id = ""
 	sqlStaff := &sqlboiler.Staff{
-		ID:        utils.CreateID(),
-		AccountID: staff.AccountID,
-		Name:      staff.Name,
-		Password:  staff.Password,
+		ID:            utils.CreateID(),
+		CreStaffID:    null.StringFrom(operatorID),
+		UpdateStaffID: null.StringFrom(operatorID),
+		AccountID:     staff.AccountID,
+		Name:          staff.Name,
+		Password:      staff.Password,
 	}
 
 	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.Groups))

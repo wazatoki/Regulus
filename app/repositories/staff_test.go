@@ -352,7 +352,8 @@ func TestStaffRepo_Insert(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staff *entities.Staff
+		staff      *entities.Staff
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -376,6 +377,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 						createExpectedStaffGroup2Entity(),
 					},
 				},
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -399,7 +401,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 			s := &StaffRepo{
 				database: tt.fields.database,
 			}
-			gotID, err := s.Insert(tt.args.staff)
+			gotID, err := s.Insert(tt.args.staff, tt.args.operatorID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("StaffRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -422,7 +424,8 @@ func TestStaffRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staff *entities.Staff
+		staff      *entities.Staff
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -452,11 +455,12 @@ func TestStaffRepo_Update(t *testing.T) {
 				createExpectedStaffGroup2Entity(),
 				createExpectedStaffGroup3Entity(),
 			}
+			tt.args.operatorID = createExpectedStaff1Entity().ID
 
 			s := &StaffRepo{
 				database: tt.fields.database,
 			}
-			if err := s.Update(tt.args.staff); (err != nil) != tt.wantErr {
+			if err := s.Update(tt.args.staff, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
@@ -476,7 +480,8 @@ func TestStaffRepo_Dalete(t *testing.T) {
 		database db
 	}
 	type args struct {
-		id string
+		id         string
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -490,7 +495,8 @@ func TestStaffRepo_Dalete(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				id: "staffid2",
+				id:         "staffid2",
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -504,7 +510,7 @@ func TestStaffRepo_Dalete(t *testing.T) {
 			s := &StaffRepo{
 				database: tt.fields.database,
 			}
-			if err := s.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+			if err := s.Dalete(tt.args.id, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, _ := sqlboiler.Staffs(

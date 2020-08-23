@@ -19,7 +19,7 @@ func AddQueryCondition(c echo.Context) error {
 	if e != nil {
 		return e
 	}
-	id, err := query.AddCondition(repo, condition)
+	id, err := query.AddCondition(repo, condition, getAuthStaffID(c))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "data insert error")
 	}

@@ -9,12 +9,13 @@ import (
 	"regulus/app/utils"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
 // Dalete delete data to database
-func (g *StaffGroupRepo) Dalete(id string) error {
+func (g *StaffGroupRepo) Dalete(id string, operatorID string) error {
 	if id == "" {
 		return errors.New("id must be required")
 	}
@@ -22,6 +23,7 @@ func (g *StaffGroupRepo) Dalete(id string) error {
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
 		sqlStaffGroup, _ := sqlboiler.FindStaffGroup(context.Background(), db.DB, id)
 		sqlStaffGroup.Del = true
+		sqlStaffGroup.UpdateStaffID = null.StringFrom(operatorID)
 		var err error
 		_, err = sqlStaffGroup.Update(context.Background(), db.DB, boil.Infer())
 		return err
@@ -31,14 +33,15 @@ func (g *StaffGroupRepo) Dalete(id string) error {
 }
 
 // Update update data to database
-func (g *StaffGroupRepo) Update(staffGroup *entities.StaffGroup) (err error) {
+func (g *StaffGroupRepo) Update(staffGroup *entities.StaffGroup, operatorID string) (err error) {
 	if staffGroup.ID == "" {
 		return errors.New("ID must be required")
 	}
 
 	sqlStaffGroup := &sqlboiler.StaffGroup{
-		ID:   staffGroup.ID,
-		Name: staffGroup.Name,
+		ID:            staffGroup.ID,
+		UpdateStaffID: null.StringFrom(operatorID),
+		Name:          staffGroup.Name,
 	}
 
 	err = g.database.WithDbContext(func(db *sqlx.DB) error {
@@ -51,11 +54,13 @@ func (g *StaffGroupRepo) Update(staffGroup *entities.StaffGroup) (err error) {
 }
 
 // Insert insert data to database
-func (g *StaffGroupRepo) Insert(staffGroup *entities.StaffGroup) (id string, err error) {
+func (g *StaffGroupRepo) Insert(staffGroup *entities.StaffGroup, operatorID string) (id string, err error) {
 	id = ""
 	sqlStaffGroup := &sqlboiler.StaffGroup{
-		ID:   utils.CreateID(),
-		Name: staffGroup.Name,
+		ID:            utils.CreateID(),
+		CreStaffID:    null.StringFrom(operatorID),
+		UpdateStaffID: null.StringFrom(operatorID),
+		Name:          staffGroup.Name,
 	}
 
 	err = g.database.WithDbContext(func(db *sqlx.DB) error {

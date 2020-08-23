@@ -140,14 +140,14 @@ func createStaffGroupCategory(groups []*entities.StaffGroup) (category entities.
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(queryConditions []entities.QueryCondition, orderItems ...query.OrderConditionItem) []entities.QueryCondition {
+func Sort(queryConditions []*entities.QueryCondition, orderItems ...query.OrderConditionItem) []*entities.QueryCondition {
 	sort.Slice(queryConditions, func(i int, j int) bool {
 		return compare(queryConditions[i], queryConditions[j], orderItems, 0)
 	})
 	return queryConditions
 }
 
-func compare(queryCondition1 entities.QueryCondition, queryCondition2 entities.QueryCondition, orderItems []query.OrderConditionItem, orderIndex int) bool {
+func compare(queryCondition1 *entities.QueryCondition, queryCondition2 *entities.QueryCondition, orderItems []query.OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false
