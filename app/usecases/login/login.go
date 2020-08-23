@@ -33,7 +33,7 @@ func generateToken(id string) (string, error) {
 
 	// Set claims
 	claims := token.Claims.(jwt.MapClaims)
-	claims["id"] = id
+	claims["staffID"] = id
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(config.LoginExpTime())).Unix()
 
 	// Generate encoded token and send it as response.

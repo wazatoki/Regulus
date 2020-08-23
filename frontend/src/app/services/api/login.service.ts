@@ -38,6 +38,10 @@ export class LoginService {
         `body was: ${error.error}`);
     }
     // return an observable with a user-facing error message
+    if (error.status === 401){
+      return throwError(
+        'login incorrect.\nID or password is mismatch.');  
+    }
     return throwError(
       'Something bad happened; please try again later.');
   };

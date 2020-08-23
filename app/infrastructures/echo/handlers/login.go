@@ -6,6 +6,7 @@ import (
 	"regulus/app/repositories"
 	"regulus/app/usecases/login"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
 
@@ -25,4 +26,14 @@ func Login(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"staff": staff, "jwtToken": token})
+}
+
+func getAuthStaffID(c echo.Context) string {
+	if c.Get("user") == nil {
+		return ""
+	}
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	staffID := claims["staffID"].(string)
+	return staffID
 }

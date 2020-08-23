@@ -19,7 +19,7 @@ func skipper(c echo.Context) bool {
 	if strings.HasPrefix(c.Request().URL.Path, "/resources/") {
 		return true
 	}
-	if strings.HasPrefix(c.Request().URL.Path, "/login") {
+	if strings.HasPrefix(c.Request().URL.Path, "/login") && c.Request().Method == "POST" {
 		return true
 	}
 	if strings.HasPrefix(c.Request().URL.Path, "/api/") {
