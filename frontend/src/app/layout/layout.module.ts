@@ -86,6 +86,9 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
     ComplexSearchConditionItemComponent,
     ComplexSearchOrderItemComponent,
     AutofocusDirective,
+  ],
+  entryComponents: [
+    AlertDialogComponent,
   ]
 })
 export class LayoutModule { }

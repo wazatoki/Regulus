@@ -68,7 +68,7 @@ export class LoginService {
     this.token = '';
     this.user = null;
     this.currentUserSubject.next(null);
-    this.currentUserTokenSubject.next(null);
+    this.currentUserTokenSubject.next('');
   }
 
   constructor(

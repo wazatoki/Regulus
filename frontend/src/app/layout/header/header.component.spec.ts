@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from './header.component';
 import { LoginService } from 'src/app/services/api/login.service';
 import { BehaviorSubject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -12,12 +13,14 @@ describe('HeaderComponent', () => {
   beforeEach(async(() => {
     
     const spy = jasmine.createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
+    const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
       declarations: [ HeaderComponent ],
       imports: [ RouterTestingModule ],
       providers: [
         { provide: LoginService, useValue: spy },
+        { provide: MatDialog, useValue: dialogspy },
       ]
     })
     .compileComponents();
