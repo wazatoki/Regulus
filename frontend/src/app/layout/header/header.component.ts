@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from 'src/app/services/api/login.service';
 
 @Component({
   selector: 'app-header',
@@ -7,7 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  isLoginable: boolean
+  isLogoutable: boolean
+
+  constructor(
+    private loginService :LoginService
+  ) { 
+    this.loginService.currentUserToken.subscribe( token => {
+      if (token === '') {
+        this.isLoginable = true;
+        this.isLogoutable = false;
+      }else{
+        this.isLoginable = false;
+        this.isLogoutable = true;
+      }
+    });
+  }
 
   ngOnInit() {
   }

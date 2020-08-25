@@ -5,6 +5,8 @@ import { ProductMasterComponent } from './product-master.component';
 import { LayoutModule } from '../../layout/layout.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
+import { LoginService } from 'src/app/services/api/login.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({selector: 'app-product-search', template: ''})
 class ProductSearchComponent {}
@@ -16,8 +18,12 @@ describe('ProductMasterComponent', () => {
   let component: ProductMasterComponent;
   let productMasterElement: HTMLElement;
   let fixture: ComponentFixture<ProductMasterComponent>;
+  let spy:jasmine.SpyObj<LoginService>;
 
   beforeEach(async(() => {
+
+    const spy = jasmine.createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
+
     TestBed.configureTestingModule({
       declarations: [ 
         ProductMasterComponent,
@@ -28,12 +34,18 @@ describe('ProductMasterComponent', () => {
         MatTableModule,
         LayoutModule,
         RouterTestingModule,
+      ],
+      providers: [
+        { provide: LoginService, useValue: spy },
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
+    spy = TestBed.get(LoginService);
+    spy.currentUserToken= new BehaviorSubject<string>('').asObservable()
+
     fixture = TestBed.createComponent(ProductMasterComponent);
     component = fixture.componentInstance;
     productMasterElement = fixture.debugElement.nativeElement;

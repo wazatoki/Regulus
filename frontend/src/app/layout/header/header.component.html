@@ -1,4 +1,6 @@
 <div>
-    <a routerLink="/login">ログイン</a>
+
+    <a *ngIf="isLoginable" routerLink="/login">ログイン</a>
+    <a *ngIf="isLogoutable" routerLink="/login">ログアウト</a>
 </div>
 
