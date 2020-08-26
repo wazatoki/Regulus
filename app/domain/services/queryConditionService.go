@@ -9,10 +9,11 @@ import (
 
 /*
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
+optionのグループにはすべてのstaffGroupを渡す。
 */
-func CreateCategories(groups []*entities.StaffGroup) (categories []entities.Category) {
+func CreateCategories(groups []*entities.StaffGroup) (categories []*entities.Category) {
 
-	categories = []entities.Category{}
+	categories = []*entities.Category{}
 
 	categories = append(categories, createQueryConditionCategory(groups))
 
@@ -23,7 +24,7 @@ func CreateCategories(groups []*entities.StaffGroup) (categories []entities.Cate
 	return
 }
 
-func createQueryConditionCategory(groups []*entities.StaffGroup) (category entities.Category) {
+func createQueryConditionCategory(groups []*entities.StaffGroup) (category *entities.Category) {
 
 	optionItems := []query.OptionItem{}
 
@@ -31,7 +32,7 @@ func createQueryConditionCategory(groups []*entities.StaffGroup) (category entit
 		optionItems = append(optionItems, query.OptionItem{ID: g.ID, ViewValue: g.Name})
 	}
 
-	category = entities.Category{
+	category = &entities.Category{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
 		SearchItems: entities.ComplexSearchItems{
@@ -72,8 +73,8 @@ func createQueryConditionCategory(groups []*entities.StaffGroup) (category entit
 	return
 }
 
-func createStaffCategory(groups []*entities.StaffGroup) (category entities.Category) {
-	category = entities.Category{
+func createStaffCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+	category = &entities.Category{
 		Name:      "staff",
 		ViewValue: "利用者",
 		SearchItems: entities.ComplexSearchItems{
@@ -107,8 +108,8 @@ func createStaffCategory(groups []*entities.StaffGroup) (category entities.Categ
 	return
 }
 
-func createStaffGroupCategory(groups []*entities.StaffGroup) (category entities.Category) {
-	category = entities.Category{
+func createStaffGroupCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+	category = &entities.Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
 		SearchItems: entities.ComplexSearchItems{

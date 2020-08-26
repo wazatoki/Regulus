@@ -12,7 +12,7 @@ import { ComplexSearchItems } from '../models/search/complex-search-items';
 export class ComplexSearchConditionService {
 
   findAllCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>('/complexSearchCondition/categories');
+    return this.http.get<Category[]>('/complexSearchCondition/DataInputFormItems');
   }
 
   findComplexSearchItems(): Observable<ComplexSearchItems> {

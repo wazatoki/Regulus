@@ -8,14 +8,15 @@ import (
 )
 
 func defineRouting(e *echo.Echo) {
-	apiPath := "/api/"
-	api := e.Group("/api")
-	api.Use(middleware.JWT([]byte("secret")))
 
 	e.GET("/", handlers.Root)
 	e.GET("/index", handlers.Index)
 	e.POST("/login", handlers.Login)
-	api.GET(apiPath+"complexSearchCondition", handlers.FindQueryConditionByCondition)
-	api.POST(apiPath+"complexSearchCondition", handlers.AddQueryCondition)
-	api.GET(apiPath+"complexSearchCondition/categories", handlers.FindAllComplexConditionSearchCategories)
+
+	apiPath := "/api"
+	api := e.Group(apiPath)
+	api.Use(middleware.JWT([]byte("secret")))
+	api.GET("/complexSearchCondition", handlers.FindQueryConditionByCondition)
+	api.POST("/complexSearchCondition", handlers.AddQueryCondition)
+	api.GET("/complexSearchCondition/DataInputFormItems", handlers.FetchDataInputFormItems)
 }

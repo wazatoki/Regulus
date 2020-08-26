@@ -493,7 +493,7 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 
 // QueryConditionObjectMap data mapper sqlboiler object to entities object
 func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *entities.QueryCondition) {
-	var category entities.Category
+	var category *entities.Category
 	var staffGroups []*entities.StaffGroup
 	var displayItemList []query.FieldAttr
 	var searchConditionList []query.SearchConditionItem

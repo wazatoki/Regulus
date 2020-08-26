@@ -29,7 +29,7 @@ QueryCondition is saved query condition data
 type QueryCondition struct {
 	ID             string              `json:"id"`
 	PatternName    string              `json:"patternName"`
-	Category       Category            `json:"category"`
+	Category       *Category           `json:"category"`
 	IsDisclose     bool                `json:"isDisclose"`
 	DiscloseGroups []*StaffGroup       `json:"discloseGroups"`
 	Owner          *Staff              `json:"owner"`

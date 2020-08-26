@@ -12,6 +12,21 @@ import (
 	"github.com/labstack/echo"
 )
 
+/*
+FetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するハンドラです。
+*/
+func FetchDataInputFormItems(c echo.Context) error {
+	groupRepo := repositories.NewStaffGroupRepo()
+	categories, e := query.FetchDataInputFormItems(groupRepo)
+	if e != nil {
+		return e
+	}
+	return c.JSON(http.StatusOK, categories)
+}
+
+/*
+AddQueryCondition 検索条件追加用ハンドラ
+*/
 func AddQueryCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
 	condition := &entities.QueryCondition{}

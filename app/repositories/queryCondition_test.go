@@ -93,7 +93,7 @@ var queryConditionSearchConditionList = []query.FieldAttr{
 	},
 }
 
-var categories = []entities.Category{
+var categories = []*entities.Category{
 	{
 		Name:      "staff",
 		ViewValue: "利用者",
