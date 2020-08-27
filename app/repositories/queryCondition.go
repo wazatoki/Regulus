@@ -157,7 +157,7 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition, ope
 		UpdateStaffID: null.StringFrom(operatorID),
 		CategoryName:  queryCondition.Category.Name,
 		IsDisclose:    queryCondition.IsDisclose,
-		OwnerID:       queryCondition.Owner.ID,
+		OwnerID:       operatorID,
 		PatternName:   queryCondition.PatternName,
 	}
 
@@ -215,24 +215,36 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition, ope
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 		var err error
 
-		err = sqlQueryCondition.Insert(context.Background(), db.DB, boil.Infer())
+		if err = sqlQueryCondition.Insert(context.Background(), db.DB, boil.Infer()); err != nil {
+			return err
+		}
+
 		for _, d := range sqlQueryDisplayItems {
-			err = d.Insert(context.Background(), db.DB, boil.Infer())
+			if err = d.Insert(context.Background(), db.DB, boil.Infer()); err != nil {
+				return err
+			}
 		}
 		for _, s := range sqlQuerySearchConditionItems {
-			err = s.Insert(context.Background(), db.DB, boil.Infer())
+			if err = s.Insert(context.Background(), db.DB, boil.Infer()); err != nil {
+				return err
+			}
 		}
 		for _, o := range sqlQueryOrderConditionItems {
-			err = o.Insert(context.Background(), db.DB, boil.Infer())
+			if err = o.Insert(context.Background(), db.DB, boil.Infer()); err != nil {
+				return err
+			}
 		}
-		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
-		return err
+		if err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...); err != nil {
+			return err
+		}
+		return nil
 	})
 
-	if err == nil {
-		id = sqlQueryCondition.ID
+	if err != nil {
+		return "", err
 	}
 
+	id = sqlQueryCondition.ID
 	return
 }
 

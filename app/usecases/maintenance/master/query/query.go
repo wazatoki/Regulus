@@ -5,6 +5,7 @@ import (
 	"regulus/app/domain/services"
 	"regulus/app/domain/vo/query"
 	"regulus/app/usecases/maintenance/master/group"
+	"regulus/app/utils/log"
 )
 
 /*
@@ -17,12 +18,13 @@ func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*entitie
 	items, err := queryRepo.Select(conditionData.SearchConditionList...)
 
 	if err != nil {
-		items = services.Sort(items, conditionData.OrderConditionList...)
 
-		return items, nil
+		log.Error("usecases:query:Find:message:" + err.Error())
+		return nil, err
 	}
 
-	return nil, err
+	items = services.Sort(items, conditionData.OrderConditionList...)
+	return items, nil
 }
 
 /*
@@ -33,6 +35,10 @@ AddCondition は検索条件追加時のユースケースです。成功した�
 func AddCondition(queryRepo persistance, queryCondition *entities.QueryCondition, operatorID string) (string, error) {
 
 	id, err := queryRepo.Insert(queryCondition, operatorID)
+
+	if err != nil {
+		log.Error("usecases:query:AddCondition:message:" + err.Error())
+	}
 
 	return id, err
 }
@@ -46,6 +52,7 @@ func FetchDataInputFormItems(groupRepo group.Persistance) ([]*entities.Category,
 	groups, err := groupRepo.SelectAll()
 
 	if err != nil {
+		log.Error("usecases:query:FetchDataInputFormItems:message:" + err.Error())
 		return nil, err
 	}
 	return services.CreateCategories(groups), nil
