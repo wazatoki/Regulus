@@ -118,6 +118,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
 
     // 検索条件を反映する
+    console.log(this.saveData.conditionData.searchConditionList)
     this.saveData.conditionData.searchConditionList.forEach(condition => {
       this.pushSearchCondition();
       const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);

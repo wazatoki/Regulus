@@ -489,16 +489,12 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 	qslice = append(
 		qslice,
 		qm.Select("distinct query_conditions.*"),
-		qm.InnerJoin("join_query_conditions_staff_groups jqcsg on query_conditions.id = jqcsg.query_conditions_id"),
-		qm.InnerJoin("staff_groups sg on jqcsg.staff_groups_id = sg.id"),
-		qm.InnerJoin("staffs owner on query_conditions.owner_id = owner.id"),
 		qm.Where("query_conditions."+sqlboiler.QueryConditionColumns.ID+" IS NOT NULL"),
 		qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
 		qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
 		qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
 		qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
 		qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
-		//qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 	)
 	return
 }

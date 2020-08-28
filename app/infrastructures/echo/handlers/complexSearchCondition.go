@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"regulus/app/domain/entities"
-	"regulus/app/domain/services"
 	domainQuery "regulus/app/domain/vo/query"
 	"regulus/app/repositories"
 	"regulus/app/usecases/maintenance/master/query"
@@ -62,29 +61,29 @@ func FindQueryConditionByCondition(c echo.Context) error {
 /*
 FindAllComplexConditionSearchCategories return condition search categories
 */
-func FindAllComplexConditionSearchCategories(c echo.Context) error {
-	r := repositories.NewStaffGroupRepo()
-	groups, _ := r.SelectAll()
-	return c.JSON(http.StatusOK, services.CreateCategories(groups))
-}
+// func FindAllComplexConditionSearchCategories(c echo.Context) error {
+// 	r := repositories.NewStaffGroupRepo()
+// 	groups, _ := r.SelectAll()
+// 	return c.JSON(http.StatusOK, services.CreateCategories(groups))
+// }
 
 /*
 FindComplexSearchItems return condition search items as query-condition
 */
-func FindComplexSearchItems(c echo.Context) error {
+// func FindComplexSearchItems(c echo.Context) error {
 
-	var items entities.ComplexSearchItems
-	r := repositories.NewStaffGroupRepo()
-	groups, _ := r.SelectAll()
+// 	var items entities.ComplexSearchItems
+// 	r := repositories.NewStaffGroupRepo()
+// 	groups, _ := r.SelectAll()
 
-	for _, category := range services.CreateCategories(groups) {
+// 	for _, category := range services.CreateCategories(groups) {
 
-		if category.Name == "query-condition" {
+// 		if category.Name == "query-condition" {
 
-			items = category.SearchItems
+// 			items = category.SearchItems
 
-			break
-		}
-	}
-	return c.JSON(http.StatusOK, items)
-}
+// 			break
+// 		}
+// 	}
+// 	return c.JSON(http.StatusOK, items)
+// }
