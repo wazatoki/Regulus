@@ -92,13 +92,16 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
-    this.discloseGroupFormArray.controls.forEach((v, i) => {
-      this.saveData.discloseGroupIDs.forEach(id => {
-        if (this.groupList[i].id === id) {
-          v.setValue(true)
-        }
+    if (this.saveData.isDisclose) {
+      this.discloseGroupFormArray.controls.forEach((v, i) => {
+        this.saveData.discloseGroupIDs.forEach(id => {
+          if (this.groupList[i].id === id) {
+            v.setValue(true)
+          }
+        });
       });
-    });
+    }
+
 
     // 表示項目を反映する。
     if (this.saveData.conditionData.displayItemList !== null
@@ -118,14 +121,13 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
 
     // 検索条件を反映する
-    console.log(this.saveData.conditionData.searchConditionList)
     this.saveData.conditionData.searchConditionList.forEach(condition => {
-      this.pushSearchCondition();
-      const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);
-      fgroup.get('fieldSelected').setValue(condition.searchField.id);
-      fgroup.get('conditionValue').setValue(condition.conditionValue);
-      fgroup.get('matchTypeSelected').setValue(condition.matchType);
-      fgroup.get('operatorSelected').setValue(condition.operator);
+      this.pushSearchCondition(condition);
+      // const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);
+      // fgroup.get('fieldSelected').setValue(condition.searchField.id);
+      // fgroup.get('conditionValue').setValue(condition.conditionValue);
+      // fgroup.get('matchTypeSelected').setValue(condition.matchType);
+      // fgroup.get('operatorSelected').setValue(condition.operator);
     });
 
     // 並び順を反映する
@@ -149,13 +151,22 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
   }
 
-  pushSearchCondition() {
-    this.searchConditionFormArray.push(new FormGroup({
-      fieldSelected: new FormControl(this.searchConditionList[0].id),
-      conditionValue: new FormControl('', [Validators.required]),
-      matchTypeSelected: new FormControl(''),
-      operatorSelected: new FormControl(''),
-    }));
+  pushSearchCondition(condition?: SearchCondition) {
+    if (condition && condition.searchField && condition.searchField.id) {
+      this.searchConditionFormArray.push(new FormGroup({
+        fieldSelected: new FormControl(condition.searchField.id),
+        conditionValue: new FormControl(condition.conditionValue, [Validators.required]),
+        matchTypeSelected: new FormControl(condition.matchType),
+        operatorSelected: new FormControl(condition.operator),
+      }));
+    } else {
+      this.searchConditionFormArray.push(new FormGroup({
+        fieldSelected: new FormControl(this.searchConditionList[0].id),
+        conditionValue: new FormControl('', [Validators.required]),
+        matchTypeSelected: new FormControl(''),
+        operatorSelected: new FormControl(''),
+      }));
+    }
   }
 
 
@@ -205,7 +216,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       })
       this.initGroups()
 
-      if(this.selectedCategory){
+      if (this.selectedCategory) {
         this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem
         this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition
         this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
@@ -313,7 +324,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   onSubmit() {
 
     if (this.form.valid) {
-      
+
       this.createSaveData();
 
       if (this.saveData.id) {
