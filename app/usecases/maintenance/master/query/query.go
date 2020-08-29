@@ -10,6 +10,22 @@ import (
 
 /*
 
+UpdateCondition は検索条件更新時のユースケースです。
+
+*/
+func UpdateCondition(queryRepo persistance, queryCondition *entities.QueryCondition, operatorID string) error {
+
+	err := queryRepo.Update(queryCondition, operatorID)
+
+	if err != nil {
+		log.Error("usecases:query:UpdateCondition:message:" + err.Error())
+	}
+
+	return err
+}
+
+/*
+
 Find は検索時のユースケースです。条件指定がない場合は全件検索の結果を返します。
 
 */

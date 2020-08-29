@@ -330,7 +330,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       if (this.saveData.id) {
         this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
           this.dialog.open(NoticeDialogComponent, {
-            data: { contents: '検索条件を保存しました。' }
+            data: { contents: '検索条件を修正しました。' }
           });
         });
 

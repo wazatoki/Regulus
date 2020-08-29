@@ -18,5 +18,6 @@ func defineRouting(e *echo.Echo) {
 	api.Use(middleware.JWT([]byte("secret")))
 	api.GET("/complexSearchCondition", handlers.FindQueryConditionByCondition)
 	api.POST("/complexSearchCondition", handlers.AddQueryCondition)
+	api.PUT("/complexSearchCondition", handlers.UpdateQueryCondition)
 	api.GET("/complexSearchCondition/DataInputFormItems", handlers.FetchDataInputFormItems)
 }

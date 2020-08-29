@@ -12,6 +12,23 @@ import (
 )
 
 /*
+UpdateQueryCondition 検索条件修正用ハンドラ
+*/
+func UpdateQueryCondition(c echo.Context) error {
+	repo := repositories.NewQueryConditionRepo()
+	condition := &entities.QueryCondition{}
+	e := c.Bind(condition)
+	if e != nil {
+		return e
+	}
+	err := query.UpdateCondition(repo, condition, getAuthStaffID(c))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "data update error")
+	}
+	return c.JSON(http.StatusOK, "data update ok")
+}
+
+/*
 FetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するハンドラです。
 */
 func FetchDataInputFormItems(c echo.Context) error {
@@ -57,33 +74,3 @@ func FindQueryConditionByCondition(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, result)
 }
-
-/*
-FindAllComplexConditionSearchCategories return condition search categories
-*/
-// func FindAllComplexConditionSearchCategories(c echo.Context) error {
-// 	r := repositories.NewStaffGroupRepo()
-// 	groups, _ := r.SelectAll()
-// 	return c.JSON(http.StatusOK, services.CreateCategories(groups))
-// }
-
-/*
-FindComplexSearchItems return condition search items as query-condition
-*/
-// func FindComplexSearchItems(c echo.Context) error {
-
-// 	var items entities.ComplexSearchItems
-// 	r := repositories.NewStaffGroupRepo()
-// 	groups, _ := r.SelectAll()
-
-// 	for _, category := range services.CreateCategories(groups) {
-
-// 		if category.Name == "query-condition" {
-
-// 			items = category.SearchItems
-
-// 			break
-// 		}
-// 	}
-// 	return c.JSON(http.StatusOK, items)
-// }
