@@ -12,6 +12,18 @@ import (
 )
 
 /*
+FetchComplexSearchItems は詳細検索条件設定フォームを開く際に必要なデータを取得するハンドラです。
+*/
+func FetchComplexSearchItems(c echo.Context) error {
+	groupRepo := repositories.NewStaffGroupRepo()
+	category, e := query.FetchComplexSearchItems(groupRepo)
+	if e != nil {
+		return e
+	}
+	return c.JSON(http.StatusOK, category)
+}
+
+/*
 UpdateQueryCondition 検索条件修正用ハンドラ
 */
 func UpdateQueryCondition(c echo.Context) error {

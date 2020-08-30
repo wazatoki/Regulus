@@ -293,7 +293,7 @@ func CreateCategories(groups []*entities.StaffGroup) (categories []*entities.Cat
 
 	categories = []*entities.Category{}
 
-	categories = append(categories, createQueryConditionCategory(groups))
+	categories = append(categories, CreateQueryConditionCategory(groups))
 
 	categories = append(categories, createStaffCategory(groups))
 
@@ -302,7 +302,11 @@ func CreateCategories(groups []*entities.StaffGroup) (categories []*entities.Cat
 	return
 }
 
-func createQueryConditionCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+/*
+CreateQueryConditionCategory 詳細検索条件設定時に使用する条件項目を返す
+optionのグループにはすべてのstaffGroupを渡す。
+*/
+func CreateQueryConditionCategory(groups []*entities.StaffGroup) (category *entities.Category) {
 
 	optionItems := []query.OptionItem{}
 

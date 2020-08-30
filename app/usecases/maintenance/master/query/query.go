@@ -10,6 +10,22 @@ import (
 
 /*
 
+FetchComplexSearchItems は詳細検索条件設定フォームを開く際に必要なデータを取得するユースケースです。
+
+*/
+func FetchComplexSearchItems(groupRepo group.Persistance) (*entities.Category, error) {
+	groups, err := groupRepo.SelectAll()
+
+	if err != nil {
+		log.Error("usecases:query:FetchComplexSearchItems:message:" + err.Error())
+		return nil, err
+	}
+	return services.CreateQueryConditionCategory(groups), nil
+
+}
+
+/*
+
 UpdateCondition は検索条件更新時のユースケースです。
 
 */

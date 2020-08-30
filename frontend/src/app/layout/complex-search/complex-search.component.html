@@ -1,4 +1,4 @@
-<form [formGroup]='form'>
+<form [formGroup]='form' (ngSubmit)="onSubmit()">
 
     <mat-card class="display-item" *ngIf="isShowDisplayItem">
         <mat-card-header>
@@ -33,14 +33,17 @@
         <mat-card-header>
             <mat-card-title>
                 検索条件
-                <button type="button" mat-stroked-button (click)="pushSearchCondition()" class="push-search-condition">追加</button>
+                <button type="button" mat-stroked-button (click)="pushSearchCondition()"
+                    class="push-search-condition">追加</button>
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
+            <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)"
+                formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of searchConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup" (onDelete)="removeSearchCondition(i)">
+                    <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup"
+                        (onDelete)="removeSearchCondition(i)">
                     </app-complex-search-condition-item>
                 </div>
             </div>
@@ -51,14 +54,17 @@
         <mat-card-header>
             <mat-card-title>
                 並び順
-                <button type="button" mat-stroked-button (click)="pushOrderCondition()" class="push-order-condition">追加</button>
+                <button type="button" mat-stroked-button (click)="pushOrderCondition()"
+                    class="push-order-condition">追加</button>
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
+            <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="orderCondition"
+                [cdkDropListData]="orderConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup" (onDelete)="removeOrderCondition(i)">
+                    <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup"
+                        (onDelete)="removeOrderCondition(i)">
                     </app-complex-search-order-item>
                 </div>
             </div>
@@ -76,8 +82,10 @@
                     <input class="pattern-name" matInput formControlName="patternName">
                 </mat-form-field>
                 <mat-checkbox class="is-disclose" formControlName="isDisclose">公開する</mat-checkbox>
-                <div class="disclosure-destination" formArrayName="discloseGroups">
-                    <div class="disclosure-destination-group" *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
+                <div *ngIf="saveConditions.get('isDisclose').value" class="disclosure-destination"
+                    formArrayName="discloseGroups">
+                    <div class="disclosure-destination-group"
+                        *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
                         <mat-checkbox [formControlName]="i">
                             {{groupList[i].name}}
                         </mat-checkbox>
@@ -85,17 +93,22 @@
                 </div>
             </div>
         </mat-card-content>
-        <mat-card-actions>
-            <button type="button" mat-stroked-button (click)="clickSave()" class="complex-search-condition-save-button">保存</button>
-        </mat-card-actions>
-
     </mat-card>
-    <mat-grid-list cols="1" rowHeight="100px">
+
+    <mat-grid-list cols="3" rowHeight="100px">
+        <mat-grid-tile>
+            <app-clear (clicked)="onClearClick()"></app-clear>
+        </mat-grid-tile>
         <mat-grid-tile>
             <button type="button" mat-stroked-button (click)="clickSearch()" class="complex-search-button">検索</button>
         </mat-grid-tile>
+        <mat-grid-tile>
+            <button type="button" mat-stroked-button (click)="clickSave()"
+                class="complex-search-condition-save-button">保存</button>
+        </mat-grid-tile>
+
     </mat-grid-list>
 
-    
+
 
 </form>
