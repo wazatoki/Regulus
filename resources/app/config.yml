@@ -5,3 +5,5 @@ dbPort: "5432"
 dbUser: "regulus"
 dbPassword: "regulus"
 dbName: "regulusdb"
+secretKey: "secret"
+loginExpTime: 24

@@ -1,1 +1,6 @@
-<p>header works!</p>
+<div>
+
+    <a *ngIf="isLoginable" routerLink="/login">ログイン</a>
+    <a *ngIf="isLogoutable" (click)="onLogout($event)">ログアウト</a>
+</div>
+

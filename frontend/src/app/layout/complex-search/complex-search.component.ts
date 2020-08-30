@@ -107,7 +107,7 @@ export class ComplexSearchComponent implements OnInit {
     this.saveData.conditionData.searchConditionList.forEach(condition => {
       this.pushSearchCondition();
       const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);
-      fgroup.get('fieldSelected').setValue(condition.field.id);
+      fgroup.get('fieldSelected').setValue(condition.searchField.id);
       fgroup.get('conditionValue').setValue(condition.conditionValue);
       fgroup.get('matchTypeSelected').setValue(condition.matchType);
       fgroup.get('operatorSelected').setValue(condition.operator);
@@ -199,7 +199,7 @@ export class ComplexSearchComponent implements OnInit {
         }
       });
       const condition: SearchCondition = {
-        field: field,
+        searchField: field,
         conditionValue: formGroup.get('conditionValue').value,
         matchType: formGroup.get('matchTypeSelected').value,
         operator: formGroup.get('operatorSelected').value,

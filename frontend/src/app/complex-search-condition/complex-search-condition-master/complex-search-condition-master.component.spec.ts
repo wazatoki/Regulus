@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComplexSearchConditionMasterComponent } from './complex-search-condition-master.component';
 import { ComplexSearchConditionSearchComponent } from '../complex-search-condition-search/complex-search-condition-search.component';
 import { LayoutModule } from 'src/app/layout/layout.module';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -38,6 +39,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
       imports: [
         BrowserAnimationsModule,
         LayoutModule,
+        RouterTestingModule,
         MatTableModule,
         MatListModule,
         MatDialogModule,

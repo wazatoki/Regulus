@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button'; 
@@ -14,6 +14,8 @@ import { AppComponent } from './app.component';
 import { WelcomComponent } from './welcom/welcom.component';
 import { TestComponent } from './test/test.component';
 import { LayoutModule } from './layout/layout.module';
+import { JwtInterceptor } from './services/helper/jwt-interceptor'
+import { HttpErrorInterceptor } from './services/helper/http-error-interceptor'
 
 
 @NgModule({
@@ -33,7 +35,10 @@ import { LayoutModule } from './layout/layout.module';
     MatInputModule,
     LayoutModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,7 +6,7 @@ SearchCondition 検索条件のパーツ
 
 */
 export interface SearchCondition {
-    field: FieldAttr
+    searchField: FieldAttr
     conditionValue: string
     matchType: string
     operator: string

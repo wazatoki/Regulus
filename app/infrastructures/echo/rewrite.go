@@ -19,7 +19,10 @@ func skipper(c echo.Context) bool {
 	if strings.HasPrefix(c.Request().URL.Path, "/resources/") {
 		return true
 	}
-	if strings.HasPrefix(c.Request().URL.Path, "/api/") {
+	if strings.HasPrefix(c.Request().URL.Path, "/login") && c.Request().Method == "POST" {
+		return true
+	}
+	if strings.HasPrefix(c.Request().URL.Path, "/api") {
 		return true
 	}
 	return false
@@ -28,7 +31,7 @@ func skipper(c echo.Context) bool {
 /*
 
 defineRewrite リクエストurlのリライト定義
-
+frontendでルーティング処理を行うのでサーバーサイドはindex.htmlで受ける。
 */
 func defineRewrite(e *echo.Echo) {
 	config := middleware.RewriteConfig{

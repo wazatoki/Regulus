@@ -13,12 +13,13 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/volatiletech/null"
 	"github.com/volatiletech/sqlboiler/boil"
 	"github.com/volatiletech/sqlboiler/queries/qm"
 )
 
 // Delete delete data to database
-func (q *QueryConditionRepo) Delete(id string) error {
+func (q *QueryConditionRepo) Delete(id string, operatorID string) error {
 	if id == "" {
 		return errors.New("id must be required")
 	}
@@ -26,7 +27,8 @@ func (q *QueryConditionRepo) Delete(id string) error {
 	err := q.database.WithDbContext(func(db *sqlx.DB) error {
 
 		updateCols := map[string]interface{}{
-			sqlboiler.QueryConditionColumns.Del: true,
+			sqlboiler.QueryConditionColumns.Del:           true,
+			sqlboiler.QueryConditionColumns.UpdateStaffID: null.StringFrom(operatorID),
 		}
 		query := qm.Where(sqlboiler.QueryConditionColumns.ID+" = ?", id)
 		_, err := sqlboiler.QueryConditions(query).UpdateAll(context.Background(), db.DB, updateCols)
@@ -38,17 +40,18 @@ func (q *QueryConditionRepo) Delete(id string) error {
 }
 
 // Update update data to database
-func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (err error) {
+func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition, operatorID string) (err error) {
 	if queryCondition.ID == "" {
 		return errors.New("ID must be required")
 	}
 
 	sqlQueryCondition := &sqlboiler.QueryCondition{
-		ID:           queryCondition.ID,
-		CategoryName: queryCondition.Category.Name,
-		IsDisclose:   queryCondition.IsDisclose,
-		OwnerID:      queryCondition.Owner.ID,
-		PatternName:  queryCondition.PatternName,
+		ID:            queryCondition.ID,
+		UpdateStaffID: null.StringFrom(operatorID),
+		CategoryName:  queryCondition.Category.Name,
+		IsDisclose:    queryCondition.IsDisclose,
+		OwnerID:       queryCondition.Owner.ID,
+		PatternName:   queryCondition.PatternName,
 	}
 	sqlQueryDisplayItems := make([]*sqlboiler.QueryDisplayItem,
 		len(queryCondition.ConditionData.DisplayItemList))
@@ -60,6 +63,8 @@ func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (er
 	for i, d := range queryCondition.ConditionData.DisplayItemList {
 		sqlQueryDisplayItems[i] = &sqlboiler.QueryDisplayItem{
 			ID:                utils.CreateID(),
+			CreStaffID:        null.StringFrom(operatorID),
+			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			DisplayFieldID:    d.ID,
 			RowOrder:          i,
@@ -69,6 +74,8 @@ func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (er
 	for i, s := range queryCondition.ConditionData.SearchConditionList {
 		sqlQuerySearchConditionItems[i] = &sqlboiler.QuerySearchConditionItem{
 			ID:                utils.CreateID(),
+			CreStaffID:        null.StringFrom(operatorID),
+			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			SearchFieldID:     s.SearchField.ID,
 			ConditionValue:    s.ConditionValue,
@@ -81,6 +88,8 @@ func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (er
 	for i, o := range queryCondition.ConditionData.OrderConditionList {
 		sqlQueryOrderConditionItems[i] = &sqlboiler.QueryOrderConditionItem{
 			ID:                utils.CreateID(),
+			CreStaffID:        null.StringFrom(operatorID),
+			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			OrderFieldID:      o.OrderField.ID,
 			OrderFieldKeyWord: string(o.OrderFieldKeyWord),
@@ -101,19 +110,22 @@ func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (er
 		 元の検索条件を論理削除
 		*/
 		displayUpdateCols := map[string]interface{}{
-			sqlboiler.QueryDisplayItemColumns.Del: true,
+			sqlboiler.QueryDisplayItemColumns.Del:           true,
+			sqlboiler.QueryDisplayItemColumns.UpdateStaffID: null.StringFrom(operatorID),
 		}
 		displayItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QueryDisplayItems(displayItemQuery).UpdateAll(context.Background(), db.DB, displayUpdateCols)
 
 		searchUpdateCols := map[string]interface{}{
-			sqlboiler.QuerySearchConditionItemColumns.Del: true,
+			sqlboiler.QuerySearchConditionItemColumns.Del:           true,
+			sqlboiler.QuerySearchConditionItemColumns.UpdateStaffID: null.StringFrom(operatorID),
 		}
 		searchItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QuerySearchConditionItems(searchItemQuery).UpdateAll(context.Background(), db.DB, searchUpdateCols)
 
 		orderUpdateCols := map[string]interface{}{
-			sqlboiler.QueryOrderConditionItemColumns.Del: true,
+			sqlboiler.QueryOrderConditionItemColumns.Del:           true,
+			sqlboiler.QueryOrderConditionItemColumns.UpdateStaffID: null.StringFrom(operatorID),
 		}
 		orderItemQuery := qm.Where(sqlboiler.QueryOrderConditionItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QueryOrderConditionItems(orderItemQuery).UpdateAll(context.Background(), db.DB, orderUpdateCols)
@@ -138,14 +150,16 @@ func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition) (er
 }
 
 // Insert insert data to database
-func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id string, err error) {
+func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition, operatorID string) (id string, err error) {
 	id = ""
 	sqlQueryCondition := &sqlboiler.QueryCondition{
-		ID:           utils.CreateID(),
-		CategoryName: queryCondition.Category.Name,
-		IsDisclose:   queryCondition.IsDisclose,
-		OwnerID:      queryCondition.Owner.ID,
-		PatternName:  queryCondition.PatternName,
+		ID:            utils.CreateID(),
+		CreStaffID:    null.StringFrom(operatorID),
+		UpdateStaffID: null.StringFrom(operatorID),
+		CategoryName:  queryCondition.Category.Name,
+		IsDisclose:    queryCondition.IsDisclose,
+		OwnerID:       operatorID,
+		PatternName:   queryCondition.PatternName,
 	}
 
 	sqlQueryDisplayItems := make([]*sqlboiler.QueryDisplayItem,
@@ -159,6 +173,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id
 	for i, d := range queryCondition.ConditionData.DisplayItemList {
 		sqlQueryDisplayItems[i] = &sqlboiler.QueryDisplayItem{
 			ID:                utils.CreateID(),
+			CreStaffID:        null.StringFrom(operatorID),
+			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			DisplayFieldID:    d.ID,
 			RowOrder:          i,
@@ -168,6 +184,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id
 	for i, s := range queryCondition.ConditionData.SearchConditionList {
 		sqlQuerySearchConditionItems[i] = &sqlboiler.QuerySearchConditionItem{
 			ID:                utils.CreateID(),
+			CreStaffID:        null.StringFrom(operatorID),
+			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			SearchFieldID:     s.SearchField.ID,
 			ConditionValue:    s.ConditionValue,
@@ -180,6 +198,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id
 	for i, o := range queryCondition.ConditionData.OrderConditionList {
 		sqlQueryOrderConditionItems[i] = &sqlboiler.QueryOrderConditionItem{
 			ID:                utils.CreateID(),
+			CreStaffID:        null.StringFrom(operatorID),
+			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			OrderFieldID:      o.OrderField.ID,
 			OrderFieldKeyWord: string(o.OrderFieldKeyWord),
@@ -212,6 +232,7 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id
 			err = s.Insert(context.Background(), db.DB, boil.Infer())
 			if err != nil {
 				log.Error(err.Error())
+
 				return err
 			}
 		}
@@ -231,16 +252,17 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition) (id
 		return err
 	})
 
-	if err == nil {
-		id = sqlQueryCondition.ID
+	if err != nil {
+		return "", err
 	}
 
+	id = sqlQueryCondition.ID
 	return
 }
 
 // SelectByIDs select staff data by id list from database
-func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []entities.QueryCondition, err error) {
-	queryConditions = []entities.QueryCondition{}
+func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*entities.QueryCondition, err error) {
+	queryConditions = []*entities.QueryCondition{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -277,9 +299,9 @@ func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []entiti
 }
 
 // SelectByID select staaff data by id from database
-func (q *QueryConditionRepo) SelectByID(id string) (queryCondition entities.QueryCondition, err error) {
+func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *entities.QueryCondition, err error) {
 	if id == "" {
-		return entities.QueryCondition{}, errors.New("id must be required")
+		return nil, errors.New("id must be required")
 	}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
@@ -304,8 +326,8 @@ func (q *QueryConditionRepo) SelectByID(id string) (queryCondition entities.Quer
 }
 
 // SelectAll select all query condition data without not del from database
-func (q *QueryConditionRepo) SelectAll() (queryConditions []entities.QueryCondition, err error) {
-	queryConditions = []entities.QueryCondition{}
+func (q *QueryConditionRepo) SelectAll() (queryConditions []*entities.QueryCondition, err error) {
+	queryConditions = []*entities.QueryCondition{}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := q.createQueryModSlice()
@@ -323,10 +345,10 @@ func (q *QueryConditionRepo) SelectAll() (queryConditions []entities.QueryCondit
 }
 
 // Select select query condition data by condition from database
-func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []entities.QueryCondition, err error) {
-	tempQueryConditions := []entities.QueryCondition{}
-	addQueryConditions := []entities.QueryCondition{}
-	var allQueryConditions []entities.QueryCondition
+func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []*entities.QueryCondition, err error) {
+	tempQueryConditions := []*entities.QueryCondition{}
+	addQueryConditions := []*entities.QueryCondition{}
+	var allQueryConditions []*entities.QueryCondition
 	var queries []qm.QueryMod
 	var qmod qm.QueryMod
 
@@ -387,7 +409,7 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 			}
 
 			if operator == query.Or {
-				addQueryConditions = []entities.QueryCondition{}
+				addQueryConditions = []*entities.QueryCondition{}
 				for _, tempItem := range tempQueryConditions {
 					isMatchResult := false
 					for _, resultItem := range resultQueryConditions {
@@ -404,7 +426,7 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 				// 最終結果に反映
 				resultQueryConditions = append(resultQueryConditions, addQueryConditions...)
 			} else { // operator == And
-				addQueryConditions = []entities.QueryCondition{}
+				addQueryConditions = []*entities.QueryCondition{}
 				for _, resultItem := range resultQueryConditions {
 					isMatchResult := false
 					for _, tempItem := range tempQueryConditions {
@@ -479,27 +501,27 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 	qslice = append(
 		qslice,
 		qm.Select("distinct query_conditions.*"),
-		qm.InnerJoin("join_query_conditions_staff_groups jqcsg on query_conditions.id = jqcsg.query_conditions_id"),
-		qm.InnerJoin("staff_groups sg on jqcsg.staff_groups_id = sg.id"),
-		qm.InnerJoin("staffs owner on query_conditions.owner_id = owner.id"),
 		qm.Where("query_conditions."+sqlboiler.QueryConditionColumns.ID+" IS NOT NULL"),
 		qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
 		qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
 		qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
 		qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
 		qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
-		//qm.Load(sqlboiler.StaffRels.StaffGroups, qm.Where("del != true")),
 	)
 	return
 }
 
 // QueryConditionObjectMap data mapper sqlboiler object to entities object
-func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc entities.QueryCondition) {
-	var category entities.Category
-	var staffGroups []entities.StaffGroup
+func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *entities.QueryCondition) {
+	var category *entities.Category
+	var staffGroups []*entities.StaffGroup
 	var displayItemList []query.FieldAttr
 	var searchConditionList []query.SearchConditionItem
 	var orderConditionList []query.OrderConditionItem
+
+	if sqc == nil {
+		return nil
+	}
 
 	r := NewStaffGroupRepo()
 	groups, _ := r.SelectAll()
@@ -563,7 +585,7 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc entities.QueryC
 		}
 		orderConditionList = append(orderConditionList, orderConditionItem)
 	}
-	eqc = entities.QueryCondition{
+	eqc = &entities.QueryCondition{
 		ID:             sqc.ID,
 		PatternName:    sqc.PatternName,
 		Category:       category,

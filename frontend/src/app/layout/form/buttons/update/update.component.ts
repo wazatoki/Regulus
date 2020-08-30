@@ -24,7 +24,8 @@ export class UpdateComponent implements OnInit {
   ngOnInit() {
   }
 
-  onClick() {
+  onClick(event: any) {
+    event.preventDefault()
     this.clicked.emit('updateClicked');
   }
 

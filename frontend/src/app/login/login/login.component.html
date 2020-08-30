@@ -1,0 +1,20 @@
+<div class="login">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        {{ error }}
+        <div>
+            <mat-form-field>
+                <input type="text" formControlName="id" (keydown.enter)="onEnterUserID($event)" matInput placeholder="ユーザーID" appAutofocus>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <input type="password" formControlName="password" (keydown.enter)="onEnterPassword($event)"  matInput placeholder="パスワード">
+            </mat-form-field>
+        </div>
+
+        <div>
+            <app-submit [focus]="isSubmitFocus" (focusout)="onSubmitFocusout()"></app-submit>
+        </div>
+    </form>
+</div>

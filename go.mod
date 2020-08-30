@@ -6,6 +6,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.4.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20200620013148-b91950f658ec // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/friendsofgo/errors v0.9.2 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

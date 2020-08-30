@@ -200,7 +200,7 @@ describe('ComplexSearchComponent', () => {
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(false);
     expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
-    expect(saveData.conditionData.searchConditionList[0].field).toEqual(component.searchConditionList[0]);
+    expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
     expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
