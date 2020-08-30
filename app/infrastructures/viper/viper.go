@@ -16,6 +16,8 @@ func SetupAppConfig() {
 	viper.SetDefault("dbUser", "regulus")
 	viper.SetDefault("dbPassword", "regulus")
 	viper.SetDefault("dbName", "regulusdb")
+	viper.SetDefault("secretKey", "secret")
+	viper.SetDefault("loginExpTime", 24)
 
 	// read config file
 	viper.SetConfigName("config")
@@ -37,4 +39,6 @@ func SetupTestConfig() {
 	viper.SetDefault("dbUser", "regulus")
 	viper.SetDefault("dbPassword", "regulus")
 	viper.SetDefault("dbName", "regulusdb")
+	viper.SetDefault("secretKey", "secret")
+	viper.SetDefault("loginExpTime", 24)
 }

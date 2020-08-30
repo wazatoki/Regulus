@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { MakerMasterComponent } from './maker-master.component';
 import { MakerSearchComponent } from '../maker-search/maker-search.component';
 import { LayoutModule } from '../../layout/layout.module';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
@@ -36,6 +37,7 @@ describe('MakerMasterComponent', () => {
       imports: [
         BrowserAnimationsModule,
         LayoutModule,
+        RouterTestingModule,
         MatTableModule,
         MatListModule,
         MatDialogModule,

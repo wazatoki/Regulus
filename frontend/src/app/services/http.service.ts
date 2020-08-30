@@ -42,7 +42,9 @@ export class HttpService {
   };
 
   get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
-    return this.client.get<T>(`${this.API_URL}${path}`, { params: this.getHttpParams(data) })
+    return this.client.get<T>(`${this.API_URL}${path}`, {
+      params: this.getHttpParams(data)
+    })
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -70,7 +72,7 @@ export class HttpService {
   delete<T>(path: string, data: string[]): Observable<T[]> {
     const options = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }),
       body: new Array<string>(),
     };

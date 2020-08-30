@@ -11,6 +11,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -35,6 +37,7 @@ describe('ComplexSearchConditionItemComponent', () => {
         MatRadioModule,
         MatGridListModule,
         MatButtonModule,
+        MatCheckboxModule,
         NoopAnimationsModule,
       ]
     })

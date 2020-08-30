@@ -19,18 +19,22 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   selection: SelectionModel<SaveData>;
 
 
-onUpdateClicked(saveData: SaveData): void {
-    this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
-      data: {
-        categories: [],
-        saveData: saveData,
-      },
-    })
+  onUpdateClicked(saveData: SaveData): void {
+
+    this.complexSearchConditionService.findAllCategories().subscribe(categories => {
+      this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
+        data: {
+          categories: categories,
+          saveData: saveData,
+        },
+      })
+    });
+
   }
 
   openInputForm(): void {
 
-    this.complexSearchConditionService.findAllCategories().subscribe( categories => {
+    this.complexSearchConditionService.findAllCategories().subscribe(categories => {
       this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
         data: {
           categories: categories,
@@ -38,7 +42,7 @@ onUpdateClicked(saveData: SaveData): void {
         },
       })
     });
-    
+
   }
 
   deleteItems(): void {
@@ -99,7 +103,7 @@ onUpdateClicked(saveData: SaveData): void {
   ) {
     const initialSelection = [];
     const allowMultiSelect = true;
-    this.displayedColumns = ['select', 'name', 'category', 'owner'];
+    this.displayedColumns = ['select', 'name', 'category', 'owner', 'action'];
     this.dataSource = new MatTableDataSource<SaveData>([]);
     this.selection = new SelectionModel<SaveData>(allowMultiSelect, initialSelection);
 

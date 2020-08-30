@@ -23,36 +23,36 @@ func tearDownStaffGroupTest(con *sqlx.DB) {
 	con.Close()
 }
 
-func createExpectedStaffGroup1Entity() entities.StaffGroup {
-	return entities.StaffGroup{
+func createExpectedStaffGroup1Entity() *entities.StaffGroup {
+	return &entities.StaffGroup{
 		ID:   "staffgroupid1",
 		Name: "staff group name 1",
 	}
 }
 
-func createExpectedStaffGroup2Entity() entities.StaffGroup {
-	return entities.StaffGroup{
+func createExpectedStaffGroup2Entity() *entities.StaffGroup {
+	return &entities.StaffGroup{
 		ID:   "staffgroupid2",
 		Name: "staff group name 2",
 	}
 }
 
-func createExpectedStaffGroup3Entity() entities.StaffGroup {
-	return entities.StaffGroup{
+func createExpectedStaffGroup3Entity() *entities.StaffGroup {
+	return &entities.StaffGroup{
 		ID:   "staffgroupid3",
 		Name: "staff group name 3",
 	}
 }
 
-func createExpectedStaffGroupEntity1Slice() []entities.StaffGroup {
-	return []entities.StaffGroup{
+func createExpectedStaffGroupEntity1Slice() []*entities.StaffGroup {
+	return []*entities.StaffGroup{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 	}
 }
 
-func createExpectedStaffGroupEntity2Slice() []entities.StaffGroup {
-	return []entities.StaffGroup{
+func createExpectedStaffGroupEntity2Slice() []*entities.StaffGroup {
+	return []*entities.StaffGroup{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 		createExpectedStaffGroup3Entity(),
@@ -66,7 +66,7 @@ func TestStaffGroupObjectMap(t *testing.T) {
 	tests := []struct {
 		name   string
 		args   args
-		wantEg entities.StaffGroup
+		wantEg *entities.StaffGroup
 	}{
 		{
 			name:   "convert sqlboiler.staffGroup to entities.staffGroup",
@@ -100,7 +100,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []entities.StaffGroup
+		want    []*entities.StaffGroup
 		wantErr bool
 	}{
 		{
@@ -122,7 +122,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			want: []entities.StaffGroup{
+			want: []*entities.StaffGroup{
 				createExpectedStaffGroup1Entity(),
 			},
 			wantErr: false,
@@ -160,7 +160,7 @@ func TestStaffGroupRepo_SelectByID(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		wantStaffGroup entities.StaffGroup
+		wantStaffGroup *entities.StaffGroup
 		wantErr        bool
 	}{
 		{
@@ -207,7 +207,7 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 		name            string
 		fields          fields
 		args            args
-		wantStaffGroups []entities.StaffGroup
+		wantStaffGroups []*entities.StaffGroup
 		wantErr         bool
 	}{
 		{
@@ -221,7 +221,7 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 					"staffgroupid2",
 				},
 			},
-			wantStaffGroups: []entities.StaffGroup{
+			wantStaffGroups: []*entities.StaffGroup{
 				createExpectedStaffGroup1Entity(),
 				createExpectedStaffGroup2Entity(),
 			},
@@ -255,6 +255,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 	}
 	type args struct {
 		staffGroup *entities.StaffGroup
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -268,10 +269,11 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				&entities.StaffGroup{
+				staffGroup: &entities.StaffGroup{
 					ID:   "staffgroupid3",
 					Name: "staff group name 5",
 				},
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -281,14 +283,14 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 			con := setUpStaffGroupTest()
 			defer tearDownStaffGroupTest(con)
 			setupTestData()
-			want := entities.StaffGroup{
+			want := &entities.StaffGroup{
 				ID:   "staffgroupid3",
 				Name: "staff group name 5",
 			}
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			gotID, err := g.Insert(tt.args.staffGroup)
+			gotID, err := g.Insert(tt.args.staffGroup, tt.args.operatorID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -311,6 +313,7 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 	}
 	type args struct {
 		staffGroup *entities.StaffGroup
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -332,18 +335,19 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 			defer tearDownStaffGroupTest(con)
 			setupTestData()
 			beforeStaffGroup := createExpectedStaffGroup1Entity()
-			tt.args.staffGroup = &beforeStaffGroup
+			tt.args.staffGroup = beforeStaffGroup
 			tt.args.staffGroup.Name = "staff group name 5"
+			tt.args.operatorID = createExpectedStaff1Entity().ID
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			if err := g.Update(tt.args.staffGroup); (err != nil) != tt.wantErr {
+			if err := g.Update(tt.args.staffGroup, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, _ := sqlboiler.StaffGroups(qm.Where("id=?", beforeStaffGroup.ID)).One(context.Background(), con)
 			resultEntity := StaffGroupObjectMap(got)
 
-			if !reflect.DeepEqual(resultEntity, *tt.args.staffGroup) {
+			if !reflect.DeepEqual(resultEntity, tt.args.staffGroup) {
 				t.Errorf("StaffRepo.SelectByID() = %v, want %v", resultEntity, tt.args.staffGroup)
 			}
 		})
@@ -355,7 +359,8 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 		database db
 	}
 	type args struct {
-		id string
+		id         string
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -369,7 +374,8 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				id: "staffgroupid2",
+				id:         "staffgroupid2",
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -383,7 +389,7 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			if err := g.Dalete(tt.args.id); (err != nil) != tt.wantErr {
+			if err := g.Dalete(tt.args.id, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 

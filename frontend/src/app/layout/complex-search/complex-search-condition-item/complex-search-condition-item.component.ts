@@ -57,9 +57,21 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   ngOnInit() {
+
     // matchTypeの初期設定
     if (this.fieldSelected.value !== null && this.fieldSelected.value !== undefined && this.fieldSelected.value !== '') {
+
+      const f = this.fields.find((field) => {
+        return (field.id === this.fieldSelected.value)
+      })
+      if (f) {
+        this.selectedFieldType = f.fieldType;
+      }
+      const cv = this.conditionValue.value
+      const mt = this.matchTypeSelected.value
       this.setMatchType();
+      this.conditionValue.setValue(cv);
+      this.matchTypeSelected.setValue(mt);
 
     } else {
       this.matchTypes = this.matchTypesForString;
@@ -68,8 +80,9 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
       this.operatorSelected.setValue(this.operators[0]);
     }
+
   }
-  
+
   getConditionValueErrorMessage() {
     return this.conditionValue.hasError('required') ? '条件値は必須項目です。' : '';
   }

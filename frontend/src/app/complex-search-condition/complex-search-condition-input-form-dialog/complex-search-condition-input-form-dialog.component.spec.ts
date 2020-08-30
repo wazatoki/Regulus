@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 
 import { ComplexSearchConditionInputFormDialogComponent } from './complex-search-condition-input-form-dialog.component';
 import { Component, DebugElement, OnInit } from '@angular/core';
@@ -46,7 +46,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
   };
 
   beforeEach(async(() => {
-    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
+    complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
       ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
 
     TestBed.configureTestingModule({
@@ -100,12 +100,12 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
       .compileComponents();
 
     dialog = TestBed.get(MatDialog);
+    fixture = TestBed.createComponent(ComplexSearchConditionInputFormDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComplexSearchConditionInputFormDialogComponent);
-    component = fixture.componentInstance;
-
     complexSearchServiceSpy = TestBed.get(ComplexSearchService);
     complexSearchServiceSpy.initSaveDataObj.and.returnValue(createInitSaveData());
     complexSearchServiceSpy.initConditionDataObj.and.returnValue(createInitConditionData());
@@ -181,6 +181,10 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     component.isShowSaveCondition = true;
     fixture.detectChanges();
 
+    (component.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
+    (component.searchConditionFormArray.controls[1] as FormGroup).get('conditionValue').setValue('value1');
+    fixture.detectChanges();
+
     const formDebugElement: DebugElement = fixture.debugElement.query(By.css('form'));
     formDebugElement.triggerEventHandler('submit', null);
     fixture.detectChanges();
@@ -239,7 +243,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     expect(expectSaveData.patternName).toBe('sample pattern name');
     expect(expectSaveData.isDisclose).toBe(false);
     expect(expectSaveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
-    expect(expectSaveData.conditionData.searchConditionList[0].field).toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
+    expect(expectSaveData.conditionData.searchConditionList[0].searchField).toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
     expect(expectSaveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(expectSaveData.conditionData.searchConditionList[0].matchType).toEqual('match');
     expect(expectSaveData.conditionData.searchConditionList[0].operator).toEqual('and');
@@ -355,7 +359,8 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
 
     component.onClearClick();
     fixture.detectChanges();
-    expect(selectEl.textContent).not.toContain('TEST_CATEGORY_1');
+    
+    expect(selectEl.textContent).not.toContain(categories[0].name);
   });
 
 });

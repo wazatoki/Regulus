@@ -93,7 +93,7 @@ var queryConditionSearchConditionList = []query.FieldAttr{
 	},
 }
 
-var categories = []entities.Category{
+var categories = []*entities.Category{
 	{
 		Name:      "staff",
 		ViewValue: "利用者",
@@ -126,8 +126,8 @@ var categories = []entities.Category{
 	},
 }
 
-func createExpectedQueryCondition0Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition0Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid0",
 		PatternName: "patternName0",
 		Category:    categories[0],
@@ -149,8 +149,8 @@ func createExpectedQueryCondition0Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition1Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition1Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid1",
 		PatternName: "patternName1",
 		Category:    categories[0],
@@ -172,8 +172,8 @@ func createExpectedQueryCondition1Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition2Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition2Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid2",
 		PatternName: "patternName2",
 		Category:    categories[0],
@@ -195,8 +195,8 @@ func createExpectedQueryCondition2Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition3Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition3Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid3",
 		PatternName: "patternName3",
 		Category:    categories[0],
@@ -218,8 +218,8 @@ func createExpectedQueryCondition3Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition4Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition4Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid4",
 		PatternName: "patternName4",
 		Category:    categories[0],
@@ -241,8 +241,8 @@ func createExpectedQueryCondition4Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition5Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition5Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid5",
 		PatternName: "patternName5",
 		Category:    categories[1],
@@ -264,8 +264,8 @@ func createExpectedQueryCondition5Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition6Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition6Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid6",
 		PatternName: "patternName6",
 		Category:    categories[1],
@@ -287,8 +287,8 @@ func createExpectedQueryCondition6Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition7Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition7Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid7",
 		PatternName: "patternName7",
 		Category:    categories[1],
@@ -310,8 +310,8 @@ func createExpectedQueryCondition7Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition8Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition8Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid8",
 		PatternName: "patternName8",
 		Category:    categories[1],
@@ -333,8 +333,8 @@ func createExpectedQueryCondition8Entity() entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition9Entity() entities.QueryCondition {
-	return entities.QueryCondition{
+func createExpectedQueryCondition9Entity() *entities.QueryCondition {
+	return &entities.QueryCondition{
 		ID:          "queryConditionid9",
 		PatternName: "patternName9",
 		Category:    categories[1],
@@ -363,7 +363,7 @@ func TestQueryConditionObjectMap(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		wantEqc entities.QueryCondition
+		wantEqc *entities.QueryCondition
 	}{
 		{
 			name:    "convert sqlboiler.QueryCondition to entities.QueryConditon",
@@ -447,7 +447,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 		name                      string
 		fields                    fields
 		args                      args
-		wantResultQueryConditions []entities.QueryCondition
+		wantResultQueryConditions []*entities.QueryCondition
 		wantErr                   bool
 	}{
 		{
@@ -471,7 +471,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			wantResultQueryConditions: []entities.QueryCondition{
+			wantResultQueryConditions: []*entities.QueryCondition{
 				createExpectedQueryCondition5Entity(),
 			},
 			wantErr: false,
@@ -510,7 +510,7 @@ func TestQueryConditionRepo_SelectByID(t *testing.T) {
 		name               string
 		fields             fields
 		args               args
-		wantQueryCondition entities.QueryCondition
+		wantQueryCondition *entities.QueryCondition
 		wantErr            bool
 	}{
 		{
@@ -558,7 +558,7 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 		name                string
 		fields              fields
 		args                args
-		wantQueryConditions []entities.QueryCondition
+		wantQueryConditions []*entities.QueryCondition
 		wantErr             bool
 	}{
 		{
@@ -572,7 +572,7 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 					"queryConditionid1",
 				},
 			},
-			wantQueryConditions: []entities.QueryCondition{
+			wantQueryConditions: []*entities.QueryCondition{
 				createExpectedQueryCondition0Entity(),
 				createExpectedQueryCondition1Entity(),
 			},
@@ -607,12 +607,13 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 	}
 	type args struct {
 		queryCondition entities.QueryCondition
+		operatorID     string
 	}
 	tests := []struct {
 		name       string
 		fields     fields
 		args       args
-		wantEntity entities.QueryCondition
+		wantEntity *entities.QueryCondition
 		wantErr    bool
 	}{
 		{
@@ -646,6 +647,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 					},
 					Owner: createExpectedStaff1Entity(),
 				},
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -656,7 +658,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 			con := setUpQueryConditionTest()
 			defer tearDownQueryConditionTest(con)
 			setupTestData()
-			tt.wantEntity = entities.QueryCondition{
+			tt.wantEntity = &entities.QueryCondition{
 				PatternName:    tt.args.queryCondition.PatternName,
 				Category:       tt.args.queryCondition.Category,
 				IsDisclose:     tt.args.queryCondition.IsDisclose,
@@ -668,7 +670,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			gotID, err := q.Insert(&tt.args.queryCondition)
+			gotID, err := q.Insert(&tt.args.queryCondition, tt.args.operatorID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Insert() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -696,7 +698,8 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryCondition entities.QueryCondition
+		queryCondition *entities.QueryCondition
+		operatorID     string
 	}
 	tests := []struct {
 		name    string
@@ -734,11 +737,12 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 			}
 			beforeQueryCondition.IsDisclose = true
 			tt.args.queryCondition = beforeQueryCondition
+			tt.args.operatorID = createExpectedStaff1Entity().ID
 
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			if err := q.Update(&tt.args.queryCondition); (err != nil) != tt.wantErr {
+			if err := q.Update(tt.args.queryCondition, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			got, _ := sqlboiler.QueryConditions(qm.Where("id=?", beforeQueryCondition.ID),
@@ -763,7 +767,8 @@ func TestQueryConditionRepo_Dalete(t *testing.T) {
 		database db
 	}
 	type args struct {
-		id string
+		id         string
+		operatorID string
 	}
 	tests := []struct {
 		name    string
@@ -777,7 +782,8 @@ func TestQueryConditionRepo_Dalete(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				id: "queryConditionid1",
+				id:         "queryConditionid1",
+				operatorID: createExpectedStaff1Entity().ID,
 			},
 			wantErr: false,
 		},
@@ -791,7 +797,7 @@ func TestQueryConditionRepo_Dalete(t *testing.T) {
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			if err := q.Delete(tt.args.id); (err != nil) != tt.wantErr {
+			if err := q.Delete(tt.args.id, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 

@@ -4,7 +4,7 @@ import { createTestInstance1 as createFieldAttr1,
 
 export function createTestInstance1(): SearchCondition {
     return {
-        field: createFieldAttr1(),
+        searchField: createFieldAttr1(),
         conditionValue: 'test value',
         matchType: 'match',
         operator: 'and',
@@ -13,7 +13,7 @@ export function createTestInstance1(): SearchCondition {
 
 export function createTestInstance2(): SearchCondition {
     return {
-        field: createFieldAttr2(),
+        searchField: createFieldAttr2(),
         conditionValue: 'test value2',
         matchType: 'unmatch',
         operator: 'or',

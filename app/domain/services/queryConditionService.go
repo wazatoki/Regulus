@@ -5,14 +5,176 @@ import (
 	"regulus/app/domain/vo/query"
 	"regulus/app/utils"
 	"sort"
+	"strings"
 )
 
 /*
-CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
+QueryConditions *entities.QueryConditionのスライス
+Findで条件抽出
+Sortで並び替え
 */
-func CreateCategories(groups []entities.StaffGroup) (categories []entities.Category) {
+type QueryConditions []*entities.QueryCondition
 
-	categories = []entities.Category{}
+/*
+Find 条件抽出
+*/
+func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result QueryConditions) {
+
+	var temp QueryConditions
+	var temp2 QueryConditions
+	result = make(QueryConditions, 0)
+
+	for _, condition := range q {
+
+		result = append(result, condition)
+	}
+
+	for _, queryItem := range queryItems {
+
+		temp = make(QueryConditions, 0)
+
+		if queryItem.Operator == query.And {
+
+			for _, queryCondition := range result {
+
+				if q.isMatchCondition(queryItem, queryCondition) {
+
+					temp = append(temp, queryCondition)
+				}
+
+			}
+
+			result = temp
+		} else {
+
+			for _, queryCondition := range q {
+
+				if q.isMatchCondition(queryItem, queryCondition) {
+
+					temp = append(temp, queryCondition)
+				}
+			}
+
+			temp2 = make(QueryConditions, 0)
+
+			for _, tempCondition := range temp {
+
+				f := false
+
+				for _, resultCondition := range result {
+
+					if tempCondition == resultCondition {
+
+						f = true
+						break
+					}
+				}
+
+				if !f {
+
+					temp2 = append(temp2, tempCondition)
+				}
+			}
+
+			result = append(result, temp2...)
+		}
+	}
+
+	return
+}
+
+func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *entities.QueryCondition) bool {
+
+	switch sc.SearchField.FieldType {
+	case query.STRING:
+
+		switch sc.MatchType {
+		case query.Match:
+
+			switch sc.SearchField.ID {
+			case "pattern-name":
+				return qc.PatternName == sc.ConditionValue
+
+			case "category-view-value":
+				return qc.Category.ViewValue == sc.ConditionValue
+
+			case "owner":
+				return qc.Owner.Name == sc.SearchField.ViewValue
+			}
+
+		case query.Unmatch:
+
+			switch sc.SearchField.ID {
+			case "pattern-name":
+				return qc.PatternName != sc.ConditionValue
+
+			case "category-view-value":
+				return qc.Category.ViewValue != sc.ConditionValue
+
+			case "owner":
+				return qc.Owner.Name != sc.SearchField.ViewValue
+			}
+
+		case query.Pertialmatch:
+
+			switch sc.SearchField.ID {
+			case "pattern-name":
+				if strings.Index(qc.PatternName, sc.ConditionValue) == -1 {
+					return false
+				}
+				return true
+
+			case "category-view-value":
+				if strings.Index(qc.Category.ViewValue, sc.ConditionValue) == -1 {
+					return false
+				}
+				return true
+
+			case "owner":
+				if strings.Index(qc.Owner.Name, sc.ConditionValue) == -1 {
+					return false
+				}
+				return true
+			}
+		}
+
+	case query.BOOLEAN:
+
+		switch sc.SearchField.ID {
+		case "is-disclose":
+			if qc.IsDisclose {
+				return sc.ConditionValue == "true"
+			}
+			return sc.ConditionValue == "false"
+		}
+
+	case query.ARRAY:
+
+		switch sc.SearchField.ID {
+		case "disclose-groups":
+			if qc.DiscloseGroups != nil {
+
+				for _, group := range qc.DiscloseGroups {
+
+					if group.ID == sc.ConditionValue {
+						return true
+					}
+				}
+				return false
+			}
+		}
+
+	}
+	return false
+}
+
+/*
+CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
+optionのグループにはすべてのstaffGroupを渡す。
+*/
+func CreateCategories(groups []*entities.StaffGroup) (categories []*entities.Category) {
+
+	categories = []*entities.Category{}
 
 	categories = append(categories, createQueryConditionCategory(groups))
 
@@ -23,7 +185,7 @@ func CreateCategories(groups []entities.StaffGroup) (categories []entities.Categ
 	return
 }
 
-func createQueryConditionCategory(groups []entities.StaffGroup) (category entities.Category) {
+func createQueryConditionCategory(groups []*entities.StaffGroup) (category *entities.Category) {
 
 	optionItems := []query.OptionItem{}
 
@@ -31,7 +193,7 @@ func createQueryConditionCategory(groups []entities.StaffGroup) (category entiti
 		optionItems = append(optionItems, query.OptionItem{ID: g.ID, ViewValue: g.Name})
 	}
 
-	category = entities.Category{
+	category = &entities.Category{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
 		SearchItems: entities.ComplexSearchItems{
@@ -72,8 +234,8 @@ func createQueryConditionCategory(groups []entities.StaffGroup) (category entiti
 	return
 }
 
-func createStaffCategory(groups []entities.StaffGroup) (category entities.Category) {
-	category = entities.Category{
+func createStaffCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+	category = &entities.Category{
 		Name:      "staff",
 		ViewValue: "利用者",
 		SearchItems: entities.ComplexSearchItems{
@@ -107,8 +269,8 @@ func createStaffCategory(groups []entities.StaffGroup) (category entities.Catego
 	return
 }
 
-func createStaffGroupCategory(groups []entities.StaffGroup) (category entities.Category) {
-	category = entities.Category{
+func createStaffGroupCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+	category = &entities.Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
 		SearchItems: entities.ComplexSearchItems{
@@ -140,14 +302,14 @@ func createStaffGroupCategory(groups []entities.StaffGroup) (category entities.C
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(queryConditions []entities.QueryCondition, orderItems ...query.OrderConditionItem) []entities.QueryCondition {
+func Sort(queryConditions []*entities.QueryCondition, orderItems ...query.OrderConditionItem) []*entities.QueryCondition {
 	sort.Slice(queryConditions, func(i int, j int) bool {
 		return compare(queryConditions[i], queryConditions[j], orderItems, 0)
 	})
 	return queryConditions
 }
 
-func compare(queryCondition1 entities.QueryCondition, queryCondition2 entities.QueryCondition, orderItems []query.OrderConditionItem, orderIndex int) bool {
+func compare(queryCondition1 *entities.QueryCondition, queryCondition2 *entities.QueryCondition, orderItems []query.OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false

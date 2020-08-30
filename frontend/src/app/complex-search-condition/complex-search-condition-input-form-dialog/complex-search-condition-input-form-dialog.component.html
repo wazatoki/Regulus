@@ -106,7 +106,6 @@
                         </mat-form-field>
                         <mat-checkbox class="is-disclose" formControlName="isDisclose">公開する</mat-checkbox>
                         <div *ngIf="saveConditions.get('isDisclose').value" class="disclosure-destination" formArrayName="discloseGroups">
-                            sasasaasasasasasaas
                             <div class="disclosure-destination-group"
                                 *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
                                 <mat-checkbox [formControlName]="i">
