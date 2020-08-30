@@ -604,3 +604,50 @@ func TestQueryConditions_Sort(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryConditions_FindBySearchStrings(t *testing.T) {
+	type args struct {
+		serchStrings []string
+	}
+	tests := []struct {
+		name       string
+		q          QueryConditions
+		args       args
+		wantResult QueryConditions
+	}{
+		{
+			name: "Find with array, or condition",
+			q: QueryConditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+			args: args{
+				serchStrings: []string{
+					"1",
+				},
+			},
+			wantResult: QueryConditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotResult := tt.q.FindBySearchStrings(tt.args.serchStrings...); !reflect.DeepEqual(gotResult, tt.wantResult) {
+				t.Errorf("QueryConditions.FindBySearchStrings() = %v, want %v", gotResult, tt.wantResult)
+			}
+		})
+	}
+}

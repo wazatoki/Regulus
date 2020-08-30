@@ -98,6 +98,32 @@ func (q QueryConditions) compare(
 }
 
 /*
+FindBySearchStrings キーワード検索
+*/
+func (q QueryConditions) FindBySearchStrings(serchStrings ...string) (result QueryConditions) {
+
+	result = make(QueryConditions, 0)
+	for _, c := range q {
+		result = append(result, c)
+	}
+
+	for _, str := range serchStrings {
+
+		temp := make(QueryConditions, 0)
+
+		for _, c := range result {
+			if strings.Index(c.PatternName, str) != -1 || strings.Index(c.Category.ViewValue, str) != -1 || strings.Index(c.Owner.Name, str) != -1 {
+				temp = append(temp, c)
+			}
+		}
+
+		result = temp
+	}
+
+	return
+}
+
+/*
 FindBySearchConditionItem 条件抽出
 */
 func (q QueryConditions) FindBySearchConditionItem(queryItems ...query.SearchConditionItem) (result QueryConditions) {
