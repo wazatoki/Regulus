@@ -106,6 +106,29 @@ var staffGroupSearchConditionList = []query.FieldAttr{
 	},
 }
 
+var queryConditionOrderConditionList = []query.FieldAttr{
+	{
+		ID:        "pattern-name",
+		ViewValue: "検索パターン名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "category-view-value",
+		ViewValue: "カテゴリー名称",
+		FieldType: query.STRING,
+	},
+	{
+		ID:        "is-disclose",
+		ViewValue: "公開",
+		FieldType: query.BOOLEAN,
+	},
+	{
+		ID:        "owner",
+		ViewValue: "所有者",
+		FieldType: query.STRING,
+	},
+}
+
 var queryConditionSearchConditionList = []query.FieldAttr{
 	{
 		ID:        "pattern-name",
@@ -507,8 +530,76 @@ func TestQueryConditions_Find(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotResult := tt.q.Find(tt.args.queryItems...); !reflect.DeepEqual(gotResult, tt.wantResult) {
+			if gotResult := tt.q.FindBySearchConditionItem(tt.args.queryItems...); !reflect.DeepEqual(gotResult, tt.wantResult) {
 				t.Errorf("QueryConditions.Find() = %v, want %v", gotResult, tt.wantResult)
+			}
+		})
+	}
+}
+
+func TestQueryConditions_Sort(t *testing.T) {
+	type args struct {
+		orderItems []query.OrderConditionItem
+	}
+	tests := []struct {
+		name       string
+		q          QueryConditions
+		args       args
+		wantResult QueryConditions
+	}{
+		{
+			name: "Sort with order condition",
+			q: QueryConditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+			args: args{
+				orderItems: []query.OrderConditionItem{
+					{
+						OrderField:        queryConditionOrderConditionList[1],
+						OrderFieldKeyWord: query.Asc,
+					},
+					{
+						OrderField:        queryConditionOrderConditionList[0],
+						OrderFieldKeyWord: query.Desc,
+					},
+				},
+			},
+			wantResult: QueryConditions{
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition9Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition5Entity(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var r []string
+			var w []string
+			gotResult := tt.q.Sort(tt.args.orderItems...)
+			for _, a := range gotResult {
+				r = append(r, a.ID)
+			}
+			for _, b := range tt.wantResult {
+				w = append(w, b.ID)
+			}
+			if !reflect.DeepEqual(r, w) {
+				t.Errorf("QueryConditions.Sort() = %v, want %v", r, w)
 			}
 		})
 	}

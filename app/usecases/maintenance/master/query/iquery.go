@@ -2,6 +2,7 @@ package query
 
 import (
 	"regulus/app/domain/entities"
+	"regulus/app/domain/services"
 	"regulus/app/domain/vo/query"
 )
 
@@ -11,6 +12,6 @@ type persistance interface {
 	Update(*entities.QueryCondition, string) error
 	Delete(string, string) error
 	SelectByID(string) (*entities.QueryCondition, error)
-	SelectAll() ([]*entities.QueryCondition, error)
+	SelectAll() (services.QueryConditions, error)
 	Select(...query.SearchConditionItem) ([]*entities.QueryCondition, error)
 }

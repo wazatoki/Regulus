@@ -31,15 +31,16 @@ Find は検索時のユースケースです。条件指定がない場合は全
 */
 func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*entities.QueryCondition, error) {
 
-	items, err := queryRepo.Select(conditionData.SearchConditionList...)
-
+	items, err := queryRepo.SelectAll()
 	if err != nil {
 
 		log.Error("usecases:query:Find:message:" + err.Error())
 		return nil, err
 	}
 
-	items = services.Sort(items, conditionData.OrderConditionList...)
+	items = items.FindBySearchConditionItem(conditionData.SearchConditionList...)
+	items = items.Sort(conditionData.OrderConditionList...)
+
 	return items, nil
 }
 

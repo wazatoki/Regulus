@@ -326,8 +326,8 @@ func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *entities.Que
 }
 
 // SelectAll select all query condition data without not del from database
-func (q *QueryConditionRepo) SelectAll() (queryConditions []*entities.QueryCondition, err error) {
-	queryConditions = []*entities.QueryCondition{}
+func (q *QueryConditionRepo) SelectAll() (queryConditions services.QueryConditions, err error) {
+	queryConditions = services.QueryConditions{}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := q.createQueryModSlice()

@@ -16,9 +16,91 @@ Sortで並び替え
 type QueryConditions []*entities.QueryCondition
 
 /*
-Find 条件抽出
+Sort is sort QueryConditions slice by orderItems
 */
-func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result QueryConditions) {
+func (q QueryConditions) Sort(orderItems ...query.OrderConditionItem) (result QueryConditions) {
+
+	result = make(QueryConditions, 0)
+
+	for _, condition := range q {
+
+		result = append(result, condition)
+	}
+
+	sort.Slice(result, func(i int, j int) bool {
+		return q.compare(result[i], result[j], orderItems, 0)
+	})
+	return
+}
+
+func (q QueryConditions) compare(
+	queryCondition1 *entities.QueryCondition,
+	queryCondition2 *entities.QueryCondition,
+	orderItems []query.OrderConditionItem,
+	orderIndex int) bool {
+
+	if len(orderItems) <= orderIndex {
+		return false
+	}
+
+	switch orderItems[orderIndex].OrderField.ID {
+	case "pattern-name":
+		if queryCondition1.PatternName == queryCondition2.PatternName {
+			orderIndex++
+			return q.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+			return queryCondition1.PatternName > queryCondition2.PatternName
+		}
+		return queryCondition1.PatternName < queryCondition2.PatternName
+	case "category-view-value":
+		if queryCondition1.Category.ViewValue == queryCondition2.Category.ViewValue {
+			orderIndex++
+			return q.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+			return queryCondition1.Category.ViewValue > queryCondition2.Category.ViewValue
+		}
+		return queryCondition1.Category.ViewValue < queryCondition2.Category.ViewValue
+	case "is-disclose":
+		if queryCondition1.IsDisclose == queryCondition2.IsDisclose {
+			orderIndex++
+			return q.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+		}
+		qc1 := utils.BoolToInt(queryCondition1.IsDisclose)
+		qc2 := utils.BoolToInt(queryCondition2.IsDisclose)
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+			return qc1 > qc2
+		}
+		return qc1 < qc2
+
+	case "owner":
+		if queryCondition1.Owner.ID == queryCondition2.Owner.ID {
+			orderIndex++
+			return q.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+			return queryCondition1.Owner.Name > queryCondition2.Owner.Name
+		}
+		return queryCondition1.Owner.Name < queryCondition2.Owner.Name
+
+	default:
+		if queryCondition1.PatternName == queryCondition2.PatternName {
+			orderIndex++
+			return q.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+			return queryCondition1.PatternName > queryCondition2.PatternName
+		}
+		return queryCondition1.PatternName < queryCondition2.PatternName
+
+	}
+}
+
+/*
+FindBySearchConditionItem 条件抽出
+*/
+func (q QueryConditions) FindBySearchConditionItem(queryItems ...query.SearchConditionItem) (result QueryConditions) {
 
 	var temp QueryConditions
 	var temp2 QueryConditions
@@ -165,6 +247,7 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *enti
 		}
 
 	}
+
 	return false
 }
 
@@ -225,9 +308,30 @@ func createQueryConditionCategory(groups []*entities.StaffGroup) (category *enti
 					FieldType: query.STRING,
 				},
 			},
-			DisplayItemList:    []query.FieldAttr{},
-			OrderConditionList: []query.FieldAttr{},
-			Groups:             groups,
+			DisplayItemList: []query.FieldAttr{},
+			OrderConditionList: []query.FieldAttr{
+				{
+					ID:        "pattern-name",
+					ViewValue: "検索パターン名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "category-view-value",
+					ViewValue: "カテゴリー名称",
+					FieldType: query.STRING,
+				},
+				{
+					ID:        "is-disclose",
+					ViewValue: "公開",
+					FieldType: query.BOOLEAN,
+				},
+				{
+					ID:        "owner",
+					ViewValue: "所有者",
+					FieldType: query.STRING,
+				},
+			},
+			Groups: groups,
 		},
 	}
 
@@ -297,74 +401,4 @@ func createStaffGroupCategory(groups []*entities.StaffGroup) (category *entities
 		},
 	}
 	return
-}
-
-/*
-Sort is sort maker slice by orderItems
-*/
-func Sort(queryConditions []*entities.QueryCondition, orderItems ...query.OrderConditionItem) []*entities.QueryCondition {
-	sort.Slice(queryConditions, func(i int, j int) bool {
-		return compare(queryConditions[i], queryConditions[j], orderItems, 0)
-	})
-	return queryConditions
-}
-
-func compare(queryCondition1 *entities.QueryCondition, queryCondition2 *entities.QueryCondition, orderItems []query.OrderConditionItem, orderIndex int) bool {
-
-	if len(orderItems) <= orderIndex {
-		return false
-	}
-
-	switch orderItems[orderIndex].OrderField.ID {
-	case "pattern-name":
-		if queryCondition1.PatternName == queryCondition2.PatternName {
-			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
-		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
-			return queryCondition1.PatternName > queryCondition2.PatternName
-		}
-		return queryCondition1.PatternName < queryCondition2.PatternName
-	case "category-view-value":
-		if queryCondition1.Category.ViewValue == queryCondition2.Category.ViewValue {
-			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
-		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
-			return queryCondition1.Category.ViewValue > queryCondition2.Category.ViewValue
-		}
-		return queryCondition1.Category.ViewValue < queryCondition2.Category.ViewValue
-	case "is-disclose":
-		if queryCondition1.IsDisclose == queryCondition2.IsDisclose {
-			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
-		}
-		qc1 := utils.BoolToInt(queryCondition1.IsDisclose)
-		qc2 := utils.BoolToInt(queryCondition2.IsDisclose)
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
-			return qc1 > qc2
-		}
-		return qc1 < qc2
-
-	case "owner":
-		if queryCondition1.Owner.ID == queryCondition2.Owner.ID {
-			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
-		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
-			return queryCondition1.Owner.Name > queryCondition2.Owner.Name
-		}
-		return queryCondition1.Owner.Name < queryCondition2.Owner.Name
-
-	default:
-		if queryCondition1.PatternName == queryCondition2.PatternName {
-			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
-		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
-			return queryCondition1.PatternName > queryCondition2.PatternName
-		}
-		return queryCondition1.PatternName < queryCondition2.PatternName
-
-	}
 }
