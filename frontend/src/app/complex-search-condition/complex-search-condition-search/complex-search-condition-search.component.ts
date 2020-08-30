@@ -27,9 +27,8 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     this.complexSearchConditionService.findComplexSearchItems().subscribe((data: ComplexSearchItems) => {
       const aData: any = data;
       aData.saveData = this.saveData;
-      // aData.saveData = this.testData(); // 検証用
       this.dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
-        data: aData,
+        data: aData.searchItems,
       });
     });
   }
