@@ -38,6 +38,7 @@ func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*entitie
 		return nil, err
 	}
 
+	items = items.FindBySearchStrings(conditionData.SearchStrings...)
 	items = items.FindBySearchConditionItem(conditionData.SearchConditionList...)
 	items = items.Sort(conditionData.OrderConditionList...)
 

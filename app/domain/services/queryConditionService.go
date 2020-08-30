@@ -102,6 +102,10 @@ FindBySearchStrings キーワード検索
 */
 func (q QueryConditions) FindBySearchStrings(serchStrings ...string) (result QueryConditions) {
 
+	if len(serchStrings) == 0 {
+		return q
+	}
+
 	result = make(QueryConditions, 0)
 	for _, c := range q {
 		result = append(result, c)
@@ -127,6 +131,10 @@ func (q QueryConditions) FindBySearchStrings(serchStrings ...string) (result Que
 FindBySearchConditionItem 条件抽出
 */
 func (q QueryConditions) FindBySearchConditionItem(queryItems ...query.SearchConditionItem) (result QueryConditions) {
+
+	if len(queryItems) == 0 {
+		return q
+	}
 
 	var temp QueryConditions
 	var temp2 QueryConditions
