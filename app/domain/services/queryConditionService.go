@@ -318,6 +318,9 @@ func CreateQueryConditionCategory(groups []*entities.StaffGroup) (category *enti
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
 		SearchItems: entities.ComplexSearchItems{
+			IsShowDisplayItem:    false,
+			IsShowOrderCondition: true,
+			IsShowSaveCondition:  true,
 			SearchConditionList: []query.FieldAttr{
 				{
 					ID:        "pattern-name",
@@ -381,6 +384,9 @@ func createStaffCategory(groups []*entities.StaffGroup) (category *entities.Cate
 		Name:      "staff",
 		ViewValue: "利用者",
 		SearchItems: entities.ComplexSearchItems{
+			IsShowDisplayItem:    false,
+			IsShowOrderCondition: false,
+			IsShowSaveCondition:  true,
 			SearchConditionList: []query.FieldAttr{
 				{
 					ID:        "account-id",
@@ -416,6 +422,9 @@ func createStaffGroupCategory(groups []*entities.StaffGroup) (category *entities
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
 		SearchItems: entities.ComplexSearchItems{
+			IsShowDisplayItem:    false,
+			IsShowOrderCondition: false,
+			IsShowSaveCondition:  false,
 			SearchConditionList: []query.FieldAttr{
 				{
 					ID:        "name",

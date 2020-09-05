@@ -17,10 +17,13 @@ type Category struct {
 ComplexSearchItems is struct as search condition display
 */
 type ComplexSearchItems struct {
-	DisplayItemList     []query.FieldAttr `json:"displayItemList"`
-	SearchConditionList []query.FieldAttr `json:"searchConditionList"`
-	OrderConditionList  []query.FieldAttr `json:"orderConditionList"`
-	Groups              []*StaffGroup     `json:"groups"`
+	DisplayItemList      []query.FieldAttr `json:"displayItemList"`
+	SearchConditionList  []query.FieldAttr `json:"searchConditionList"`
+	OrderConditionList   []query.FieldAttr `json:"orderConditionList"`
+	Groups               []*StaffGroup     `json:"groups"`
+	IsShowDisplayItem    bool              `json:"isShowDisplayItem"`
+	IsShowOrderCondition bool              `json:"isShowOrderCondition"`
+	IsShowSaveCondition  bool              `json:"isShowSaveCondition"`
 }
 
 /*

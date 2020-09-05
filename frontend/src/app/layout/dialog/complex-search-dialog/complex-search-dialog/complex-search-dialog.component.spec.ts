@@ -24,6 +24,7 @@ import { FieldAttr } from '../../../../services/models/search/field-attr';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { HttpClient } from '@angular/common/http';
+import { ClearComponent } from 'src/app/layout/form/buttons/clear/clear.component'
 
 describe('ComplexSearchDialogComponent', () => {
   let component: TestHostComponent;
@@ -39,6 +40,7 @@ describe('ComplexSearchDialogComponent', () => {
         ComplexSearchOrderItemComponent,
         CancelComponent,
         DeleteComponent,
+        ClearComponent,
       ],
       imports: [
         FormsModule,

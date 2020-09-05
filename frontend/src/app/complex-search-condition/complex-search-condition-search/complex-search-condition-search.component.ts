@@ -7,7 +7,7 @@ import { SaveData } from 'src/app/services/models/search/save-data';
 import { ConditionData, mapCondition, splitStrings } from 'src/app/services/models/search/condition-data';
 import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
-import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
+import { Category } from '../../services/models/search/category'
 
 @Component({
   selector: 'app-complex-search-condition-search',
@@ -24,11 +24,13 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   @Output() fetched: EventEmitter<SaveData[]> = new EventEmitter();
 
   openComplexSearch() {
-    this.complexSearchConditionService.findComplexSearchItems().subscribe((data: ComplexSearchItems) => {
-      const aData: any = data;
+    this.complexSearchConditionService.findComplexSearchItems().subscribe((data: Category) => {
+
+      const aData: any = { };
       aData.saveData = this.saveData;
+      aData.category = data;
       this.dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
-        data: aData.searchItems,
+        data: aData,
       });
     });
   }

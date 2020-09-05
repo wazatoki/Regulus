@@ -58,17 +58,17 @@ describe('ComplexSearchConditionService', () => {
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/DataInputFormItems');
   });
 
-  it('should call httpService.get with /complexSearchCondition/categories when called findComplexSearchItems method', () => {
-    const testData: ComplexSearchItems = createTestInstanceComplexSearchItem();
+  it('should call httpService.get with /complexSearchCondition/complexSearchItems when called findComplexSearchItems method', () => {
+    const testData: Category = createTestInstanceComplexSearchItem()[0];
 
     complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: ComplexSearchItems;
+    let result: Category;
 
-    complexSearchConditionService.findComplexSearchItems().subscribe(data => {
+    complexSearchConditionService.findComplexSearchItems().subscribe((data: Category) => {
       result = data
     })
 

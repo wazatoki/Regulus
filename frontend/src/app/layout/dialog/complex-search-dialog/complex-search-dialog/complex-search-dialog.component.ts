@@ -1,9 +1,6 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FieldAttr } from '../../../../services/models/search/field-attr';
-import { ConditionData } from '../../../../services/models/search/condition-data';
-import { ComplexSearchItems } from '../../../../services/models/search/complex-search-items';
-import {Group } from '../../../../services/models/group/group';
+import { Category } from 'src/app/services/models/search/category';
 
 @Component({
   selector: 'app-complex-search-dialog',
@@ -14,7 +11,7 @@ export class ComplexSearchDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ComplexSearchDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ComplexSearchItems
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {

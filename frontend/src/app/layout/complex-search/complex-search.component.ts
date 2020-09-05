@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl, Validators} from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Group } from '../../services/models/group/group';
 import { FieldAttr } from '../../services/models/search/field-attr';
@@ -10,6 +10,7 @@ import { SaveData } from '../../services/models/search/save-data';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from '../dialog/notice-dialog/notice-dialog.component';
+import { Category } from 'src/app/services/models/search/category';
 
 @Component({
   selector: 'app-complex-search',
@@ -23,14 +24,58 @@ export class ComplexSearchComponent implements OnInit {
   selectedDisplayItemArray: FieldAttr[];
   fromDisplayItemArray: FieldAttr[];
 
-  @Input() displayItemList: FieldAttr[] = [];
-  @Input() searchConditionList: FieldAttr[] = [];
-  @Input() orderConditionList: FieldAttr[] = [];
-  @Input() isShowDisplayItem: boolean = false;
-  @Input() isShowOrderCondition: boolean = false;
-  @Input() isShowSaveCondition: boolean = false;
-  @Input() groupList: Group[] = [];
+
+  @Input() category: Category;
   @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
+
+  get displayItemList(): FieldAttr[] {
+    if (this.category && this.category.searchItems && this.category.searchItems.displayItemList) {
+      return this.category.searchItems.displayItemList
+    }
+    return []
+  }
+
+  get searchConditionList(): FieldAttr[] {
+    if (this.category && this.category.searchItems && this.category.searchItems.searchConditionList) {
+      return this.category.searchItems.searchConditionList
+    }
+    return []
+  }
+
+  get orderConditionList(): FieldAttr[] {
+    if (this.category && this.category.searchItems && this.category.searchItems.orderConditionList) {
+      return this.category.searchItems.orderConditionList
+    }
+    return []
+  }
+
+  get isShowDisplayItem(): boolean {
+    if (this.category && this.category.searchItems) {
+      return this.category.searchItems.isShowDisplayItem
+    }
+    return false
+  }
+
+  get isShowOrderCondition(): boolean {
+    if (this.category && this.category.searchItems) {
+      return this.category.searchItems.isShowOrderCondition
+    }
+    return false
+  }
+
+  get isShowSaveCondition(): boolean {
+    if (this.category && this.category.searchItems) {
+      return this.category.searchItems.isShowSaveCondition
+    }
+    return false
+  }
+
+  get groupList(): Group[] {
+    if (this.category && this.category.searchItems && this.category.searchItems.groups) {
+      return this.category.searchItems.groups
+    }
+    return []
+  }
 
   get searchConditionFormArray() {
     return this.form.get('searchCondition') as FormArray;
@@ -50,20 +95,10 @@ export class ComplexSearchComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private complexSearchDataShereService: ComplexSearchService,
-    private dialog: MatDialog) {
-
-    this.form = this.fb.group({
-      searchCondition: this.fb.array([]),
-      orderCondition: this.fb.array([]),
-      saveCondition: this.fb.group({
-        patternName: this.fb.control(""),
-        isDisclose: this.fb.control(""),
-        discloseGroups: this.fb.array([]),
-      }),
-    });
-  }
+    private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.form = this.initForm()
     this.groupList.forEach(g => {
       this.discloseGroupFormArray.push(this.fb.control(''));
     })
@@ -73,6 +108,19 @@ export class ComplexSearchComponent implements OnInit {
     if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
       this.setSavedDataToForm()
     }
+  }
+
+  initForm(): FormGroup {
+    return this.fb.group({
+      searchCondition: this.fb.array([]),
+      orderCondition: this.fb.array([]),
+      saveCondition: this.fb.group({
+        category: this.fb.control(this.category.name),
+        patternName: this.fb.control('', [Validators.required]),
+        isDisclose: this.fb.control(''),
+        discloseGroups: this.fb.array([]),
+      }),
+    });
   }
 
   setSavedDataToForm() {
@@ -269,5 +317,11 @@ export class ComplexSearchComponent implements OnInit {
     })
     this.selectedDisplayItemArray = [];
   }
+
+  onClearClick(): void {
+    this.form = this.initForm()
+    this.initSelectedDisplayItems()
+  }
+
 
 }// end of class

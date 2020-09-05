@@ -15,8 +15,8 @@ export class ComplexSearchConditionService {
     return this.http.get<Category[]>('/complexSearchCondition/DataInputFormItems');
   }
 
-  findComplexSearchItems(): Observable<ComplexSearchItems> {
-    return this.http.get<ComplexSearchItems>('/complexSearchCondition/complexSearchItems')
+  findComplexSearchItems(): Observable<Category> {
+    return this.http.get<Category>('/complexSearchCondition/complexSearchItems')
   }
 
   findByCondition(condition: ConditionData): Observable<SaveData[]> {
