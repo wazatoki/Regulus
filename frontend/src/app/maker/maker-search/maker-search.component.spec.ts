@@ -10,6 +10,7 @@ import { Maker } from '../../services/models/maker/maker';
 import { of,Subject } from 'rxjs';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
 import { ComplexSearchItems } from 'src/app/services/models/search/complex-search-items';
+import { SaveData } from 'src/app/services/models/search/save-data';
 
 describe('MakerSearchComponent', () => {
   let component: MakerSearchComponent;
@@ -67,7 +68,7 @@ describe('MakerSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     });
-    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
+    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<SaveData>().asObservable();
 
     fixture = TestBed.createComponent(MakerSearchComponent);
     component = fixture.componentInstance;

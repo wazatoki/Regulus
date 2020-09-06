@@ -59,8 +59,8 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
   defineDialogSearch() {
     // 検索条件設定ダイアログで検索ボタンをクリックしたら検索条件を変更して検索を実行する。
     this.complexSearchSubscription = this.complexSearchService.complexSearchOrdered$.subscribe(
-      (data: ConditionData) => {
-        mapCondition(data, this.condition);
+      (data: SaveData) => {
+        mapCondition(data.conditionData, this.condition);
         this.search();
         this.dialogRef.close();
       }

@@ -10,7 +10,7 @@ import { HttpService } from '../http.service';
 })
 export class ComplexSearchService {
 
-  private complexSearchOrderedSouce = new Subject<ConditionData>();
+  private complexSearchOrderedSouce = new Subject<SaveData>();
   private complexSearchSaveOrderedSouce = new Subject<SaveData>();
 
   complexSearchOrdered$ = this.complexSearchOrderedSouce.asObservable();
@@ -41,7 +41,7 @@ export class ComplexSearchService {
     };
   }
 
-  orderComplexSearch(data: ConditionData){
+  orderComplexSearch(data: SaveData){
     this.complexSearchOrderedSouce.next(data);
   }
 

@@ -157,7 +157,7 @@ describe('ComplexSearchComponent', () => {
   });
 
 
-  it('should create save data', () => {
+  fit('should create save data', () => {
 
     fixture.detectChanges();
 
@@ -165,10 +165,10 @@ describe('ComplexSearchComponent', () => {
     const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
     patternNameEl.value = 'sample pattern name';
     patternNameEl.dispatchEvent(new Event('input'));
-    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose .mat-checkbox-label"));
     const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
     isDiscloseEl.click();
-    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group .mat-checkbox-label"));
     const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
     const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
     groupEl0.click();
@@ -184,8 +184,7 @@ describe('ComplexSearchComponent', () => {
     (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
     fixture.detectChanges();
 
-    component.searchComponent.createSaveData();
-    saveData = component.searchComponent.saveData;
+    saveData = component.searchComponent.createSaveData();
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(false);
     expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);

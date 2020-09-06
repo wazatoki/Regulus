@@ -99,9 +99,13 @@ export class ComplexSearchComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.initForm()
-    this.groupList.forEach(g => {
-      this.discloseGroupFormArray.push(this.fb.control(''));
-    })
+
+    if(this.category && this.category.searchItems && this.category.searchItems.groups){
+      this.category.searchItems.groups.forEach(g => {
+        this.discloseGroupFormArray.push(this.fb.control(''));
+      })
+    }
+
     this.initSelectedDisplayItems();
 
     // saveDataの編集のときは値をフォームに反映する
@@ -215,16 +219,15 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSave() {
-    this.createSaveData();
     if (this.saveData.id) {
-      this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
+      this.complexSearchDataShereService.updateSearchCondition(this.createSaveData()).subscribe(data => {
         this.dialog.open(NoticeDialogComponent, {
           data: { contents: '検索条件を保存しました。' }
         });
         this.clickSearch()
       });
     } else {
-      this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe(data => {
+      this.complexSearchDataShereService.addSearchCondition(this.createSaveData()).subscribe(data => {
         this.dialog.open(NoticeDialogComponent, {
           data: { contents: '検索条件を保存しました。' }
         });
@@ -235,7 +238,7 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSearch(): void {
-    const data: ConditionData = this.createSearchData();
+    const data: SaveData = this.createSaveData()
     this.complexSearchDataShereService.orderComplexSearch(data);
   }
 
@@ -277,29 +280,29 @@ export class ComplexSearchComponent implements OnInit {
     return result;
   }
 
-  createSaveData(): void {
+  createSaveData(): SaveData {
 
-    if (this.saveData === null || this.saveData === undefined) {
-      this.saveData = this.complexSearchDataShereService.initSaveDataObj();
-    }
+    const data :SaveData = this.complexSearchDataShereService.initSaveDataObj();
 
     if (this.isShowSaveCondition) {
-      this.saveData.category = this.category;
-      this.saveData.patternName = this.saveConditions.get('patternName').value;
+      data.category = this.category;
+      data.patternName = this.saveConditions.get('patternName').value;
       if (this.saveConditions.get('isDisclose').value) {
-        this.saveData.isDisclose = true;
+        data.isDisclose = true;
       } else {
-        this.saveData.isDisclose = false;
+        data.isDisclose = false;
       }
 
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
-          this.saveData.discloseGroupIDs.push(this.groupList[i].id);
+          data.discloseGroupIDs.push(this.groupList[i].id);
         }
       });
     }
 
-    this.saveData.conditionData = this.createSearchData();
+    data.conditionData = this.createSearchData();
+
+    return data;
 
   }
 

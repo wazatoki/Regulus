@@ -45,7 +45,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
       searchConditionList: [],
       orderConditionList: [],
     });
-    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
+    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<SaveData>().asObservable();
 
     fixture = TestBed.createComponent(ComplexSearchConditionSearchComponent);
     component = fixture.componentInstance;
