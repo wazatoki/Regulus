@@ -221,12 +221,14 @@ export class ComplexSearchComponent implements OnInit {
         this.dialog.open(NoticeDialogComponent, {
           data: { contents: '検索条件を保存しました。' }
         });
+        this.clickSearch()
       });
     } else {
       this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe(data => {
         this.dialog.open(NoticeDialogComponent, {
           data: { contents: '検索条件を保存しました。' }
         });
+        this.clickSearch()
       });
     }
 
