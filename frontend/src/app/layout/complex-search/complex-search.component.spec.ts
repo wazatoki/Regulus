@@ -165,14 +165,9 @@ describe('ComplexSearchComponent', () => {
     const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
     patternNameEl.value = 'sample pattern name';
     patternNameEl.dispatchEvent(new Event('input'));
-    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose .mat-checkbox-label"));
-    const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
-    isDiscloseEl.click();
-    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group .mat-checkbox-label"));
-    const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
-    const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
-    groupEl0.click();
-    groupEl1.click();
+    component.searchComponent.saveConditions.get('isDisclose').setValue(true)
+    component.searchComponent.discloseGroupFormArray.controls[0].setValue(true)
+    component.searchComponent.discloseGroupFormArray.controls[1].setValue(true)
 
     component.searchComponent.pushSearchCondition();
     component.searchComponent.pushOrderCondition();
@@ -186,7 +181,7 @@ describe('ComplexSearchComponent', () => {
 
     saveData = component.searchComponent.createSaveData();
     expect(saveData.patternName).toBe('sample pattern name');
-    expect(saveData.isDisclose).toBe(false);
+    expect(saveData.isDisclose).toBe(true);
     expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
     expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.category.searchItems.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
