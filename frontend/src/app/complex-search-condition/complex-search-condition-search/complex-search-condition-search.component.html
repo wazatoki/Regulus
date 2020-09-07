@@ -1,4 +1,5 @@
 <div fxLayout="row wrap">
+    <span class = "pattern-name">{{ saveData.patternName }}</span>
     <app-search (searchClick)="onSearch($event)"></app-search>
     <button mat-flat-button (click)="openComplexSearch()">条件を設定</button>
 </div>

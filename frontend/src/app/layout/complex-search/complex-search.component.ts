@@ -219,19 +219,26 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   clickSave() {
+
+    const  sdata: SaveData = this.createSaveData();
+
     if (this.saveData.id) {
-      this.complexSearchDataShereService.updateSearchCondition(this.createSaveData()).subscribe(data => {
+      sdata.id = this.saveData.id
+      this.saveData = sdata
+      this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
         this.dialog.open(NoticeDialogComponent, {
           data: { contents: '検索条件を保存しました。' }
         });
-        this.clickSearch()
+        this.complexSearchDataShereService.orderComplexSearch(this.saveData);
       });
     } else {
-      this.complexSearchDataShereService.addSearchCondition(this.createSaveData()).subscribe(data => {
+      this.complexSearchDataShereService.addSearchCondition(sdata).subscribe(data => {
+        sdata.id = data.id
+        this.saveData = sdata
         this.dialog.open(NoticeDialogComponent, {
           data: { contents: '検索条件を保存しました。' }
         });
-        this.clickSearch()
+        this.complexSearchDataShereService.orderComplexSearch(this.saveData);
       });
     }
 
@@ -246,14 +253,28 @@ export class ComplexSearchComponent implements OnInit {
     const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
+
+      const conditionValue = (fieldType: string) => {
+        if (fieldType == 'boolean') {
+          if (formGroup.get('conditionValue').value) {
+            return 'true';
+          } else {
+            return 'false';
+          }
+        } else {
+          return formGroup.get('conditionValue').value;
+        }
+      }
+
       this.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
+
       const condition: SearchCondition = {
         searchField: field,
-        conditionValue: formGroup.get('conditionValue').value,
+        conditionValue: conditionValue(field.fieldType),
         matchType: formGroup.get('matchTypeSelected').value,
         operator: formGroup.get('operatorSelected').value,
       };

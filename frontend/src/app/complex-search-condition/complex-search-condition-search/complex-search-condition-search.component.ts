@@ -59,6 +59,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     // 検索条件設定ダイアログで検索ボタンをクリックしたら検索条件を変更して検索を実行する。
     this.complexSearchSubscription = this.complexSearchService.complexSearchOrdered$.subscribe(
       (data: SaveData) => {
+        this.saveData = data
         mapCondition(data.conditionData, this.condition);
         this.search();
         this.dialogRef.close();
@@ -72,6 +73,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     private dialog: MatDialog
     ) {
       this.condition = complexSearchService.initConditionDataObj();
+      this.saveData = complexSearchService.initSaveDataObj();
       this.defineDialogSearch();
     }
 
