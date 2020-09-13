@@ -21,10 +21,10 @@ describe('ComplexSearchConditionSearchComponent', () => {
 
     const complexSearchConditionServiceSpy = jasmine.createSpyObj('ComplexSearchConditionService', ['findByCondition']);
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
+      ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
-      declarations: [ ComplexSearchConditionSearchComponent ],
+      declarations: [ComplexSearchConditionSearchComponent],
       imports: [
         LayoutModule,
         FlexLayoutModule,
@@ -34,7 +34,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
         { provide: ComplexSearchService, useValue: complexSearchServiceSpy },
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -44,6 +44,24 @@ describe('ComplexSearchConditionSearchComponent', () => {
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
+    });
+    complexSearchServiceSpy.initSaveDataObj.and.returnValue({
+      id: '',
+      patternName: '',
+      category: null,
+      isDisclose: false,
+      discloseGroups: [],
+      ownerID: '',
+      conditionData: {
+        searchStrings: [],
+        displayItemList: [],
+        searchConditionList: [],
+        orderConditionList: [],
+      },
+      owner: {
+        id: '',
+        name: '',
+      }
     });
     complexSearchServiceSpy.complexSearchOrdered$ = new Subject<SaveData>().asObservable();
 
@@ -60,7 +78,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
     complexSearchConditionServiceSpy = TestBed.get(ComplexSearchConditionService);
     const searchWords = 'aaa bbb ccc';
     const condition = {
-      searchStrings: ['aaa','bbb','ccc'],
+      searchStrings: ['aaa', 'bbb', 'ccc'],
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
@@ -69,7 +87,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
     complexSearchConditionServiceSpy.findByCondition.and.returnValue(of(data))
     component.onSearch(searchWords);
 
-    component.fetched.subscribe( (res: SaveData[]) => {
+    component.fetched.subscribe((res: SaveData[]) => {
       expect(res).toBe(data);
     });
 

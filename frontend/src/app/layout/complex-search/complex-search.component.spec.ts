@@ -24,8 +24,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
 import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
-import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/group/group.spec';
-import { createTestInstance1 as createTestInstanceSaveData} from 'src/app/services/models/search/save-data.spec';
+import { ceateTestArray as ceateTestArrayGroup } from 'src/app/services/models/group/group.spec';
+import { createTestInstance1 as createTestInstanceSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 import { ClearComponent } from 'src/app/layout/form/buttons/clear/clear.component'
@@ -40,7 +40,7 @@ describe('ComplexSearchComponent', () => {
 
   beforeEach(async(() => {
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
+      ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -86,7 +86,7 @@ describe('ComplexSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
-    
+
     spy = TestBed.get(ComplexSearchService);
     spy.initSaveDataObj.and.returnValue(createInitSaveData());
     spy.initConditionDataObj.and.returnValue(createInitConditionData());
@@ -137,9 +137,9 @@ describe('ComplexSearchComponent', () => {
     buttonEl.click();
     fixture.detectChanges();
 
-    if(component.searchComponent.saveData.id){
+    if (component.searchComponent.saveData.id) {
       expect(spy.updateSearchCondition).toHaveBeenCalled();
-    }else{
+    } else {
       expect(spy.addSearchCondition).toHaveBeenCalled();
     }
   });
@@ -157,7 +157,7 @@ describe('ComplexSearchComponent', () => {
   });
 
 
-  fit('should create save data', () => {
+  it('should create save data', async () => {
 
     fixture.detectChanges();
 
@@ -165,30 +165,33 @@ describe('ComplexSearchComponent', () => {
     const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
     patternNameEl.value = 'sample pattern name';
     patternNameEl.dispatchEvent(new Event('input'));
-    component.searchComponent.saveConditions.get('isDisclose').setValue(true)
-    component.searchComponent.discloseGroupFormArray.controls[0].setValue(true)
-    component.searchComponent.discloseGroupFormArray.controls[1].setValue(true)
+    component.searchComponent.saveConditions.get('isDisclose').setValue(true);
+    component.searchComponent.discloseGroupFormArray.controls[0].setValue(true);
+    component.searchComponent.discloseGroupFormArray.controls[1].setValue(true);
 
-    component.searchComponent.pushSearchCondition();
-    component.searchComponent.pushOrderCondition();
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('fieldSelected').setValue('fieldid1');
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('conditionValue').setValue('value1');
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('matchTypeSelected').setValue('match');
     (component.searchComponent.searchConditionFormArray.controls[0] as FormGroup).get('operatorSelected').setValue('and');
     (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldSelected').setValue('fieldid2');
     (component.searchComponent.orderConditionFormArray.controls[0] as FormGroup).get('orderFieldKeyWordSelected').setValue('asc');
-    fixture.detectChanges();
 
-    saveData = component.searchComponent.createSaveData();
-    expect(saveData.patternName).toBe('sample pattern name');
-    expect(saveData.isDisclose).toBe(true);
-    expect(saveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
-    expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.category.searchItems.searchConditionList[0]);
-    expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
-    expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
-    expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
-    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.category.searchItems.orderConditionList[1]);
-    expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
+    fixture.whenStable().then(() => {
+
+      saveData = component.searchComponent.createSaveData();
+      expect(saveData.patternName).toBe('sample pattern name');
+      expect(saveData.isDisclose).toBe(true);
+      expect(saveData.discloseGroups[0].id).toEqual('test-group-id-1');
+      expect(saveData.discloseGroups[1].id).toEqual('test-group-id-2');
+      expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.category.searchItems.searchConditionList[0]);
+      expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
+      expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
+      expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
+      expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.category.searchItems.orderConditionList[1]);
+      expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
+
+    });
+
   });
 
   it('should delete condition', () => {
@@ -254,8 +257,8 @@ describe('ComplexSearchComponent', () => {
 })
 class TestHostComponent {
 
-  @ViewChild(ComplexSearchComponent, {static: true})
-  searchComponent:ComplexSearchComponent;
+  @ViewChild(ComplexSearchComponent, { static: true })
+  searchComponent: ComplexSearchComponent;
 
   category: Category = createCategoryArrayData()[0]
   saveData: SaveData = createTestInstanceSaveData()
