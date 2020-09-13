@@ -103,8 +103,7 @@
             <button type="button" mat-stroked-button (click)="clickSearch()" class="complex-search-button">検索</button>
         </mat-grid-tile>
         <mat-grid-tile>
-            <button type="button" mat-stroked-button (click)="clickSave()"
-                class="complex-search-condition-save-button">保存</button>
+            <app-submit [buttonLabelType]="save"></app-submit>
         </mat-grid-tile>
 
     </mat-grid-list>

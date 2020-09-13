@@ -25,6 +25,7 @@ import { DebugElement, Component, ViewChild } from '@angular/core';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { HttpClient } from '@angular/common/http';
 import { ClearComponent } from 'src/app/layout/form/buttons/clear/clear.component'
+import { SubmitComponent } from 'src/app/layout/form/buttons/submit/submit.component'
 
 describe('ComplexSearchDialogComponent', () => {
   let component: TestHostComponent;
@@ -41,6 +42,7 @@ describe('ComplexSearchDialogComponent', () => {
         CancelComponent,
         DeleteComponent,
         ClearComponent,
+        SubmitComponent,
       ],
       imports: [
         FormsModule,

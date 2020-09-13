@@ -218,7 +218,7 @@ export class ComplexSearchComponent implements OnInit {
     this.orderConditionFormArray.removeAt(i);
   }
 
-  clickSave() {
+  onSubmit() {
 
     const  sdata: SaveData = this.createSaveData();
 

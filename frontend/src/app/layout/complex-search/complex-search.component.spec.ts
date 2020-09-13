@@ -29,6 +29,7 @@ import { createTestInstance1 as createTestInstanceSaveData } from 'src/app/servi
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 import { ClearComponent } from 'src/app/layout/form/buttons/clear/clear.component'
+import { SubmitComponent } from 'src/app/layout/form/buttons/submit/submit.component'
 import { Category } from 'src/app/services/models/search/category';
 import { ceateTestArrayForMasterMaintenanceTest as createCategoryArrayData } from 'src/app/services/models/search/category.spec'
 
@@ -50,6 +51,7 @@ describe('ComplexSearchComponent', () => {
         ComplexSearchOrderItemComponent,
         DeleteComponent,
         ClearComponent,
+        SubmitComponent,
       ],
       imports: [
         FormsModule,
@@ -132,9 +134,11 @@ describe('ComplexSearchComponent', () => {
   it('should click save button', () => {
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-condition-save-button"));
-    const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
-    buttonEl.click();
+    const formDebugElement: DebugElement = fixture.debugElement.query(By.css('form'));
+    formDebugElement.triggerEventHandler('submit', null);
+    // const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-condition-save-button"));
+    // const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
+    // buttonEl.click();
     fixture.detectChanges();
 
     if (component.searchComponent.saveData.id) {
