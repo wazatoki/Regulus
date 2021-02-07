@@ -2,7 +2,7 @@ package entities
 
 import (
 	"regulus/app/domain/authentication"
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 )
 
 /*

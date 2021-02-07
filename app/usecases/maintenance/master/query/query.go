@@ -2,8 +2,8 @@ package query
 
 import (
 	"regulus/app/domain/entities"
+	"regulus/app/domain/query"
 	"regulus/app/domain/services"
-	"regulus/app/domain/vo/query"
 	"regulus/app/usecases/maintenance/master/group"
 	"regulus/app/utils/log"
 )

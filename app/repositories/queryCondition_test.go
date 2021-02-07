@@ -4,7 +4,7 @@ import (
 	"context"
 	"reflect"
 	"regulus/app/domain/entities"
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
 

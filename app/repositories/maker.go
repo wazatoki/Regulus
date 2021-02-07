@@ -8,7 +8,7 @@ import (
 	"regulus/app/utils"
 	"sort"
 
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/sqlboiler/boil"

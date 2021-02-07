@@ -3,7 +3,7 @@ package repositories
 import (
 	"regulus/app/infrastructures/postgresql"
 
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 
 	"github.com/jmoiron/sqlx"
 )

@@ -3,7 +3,7 @@ package services
 import (
 	"regulus/app/domain/authentication"
 	"regulus/app/domain/entities"
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 	"regulus/app/utils"
 	"sort"
 	"strings"

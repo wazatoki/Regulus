@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"regulus/app/domain/entities"
-	domainQuery "regulus/app/domain/vo/query"
+	domainQuery "regulus/app/domain/query"
 	"regulus/app/repositories"
 	"regulus/app/usecases/maintenance/master/query"
 

@@ -3,7 +3,7 @@ package repositories
 import (
 	"reflect"
 	makerEntity "regulus/app/domain/entities"
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 	"regulus/app/infrastructures/viper"
 	"testing"
 

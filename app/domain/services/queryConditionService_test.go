@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"regulus/app/domain/authentication"
 	"regulus/app/domain/entities"
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 	"testing"
 )
 

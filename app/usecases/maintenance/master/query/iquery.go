@@ -2,7 +2,7 @@ package query
 
 import (
 	"regulus/app/domain/entities"
-	"regulus/app/domain/vo/query"
+	"regulus/app/domain/query"
 )
 
 // persistance API用のインターフェース
