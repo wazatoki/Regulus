@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"regulus/app/domain/authentication"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/services"
 	"regulus/app/domain/vo/query"
@@ -514,7 +515,7 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 // QueryConditionObjectMap data mapper sqlboiler object to entities object
 func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *entities.QueryCondition) {
 	var category *entities.Category
-	var staffGroups []*entities.StaffGroup
+	var staffGroups []*authentication.Group
 	var displayItemList []query.FieldAttr
 	var searchConditionList []query.SearchConditionItem
 	var orderConditionList []query.OrderConditionItem

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"regulus/app/domain/authentication"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"regulus/app/utils"
@@ -172,7 +173,7 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *enti
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
 optionのグループにはすべてのstaffGroupを渡す。
 */
-func CreateCategories(groups []*entities.StaffGroup) (categories []*entities.Category) {
+func CreateCategories(groups []*authentication.Group) (categories []*entities.Category) {
 
 	categories = []*entities.Category{}
 
@@ -185,7 +186,7 @@ func CreateCategories(groups []*entities.StaffGroup) (categories []*entities.Cat
 	return
 }
 
-func createQueryConditionCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+func createQueryConditionCategory(groups []*authentication.Group) (category *entities.Category) {
 
 	optionItems := []query.OptionItem{}
 
@@ -234,7 +235,7 @@ func createQueryConditionCategory(groups []*entities.StaffGroup) (category *enti
 	return
 }
 
-func createStaffCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+func createStaffCategory(groups []*authentication.Group) (category *entities.Category) {
 	category = &entities.Category{
 		Name:      "staff",
 		ViewValue: "利用者",
@@ -269,7 +270,7 @@ func createStaffCategory(groups []*entities.StaffGroup) (category *entities.Cate
 	return
 }
 
-func createStaffGroupCategory(groups []*entities.StaffGroup) (category *entities.Category) {
+func createStaffGroupCategory(groups []*authentication.Group) (category *entities.Category) {
 	category = &entities.Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",

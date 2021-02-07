@@ -2,13 +2,14 @@ package services
 
 import (
 	"reflect"
+	"regulus/app/domain/authentication"
 	"regulus/app/domain/entities"
 	"regulus/app/domain/vo/query"
 	"testing"
 )
 
-func createExpectedStaff1Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff1Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid1",
 		AccountID: "12345",
 		Name:      "name 1",
@@ -17,48 +18,48 @@ func createExpectedStaff1Entity() *entities.Staff {
 	}
 }
 
-func createExpectedStaff2Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff2Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid2",
 		AccountID: "22345",
 		Name:      "name 2",
 		Password:  "password 2",
-		Groups: []*entities.StaffGroup{
+		Groups: []*authentication.Group{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaffGroup1Entity() *entities.StaffGroup {
-	return &entities.StaffGroup{
+func createExpectedStaffGroup1Entity() *authentication.Group {
+	return &authentication.Group{
 		ID:   "staffgroupid1",
 		Name: "staff group name 1",
 	}
 }
 
-func createExpectedStaffGroup2Entity() *entities.StaffGroup {
-	return &entities.StaffGroup{
+func createExpectedStaffGroup2Entity() *authentication.Group {
+	return &authentication.Group{
 		ID:   "staffgroupid2",
 		Name: "staff group name 2",
 	}
 }
 
-func createExpectedStaffGroup3Entity() *entities.StaffGroup {
-	return &entities.StaffGroup{
+func createExpectedStaffGroup3Entity() *authentication.Group {
+	return &authentication.Group{
 		ID:   "staffgroupid3",
 		Name: "staff group name 3",
 	}
 }
 
-func createExpectedStaffGroupEntity1Slice() []*entities.StaffGroup {
-	return []*entities.StaffGroup{
+func createExpectedStaffGroupEntity1Slice() []*authentication.Group {
+	return []*authentication.Group{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 	}
 }
 
-func createExpectedStaffGroupEntity2Slice() []*entities.StaffGroup {
-	return []*entities.StaffGroup{
+func createExpectedStaffGroupEntity2Slice() []*authentication.Group {
+	return []*authentication.Group{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 		createExpectedStaffGroup3Entity(),

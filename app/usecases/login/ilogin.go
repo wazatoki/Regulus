@@ -1,8 +1,8 @@
 package login
 
-import "regulus/app/domain/entities"
+import "regulus/app/domain/authentication"
 
 // persistance API用のインターフェース
 type persistance interface {
-	SelectByAccountID(string) (*entities.Staff, error)
+	SelectByAccountID(string) (*authentication.Staff, error)
 }

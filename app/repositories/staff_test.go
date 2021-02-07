@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"reflect"
-	"regulus/app/domain/entities"
+	"regulus/app/domain/authentication"
 	"regulus/app/domain/vo/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
@@ -23,8 +23,8 @@ func tearDownStaffTest(con *sqlx.DB) {
 	con.Close()
 }
 
-func createExpectedStaff1Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff1Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid1",
 		AccountID: "12345",
 		Name:      "name 1",
@@ -33,64 +33,64 @@ func createExpectedStaff1Entity() *entities.Staff {
 	}
 }
 
-func createExpectedStaff2Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff2Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid2",
 		AccountID: "22345",
 		Name:      "name 2",
 		Password:  "password 2",
-		Groups: []*entities.StaffGroup{
+		Groups: []*authentication.Group{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaff3Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff3Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid3",
 		AccountID: "32345",
 		Name:      "name 3",
 		Password:  "password 3",
-		Groups: []*entities.StaffGroup{
+		Groups: []*authentication.Group{
 			createExpectedStaffGroup2Entity(),
 		},
 	}
 }
 
-func createExpectedStaff4Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff4Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid4",
 		AccountID: "42345",
 		Name:      "name 4",
 		Password:  "password 4",
-		Groups: []*entities.StaffGroup{
+		Groups: []*authentication.Group{
 			createExpectedStaffGroup3Entity(),
 		},
 	}
 }
 
-func createExpectedStaff5Entity() *entities.Staff {
-	return &entities.Staff{
+func createExpectedStaff5Entity() *authentication.Staff {
+	return &authentication.Staff{
 		ID:        "staffid5",
 		AccountID: "52345",
 		Name:      "name 5",
 		Password:  "password 5",
-		Groups: []*entities.StaffGroup{
+		Groups: []*authentication.Group{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaffEntity1Slice() []*entities.Staff {
-	return []*entities.Staff{
+func createExpectedStaffEntity1Slice() []*authentication.Staff {
+	return []*authentication.Staff{
 		createExpectedStaff1Entity(),
 		createExpectedStaff3Entity(),
 		createExpectedStaff4Entity(),
 	}
 }
 
-func createExpectedStaffEntity2Slice() []*entities.Staff {
-	return []*entities.Staff{
+func createExpectedStaffEntity2Slice() []*authentication.Staff {
+	return []*authentication.Staff{
 		createExpectedStaff1Entity(),
 		createExpectedStaff2Entity(),
 		createExpectedStaff3Entity(),
@@ -107,10 +107,10 @@ func TestStaffObjectMap(t *testing.T) {
 	tests := []struct {
 		name   string
 		args   args
-		wantEs *entities.Staff
+		wantEs *authentication.Staff
 	}{
 		{
-			name:   "convert sqlboiler.staff to entities.staff",
+			name:   "convert sqlboiler.staff to authentication.Staff",
 			args:   args{},
 			wantEs: createExpectedStaff1Entity(),
 		},
@@ -141,7 +141,7 @@ func TestStaffRepo_Select(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []*entities.Staff
+		want    []*authentication.Staff
 		wantErr bool
 	}{
 		{
@@ -215,7 +215,7 @@ func TestStaffRepo_SelectAll(t *testing.T) {
 	tests := []struct {
 		name       string
 		fields     fields
-		wantStaffs []*entities.Staff
+		wantStaffs []*authentication.Staff
 		wantErr    bool
 	}{
 		{
@@ -260,7 +260,7 @@ func TestStaffRepo_SelectByID(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *entities.Staff
+		want    *authentication.Staff
 		wantErr bool
 	}{
 		{
@@ -307,7 +307,7 @@ func TestStaffRepo_SelectByIDs(t *testing.T) {
 		name       string
 		fields     fields
 		args       args
-		wantStaffs []*entities.Staff
+		wantStaffs []*authentication.Staff
 		wantErr    bool
 	}{
 		{
@@ -352,7 +352,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staff      *entities.Staff
+		staff      *authentication.Staff
 		operatorID string
 	}
 	tests := []struct {
@@ -367,12 +367,12 @@ func TestStaffRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				staff: &entities.Staff{
+				staff: &authentication.Staff{
 					ID:        "",
 					AccountID: "62345",
 					Name:      "name 6",
 					Password:  "password 6",
-					Groups: []*entities.StaffGroup{
+					Groups: []*authentication.Group{
 						createExpectedStaffGroup1Entity(),
 						createExpectedStaffGroup2Entity(),
 					},
@@ -387,12 +387,12 @@ func TestStaffRepo_Insert(t *testing.T) {
 			con := setUpStaffTest()
 			defer tearDownStaffTest(con)
 			setupTestData()
-			want := &entities.Staff{
+			want := &authentication.Staff{
 				ID:        "",
 				AccountID: "62345",
 				Name:      "name 6",
 				Password:  "password 6",
-				Groups: []*entities.StaffGroup{
+				Groups: []*authentication.Group{
 					createExpectedStaffGroup1Entity(),
 					createExpectedStaffGroup2Entity(),
 				},
@@ -424,7 +424,7 @@ func TestStaffRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staff      *entities.Staff
+		staff      *authentication.Staff
 		operatorID string
 	}
 	tests := []struct {
@@ -451,7 +451,7 @@ func TestStaffRepo_Update(t *testing.T) {
 			tt.args.staff.AccountID = "1234512345"
 			tt.args.staff.Name = "name 1name 1"
 			tt.args.staff.Password = "password 1password 1"
-			tt.args.staff.Groups = []*entities.StaffGroup{
+			tt.args.staff.Groups = []*authentication.Group{
 				createExpectedStaffGroup2Entity(),
 				createExpectedStaffGroup3Entity(),
 			}
@@ -537,7 +537,7 @@ func TestStaffRepo_SelectByAccountID(t *testing.T) {
 		name      string
 		fields    fields
 		args      args
-		wantStaff *entities.Staff
+		wantStaff *authentication.Staff
 		wantErr   bool
 	}{
 		{

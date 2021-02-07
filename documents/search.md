@@ -29,7 +29,7 @@ class FieldAttr {
 
 FieldAttr "1" -- "1" ValueTypeEnum : FieldType >
 
-class StaffGroup {
+class Group {
 	ID   string
 	Name string
 }
@@ -38,13 +38,13 @@ class ComplexSearchItems {
 	DisplayItemList      []FieldAttr
 	SearchConditionList  []FieldAttr
 	OrderConditionList   []FieldAttr
-	Groups               []StaffGroup
+	Groups               []Group
 }
 
 ComplexSearchItems "1" -- "1..*" FieldAttr : DisplayItemList >
 ComplexSearchItems "1" -- "1..*" FieldAttr : SearchConditionList >
 ComplexSearchItems "1" -- "1..*" FieldAttr : OrderConditionList >
-ComplexSearchItems "1" -- "1..*" StaffGroup : Groups >
+ComplexSearchItems "1" -- "1..*" Group : Groups >
 
 class Category {
 	Name        string
@@ -109,17 +109,17 @@ class Staff {
 	AccountID  string
 	Password string
 	Name     string
-	Groups   []StaffGroup
+	Groups   []Group
 }
 
-Staff "1" -- "1..*" StaffGroup : Groups >
+Staff "1" -- "1..*" Group : Groups >
 
 class QueryCondition {
     ID             string
 	PatternName    string
 	Category       Category
 	IsDisclose     bool
-	DiscloseGroups []StaffGroup
+	DiscloseGroups []Group
 	Owner          Staff
 	ConditionData  ConditionData
 }
@@ -127,7 +127,7 @@ class QueryCondition {
 QueryCondition "1" -- "1" Category : Category >
 QueryCondition "1" -- "1" ConditionData : ConditionData >
 QueryCondition "1" -- "1" Staff : Owner >
-QueryCondition "1" -- "1..*" StaffGroup : DiscloseGroups >
+QueryCondition "1" -- "1..*" Group : DiscloseGroups >
 
 @enduml
 
