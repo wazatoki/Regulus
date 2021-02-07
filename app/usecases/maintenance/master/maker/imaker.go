@@ -1,15 +1,15 @@
 package maker
 
 import (
-	makerEntity "regulus/app/domain/entities"
+	"regulus/app/domain/supplier"
 )
 
 // persistance API用のインターフェース
 type persistance interface {
-	Insert(*makerEntity.Maker) (string, error)
-	Update(*makerEntity.Maker) error
+	Insert(*supplier.Maker) (string, error)
+	Update(*supplier.Maker) error
 	Delete(string) error
-	SelectByID(string) (*makerEntity.Maker, error)
-	SelectAll() ([]makerEntity.Maker, error)
-	Select(string) ([]makerEntity.Maker, error)
+	SelectByID(string) (*supplier.Maker, error)
+	SelectAll() ([]supplier.Maker, error)
+	Select(string) ([]supplier.Maker, error)
 }

@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"errors"
-	makerEntity "regulus/app/domain/entities"
+	"regulus/app/domain/supplier"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 	"sort"
@@ -21,8 +21,8 @@ type MakerRepo struct {
 }
 
 // Select select maker data by condition from database
-func (m *MakerRepo) Select(queryItems ...*query.SearchConditionItem) ([]makerEntity.Maker, error) {
-	meSlice := []makerEntity.Maker{}
+func (m *MakerRepo) Select(queryItems ...*query.SearchConditionItem) ([]supplier.Maker, error) {
+	meSlice := []supplier.Maker{}
 	queries := []qm.QueryMod{}
 	var q qm.QueryMod
 
@@ -42,8 +42,8 @@ func (m *MakerRepo) Select(queryItems ...*query.SearchConditionItem) ([]makerEnt
 		if err == nil {
 
 			for _, maker := range makers {
-				var me *makerEntity.Maker
-				me = &makerEntity.Maker{}
+				var me *supplier.Maker
+				me = &supplier.Maker{}
 
 				me.ID = maker.ID
 				me.Name = maker.Name
@@ -59,8 +59,8 @@ func (m *MakerRepo) Select(queryItems ...*query.SearchConditionItem) ([]makerEnt
 }
 
 // SelectAll select all maker data without not del from database
-func (m *MakerRepo) SelectAll() ([]makerEntity.Maker, error) {
-	meSlice := []makerEntity.Maker{}
+func (m *MakerRepo) SelectAll() ([]supplier.Maker, error) {
+	meSlice := []supplier.Maker{}
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
@@ -72,8 +72,8 @@ func (m *MakerRepo) SelectAll() ([]makerEntity.Maker, error) {
 		if err == nil {
 
 			for _, maker := range makers {
-				var me *makerEntity.Maker
-				me = &makerEntity.Maker{}
+				var me *supplier.Maker
+				me = &supplier.Maker{}
 
 				me.ID = maker.ID
 				me.Name = maker.Name
@@ -89,12 +89,12 @@ func (m *MakerRepo) SelectAll() ([]makerEntity.Maker, error) {
 }
 
 // SelectByIDs select maker data by id list from database
-func (m *MakerRepo) SelectByIDs(ids []string) ([]makerEntity.Maker, error) {
+func (m *MakerRepo) SelectByIDs(ids []string) ([]supplier.Maker, error) {
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
 
-	meSlice := []makerEntity.Maker{}
+	meSlice := []supplier.Maker{}
 
 	var convertedIDs []interface{} = make([]interface{}, len(ids))
 	for i, d := range ids {
@@ -115,8 +115,8 @@ func (m *MakerRepo) SelectByIDs(ids []string) ([]makerEntity.Maker, error) {
 		if err == nil {
 
 			for _, maker := range makers {
-				var me *makerEntity.Maker
-				me = &makerEntity.Maker{}
+				var me *supplier.Maker
+				me = &supplier.Maker{}
 
 				me.ID = maker.ID
 				me.Name = maker.Name
@@ -132,13 +132,13 @@ func (m *MakerRepo) SelectByIDs(ids []string) ([]makerEntity.Maker, error) {
 }
 
 // SelectByID select maker data by id from database
-func (m *MakerRepo) SelectByID(id string) (*makerEntity.Maker, error) {
+func (m *MakerRepo) SelectByID(id string) (*supplier.Maker, error) {
 	if id == "" {
 		return nil, errors.New("id must be required")
 	}
 
-	var me *makerEntity.Maker
-	me = &makerEntity.Maker{}
+	var me *supplier.Maker
+	me = &supplier.Maker{}
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
 		maker, err := sqlboiler.FindMaker(context.Background(), db.DB, id)
@@ -172,7 +172,7 @@ func (m *MakerRepo) Dalete(id string) error {
 }
 
 // Update update data to database
-func (m *MakerRepo) Update(makerEntity *makerEntity.Maker) error {
+func (m *MakerRepo) Update(makerEntity *supplier.Maker) error {
 	if makerEntity.ID == "" {
 		return errors.New("ID must be required")
 	}
@@ -190,7 +190,7 @@ func (m *MakerRepo) Update(makerEntity *makerEntity.Maker) error {
 }
 
 // Insert insert data to database
-func (m *MakerRepo) Insert(makerEntity *makerEntity.Maker) (string, error) {
+func (m *MakerRepo) Insert(makerEntity *supplier.Maker) (string, error) {
 	id := ""
 	maker := &sqlboiler.Maker{}
 	maker.ID = utils.CreateID()
@@ -235,14 +235,14 @@ func (m *MakerRepo) createQueryMod(queryItem *query.SearchConditionItem) qm.Quer
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(makers []makerEntity.Maker, orderItems []query.OrderConditionItem) []makerEntity.Maker {
+func Sort(makers []supplier.Maker, orderItems []query.OrderConditionItem) []supplier.Maker {
 	sort.Slice(makers, func(i int, j int) bool {
 		return compare(makers[i], makers[j], orderItems, 0)
 	})
 	return makers
 }
 
-func compare(maker1 makerEntity.Maker, maker2 makerEntity.Maker, orderItems []query.OrderConditionItem, orderIndex int) bool {
+func compare(maker1 supplier.Maker, maker2 supplier.Maker, orderItems []query.OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false

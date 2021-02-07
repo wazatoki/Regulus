@@ -9,97 +9,97 @@ package maker
 import (
 	"errors"
 	"reflect"
-	makerEntity "regulus/app/domain/entities"
+	"regulus/app/domain/supplier"
 	"testing"
 )
 
 type persistanceStb struct{}
 
-func (p *persistanceStb) Insert(*makerEntity.Maker) (string, error) {
+func (p *persistanceStb) Insert(*supplier.Maker) (string, error) {
 	return "sampleId1", nil
 }
-func (p *persistanceStb) Update(*makerEntity.Maker) error {
+func (p *persistanceStb) Update(*supplier.Maker) error {
 	return nil
 }
 func (p *persistanceStb) Delete(string) error {
 	return nil
 }
-func (p *persistanceStb) SelectByID(string) (*makerEntity.Maker, error) {
-	return &makerEntity.Maker{
+func (p *persistanceStb) SelectByID(string) (*supplier.Maker, error) {
+	return &supplier.Maker{
 		ID:   "sampleid1",
 		Name: "samplename1",
 	}, nil
 }
-func (p *persistanceStb) SelectAll() ([]makerEntity.Maker, error) {
-	var results []makerEntity.Maker = []makerEntity.Maker{}
+func (p *persistanceStb) SelectAll() ([]supplier.Maker, error) {
+	var results []supplier.Maker = []supplier.Maker{}
 	return results, nil
 }
-func (p *persistanceStb) Select(string) ([]makerEntity.Maker, error) {
-	var results []makerEntity.Maker = []makerEntity.Maker{}
+func (p *persistanceStb) Select(string) ([]supplier.Maker, error) {
+	var results []supplier.Maker = []supplier.Maker{}
 	return results, nil
 }
 
 type persistanceStbErr struct{}
 
-func (p *persistanceStbErr) Insert(*makerEntity.Maker) (string, error) {
+func (p *persistanceStbErr) Insert(*supplier.Maker) (string, error) {
 	return "", errors.New("error occurred")
 }
-func (p *persistanceStbErr) Update(*makerEntity.Maker) error {
+func (p *persistanceStbErr) Update(*supplier.Maker) error {
 	return errors.New("error occurred")
 }
 func (p *persistanceStbErr) Delete(string) error {
 	return errors.New("error occurred")
 }
-func (p *persistanceStbErr) SelectByID(string) (*makerEntity.Maker, error) {
-	return &makerEntity.Maker{
+func (p *persistanceStbErr) SelectByID(string) (*supplier.Maker, error) {
+	return &supplier.Maker{
 		ID:   "sampleid1",
 		Name: "samplename1",
 	}, nil
 }
-func (p *persistanceStbErr) SelectAll() ([]makerEntity.Maker, error) {
-	var results []makerEntity.Maker = []makerEntity.Maker{}
+func (p *persistanceStbErr) SelectAll() ([]supplier.Maker, error) {
+	var results []supplier.Maker = []supplier.Maker{}
 	return results, nil
 }
-func (p *persistanceStbErr) Select(string) ([]makerEntity.Maker, error) {
-	var results []makerEntity.Maker = []makerEntity.Maker{}
+func (p *persistanceStbErr) Select(string) ([]supplier.Maker, error) {
+	var results []supplier.Maker = []supplier.Maker{}
 	return results, nil
 }
 
 type persistanceStbErr1 struct{}
 
-func (p *persistanceStbErr1) Insert(*makerEntity.Maker) (string, error) {
+func (p *persistanceStbErr1) Insert(*supplier.Maker) (string, error) {
 	return "", errors.New("error occurred")
 }
-func (p *persistanceStbErr1) Update(*makerEntity.Maker) error {
+func (p *persistanceStbErr1) Update(*supplier.Maker) error {
 	return errors.New("error occurred")
 }
 func (p *persistanceStbErr1) Delete(string) error {
 	return errors.New("error occurred")
 }
-func (p *persistanceStbErr1) SelectByID(string) (*makerEntity.Maker, error) {
-	return &makerEntity.Maker{}, errors.New("error occurred")
+func (p *persistanceStbErr1) SelectByID(string) (*supplier.Maker, error) {
+	return &supplier.Maker{}, errors.New("error occurred")
 }
-func (p *persistanceStbErr1) SelectAll() ([]makerEntity.Maker, error) {
-	var results []makerEntity.Maker = []makerEntity.Maker{}
+func (p *persistanceStbErr1) SelectAll() ([]supplier.Maker, error) {
+	var results []supplier.Maker = []supplier.Maker{}
 	return results, nil
 }
-func (p *persistanceStbErr1) Select(string) ([]makerEntity.Maker, error) {
-	var results []makerEntity.Maker = []makerEntity.Maker{}
+func (p *persistanceStbErr1) Select(string) ([]supplier.Maker, error) {
+	var results []supplier.Maker = []supplier.Maker{}
 	return results, nil
 }
 
 func TestCreate(t *testing.T) {
 	type args struct {
-		makerEn makerEntity.Maker
+		makerEn supplier.Maker
 		p       persistance
 	}
 
-	mk := makerEntity.Maker{
+	mk := supplier.Maker{
 		ID:   "",
 		Name: "name1",
 	}
 
-	expectMk := makerEntity.Maker{
+	expectMk := supplier.Maker{
 		ID:   "sampleId1",
 		Name: "name1",
 	}
@@ -118,7 +118,7 @@ func TestCreate(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *makerEntity.Maker
+		want *supplier.Maker
 	}{
 		{
 			name: "create successfull",
@@ -143,11 +143,11 @@ func TestCreate(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 	type args struct {
-		makerEn makerEntity.Maker
+		makerEn supplier.Maker
 		p       persistance
 	}
 
-	mk := makerEntity.Maker{
+	mk := supplier.Maker{
 		ID:   "sampleId1",
 		Name: "name1",
 	}
@@ -166,7 +166,7 @@ func TestUpdate(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *makerEntity.Maker
+		want *supplier.Maker
 	}{
 		{
 			name: "update successfull",
@@ -209,17 +209,17 @@ func TestDelete(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *[]makerEntity.Maker
+		want *[]supplier.Maker
 	}{
 		{
 			name: "delete successfull",
 			args: a,
-			want: &[]makerEntity.Maker{},
+			want: &[]supplier.Maker{},
 		},
 		{
 			name: "delete unsuccessfull",
 			args: b,
-			want: &[]makerEntity.Maker{
+			want: &[]supplier.Maker{
 				{
 					ID:   "sampleid1",
 					Name: "samplename1",
@@ -261,12 +261,12 @@ func TestFindByID(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *makerEntity.Maker
+		want *supplier.Maker
 	}{
 		{
 			name: "FindByID successful",
 			args: a,
-			want: &makerEntity.Maker{
+			want: &supplier.Maker{
 				ID:   "sampleid1",
 				Name: "samplename1",
 			},

@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"reflect"
-	makerEntity "regulus/app/domain/entities"
 	"regulus/app/domain/query"
+	"regulus/app/domain/supplier"
 	"regulus/app/infrastructures/viper"
 	"testing"
 
@@ -27,7 +27,7 @@ func TestMakerRepo_Insert(t *testing.T) {
 		database db
 	}
 	type args struct {
-		makerEntity *makerEntity.Maker
+		makerEntity *supplier.Maker
 	}
 	tests := []struct {
 		name    string
@@ -42,7 +42,7 @@ func TestMakerRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				makerEntity: &makerEntity.Maker{
+				makerEntity: &supplier.Maker{
 					ID:   "",
 					Name: "testname",
 				},
@@ -61,7 +61,7 @@ func TestMakerRepo_Insert(t *testing.T) {
 			}
 			got, _ := m.Insert(tt.args.makerEntity)
 
-			maker := makerEntity.Maker{}
+			maker := supplier.Maker{}
 			con.Get(&maker, "select id, name from makers limit 1")
 
 			if got == "" {
@@ -80,7 +80,7 @@ func TestMakerRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		makerEntity *makerEntity.Maker
+		makerEntity *supplier.Maker
 	}
 	tests := []struct {
 		name    string
@@ -94,7 +94,7 @@ func TestMakerRepo_Update(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				makerEntity: &makerEntity.Maker{
+				makerEntity: &supplier.Maker{
 					ID:   "id1",
 					Name: "testname2",
 				},
@@ -114,7 +114,7 @@ func TestMakerRepo_Update(t *testing.T) {
 
 			m.Update(tt.args.makerEntity)
 
-			maker := makerEntity.Maker{}
+			maker := supplier.Maker{}
 			con.Get(&maker, "select id, name from makers limit 1")
 
 			if maker.Name != tt.args.makerEntity.Name {
@@ -161,7 +161,7 @@ func TestMakerRepo_Dalete(t *testing.T) {
 
 			m.Dalete(tt.args.id)
 
-			maker := makerEntity.Maker{}
+			maker := supplier.Maker{}
 
 			con.Get(&maker, "select id, name from makers where del = true")
 
@@ -183,7 +183,7 @@ func TestMakerRepo_SelectByID(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *makerEntity.Maker
+		want    *supplier.Maker
 		wantErr bool
 	}{
 		{
@@ -194,7 +194,7 @@ func TestMakerRepo_SelectByID(t *testing.T) {
 			args: args{
 				id: "id1",
 			},
-			want: &makerEntity.Maker{
+			want: &supplier.Maker{
 				ID:   "id1",
 				Name: "testname1",
 			},
@@ -226,7 +226,7 @@ func TestMakerRepo_SelectAll(t *testing.T) {
 	tests := []struct {
 		name    string
 		fields  fields
-		want    []makerEntity.Maker
+		want    []supplier.Maker
 		wantErr bool
 	}{
 		{
@@ -234,7 +234,7 @@ func TestMakerRepo_SelectAll(t *testing.T) {
 			fields: fields{
 				database: createDB(),
 			},
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id1",
 					Name: "testname1",
@@ -300,7 +300,7 @@ func TestMakerRepo_Select(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []makerEntity.Maker
+		want    []supplier.Maker
 		wantErr bool
 	}{
 		{
@@ -309,7 +309,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{},
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id1",
 					Name: "testname1",
@@ -331,7 +331,7 @@ func TestMakerRepo_Select(t *testing.T) {
 					&qi1,
 				},
 			},
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id1",
 					Name: "testname1",
@@ -350,7 +350,7 @@ func TestMakerRepo_Select(t *testing.T) {
 					&qi2,
 				},
 			},
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id1",
 					Name: "testname1",
@@ -397,7 +397,7 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []makerEntity.Maker
+		want    []supplier.Maker
 		wantErr bool
 	}{
 		{
@@ -406,7 +406,7 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 				database: createDB(),
 			},
 			args: arg,
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id1",
 					Name: "testname1",
@@ -444,10 +444,10 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 
 func TestSort(t *testing.T) {
 	type args struct {
-		makers     []makerEntity.Maker
+		makers     []supplier.Maker
 		orderItems []query.OrderConditionItem
 	}
-	unsortMakers := []makerEntity.Maker{
+	unsortMakers := []supplier.Maker{
 		{
 			ID:   "id1",
 			Name: "testname1",
@@ -464,7 +464,7 @@ func TestSort(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []makerEntity.Maker
+		want []supplier.Maker
 	}{
 		{
 			name: "sort by asc",
@@ -481,7 +481,7 @@ func TestSort(t *testing.T) {
 					},
 				},
 			},
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id1",
 					Name: "testname1",
@@ -511,7 +511,7 @@ func TestSort(t *testing.T) {
 					},
 				},
 			},
-			want: []makerEntity.Maker{
+			want: []supplier.Maker{
 				{
 					ID:   "id3",
 					Name: "testname3",

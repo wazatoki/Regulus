@@ -1,4 +1,4 @@
-package entities
+package supplier
 
 // Maker 製造販売業者を示す構造体
 type Maker struct {

@@ -7,7 +7,7 @@ maker はメーカーマスターメンテナンスのためのパッケージ�
 package maker
 
 import (
-	makerEntity "regulus/app/domain/entities"
+	"regulus/app/domain/supplier"
 )
 
 /*
@@ -17,7 +17,7 @@ Create は新規作成時のユーズケースです。
 正常に保存が終了した場合はMaker構造体のIDにidを代入して返却します。
 保存時に例外が発生した場合はnilを返却します。
 */
-func Create(makerEn makerEntity.Maker, p persistance) *makerEntity.Maker {
+func Create(makerEn supplier.Maker, p persistance) *supplier.Maker {
 
 	var err error
 
@@ -35,7 +35,7 @@ Update は更新時のユーズケースです。
 正常に保存が終了した場合は引数で渡されたMaker構造体をそのまま返却します。
 保存時に例外が発生した場合はnilを返却します。
 */
-func Update(makerEn makerEntity.Maker, p persistance) *makerEntity.Maker {
+func Update(makerEn supplier.Maker, p persistance) *supplier.Maker {
 
 	err := p.Update(&makerEn)
 	if err != nil {
@@ -51,9 +51,9 @@ Delete は削除時のユーズケースです。複数アイテムを削除し�
 
 削除に失敗したMaker構造体のリストを返却します。
 */
-func Delete(idList []string, p persistance) *[]makerEntity.Maker {
+func Delete(idList []string, p persistance) *[]supplier.Maker {
 
-	errResult := []makerEntity.Maker{}
+	errResult := []supplier.Maker{}
 
 	for _, id := range idList {
 
@@ -74,7 +74,7 @@ func Delete(idList []string, p persistance) *[]makerEntity.Maker {
 FindByID はID検索時のユースケースです。
 
 */
-func FindByID(id string, p persistance) *makerEntity.Maker {
+func FindByID(id string, p persistance) *supplier.Maker {
 
 	result, err := p.SelectByID(id)
 
