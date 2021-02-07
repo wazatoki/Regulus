@@ -2,7 +2,6 @@ package query
 
 import (
 	"regulus/app/domain/query"
-	"regulus/app/domain/services"
 	"regulus/app/usecases/maintenance/master/group"
 	"regulus/app/utils/log"
 )
@@ -38,7 +37,7 @@ func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*query.C
 		return nil, err
 	}
 
-	items = services.Sort(items, conditionData.OrderConditionList...)
+	items = query.Sort(items, conditionData.OrderConditionList...)
 	return items, nil
 }
 
@@ -70,6 +69,6 @@ func FetchDataInputFormItems(groupRepo group.Persistance) ([]*query.Category, er
 		log.Error("usecases:query:FetchDataInputFormItems:message:" + err.Error())
 		return nil, err
 	}
-	return services.CreateCategories(groups), nil
+	return query.CreateCategories(groups), nil
 
 }

@@ -1,28 +1,27 @@
-package services
+package query
 
 import (
 	"regulus/app/domain/authentication"
-	"regulus/app/domain/query"
 	"regulus/app/utils"
 	"sort"
 	"strings"
 )
 
 /*
-QueryConditions *entities.Conditionのスライス
+Conditions *entities.Conditionのスライス
 Findで条件抽出
 Sortで並び替え
 */
-type QueryConditions []*query.Condition
+type Conditions []*Condition
 
 /*
 Find 条件抽出
 */
-func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result QueryConditions) {
+func (q Conditions) Find(queryItems ...SearchConditionItem) (result Conditions) {
 
-	var temp QueryConditions
-	var temp2 QueryConditions
-	result = make(QueryConditions, 0)
+	var temp Conditions
+	var temp2 Conditions
+	result = make(Conditions, 0)
 
 	for _, condition := range q {
 
@@ -31,9 +30,9 @@ func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result Q
 
 	for _, queryItem := range queryItems {
 
-		temp = make(QueryConditions, 0)
+		temp = make(Conditions, 0)
 
-		if queryItem.Operator == query.And {
+		if queryItem.Operator == And {
 
 			for _, queryCondition := range result {
 
@@ -55,7 +54,7 @@ func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result Q
 				}
 			}
 
-			temp2 = make(QueryConditions, 0)
+			temp2 = make(Conditions, 0)
 
 			for _, tempCondition := range temp {
 
@@ -83,13 +82,13 @@ func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result Q
 	return
 }
 
-func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *query.Condition) bool {
+func (q Conditions) isMatchCondition(sc SearchConditionItem, qc *Condition) bool {
 
 	switch sc.SearchField.FieldType {
-	case query.STRING:
+	case STRING:
 
 		switch sc.MatchType {
-		case query.Match:
+		case Match:
 
 			switch sc.SearchField.ID {
 			case "pattern-name":
@@ -102,7 +101,7 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *quer
 				return qc.Owner.Name == sc.SearchField.ViewValue
 			}
 
-		case query.Unmatch:
+		case Unmatch:
 
 			switch sc.SearchField.ID {
 			case "pattern-name":
@@ -115,7 +114,7 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *quer
 				return qc.Owner.Name != sc.SearchField.ViewValue
 			}
 
-		case query.Pertialmatch:
+		case Pertialmatch:
 
 			switch sc.SearchField.ID {
 			case "pattern-name":
@@ -138,7 +137,7 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *quer
 			}
 		}
 
-	case query.BOOLEAN:
+	case BOOLEAN:
 
 		switch sc.SearchField.ID {
 		case "is-disclose":
@@ -148,7 +147,7 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *quer
 			return sc.ConditionValue == "false"
 		}
 
-	case query.ARRAY:
+	case ARRAY:
 
 		switch sc.SearchField.ID {
 		case "disclose-groups":
@@ -172,9 +171,9 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *quer
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
 optionのグループにはすべてのstaffGroupを渡す。
 */
-func CreateCategories(groups []*authentication.Group) (categories []*query.Category) {
+func CreateCategories(groups []*authentication.Group) (categories []*Category) {
 
-	categories = []*query.Category{}
+	categories = []*Category{}
 
 	categories = append(categories, createQueryConditionCategory(groups))
 
@@ -185,48 +184,48 @@ func CreateCategories(groups []*authentication.Group) (categories []*query.Categ
 	return
 }
 
-func createQueryConditionCategory(groups []*authentication.Group) (category *query.Category) {
+func createQueryConditionCategory(groups []*authentication.Group) (category *Category) {
 
-	optionItems := []query.OptionItem{}
+	optionItems := []OptionItem{}
 
 	for _, g := range groups {
-		optionItems = append(optionItems, query.OptionItem{ID: g.ID, ViewValue: g.Name})
+		optionItems = append(optionItems, OptionItem{ID: g.ID, ViewValue: g.Name})
 	}
 
-	category = &query.Category{
+	category = &Category{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
-		SearchItems: query.ComplexSearchItems{
-			SearchConditionList: []query.FieldAttr{
+		SearchItems: ComplexSearchItems{
+			SearchConditionList: []FieldAttr{
 				{
 					ID:        "pattern-name",
 					ViewValue: "検索パターン名称",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 				{
 					ID:        "category-view-value",
 					ViewValue: "カテゴリー名称",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 				{
 					ID:        "is-disclose",
 					ViewValue: "公開",
-					FieldType: query.BOOLEAN,
+					FieldType: BOOLEAN,
 				},
 				{
 					ID:          "disclose-groups",
 					ViewValue:   "公開先グループ",
-					FieldType:   query.ARRAY,
+					FieldType:   ARRAY,
 					OptionItems: optionItems,
 				},
 				{
 					ID:        "owner",
 					ViewValue: "所有者",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 			},
-			DisplayItemList:    []query.FieldAttr{},
-			OrderConditionList: []query.FieldAttr{},
+			DisplayItemList:    []FieldAttr{},
+			OrderConditionList: []FieldAttr{},
 			Groups:             groups,
 		},
 	}
@@ -234,65 +233,65 @@ func createQueryConditionCategory(groups []*authentication.Group) (category *que
 	return
 }
 
-func createStaffCategory(groups []*authentication.Group) (category *query.Category) {
-	category = &query.Category{
+func createStaffCategory(groups []*authentication.Group) (category *Category) {
+	category = &Category{
 		Name:      "staff",
 		ViewValue: "利用者",
-		SearchItems: query.ComplexSearchItems{
-			SearchConditionList: []query.FieldAttr{
+		SearchItems: ComplexSearchItems{
+			SearchConditionList: []FieldAttr{
 				{
 					ID:        "account-id",
 					ViewValue: "利用者ID",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 				{
 					ID:        "name",
 					ViewValue: "利用者名称",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 				{
 					ID:        "groups",
 					ViewValue: "所属グループ",
-					FieldType: query.ARRAY,
+					FieldType: ARRAY,
 				},
 				{
 					ID:        "group-name",
 					ViewValue: "所属グループ名",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 			},
-			DisplayItemList:    []query.FieldAttr{},
-			OrderConditionList: []query.FieldAttr{},
+			DisplayItemList:    []FieldAttr{},
+			OrderConditionList: []FieldAttr{},
 			Groups:             groups,
 		},
 	}
 	return
 }
 
-func createStaffGroupCategory(groups []*authentication.Group) (category *query.Category) {
-	category = &query.Category{
+func createStaffGroupCategory(groups []*authentication.Group) (category *Category) {
+	category = &Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
-		SearchItems: query.ComplexSearchItems{
-			SearchConditionList: []query.FieldAttr{
+		SearchItems: ComplexSearchItems{
+			SearchConditionList: []FieldAttr{
 				{
 					ID:        "name",
 					ViewValue: "グループ名称",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 				{
 					ID:        "staff-name",
 					ViewValue: "利用者名称",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 				{
 					ID:        "staff-account-id",
 					ViewValue: "利用者ID",
-					FieldType: query.STRING,
+					FieldType: STRING,
 				},
 			},
-			DisplayItemList:    []query.FieldAttr{},
-			OrderConditionList: []query.FieldAttr{},
+			DisplayItemList:    []FieldAttr{},
+			OrderConditionList: []FieldAttr{},
 			Groups:             groups,
 		},
 	}
@@ -302,14 +301,14 @@ func createStaffGroupCategory(groups []*authentication.Group) (category *query.C
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(queryConditions []*query.Condition, orderItems ...query.OrderConditionItem) []*query.Condition {
+func Sort(queryConditions []*Condition, orderItems ...OrderConditionItem) []*Condition {
 	sort.Slice(queryConditions, func(i int, j int) bool {
 		return compare(queryConditions[i], queryConditions[j], orderItems, 0)
 	})
 	return queryConditions
 }
 
-func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition, orderItems []query.OrderConditionItem, orderIndex int) bool {
+func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems []OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false
@@ -321,7 +320,7 @@ func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition,
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
 			return queryCondition1.PatternName > queryCondition2.PatternName
 		}
 		return queryCondition1.PatternName < queryCondition2.PatternName
@@ -330,7 +329,7 @@ func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition,
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
 			return queryCondition1.Category.ViewValue > queryCondition2.Category.ViewValue
 		}
 		return queryCondition1.Category.ViewValue < queryCondition2.Category.ViewValue
@@ -341,7 +340,7 @@ func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition,
 		}
 		qc1 := utils.BoolToInt(queryCondition1.IsDisclose)
 		qc2 := utils.BoolToInt(queryCondition2.IsDisclose)
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
 			return qc1 > qc2
 		}
 		return qc1 < qc2
@@ -351,7 +350,7 @@ func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition,
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
 			return queryCondition1.Owner.Name > queryCondition2.Owner.Name
 		}
 		return queryCondition1.Owner.Name < queryCondition2.Owner.Name
@@ -361,7 +360,7 @@ func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition,
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
 			return queryCondition1.PatternName > queryCondition2.PatternName
 		}
 		return queryCondition1.PatternName < queryCondition2.PatternName

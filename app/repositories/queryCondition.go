@@ -6,7 +6,6 @@ import (
 	"errors"
 	"regulus/app/domain/authentication"
 	"regulus/app/domain/query"
-	"regulus/app/domain/services"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 	"regulus/app/utils/log"
@@ -526,7 +525,7 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Conditio
 	r := NewStaffGroupRepo()
 	groups, _ := r.SelectAll()
 
-	for _, category = range services.CreateCategories(groups) {
+	for _, category = range query.CreateCategories(groups) {
 		if category.Name == sqc.CategoryName {
 			break
 		}
