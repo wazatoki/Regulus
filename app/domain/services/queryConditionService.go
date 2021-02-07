@@ -2,7 +2,6 @@ package services
 
 import (
 	"regulus/app/domain/authentication"
-	"regulus/app/domain/entities"
 	"regulus/app/domain/query"
 	"regulus/app/utils"
 	"sort"
@@ -10,11 +9,11 @@ import (
 )
 
 /*
-QueryConditions *entities.QueryConditionのスライス
+QueryConditions *entities.Conditionのスライス
 Findで条件抽出
 Sortで並び替え
 */
-type QueryConditions []*entities.QueryCondition
+type QueryConditions []*query.Condition
 
 /*
 Find 条件抽出
@@ -84,7 +83,7 @@ func (q QueryConditions) Find(queryItems ...query.SearchConditionItem) (result Q
 	return
 }
 
-func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *entities.QueryCondition) bool {
+func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *query.Condition) bool {
 
 	switch sc.SearchField.FieldType {
 	case query.STRING:
@@ -173,9 +172,9 @@ func (q QueryConditions) isMatchCondition(sc query.SearchConditionItem, qc *enti
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
 optionのグループにはすべてのstaffGroupを渡す。
 */
-func CreateCategories(groups []*authentication.Group) (categories []*entities.Category) {
+func CreateCategories(groups []*authentication.Group) (categories []*query.Category) {
 
-	categories = []*entities.Category{}
+	categories = []*query.Category{}
 
 	categories = append(categories, createQueryConditionCategory(groups))
 
@@ -186,7 +185,7 @@ func CreateCategories(groups []*authentication.Group) (categories []*entities.Ca
 	return
 }
 
-func createQueryConditionCategory(groups []*authentication.Group) (category *entities.Category) {
+func createQueryConditionCategory(groups []*authentication.Group) (category *query.Category) {
 
 	optionItems := []query.OptionItem{}
 
@@ -194,10 +193,10 @@ func createQueryConditionCategory(groups []*authentication.Group) (category *ent
 		optionItems = append(optionItems, query.OptionItem{ID: g.ID, ViewValue: g.Name})
 	}
 
-	category = &entities.Category{
+	category = &query.Category{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: []query.FieldAttr{
 				{
 					ID:        "pattern-name",
@@ -235,11 +234,11 @@ func createQueryConditionCategory(groups []*authentication.Group) (category *ent
 	return
 }
 
-func createStaffCategory(groups []*authentication.Group) (category *entities.Category) {
-	category = &entities.Category{
+func createStaffCategory(groups []*authentication.Group) (category *query.Category) {
+	category = &query.Category{
 		Name:      "staff",
 		ViewValue: "利用者",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: []query.FieldAttr{
 				{
 					ID:        "account-id",
@@ -270,11 +269,11 @@ func createStaffCategory(groups []*authentication.Group) (category *entities.Cat
 	return
 }
 
-func createStaffGroupCategory(groups []*authentication.Group) (category *entities.Category) {
-	category = &entities.Category{
+func createStaffGroupCategory(groups []*authentication.Group) (category *query.Category) {
+	category = &query.Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: []query.FieldAttr{
 				{
 					ID:        "name",
@@ -303,14 +302,14 @@ func createStaffGroupCategory(groups []*authentication.Group) (category *entitie
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(queryConditions []*entities.QueryCondition, orderItems ...query.OrderConditionItem) []*entities.QueryCondition {
+func Sort(queryConditions []*query.Condition, orderItems ...query.OrderConditionItem) []*query.Condition {
 	sort.Slice(queryConditions, func(i int, j int) bool {
 		return compare(queryConditions[i], queryConditions[j], orderItems, 0)
 	})
 	return queryConditions
 }
 
-func compare(queryCondition1 *entities.QueryCondition, queryCondition2 *entities.QueryCondition, orderItems []query.OrderConditionItem, orderIndex int) bool {
+func compare(queryCondition1 *query.Condition, queryCondition2 *query.Condition, orderItems []query.OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false

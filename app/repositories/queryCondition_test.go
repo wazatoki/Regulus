@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"reflect"
-	"regulus/app/domain/entities"
 	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
@@ -93,11 +92,11 @@ var queryConditionSearchConditionList = []query.FieldAttr{
 	},
 }
 
-var categories = []*entities.Category{
+var categories = []*query.Category{
 	{
 		Name:      "staff",
 		ViewValue: "利用者",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: staffSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
@@ -107,7 +106,7 @@ var categories = []*entities.Category{
 	{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: staffGroupSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
@@ -117,7 +116,7 @@ var categories = []*entities.Category{
 	{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: queryConditionSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
@@ -126,8 +125,8 @@ var categories = []*entities.Category{
 	},
 }
 
-func createExpectedQueryCondition0Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition0Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid0",
 		PatternName: "patternName0",
 		Category:    categories[0],
@@ -149,8 +148,8 @@ func createExpectedQueryCondition0Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition1Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition1Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid1",
 		PatternName: "patternName1",
 		Category:    categories[0],
@@ -172,8 +171,8 @@ func createExpectedQueryCondition1Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition2Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition2Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid2",
 		PatternName: "patternName2",
 		Category:    categories[0],
@@ -195,8 +194,8 @@ func createExpectedQueryCondition2Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition3Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition3Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid3",
 		PatternName: "patternName3",
 		Category:    categories[0],
@@ -218,8 +217,8 @@ func createExpectedQueryCondition3Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition4Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition4Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid4",
 		PatternName: "patternName4",
 		Category:    categories[0],
@@ -241,8 +240,8 @@ func createExpectedQueryCondition4Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition5Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition5Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid5",
 		PatternName: "patternName5",
 		Category:    categories[1],
@@ -264,8 +263,8 @@ func createExpectedQueryCondition5Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition6Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition6Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid6",
 		PatternName: "patternName6",
 		Category:    categories[1],
@@ -287,8 +286,8 @@ func createExpectedQueryCondition6Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition7Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition7Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid7",
 		PatternName: "patternName7",
 		Category:    categories[1],
@@ -310,8 +309,8 @@ func createExpectedQueryCondition7Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition8Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition8Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid8",
 		PatternName: "patternName8",
 		Category:    categories[1],
@@ -333,8 +332,8 @@ func createExpectedQueryCondition8Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition9Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition9Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid9",
 		PatternName: "patternName9",
 		Category:    categories[1],
@@ -363,7 +362,7 @@ func TestQueryConditionObjectMap(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		wantEqc *entities.QueryCondition
+		wantEqc *query.Condition
 	}{
 		{
 			name:    "convert sqlboiler.QueryCondition to entities.QueryConditon",
@@ -447,7 +446,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 		name                      string
 		fields                    fields
 		args                      args
-		wantResultQueryConditions []*entities.QueryCondition
+		wantResultQueryConditions []*query.Condition
 		wantErr                   bool
 	}{
 		{
@@ -471,7 +470,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			wantResultQueryConditions: []*entities.QueryCondition{
+			wantResultQueryConditions: []*query.Condition{
 				createExpectedQueryCondition5Entity(),
 			},
 			wantErr: false,
@@ -510,7 +509,7 @@ func TestQueryConditionRepo_SelectByID(t *testing.T) {
 		name               string
 		fields             fields
 		args               args
-		wantQueryCondition *entities.QueryCondition
+		wantQueryCondition *query.Condition
 		wantErr            bool
 	}{
 		{
@@ -558,7 +557,7 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 		name                string
 		fields              fields
 		args                args
-		wantQueryConditions []*entities.QueryCondition
+		wantQueryConditions []*query.Condition
 		wantErr             bool
 	}{
 		{
@@ -572,7 +571,7 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 					"queryConditionid1",
 				},
 			},
-			wantQueryConditions: []*entities.QueryCondition{
+			wantQueryConditions: []*query.Condition{
 				createExpectedQueryCondition0Entity(),
 				createExpectedQueryCondition1Entity(),
 			},
@@ -606,14 +605,14 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryCondition entities.QueryCondition
+		queryCondition query.Condition
 		operatorID     string
 	}
 	tests := []struct {
 		name       string
 		fields     fields
 		args       args
-		wantEntity *entities.QueryCondition
+		wantEntity *query.Condition
 		wantErr    bool
 	}{
 		{
@@ -622,7 +621,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryCondition: entities.QueryCondition{
+				queryCondition: query.Condition{
 					PatternName:    "testPatternName",
 					Category:       categories[0],
 					IsDisclose:     true,
@@ -658,7 +657,7 @@ func TestQueryConditionRepo_Insert(t *testing.T) {
 			con := setUpQueryConditionTest()
 			defer tearDownQueryConditionTest(con)
 			setupTestData()
-			tt.wantEntity = &entities.QueryCondition{
+			tt.wantEntity = &query.Condition{
 				PatternName:    tt.args.queryCondition.PatternName,
 				Category:       tt.args.queryCondition.Category,
 				IsDisclose:     tt.args.queryCondition.IsDisclose,
@@ -698,7 +697,7 @@ func TestQueryConditionRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryCondition *entities.QueryCondition
+		queryCondition *query.Condition
 		operatorID     string
 	}
 	tests := []struct {

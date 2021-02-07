@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"regulus/app/domain/entities"
 	domainQuery "regulus/app/domain/query"
 	"regulus/app/repositories"
 	"regulus/app/usecases/maintenance/master/query"
@@ -16,7 +15,7 @@ UpdateQueryCondition 検索条件修正用ハンドラ
 */
 func UpdateQueryCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
-	condition := &entities.QueryCondition{}
+	condition := &domainQuery.Condition{}
 	e := c.Bind(condition)
 	if e != nil {
 		return e
@@ -45,7 +44,7 @@ AddQueryCondition 検索条件追加用ハンドラ
 */
 func AddQueryCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
-	condition := &entities.QueryCondition{}
+	condition := &domainQuery.Condition{}
 	e := c.Bind(condition)
 	if e != nil {
 		return e

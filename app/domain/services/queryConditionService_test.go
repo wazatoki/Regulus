@@ -3,7 +3,6 @@ package services
 import (
 	"reflect"
 	"regulus/app/domain/authentication"
-	"regulus/app/domain/entities"
 	"regulus/app/domain/query"
 	"testing"
 )
@@ -135,11 +134,11 @@ var queryConditionSearchConditionList = []query.FieldAttr{
 	},
 }
 
-var categories = []*entities.Category{
+var categories = []*query.Category{
 	{
 		Name:      "staff",
 		ViewValue: "利用者",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: staffSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
@@ -149,7 +148,7 @@ var categories = []*entities.Category{
 	{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: staffGroupSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
@@ -159,7 +158,7 @@ var categories = []*entities.Category{
 	{
 		Name:      "query-condition",
 		ViewValue: "検索条件管理",
-		SearchItems: entities.ComplexSearchItems{
+		SearchItems: query.ComplexSearchItems{
 			SearchConditionList: queryConditionSearchConditionList,
 			DisplayItemList:     []query.FieldAttr{},
 			OrderConditionList:  []query.FieldAttr{},
@@ -168,8 +167,8 @@ var categories = []*entities.Category{
 	},
 }
 
-func createExpectedQueryCondition0Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition0Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid0",
 		PatternName: "patternName0",
 		Category:    categories[0],
@@ -191,8 +190,8 @@ func createExpectedQueryCondition0Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition1Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition1Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid1",
 		PatternName: "patternName1",
 		Category:    categories[0],
@@ -214,8 +213,8 @@ func createExpectedQueryCondition1Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition2Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition2Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid2",
 		PatternName: "patternName2",
 		Category:    categories[0],
@@ -237,8 +236,8 @@ func createExpectedQueryCondition2Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition3Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition3Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid3",
 		PatternName: "patternName3",
 		Category:    categories[0],
@@ -260,8 +259,8 @@ func createExpectedQueryCondition3Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition4Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition4Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid4",
 		PatternName: "patternName4",
 		Category:    categories[0],
@@ -283,8 +282,8 @@ func createExpectedQueryCondition4Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition5Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition5Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid5",
 		PatternName: "patternName5",
 		Category:    categories[1],
@@ -306,8 +305,8 @@ func createExpectedQueryCondition5Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition6Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition6Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid6",
 		PatternName: "patternName6",
 		Category:    categories[1],
@@ -329,8 +328,8 @@ func createExpectedQueryCondition6Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition7Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition7Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid7",
 		PatternName: "patternName7",
 		Category:    categories[1],
@@ -352,8 +351,8 @@ func createExpectedQueryCondition7Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition8Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition8Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid8",
 		PatternName: "patternName8",
 		Category:    categories[1],
@@ -375,8 +374,8 @@ func createExpectedQueryCondition8Entity() *entities.QueryCondition {
 	}
 }
 
-func createExpectedQueryCondition9Entity() *entities.QueryCondition {
-	return &entities.QueryCondition{
+func createExpectedQueryCondition9Entity() *query.Condition {
+	return &query.Condition{
 		ID:          "queryConditionid9",
 		PatternName: "patternName9",
 		Category:    categories[1],

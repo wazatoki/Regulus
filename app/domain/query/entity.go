@@ -1,8 +1,7 @@
-package entities
+package query
 
 import (
 	"regulus/app/domain/authentication"
-	"regulus/app/domain/query"
 )
 
 /*
@@ -18,21 +17,21 @@ type Category struct {
 ComplexSearchItems is struct as search condition display
 */
 type ComplexSearchItems struct {
-	DisplayItemList     []query.FieldAttr       `json:"displayItemList"`
-	SearchConditionList []query.FieldAttr       `json:"searchConditionList"`
-	OrderConditionList  []query.FieldAttr       `json:"orderConditionList"`
+	DisplayItemList     []FieldAttr             `json:"displayItemList"`
+	SearchConditionList []FieldAttr             `json:"searchConditionList"`
+	OrderConditionList  []FieldAttr             `json:"orderConditionList"`
 	Groups              []*authentication.Group `json:"groups"`
 }
 
 /*
-QueryCondition is saved query condition data
+Condition is saved query condition data
 */
-type QueryCondition struct {
+type Condition struct {
 	ID             string                  `json:"id"`
 	PatternName    string                  `json:"patternName"`
 	Category       *Category               `json:"category"`
 	IsDisclose     bool                    `json:"isDisclose"`
 	DiscloseGroups []*authentication.Group `json:"discloseGroups"`
 	Owner          *authentication.Staff   `json:"owner"`
-	ConditionData  query.ConditionData     `json:"conditionData"`
+	ConditionData  ConditionData           `json:"conditionData"`
 }

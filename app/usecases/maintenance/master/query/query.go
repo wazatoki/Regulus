@@ -1,7 +1,6 @@
 package query
 
 import (
-	"regulus/app/domain/entities"
 	"regulus/app/domain/query"
 	"regulus/app/domain/services"
 	"regulus/app/usecases/maintenance/master/group"
@@ -13,7 +12,7 @@ import (
 UpdateCondition は検索条件更新時のユースケースです。
 
 */
-func UpdateCondition(queryRepo persistance, queryCondition *entities.QueryCondition, operatorID string) error {
+func UpdateCondition(queryRepo persistance, queryCondition *query.Condition, operatorID string) error {
 
 	err := queryRepo.Update(queryCondition, operatorID)
 
@@ -29,7 +28,7 @@ func UpdateCondition(queryRepo persistance, queryCondition *entities.QueryCondit
 Find は検索時のユースケースです。条件指定がない場合は全件検索の結果を返します。
 
 */
-func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*entities.QueryCondition, error) {
+func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*query.Condition, error) {
 
 	items, err := queryRepo.Select(conditionData.SearchConditionList...)
 
@@ -48,7 +47,7 @@ func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*entitie
 AddCondition は検索条件追加時のユースケースです。成功した場合は id を返却します。
 
 */
-func AddCondition(queryRepo persistance, queryCondition *entities.QueryCondition, operatorID string) (string, error) {
+func AddCondition(queryRepo persistance, queryCondition *query.Condition, operatorID string) (string, error) {
 
 	id, err := queryRepo.Insert(queryCondition, operatorID)
 
@@ -64,7 +63,7 @@ func AddCondition(queryRepo persistance, queryCondition *entities.QueryCondition
 FetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するユースケースです。
 
 */
-func FetchDataInputFormItems(groupRepo group.Persistance) ([]*entities.Category, error) {
+func FetchDataInputFormItems(groupRepo group.Persistance) ([]*query.Category, error) {
 	groups, err := groupRepo.SelectAll()
 
 	if err != nil {

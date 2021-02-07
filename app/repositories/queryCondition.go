@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"regulus/app/domain/authentication"
-	"regulus/app/domain/entities"
 	"regulus/app/domain/query"
 	"regulus/app/domain/services"
 	"regulus/app/infrastructures/sqlboiler"
@@ -41,7 +40,7 @@ func (q *QueryConditionRepo) Delete(id string, operatorID string) error {
 }
 
 // Update update data to database
-func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition, operatorID string) (err error) {
+func (q *QueryConditionRepo) Update(queryCondition *query.Condition, operatorID string) (err error) {
 	if queryCondition.ID == "" {
 		return errors.New("ID must be required")
 	}
@@ -151,7 +150,7 @@ func (q *QueryConditionRepo) Update(queryCondition *entities.QueryCondition, ope
 }
 
 // Insert insert data to database
-func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition, operatorID string) (id string, err error) {
+func (q *QueryConditionRepo) Insert(queryCondition *query.Condition, operatorID string) (id string, err error) {
 	id = ""
 	sqlQueryCondition := &sqlboiler.QueryCondition{
 		ID:            utils.CreateID(),
@@ -262,8 +261,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *entities.QueryCondition, ope
 }
 
 // SelectByIDs select staff data by id list from database
-func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*entities.QueryCondition, err error) {
-	queryConditions = []*entities.QueryCondition{}
+func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*query.Condition, err error) {
+	queryConditions = []*query.Condition{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -300,7 +299,7 @@ func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*entit
 }
 
 // SelectByID select staaff data by id from database
-func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *entities.QueryCondition, err error) {
+func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *query.Condition, err error) {
 	if id == "" {
 		return nil, errors.New("id must be required")
 	}
@@ -327,8 +326,8 @@ func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *entities.Que
 }
 
 // SelectAll select all query condition data without not del from database
-func (q *QueryConditionRepo) SelectAll() (queryConditions []*entities.QueryCondition, err error) {
-	queryConditions = []*entities.QueryCondition{}
+func (q *QueryConditionRepo) SelectAll() (queryConditions []*query.Condition, err error) {
+	queryConditions = []*query.Condition{}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := q.createQueryModSlice()
@@ -346,10 +345,10 @@ func (q *QueryConditionRepo) SelectAll() (queryConditions []*entities.QueryCondi
 }
 
 // Select select query condition data by condition from database
-func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []*entities.QueryCondition, err error) {
-	tempQueryConditions := []*entities.QueryCondition{}
-	addQueryConditions := []*entities.QueryCondition{}
-	var allQueryConditions []*entities.QueryCondition
+func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []*query.Condition, err error) {
+	tempQueryConditions := []*query.Condition{}
+	addQueryConditions := []*query.Condition{}
+	var allQueryConditions []*query.Condition
 	var queries []qm.QueryMod
 	var qmod qm.QueryMod
 
@@ -410,7 +409,7 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 			}
 
 			if operator == query.Or {
-				addQueryConditions = []*entities.QueryCondition{}
+				addQueryConditions = []*query.Condition{}
 				for _, tempItem := range tempQueryConditions {
 					isMatchResult := false
 					for _, resultItem := range resultQueryConditions {
@@ -427,7 +426,7 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 				// 最終結果に反映
 				resultQueryConditions = append(resultQueryConditions, addQueryConditions...)
 			} else { // operator == And
-				addQueryConditions = []*entities.QueryCondition{}
+				addQueryConditions = []*query.Condition{}
 				for _, resultItem := range resultQueryConditions {
 					isMatchResult := false
 					for _, tempItem := range tempQueryConditions {
@@ -513,8 +512,8 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 }
 
 // QueryConditionObjectMap data mapper sqlboiler object to entities object
-func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *entities.QueryCondition) {
-	var category *entities.Category
+func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Condition) {
+	var category *query.Category
 	var staffGroups []*authentication.Group
 	var displayItemList []query.FieldAttr
 	var searchConditionList []query.SearchConditionItem
@@ -586,7 +585,7 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *entities.Query
 		}
 		orderConditionList = append(orderConditionList, orderConditionItem)
 	}
-	eqc = &entities.QueryCondition{
+	eqc = &query.Condition{
 		ID:             sqc.ID,
 		PatternName:    sqc.PatternName,
 		Category:       category,
