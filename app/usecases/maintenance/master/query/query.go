@@ -30,12 +30,11 @@ Find は検索時のユースケースです。条件指定がない場合は全
 */
 func Find(conditionData *query.ConditionData, queryRepo persistance) ([]*query.Condition, error) {
 
-	// 検索条件がDB管理されていない場合category-view-valueの処理
-
 	conditionList := []query.SearchConditionItem{}
 
 	for _, queryItem := range conditionData.SearchConditionList {
 
+		// 検索条件がDB管理されていない場合の処理
 		if queryItem.SearchField.ID == "category-view-value" {
 
 			item := query.SearchConditionItem{
