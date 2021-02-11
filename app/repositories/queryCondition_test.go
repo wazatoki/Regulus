@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"encoding/json"
 	"reflect"
 	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
@@ -482,11 +483,33 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 			con := setUpQueryConditionTest()
 			defer tearDownQueryConditionTest(con)
 			setupTestData()
+			conditionList := []query.SearchConditionItem{}
 
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			gotResultQueryConditions, err := q.Select(tt.args.queryItems...)
+
+			for _, queryItem := range tt.args.queryItems {
+
+				if queryItem.SearchField.ID == "category-view-value" {
+
+					item := query.SearchConditionItem{
+						SearchField: query.FieldAttr{},
+					}
+					item.Operator = queryItem.Operator
+					item.MatchType = query.In
+					item.SearchField.ID = "category-name"
+					categoryNames := query.CategoryNameListByMatchType(queryItem.ConditionValue, queryItem.MatchType)
+					tmpByte, _ := json.Marshal(categoryNames)
+					item.ConditionValue = string(tmpByte)
+					conditionList = append(conditionList, item)
+
+				} else {
+					conditionList = append(conditionList, queryItem)
+				}
+			}
+
+			gotResultQueryConditions, err := q.Select(conditionList...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.Select() error = %v, wantErr %v", err, tt.wantErr)
 				return

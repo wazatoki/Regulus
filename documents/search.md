@@ -114,7 +114,7 @@ class Staff {
 
 Staff "1" -- "1..*" Group : Groups >
 
-class QueryCondition {
+class Condition {
     ID             string
 	PatternName    string
 	Category       Category
@@ -124,10 +124,10 @@ class QueryCondition {
 	ConditionData  ConditionData
 }
 
-QueryCondition "1" -- "1" Category : Category >
-QueryCondition "1" -- "1" ConditionData : ConditionData >
-QueryCondition "1" -- "1" Staff : Owner >
-QueryCondition "1" -- "1..*" Group : DiscloseGroups >
+Condition "1" -- "1" Category : Category >
+Condition "1" -- "1" ConditionData : ConditionData >
+Condition "1" -- "1" Staff : Owner >
+Condition "1" -- "1..*" Group : DiscloseGroups >
 
 @enduml
 

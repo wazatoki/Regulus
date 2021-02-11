@@ -33,6 +33,8 @@ func comparisonOperator(matchType query.MatchTypeEnum, val string) (string, stri
 		return "<", val
 	case query.Le:
 		return "<=", val
+	case query.In:
+		return "in", val
 	default:
 		return "=", val
 	}

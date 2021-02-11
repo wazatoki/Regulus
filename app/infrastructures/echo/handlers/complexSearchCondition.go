@@ -67,7 +67,7 @@ func FindQueryConditionByCondition(c echo.Context) error {
 	if e != nil {
 		return c.JSON(http.StatusInternalServerError, e.Error())
 	}
-	result, err := query.Find(repo, conditionData)
+	result, err := query.Find(conditionData, repo)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

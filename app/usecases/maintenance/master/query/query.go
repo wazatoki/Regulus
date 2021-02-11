@@ -1,6 +1,7 @@
 package query
 
 import (
+	"encoding/json"
 	"regulus/app/domain/query"
 	"regulus/app/usecases/maintenance/master/group"
 	"regulus/app/utils/log"
@@ -27,7 +28,31 @@ func UpdateCondition(queryRepo persistance, queryCondition *query.Condition, ope
 Find は検索時のユースケースです。条件指定がない場合は全件検索の結果を返します。
 
 */
-func Find(queryRepo persistance, conditionData *query.ConditionData) ([]*query.Condition, error) {
+func Find(conditionData *query.ConditionData, queryRepo persistance) ([]*query.Condition, error) {
+
+	// 検索条件がDB管理されていない場合category-view-valueの処理
+
+	conditionList := []query.SearchConditionItem{}
+
+	for _, queryItem := range conditionData.SearchConditionList {
+
+		if queryItem.SearchField.ID == "category-view-value" {
+
+			item := query.SearchConditionItem{
+				SearchField: query.FieldAttr{},
+			}
+			item.Operator = queryItem.Operator
+			item.MatchType = query.In
+			item.SearchField.ID = "category-name"
+			categoryNames := query.CategoryNameListByMatchType(queryItem.ConditionValue, queryItem.MatchType)
+			tmpByte, _ := json.Marshal(categoryNames)
+			item.ConditionValue = string(tmpByte)
+			conditionList = append(conditionList, item)
+
+		} else {
+			conditionList = append(conditionList, queryItem)
+		}
+	}
 
 	items, err := queryRepo.Select(conditionData.SearchConditionList...)
 

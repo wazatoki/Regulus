@@ -168,8 +168,38 @@ func (q Conditions) isMatchCondition(sc SearchConditionItem, qc *Condition) bool
 }
 
 /*
+CategoryNameListByMatchType ViewValueの値が引数の文字列sとMatchType mtに合致する
+NameのSliceを返す。
+
+*/
+func CategoryNameListByMatchType(s string, mt MatchTypeEnum) (categoryNames []string) {
+
+	categories := CreateCategories([]*authentication.Group{})
+
+	for _, category := range categories {
+
+		switch mt {
+		case Match:
+			if category.ViewValue == s {
+				categoryNames = append(categoryNames, category.Name)
+			}
+		case Unmatch:
+			if category.ViewValue != s {
+				categoryNames = append(categoryNames, category.Name)
+			}
+		default: // Pertialmatch
+			if strings.Contains(category.ViewValue, s) {
+				categoryNames = append(categoryNames, category.Name)
+			}
+		}
+	}
+
+	return
+}
+
+/*
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
-optionのグループにはすべてのstaffGroupを渡す。
+optionのグループにはすべてのauthentication.Groupを渡す。
 */
 func CreateCategories(groups []*authentication.Group) (categories []*Category) {
 

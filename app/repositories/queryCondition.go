@@ -9,7 +9,6 @@ import (
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 	"regulus/app/utils/log"
-	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/null"
@@ -345,118 +344,34 @@ func (q *QueryConditionRepo) SelectAll() (queryConditions []*query.Condition, er
 
 // Select select query condition data by condition from database
 func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []*query.Condition, err error) {
-	tempQueryConditions := []*query.Condition{}
-	addQueryConditions := []*query.Condition{}
-	var allQueryConditions []*query.Condition
-	var queries []qm.QueryMod
-	var qmod qm.QueryMod
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 
-		var selectAllerr error
-		allQueryConditions, selectAllerr = q.SelectAll()
-		if selectAllerr != nil {
-			return selectAllerr
-		}
+		queries := q.createQueryModSlice()
+		qmod := qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true)
+		queries = append(queries, qmod)
 
-		resultQueryConditions = allQueryConditions
+		// 条件構築
+		for _, queryItem := range queryItems {
 
-		for i, queryItem := range queryItems {
-
-			operator := queryItem.Operator
-
-			if q.isDependentDB(queryItem) {
-				queries = q.createQueryModSlice()
-				qmod = qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true)
-
-				// DBに依存する条件が続く場合はまとめてクエリを作成する
-				j := i
-				for ; j < len(queryItems); j++ {
-					qmod = qm.Expr(qmod, q.createQueryModWhere(queryItems[j]))
-					if j < len(queryItems)-1 && !q.isDependentDB(queryItems[j+1]) {
-						break
-					}
-				}
-				i = j
-
-				queries = append(queries, qmod)
-				fetchedStaffs, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
-				if err == nil {
-					for _, fs := range fetchedStaffs {
-						tempQueryConditions = append(tempQueryConditions, QueryConditionObjectMap(fs))
-					}
-				}
-			} else {
-				for _, item := range allQueryConditions {
-					if queryItem.SearchField.ID == "category-view-value" {
-						switch queryItem.MatchType {
-						case query.Match:
-							if item.Category.Name == queryItem.ConditionValue {
-								tempQueryConditions = append(tempQueryConditions, item)
-							}
-						case query.Unmatch:
-							if item.Category.Name != queryItem.ConditionValue {
-								tempQueryConditions = append(tempQueryConditions, item)
-							}
-						default: // query.Pertialmatch
-							if strings.Contains(item.Category.Name, queryItem.ConditionValue) {
-								tempQueryConditions = append(tempQueryConditions, item)
-							}
-						}
-					}
-				}
-			}
-
-			if operator == query.Or {
-				addQueryConditions = []*query.Condition{}
-				for _, tempItem := range tempQueryConditions {
-					isMatchResult := false
-					for _, resultItem := range resultQueryConditions {
-						if resultItem.ID == tempItem.ID {
-							isMatchResult = true
-							break
-						}
-					}
-					if !isMatchResult {
-						// 最新の結果と一致しなかったものの集合を作る
-						addQueryConditions = append(addQueryConditions, tempItem)
-					}
-				}
-				// 最終結果に反映
-				resultQueryConditions = append(resultQueryConditions, addQueryConditions...)
-			} else { // operator == And
-				addQueryConditions = []*query.Condition{}
-				for _, resultItem := range resultQueryConditions {
-					isMatchResult := false
-					for _, tempItem := range tempQueryConditions {
-						if resultItem.ID == tempItem.ID {
-							isMatchResult = true
-							break
-						}
-					}
-					if isMatchResult {
-						// 最新の結果と一致したものだけの集合を作る
-						addQueryConditions = append(addQueryConditions, resultItem)
-					}
-				}
-				// 最終結果に反映
-				resultQueryConditions = addQueryConditions
-			}
+			qmod = q.createQueryModWhere(queryItem)
+			queries = append(queries, qmod)
 
 		}
+
+		// データ取得処理
+		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+			for _, fc := range fetchedQueryConditions {
+				resultQueryConditions = append(resultQueryConditions, QueryConditionObjectMap(fc))
+			}
+		}
+
 		return err
 	})
 
 	return
-}
-
-func (q *QueryConditionRepo) isDependentDB(queryItem query.SearchConditionItem) bool {
-	switch queryItem.SearchField.ID {
-	case "category-view-value":
-		return false
-	default:
-		return true
-	}
 }
 
 func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchConditionItem) qm.QueryMod {
@@ -486,6 +401,14 @@ func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchCondition
 			return qm.Or("owner."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 		}
 		return qm.And("owner."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
+	case "category-name":
+		var ids []interface{}
+		json.Unmarshal([]byte(val), &ids)
+		if queryItem.Operator == query.Or {
+			return qm.OrIn("query_conditions."+sqlboiler.QueryConditionColumns.CategoryName+" "+mt+" ?", ids...)
+		}
+		return qm.AndIn("query_conditions."+sqlboiler.QueryConditionColumns.CategoryName+" "+mt+" ?", ids...)
+
 	default:
 		if queryItem.Operator == query.Or {
 			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)

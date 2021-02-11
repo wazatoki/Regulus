@@ -24,7 +24,7 @@ SearchConditionItem is query condition
 type SearchConditionItem struct {
 	SearchField    FieldAttr     `json:"searchField"`
 	ConditionValue string        `json:"conditionValue"`
-	MatchType      MatchTypeEnum `json:"matchType"` // match, unmatch, pertialmatch, gt, ge, le, lt
+	MatchType      MatchTypeEnum `json:"matchType"` // match, unmatch, pertialmatch, gt, ge, le, lt, in
 	Operator       OperatorEnum  `json:"operator"`  // and, or
 }
 
@@ -85,7 +85,7 @@ const (
 	Le MatchTypeEnum = "le"
 	// Lt is const value of lt
 	Lt MatchTypeEnum = "lt"
-	// In is const value of lt
+	// In is const value of in
 	In MatchTypeEnum = "in"
 )
 

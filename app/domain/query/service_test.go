@@ -512,3 +512,47 @@ func TestQueryConditions_Find(t *testing.T) {
 		})
 	}
 }
+
+func TestCategoryNameListByMatchType(t *testing.T) {
+	type args struct {
+		s  string
+		mt MatchTypeEnum
+	}
+	tests := []struct {
+		name              string
+		args              args
+		wantCategoryNames []string
+	}{
+		{
+			name: "match type is match",
+			args: args{
+				s:  "検索条件管理",
+				mt: Match,
+			},
+			wantCategoryNames: []string{"query-condition"},
+		},
+		{
+			name: "match type is unmatch",
+			args: args{
+				s:  "検索条件管理",
+				mt: Unmatch,
+			},
+			wantCategoryNames: []string{"staff", "staff-group"},
+		},
+		{
+			name: "match type is pertialmatch",
+			args: args{
+				s:  "検索条件管",
+				mt: Pertialmatch,
+			},
+			wantCategoryNames: []string{"query-condition"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotCategoryNames := CategoryNameListByMatchType(tt.args.s, tt.args.mt); !reflect.DeepEqual(gotCategoryNames, tt.wantCategoryNames) {
+				t.Errorf("CategoryNameListByMatchType() = %v, want %v", gotCategoryNames, tt.wantCategoryNames)
+			}
+		})
+	}
+}
