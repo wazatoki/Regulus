@@ -28,18 +28,6 @@ func UpdateQueryCondition(c echo.Context) error {
 }
 
 /*
-FetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するハンドラです。
-*/
-func FetchDataInputFormItems(c echo.Context) error {
-	groupRepo := repositories.NewStaffGroupRepo()
-	categories, e := query.FetchDataInputFormItems(groupRepo)
-	if e != nil {
-		return e
-	}
-	return c.JSON(http.StatusOK, categories)
-}
-
-/*
 AddQueryCondition 検索条件追加用ハンドラ
 */
 func AddQueryCondition(c echo.Context) error {
@@ -72,4 +60,34 @@ func FindQueryConditionByCondition(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
+}
+
+/*
+FetchQueryConditionSearchItems は詳細検索条件設定フォームを開く際に必要なデータを取得するハンドラです。
+*/
+func FetchQueryConditionSearchItems(c echo.Context) error {
+	groupRepo := repositories.NewStaffGroupRepo()
+	categories, e := query.FetchDataInputFormItems(groupRepo)
+	if e != nil {
+		return c.JSON(http.StatusInternalServerError, e)
+	}
+	for _, category := range categories {
+
+		if category.Name == "query-condition" {
+			return c.JSON(http.StatusOK, category.SearchItems)
+		}
+	}
+	return c.JSON(http.StatusInternalServerError, "search items is blank")
+}
+
+/*
+FetchQueryConditionDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するハンドラです。
+*/
+func FetchQueryConditionDataInputFormItems(c echo.Context) error {
+	groupRepo := repositories.NewStaffGroupRepo()
+	categories, e := query.FetchDataInputFormItems(groupRepo)
+	if e != nil {
+		return e
+	}
+	return c.JSON(http.StatusOK, categories)
 }
