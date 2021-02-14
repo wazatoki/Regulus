@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ViewChild, Component, OnInit } from '@angular/core';
 import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
 
@@ -13,6 +14,8 @@ import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-
   styleUrls: ['./complex-search-condition-master.component.css']
 })
 export class ComplexSearchConditionMasterComponent implements OnInit {
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   displayedColumns: string[];
   dataSource: MatTableDataSource<SaveData>;
@@ -73,7 +76,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   }
 
   onFetchedSearchConditions(data: SaveData[]) {
-    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.data = data
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -110,6 +113,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
 }
