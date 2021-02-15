@@ -92,7 +92,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
-    if (this.saveData.isDisclose) {
+    if (this.saveData.isDisclose && this.saveData.discloseGroups) {
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         this.saveData.discloseGroups.forEach(g => {
           if (this.groupList[i].id === g.id) {

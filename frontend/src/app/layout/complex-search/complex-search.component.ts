@@ -78,13 +78,16 @@ export class ComplexSearchComponent implements OnInit {
   setSavedDataToForm() {
     this.saveConditions.get('patternName').setValue(this.saveData.patternName)
     this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
-    this.discloseGroupFormArray.controls.forEach((v, i) => {
-      this.saveData.discloseGroups.forEach(g => {
-        if (this.groupList[i].id === g.id) {
-          v.setValue(true)
-        }
+
+    if (this.saveData.isDisclose && this.saveData.discloseGroups) {
+      this.discloseGroupFormArray.controls.forEach((v, i) => {
+        this.saveData.discloseGroups.forEach(g => {
+          if (this.groupList[i].id === g.id) {
+            v.setValue(true)
+          }
+        });
       });
-    });
+    }
 
     // 表示項目を反映する。
     if (this.saveData.conditionData.displayItemList !== null
