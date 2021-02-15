@@ -11,6 +11,21 @@ import (
 )
 
 /*
+DeleteQueryCondition 検索条件削除用ハンドラ
+*/
+func DeleteQueryCondition(c echo.Context) error {
+	repo := repositories.NewQueryConditionRepo()
+	conditionIDs := &[]string{}
+	e := c.Bind(conditionIDs)
+	if e != nil {
+		return e
+	}
+	result := query.Delete(conditionIDs, repo, getAuthStaffID(c))
+
+	return c.JSON(http.StatusOK, result)
+}
+
+/*
 UpdateQueryCondition 検索条件修正用ハンドラ
 */
 func UpdateQueryCondition(c echo.Context) error {
@@ -20,11 +35,11 @@ func UpdateQueryCondition(c echo.Context) error {
 	if e != nil {
 		return e
 	}
-	err := query.UpdateCondition(repo, condition, getAuthStaffID(c))
+	err := query.Update(condition, repo, getAuthStaffID(c))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "data update error")
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, "data update ok")
+	return c.JSON(http.StatusOK, nil)
 }
 
 /*
@@ -37,11 +52,12 @@ func AddQueryCondition(c echo.Context) error {
 	if e != nil {
 		return e
 	}
-	id, err := query.AddCondition(repo, condition, getAuthStaffID(c))
+	result, err := query.Add(condition, repo, getAuthStaffID(c))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, id)
+
+	return c.JSON(http.StatusOK, *result)
 }
 
 /*

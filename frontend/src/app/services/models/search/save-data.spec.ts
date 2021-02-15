@@ -10,7 +10,7 @@ export function createTestInstance1(): SaveData {
         category: createCategoryArrayData()[0],
         owner: createStaffInstance1(),
         ownerID: 'ownerID1',
-        discloseGroupIDs: ['test-group-id-1', 'test-group-id-2'],
+        discloseGroups: [{id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}],
         isDisclose: true,
         conditionData: createConditionData(),
     }
@@ -23,7 +23,7 @@ export function createTestInstance2(): SaveData {
         category: createCategoryArrayData()[1],
         owner: createStaffInstance1(),
         ownerID: 'ownerID1',
-        discloseGroupIDs: ['groupID1'],
+        discloseGroups: [{id: 'groupID1', name: ''}],
         isDisclose: true,
         conditionData: createConditionData(),
     }
@@ -42,7 +42,7 @@ export function createInitSaveData(): SaveData {
         patternName: '',
         category: null,
         isDisclose: false,
-        discloseGroupIDs: [],
+        discloseGroups: [],
         ownerID: '',
         conditionData: createInitConditionData(),
         owner: {

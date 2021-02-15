@@ -9,18 +9,59 @@ import (
 
 /*
 
-UpdateCondition は検索条件更新時のユースケースです。
+Delete は検索条件削除時のユースケースです。
 
 */
-func UpdateCondition(queryRepo persistance, queryCondition *query.Condition, operatorID string) error {
+func Delete(queryConditionIDs *[]string, queryRepo persistance, operatorID string) (result []query.Condition) {
+
+	result = []query.Condition{}
+
+	for _, id := range *queryConditionIDs {
+
+		err := queryRepo.Delete(id, operatorID)
+
+		if err != nil {
+			log.Error("usecases:query:Update:message:" + err.Error())
+			c, _ := queryRepo.SelectByID(id)
+			result = append(result, *c)
+		}
+	}
+
+	return
+}
+
+/*
+
+Update は検索条件更新時のユースケースです。
+
+*/
+func Update(queryCondition *query.Condition, queryRepo persistance, operatorID string) error {
 
 	err := queryRepo.Update(queryCondition, operatorID)
 
 	if err != nil {
-		log.Error("usecases:query:UpdateCondition:message:" + err.Error())
+		log.Error("usecases:query:Update:message:" + err.Error())
 	}
 
 	return err
+}
+
+/*
+
+Add は検索条件追加時のユースケースです。成功した場合は id を返却します。
+
+*/
+func Add(queryCondition *query.Condition, queryRepo persistance, operatorID string) (*query.Condition, error) {
+
+	id, err := queryRepo.Insert(queryCondition, operatorID)
+
+	if err != nil {
+		log.Error("usecases:query:Add:message:" + err.Error())
+		return nil, err
+	}
+
+	result, e := queryRepo.SelectByID(id)
+	return result, e
 }
 
 /*
@@ -63,22 +104,6 @@ func Find(conditionData *query.ConditionData, queryRepo persistance) ([]*query.C
 
 	items = query.Sort(items, conditionData.OrderConditionList...)
 	return items, nil
-}
-
-/*
-
-AddCondition は検索条件追加時のユースケースです。成功した場合は id を返却します。
-
-*/
-func AddCondition(queryRepo persistance, queryCondition *query.Condition, operatorID string) (string, error) {
-
-	id, err := queryRepo.Insert(queryCondition, operatorID)
-
-	if err != nil {
-		log.Error("usecases:query:AddCondition:message:" + err.Error())
-	}
-
-	return id, err
 }
 
 /*

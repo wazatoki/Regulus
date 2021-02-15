@@ -242,7 +242,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     const expectSaveData = component.saveData;
     expect(expectSaveData.patternName).toBe('sample pattern name');
     expect(expectSaveData.isDisclose).toBe(false);
-    expect(expectSaveData.discloseGroupIDs).toEqual(['test-group-id-1', 'test-group-id-2']);
+    expect(expectSaveData.discloseGroups).toEqual([{ id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}]);
     expect(expectSaveData.conditionData.searchConditionList[0].searchField).toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
     expect(expectSaveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(expectSaveData.conditionData.searchConditionList[0].matchType).toEqual('match');

@@ -1,6 +1,7 @@
 import { ConditionData } from './condition-data'
 import { Category } from './category'
 import { Staff } from '../staff/staff';
+import { Group } from '../group/group';
 
 /*
 
@@ -12,7 +13,7 @@ export interface SaveData {
     patternName: string
     category: Category
     isDisclose: boolean
-    discloseGroupIDs: string[]
+    discloseGroups: Group[]
     ownerID: string
     owner: Staff
     conditionData: ConditionData
