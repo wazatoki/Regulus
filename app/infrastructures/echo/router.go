@@ -19,6 +19,7 @@ func defineRouting(e *echo.Echo) {
 	api.GET("/complexSearchCondition", handlers.FindQueryConditionByCondition)
 	api.POST("/complexSearchCondition", handlers.AddQueryCondition)
 	api.PUT("/complexSearchCondition", handlers.UpdateQueryCondition)
+	api.DELETE("/complexSearchCondition", handlers.DeleteQueryCondition)
 	api.GET("/complexSearchCondition/DataInputFormItems", handlers.FetchQueryConditionDataInputFormItems)
 	api.GET("/complexSearchCondition/complexSearchItems", handlers.FetchQueryConditionSearchItems)
 }

@@ -34,7 +34,7 @@ export class ComplexSearchConditionService {
   // }
 
   delete(data: string[]): Observable<SaveData[]> {
-    return this.http.delete<SaveData>('/complexSearchCondition/delete', data);
+    return this.http.delete<SaveData>('/complexSearchCondition', data);
   }
 
   constructor( private http: HttpService ) { }
