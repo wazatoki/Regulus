@@ -76,7 +76,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   }
 
   onFetchedSearchConditions(data: SaveData[]) {
-    this.dataSource.data = data
+    this.dataSource.data = data || []
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
