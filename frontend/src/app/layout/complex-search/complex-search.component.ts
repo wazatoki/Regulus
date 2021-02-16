@@ -196,14 +196,27 @@ export class ComplexSearchComponent implements OnInit {
     const result: SearchCondition[] = [];
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
+      const conditionValue = (fieldType: string) => {
+        if (fieldType == 'boolean') {
+          if (formGroup.get('conditionValue').value) {
+            return 'true';
+          } else {
+            return 'false';
+          }
+        } else {
+          return formGroup.get('conditionValue').value;
+        }
+      }
+
       this.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
+
       const condition: SearchCondition = {
         searchField: field,
-        conditionValue: formGroup.get('conditionValue').value,
+        conditionValue: conditionValue(field.fieldType),
         matchType: formGroup.get('matchTypeSelected').value,
         operator: formGroup.get('operatorSelected').value,
       };
