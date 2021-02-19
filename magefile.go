@@ -64,7 +64,7 @@ func DropDataAccessModel() {
 
 // CreateDataAccessModel create data access model
 func CreateDataAccessModel() error {
-	out, err := exec.Command("sqlboiler", "--wipe", "--output", "./app/infrastructures/sqlboiler", "--pkgname", "sqlboiler", "psql").Output()
+	out, err := exec.Command("sqlboiler", "--wipe", "--output", "./app/infrastructures/sqlboiler", "--pkgname", "sqlboiler", "-t", "db", "psql").Output()
 	fmt.Println(string(out))
 	if err != nil {
 		return err

@@ -11,8 +11,8 @@ import (
 	"regulus/app/domain/query"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/volatiletech/sqlboiler/boil"
-	"github.com/volatiletech/sqlboiler/queries/qm"
+	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 // MakerRepo repository struct
