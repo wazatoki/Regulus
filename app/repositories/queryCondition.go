@@ -303,15 +303,11 @@ func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *query.Condit
 	}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
-		queries := []qm.QueryMod{
-			qm.Where(sqlboiler.QueryConditionColumns.Del+" !=?", true),
+		queries := q.createQueryModSlice()
+		queries = append(
+			queries,
 			qm.And(sqlboiler.QueryConditionColumns.ID+" =?", id),
-			qm.Load(qm.Rels(sqlboiler.QueryConditionRels.Owner, sqlboiler.StaffRels.StaffGroups), qm.Where("del != true")),
-			qm.Load(sqlboiler.QueryConditionRels.QueryDisplayItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryDisplayItemColumns.RowOrder)),
-			qm.Load(sqlboiler.QueryConditionRels.QueryOrderConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QueryOrderConditionItemColumns.RowOrder)),
-			qm.Load(sqlboiler.QueryConditionRels.QuerySearchConditionItems, qm.Where("del != true"), qm.OrderBy(sqlboiler.QuerySearchConditionItemColumns.RowOrder)),
-			qm.Load(sqlboiler.QueryConditionRels.StaffGroups, qm.Where("del != true")),
-		}
+		)
 		fetchedQueryCondition, err := sqlboiler.QueryConditions(queries...).One(context.Background(), db.DB)
 		if err == nil {
 			queryCondition = QueryConditionObjectMap(fetchedQueryCondition)
