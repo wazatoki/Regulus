@@ -37,7 +37,7 @@ func insertTestDataToQueryCondition(con *sqlx.DB) {
 	sql += "('queryConditionid5', 'patternName5', 'staff-group', false, 'staffid2'),"
 	sql += "('queryConditionid6', 'patternName6', 'staff-group', false, 'staffid2'),"
 	sql += "('queryConditionid7', 'patternName7', 'staff-group', false, 'staffid2'),"
-	sql += "('queryConditionid8', 'patternName8', 'staff-group', false, 'staffid2'),"
+	sql += "('queryConditionid8', 'patternName8', 'staff-group', true, 'staffid2'),"
 	sql += "('queryConditionid9', 'patternName9', 'staff-group', false, 'staffid2')"
 
 	_, err = con.Exec(sql)
@@ -95,7 +95,8 @@ func inserTestDataToJoinQueryConditionsStaffGroups(con *sqlx.DB) {
 	sql += "('queryConditionid8', 'staffgroupid1'),"
 	sql += "('queryConditionid8', 'staffgroupid2'),"
 	sql += "('queryConditionid9', 'staffgroupid1'),"
-	sql += "('queryConditionid9', 'staffgroupid2')"
+	sql += "('queryConditionid9', 'staffgroupid2'),"
+	sql += "('queryConditionid9', 'staffgroupid3')"
 
 	_, err = con.Exec(sql)
 	if err != nil {

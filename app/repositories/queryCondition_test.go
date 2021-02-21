@@ -328,7 +328,7 @@ func createExpectedQueryCondition8Entity() *query.Condition {
 			OrderConditionList: []query.OrderConditionItem{},
 		},
 		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
-		IsDisclose:     false,
+		IsDisclose:     true,
 		Owner:          createExpectedStaff2Entity(),
 	}
 }
@@ -350,7 +350,7 @@ func createExpectedQueryCondition9Entity() *query.Condition {
 			},
 			OrderConditionList: []query.OrderConditionItem{},
 		},
-		DiscloseGroups: createExpectedStaffGroupEntity1Slice(),
+		DiscloseGroups: createExpectedStaffGroupEntity2Slice(),
 		IsDisclose:     false,
 		Owner:          createExpectedStaff2Entity(),
 	}
@@ -465,7 +465,73 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 					{
 						SearchField:    queryConditionSearchConditionList[1],
-						ConditionValue: "利用者グ",
+						ConditionValue: "利用者",
+						MatchType:      query.Pertialmatch,
+						Operator:       query.And,
+					},
+				},
+			},
+			wantResultQueryConditions: []*query.Condition{
+				createExpectedQueryCondition5Entity(),
+			},
+			wantErr: false,
+		},
+		{
+			name: "should get sprcified entity as select by owner",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryItems: []query.SearchConditionItem{
+					{
+						SearchField:    queryConditionSearchConditionList[2],
+						ConditionValue: "true",
+						MatchType:      query.Match,
+						Operator:       query.And,
+					},
+				},
+			},
+			wantResultQueryConditions: []*query.Condition{
+				createExpectedQueryCondition8Entity(),
+			},
+			wantErr: false,
+		},
+		{
+			name: "should get sprcified entity as select by disclose groups",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryItems: []query.SearchConditionItem{
+					{
+						SearchField:    queryConditionSearchConditionList[3],
+						ConditionValue: "[\"staffgroupid3\"]",
+						MatchType:      query.Match,
+						Operator:       query.And,
+					},
+				},
+			},
+			wantResultQueryConditions: []*query.Condition{
+				createExpectedQueryCondition9Entity(),
+			},
+			wantErr: false,
+		},
+		{
+			name: "should get sprcified entity as select by owner",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryItems: []query.SearchConditionItem{
+					{
+						SearchField:    queryConditionSearchConditionList[4],
+						ConditionValue: "2",
+						MatchType:      query.Pertialmatch,
+						Operator:       query.And,
+					},
+					{
+						SearchField:    queryConditionSearchConditionList[0],
+						ConditionValue: "5",
 						MatchType:      query.Pertialmatch,
 						Operator:       query.And,
 					},

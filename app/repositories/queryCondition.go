@@ -10,6 +10,8 @@ import (
 	"regulus/app/utils"
 	"regulus/app/utils/log"
 
+	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -347,20 +349,60 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 
-		queries := q.createQueryModSlice()
-		qmod := qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true)
-		queries = append(queries, qmod)
+		var args []interface{} = make([]interface{}, 0)
+		ids := []string{}
+
+		query := "select distinct qc.id " +
+			"from query_conditions qc " +
+			"inner join staffs owner on qc.owner_id = owner.id " +
+			"inner join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
+			"inner join staff_groups sg on jqcsg.staff_groups_id = sg.id " +
+			"where qc.del != true"
 
 		// 条件構築
 		for _, queryItem := range queryItems {
+			qu, pslice := q.createQueryModWhere(queryItem)
+			query += qu
 
-			qmod = q.createQueryModWhere(queryItem)
-			queries = append(queries, qmod)
-
+			for _, p := range pslice {
+				args = append(args, p)
+			}
 		}
 
+		// クエリをDBドライバに併せて再構築
+		query = db.Rebind(query)
+
 		// データ取得処理
+		db.Select(&ids, query, args...)
+		fmt.Println(query)
+		fmt.Println(args)
+		fmt.Println(ids)
+		var convertedIDs []interface{} = make([]interface{}, len(ids))
+		for i, d := range ids {
+			convertedIDs[i] = d
+		}
+		queries := q.createQueryModSlice()
+		queries = append(
+			queries,
+			qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true),
+			qm.AndIn("query_conditions."+sqlboiler.QueryConditionColumns.ID+" in ?", convertedIDs...),
+		)
 		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
+
+		//queries := q.createQueryModSlice()
+		//qmod := qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true)
+		//queries = append(queries, qmod)
+
+		// 条件構築
+		//for _, queryItem := range queryItems {
+
+		//	qmod = q.createQueryModWhere(queryItem)
+		//	queries = append(queries, qmod)
+
+		//}
+
+		// データ取得処理
+		//fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
 
 		if err == nil {
 			for _, fc := range fetchedQueryConditions {
@@ -374,7 +416,63 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 	return
 }
 
-func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchConditionItem) qm.QueryMod {
+func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchConditionItem) (string, []string) {
+
+	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
+
+	switch queryItem.SearchField.ID {
+	case "pattern-name":
+		if queryItem.Operator == query.Or {
+			return " or qc." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
+		}
+		return " and qc." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
+	case "is-disclose":
+		if queryItem.Operator == query.Or {
+			return " or qc." + sqlboiler.QueryConditionColumns.IsDisclose + " " + mt + " ?", []string{val}
+		}
+		return " and qc." + sqlboiler.QueryConditionColumns.IsDisclose + " " + mt + " ?", []string{val}
+	case "disclose-groups":
+		var ids []string
+		json.Unmarshal([]byte(val), &ids)
+		var convertedIDs []interface{} = make([]interface{}, len(ids))
+		for i, d := range ids {
+			convertedIDs[i] = d
+		}
+		if queryItem.Operator == query.Or {
+			q, _, _ := sqlx.In(" or sg.id in (?)", convertedIDs)
+			return q, ids
+		}
+		q, _, _ := sqlx.In(" and sg.id in (?)", convertedIDs)
+		return q, ids
+	case "owner":
+		if queryItem.Operator == query.Or {
+			return " or owner." + sqlboiler.StaffColumns.Name + " " + mt + " ?", []string{val}
+		}
+		return " and owner." + sqlboiler.StaffColumns.Name + " " + mt + " ?", []string{val}
+	case "category-name":
+		var ids []string
+		json.Unmarshal([]byte(val), &ids)
+		var convertedIDs []interface{} = make([]interface{}, len(ids))
+		for i, d := range ids {
+			convertedIDs[i] = d
+		}
+		if queryItem.Operator == query.Or {
+			q, _, _ := sqlx.In(" or qc."+sqlboiler.QueryConditionColumns.CategoryName+" in (?)", convertedIDs)
+			return q, ids
+		}
+		q, _, _ := sqlx.In(" and qc."+sqlboiler.QueryConditionColumns.CategoryName+" in (?)", convertedIDs)
+		return q, ids
+
+	default:
+		if queryItem.Operator == query.Or {
+			return " or query_conditions." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
+		}
+		return " and query_conditions." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
+		// queryItem.Operator == and
+	}
+}
+
+func (q *QueryConditionRepo) createQueryModWhereold(queryItem query.SearchConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
