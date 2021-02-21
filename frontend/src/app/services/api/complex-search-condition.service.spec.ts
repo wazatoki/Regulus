@@ -132,7 +132,7 @@ describe('ComplexSearchConditionService', () => {
   //   expect(httpServiceSpy.put).toHaveBeenCalledWith('/complexSearchCondition', testData);
   // });
 
-  it('should call httpService.delete with /complexSearchCondition/delete when called delete method', () => {
+  it('should call httpService.delete with /complexSearchCondition when called delete method', () => {
     const testData: string[] = ['saveID1', 'saveID2'];
     const resultData: SaveData[] = [];
     complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
@@ -146,7 +146,7 @@ describe('ComplexSearchConditionService', () => {
     })
 
     expect(result).toEqual(resultData);
-    expect(httpServiceSpy.delete).toHaveBeenCalledWith('/complexSearchCondition/delete', testData);
+    expect(httpServiceSpy.delete).toHaveBeenCalledWith('/complexSearchCondition', testData);
   });
 
   
