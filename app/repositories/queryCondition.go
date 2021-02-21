@@ -452,50 +452,6 @@ func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchCondition
 	}
 }
 
-func (q *QueryConditionRepo) createQueryModWhereold(queryItem query.SearchConditionItem) qm.QueryMod {
-
-	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
-
-	switch queryItem.SearchField.ID {
-	case "pattern-name":
-		if queryItem.Operator == query.Or {
-			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
-		}
-		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
-	case "is-disclose":
-		if queryItem.Operator == query.Or {
-			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.IsDisclose+" "+mt+" ?", val)
-		}
-		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.IsDisclose+" "+mt+" ?", val)
-	case "disclose-groups":
-		var ids []interface{}
-		json.Unmarshal([]byte(val), &ids)
-		if queryItem.Operator == query.Or {
-			return qm.OrIn("sg.id"+" "+mt+" ?", ids...)
-		}
-		return qm.AndIn("sg.id"+" "+mt+" ?", ids...)
-	case "owner":
-		if queryItem.Operator == query.Or {
-			return qm.Or("owner."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
-		}
-		return qm.And("owner."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
-	case "category-name":
-		var ids []interface{}
-		json.Unmarshal([]byte(val), &ids)
-		if queryItem.Operator == query.Or {
-			return qm.OrIn("query_conditions."+sqlboiler.QueryConditionColumns.CategoryName+" "+mt+" ?", ids...)
-		}
-		return qm.AndIn("query_conditions."+sqlboiler.QueryConditionColumns.CategoryName+" "+mt+" ?", ids...)
-
-	default:
-		if queryItem.Operator == query.Or {
-			return qm.Or("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
-		}
-		return qm.And("query_conditions."+sqlboiler.QueryConditionColumns.PatternName+" "+mt+" ?", val)
-		// queryItem.Operator == and
-	}
-}
-
 func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 	qslice = []qm.QueryMod{}
 	qslice = append(
