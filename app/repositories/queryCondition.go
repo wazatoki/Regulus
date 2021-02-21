@@ -10,8 +10,6 @@ import (
 	"regulus/app/utils"
 	"regulus/app/utils/log"
 
-	"fmt"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -374,9 +372,6 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 
 		// データ取得処理
 		db.Select(&ids, query, args...)
-		fmt.Println(query)
-		fmt.Println(args)
-		fmt.Println(ids)
 		var convertedIDs []interface{} = make([]interface{}, len(ids))
 		for i, d := range ids {
 			convertedIDs[i] = d
@@ -388,21 +383,6 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 			qm.AndIn("query_conditions."+sqlboiler.QueryConditionColumns.ID+" in ?", convertedIDs...),
 		)
 		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
-
-		//queries := q.createQueryModSlice()
-		//qmod := qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true)
-		//queries = append(queries, qmod)
-
-		// 条件構築
-		//for _, queryItem := range queryItems {
-
-		//	qmod = q.createQueryModWhere(queryItem)
-		//	queries = append(queries, qmod)
-
-		//}
-
-		// データ取得処理
-		//fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
 
 		if err == nil {
 			for _, fc := range fetchedQueryConditions {
