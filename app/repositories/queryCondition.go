@@ -346,7 +346,7 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 		var args []interface{} = make([]interface{}, 0)
 		ids := []string{}
 
-		query := "select distinct qc.id " +
+		queryStr := "select distinct qc.id " +
 			"from query_conditions qc " +
 			"inner join staffs owner on qc.owner_id = owner.id " +
 			"inner join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
@@ -354,9 +354,32 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 			"where qc.del != true"
 
 		// 条件構築
+		searchConditionItems := []query.SearchConditionItem{}
+
 		for _, queryItem := range queryItems {
-			qu, pslice := q.createQueryModWhere(queryItem)
-			query += qu
+
+			// 検索条件がDB管理されていない場合の処理
+			if queryItem.SearchField.ID == "category-view-value" {
+
+				item := query.SearchConditionItem{
+					SearchField: query.FieldAttr{},
+				}
+				item.Operator = queryItem.Operator
+				item.MatchType = query.In
+				item.SearchField.ID = "category-name"
+				categoryNames := query.CategoryNameListByMatchType(queryItem.ConditionValue, queryItem.MatchType)
+				tmpByte, _ := json.Marshal(categoryNames)
+				item.ConditionValue = string(tmpByte)
+				searchConditionItems = append(searchConditionItems, item)
+
+			} else {
+				searchConditionItems = append(searchConditionItems, queryItem)
+			}
+		}
+
+		for _, searchConditionItem := range searchConditionItems {
+			qu, pslice := q.createQueryModWhere(searchConditionItem)
+			queryStr += qu
 
 			for _, p := range pslice {
 				args = append(args, p)
@@ -364,10 +387,10 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 		}
 
 		// クエリをDBドライバに併せて再構築
-		query = db.Rebind(query)
+		queryStr = db.Rebind(queryStr)
 
 		// データ取得処理
-		db.Select(&ids, query, args...)
+		db.Select(&ids, queryStr, args...)
 		var convertedIDs []interface{} = make([]interface{}, len(ids))
 		for i, d := range ids {
 			convertedIDs[i] = d
