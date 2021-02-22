@@ -208,20 +208,26 @@ export class ComplexSearchComponent implements OnInit {
         }
       }
 
+      console.log(this.searchConditionList)
       this.searchConditionList.forEach((v, i) => {
+        console.log(formGroup.get('fieldSelected').value)
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
 
-      const condition: SearchCondition = {
-        searchField: field,
-        conditionValue: conditionValue(field.fieldType),
-        matchType: formGroup.get('matchTypeSelected').value,
-        operator: formGroup.get('operatorSelected').value,
-      };
-      result.push(condition);
+      if(field){
+        const condition: SearchCondition = {
+          searchField: field,
+          conditionValue: conditionValue(field.fieldType),
+          matchType: formGroup.get('matchTypeSelected').value,
+          operator: formGroup.get('operatorSelected').value,
+        };
+        result.push(condition);
+      }
+      
     });
+    
     return result;
   }
 
@@ -234,12 +240,17 @@ export class ComplexSearchComponent implements OnInit {
           field = v;
         }
       });
-      const condition: OrderCondition = {
-        orderField: field,
-        orderFieldKeyWord: formGroup.get('orderFieldKeyWordSelected').value,
+      
+      if (field){
+        const condition: OrderCondition = {
+          orderField: field,
+          orderFieldKeyWord: formGroup.get('orderFieldKeyWordSelected').value,
+        }
+        result.push(condition);
       }
-      result.push(condition);
+      
     });
+
     return result;
   }
 
