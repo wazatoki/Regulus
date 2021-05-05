@@ -1,2 +1,2 @@
 #!/bin/sh
-docker exec -i postgresql createdb -U regulus $1
+docker exec -i regulus_db createdb -U regulus $1

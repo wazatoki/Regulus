@@ -1,6 +1,6 @@
 [psql]
   dbname = "regulusdb"
-  host   = "127.0.0.1"
+  host   = "regulus_db"
   port   = 5432
   user   = "regulus"
   pass   = "regulus"
