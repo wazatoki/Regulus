@@ -34,7 +34,7 @@ func SetupTestConfig() {
 	// default setting
 	viper.SetDefault("mode", "test")
 	viper.SetDefault("httpPort", "8080")
-	viper.SetDefault("dbUrl", "127.0.0.1")
+	viper.SetDefault("dbUrl", "regulus_db")
 	viper.SetDefault("dbPort", "5432")
 	viper.SetDefault("dbUser", "regulus")
 	viper.SetDefault("dbPassword", "regulus")

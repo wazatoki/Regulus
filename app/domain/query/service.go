@@ -1,7 +1,7 @@
 package query
 
 import (
-	"regulus/app/domain/authentication"
+	"regulus/app/domain"
 	"regulus/app/utils"
 	"sort"
 	"strings"
@@ -81,7 +81,7 @@ NameのSliceを返す。
 */
 func CategoryNameListByMatchType(s string, mt MatchTypeEnum) (categoryNames []string) {
 
-	categories := CreateCategories([]*authentication.Group{})
+	categories := CreateCategories([]*domain.Group{})
 
 	for _, category := range categories {
 
@@ -106,9 +106,9 @@ func CategoryNameListByMatchType(s string, mt MatchTypeEnum) (categoryNames []st
 
 /*
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
-optionのグループにはすべてのauthentication.Groupを渡す。
+optionのグループにはすべてのdomain.Groupを渡す。
 */
-func CreateCategories(groups []*authentication.Group) (categories []*Category) {
+func CreateCategories(groups []*domain.Group) (categories []*Category) {
 
 	categories = []*Category{}
 
@@ -121,7 +121,7 @@ func CreateCategories(groups []*authentication.Group) (categories []*Category) {
 	return
 }
 
-func createQueryConditionCategory(groups []*authentication.Group) (category *Category) {
+func createQueryConditionCategory(groups []*domain.Group) (category *Category) {
 
 	optionItems := []OptionItem{}
 
@@ -170,7 +170,7 @@ func createQueryConditionCategory(groups []*authentication.Group) (category *Cat
 	return
 }
 
-func createStaffCategory(groups []*authentication.Group) (category *Category) {
+func createStaffCategory(groups []*domain.Group) (category *Category) {
 	category = &Category{
 		Name:      "staff",
 		ViewValue: "利用者",
@@ -205,7 +205,7 @@ func createStaffCategory(groups []*authentication.Group) (category *Category) {
 	return
 }
 
-func createStaffGroupCategory(groups []*authentication.Group) (category *Category) {
+func createStaffGroupCategory(groups []*domain.Group) (category *Category) {
 	category = &Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",

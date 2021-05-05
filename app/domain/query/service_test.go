@@ -2,12 +2,12 @@ package query
 
 import (
 	"reflect"
-	"regulus/app/domain/authentication"
+	"regulus/app/domain"
 	"testing"
 )
 
-func createExpectedStaff1Entity() *authentication.Staff {
-	return &authentication.Staff{
+func createExpectedStaff1Entity() *domain.Staff {
+	return &domain.Staff{
 		ID:        "staffid1",
 		AccountID: "12345",
 		Name:      "name 1",
@@ -16,48 +16,48 @@ func createExpectedStaff1Entity() *authentication.Staff {
 	}
 }
 
-func createExpectedStaff2Entity() *authentication.Staff {
-	return &authentication.Staff{
+func createExpectedStaff2Entity() *domain.Staff {
+	return &domain.Staff{
 		ID:        "staffid2",
 		AccountID: "22345",
 		Name:      "name 2",
 		Password:  "password 2",
-		Groups: []*authentication.Group{
+		Groups: []*domain.Group{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaffGroup1Entity() *authentication.Group {
-	return &authentication.Group{
+func createExpectedStaffGroup1Entity() *domain.Group {
+	return &domain.Group{
 		ID:   "staffgroupid1",
 		Name: "staff group name 1",
 	}
 }
 
-func createExpectedStaffGroup2Entity() *authentication.Group {
-	return &authentication.Group{
+func createExpectedStaffGroup2Entity() *domain.Group {
+	return &domain.Group{
 		ID:   "staffgroupid2",
 		Name: "staff group name 2",
 	}
 }
 
-func createExpectedStaffGroup3Entity() *authentication.Group {
-	return &authentication.Group{
+func createExpectedStaffGroup3Entity() *domain.Group {
+	return &domain.Group{
 		ID:   "staffgroupid3",
 		Name: "staff group name 3",
 	}
 }
 
-func createExpectedStaffGroupEntity1Slice() []*authentication.Group {
-	return []*authentication.Group{
+func createExpectedStaffGroupEntity1Slice() []*domain.Group {
+	return []*domain.Group{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 	}
 }
 
-func createExpectedStaffGroupEntity2Slice() []*authentication.Group {
-	return []*authentication.Group{
+func createExpectedStaffGroupEntity2Slice() []*domain.Group {
+	return []*domain.Group{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 		createExpectedStaffGroup3Entity(),

@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"reflect"
-	"regulus/app/domain/authentication"
+	"regulus/app/domain"
 	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
@@ -23,36 +23,36 @@ func tearDownStaffGroupTest(con *sqlx.DB) {
 	con.Close()
 }
 
-func createExpectedStaffGroup1Entity() *authentication.Group {
-	return &authentication.Group{
+func createExpectedStaffGroup1Entity() *domain.Group {
+	return &domain.Group{
 		ID:   "staffgroupid1",
 		Name: "staff group name 1",
 	}
 }
 
-func createExpectedStaffGroup2Entity() *authentication.Group {
-	return &authentication.Group{
+func createExpectedStaffGroup2Entity() *domain.Group {
+	return &domain.Group{
 		ID:   "staffgroupid2",
 		Name: "staff group name 2",
 	}
 }
 
-func createExpectedStaffGroup3Entity() *authentication.Group {
-	return &authentication.Group{
+func createExpectedStaffGroup3Entity() *domain.Group {
+	return &domain.Group{
 		ID:   "staffgroupid3",
 		Name: "staff group name 3",
 	}
 }
 
-func createExpectedStaffGroupEntity1Slice() []*authentication.Group {
-	return []*authentication.Group{
+func createExpectedStaffGroupEntity1Slice() []*domain.Group {
+	return []*domain.Group{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 	}
 }
 
-func createExpectedStaffGroupEntity2Slice() []*authentication.Group {
-	return []*authentication.Group{
+func createExpectedStaffGroupEntity2Slice() []*domain.Group {
+	return []*domain.Group{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 		createExpectedStaffGroup3Entity(),
@@ -66,10 +66,10 @@ func TestStaffGroupObjectMap(t *testing.T) {
 	tests := []struct {
 		name   string
 		args   args
-		wantEg *authentication.Group
+		wantEg *domain.Group
 	}{
 		{
-			name:   "convert sqlboiler.staffGroup to authentication.Group",
+			name:   "convert sqlboiler.staffGroup to domain.Group",
 			args:   args{},
 			wantEg: createExpectedStaffGroup1Entity(),
 		},
@@ -100,7 +100,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []*authentication.Group
+		want    []*domain.Group
 		wantErr bool
 	}{
 		{
@@ -122,7 +122,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			want: []*authentication.Group{
+			want: []*domain.Group{
 				createExpectedStaffGroup1Entity(),
 			},
 			wantErr: false,
@@ -160,7 +160,7 @@ func TestStaffGroupRepo_SelectByID(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		wantStaffGroup *authentication.Group
+		wantStaffGroup *domain.Group
 		wantErr        bool
 	}{
 		{
@@ -207,7 +207,7 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 		name            string
 		fields          fields
 		args            args
-		wantStaffGroups []*authentication.Group
+		wantStaffGroups []*domain.Group
 		wantErr         bool
 	}{
 		{
@@ -221,7 +221,7 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 					"staffgroupid2",
 				},
 			},
-			wantStaffGroups: []*authentication.Group{
+			wantStaffGroups: []*domain.Group{
 				createExpectedStaffGroup1Entity(),
 				createExpectedStaffGroup2Entity(),
 			},
@@ -254,7 +254,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staffGroup *authentication.Group
+		staffGroup *domain.Group
 		operatorID string
 	}
 	tests := []struct {
@@ -269,7 +269,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				staffGroup: &authentication.Group{
+				staffGroup: &domain.Group{
 					ID:   "staffgroupid3",
 					Name: "staff group name 5",
 				},
@@ -283,7 +283,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 			con := setUpStaffGroupTest()
 			defer tearDownStaffGroupTest(con)
 			setupTestData()
-			want := &authentication.Group{
+			want := &domain.Group{
 				ID:   "staffgroupid3",
 				Name: "staff group name 5",
 			}
@@ -312,7 +312,7 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staffGroup *authentication.Group
+		staffGroup *domain.Group
 		operatorID string
 	}
 	tests := []struct {

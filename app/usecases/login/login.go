@@ -2,7 +2,7 @@ package login
 
 import (
 	"errors"
-	"regulus/app/domain/authentication"
+	"regulus/app/domain"
 	"regulus/app/utils/config"
 	"time"
 
@@ -10,7 +10,7 @@ import (
 )
 
 // Login 成功の場合accountIDに対応するstaffの構造体の参照と認証tokenを返す。
-func Login(staffRepo persistance, id string, pass string) (*authentication.Staff, string, error) {
+func Login(staffRepo persistance, id string, pass string) (*domain.Staff, string, error) {
 	s, err := staffRepo.SelectByAccountID(id)
 
 	if err != nil {

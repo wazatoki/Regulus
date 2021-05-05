@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"errors"
-	"regulus/app/domain/authentication"
+	"regulus/app/domain"
 	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
@@ -33,7 +33,7 @@ func (g *StaffGroupRepo) Dalete(id string, operatorID string) error {
 }
 
 // Update update data to database
-func (g *StaffGroupRepo) Update(staffGroup *authentication.Group, operatorID string) (err error) {
+func (g *StaffGroupRepo) Update(staffGroup *domain.Group, operatorID string) (err error) {
 	if staffGroup.ID == "" {
 		return errors.New("ID must be required")
 	}
@@ -54,7 +54,7 @@ func (g *StaffGroupRepo) Update(staffGroup *authentication.Group, operatorID str
 }
 
 // Insert insert data to database
-func (g *StaffGroupRepo) Insert(staffGroup *authentication.Group, operatorID string) (id string, err error) {
+func (g *StaffGroupRepo) Insert(staffGroup *domain.Group, operatorID string) (id string, err error) {
 	id = ""
 	sqlStaffGroup := &sqlboiler.StaffGroup{
 		ID:            utils.CreateID(),
@@ -78,8 +78,8 @@ func (g *StaffGroupRepo) Insert(staffGroup *authentication.Group, operatorID str
 }
 
 // SelectByIDs select staff data by id list from database
-func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []*authentication.Group, err error) {
-	staffGroups = []*authentication.Group{}
+func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []*domain.Group, err error) {
+	staffGroups = []*domain.Group{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -111,9 +111,9 @@ func (g *StaffGroupRepo) SelectByIDs(ids []string) (staffGroups []*authenticatio
 }
 
 // SelectByID select staaffGroup data by id from database
-func (g *StaffGroupRepo) SelectByID(id string) (staffGroup *authentication.Group, err error) {
+func (g *StaffGroupRepo) SelectByID(id string) (staffGroup *domain.Group, err error) {
 	if id == "" {
-		return &authentication.Group{}, errors.New("id must be required")
+		return &domain.Group{}, errors.New("id must be required")
 	}
 
 	err = g.database.WithDbContext(func(db *sqlx.DB) error {
@@ -133,8 +133,8 @@ func (g *StaffGroupRepo) SelectByID(id string) (staffGroup *authentication.Group
 }
 
 // SelectAll select all group data without not del from database
-func (g *StaffGroupRepo) SelectAll() ([]*authentication.Group, error) {
-	geSlice := []*authentication.Group{}
+func (g *StaffGroupRepo) SelectAll() ([]*domain.Group, error) {
+	geSlice := []*domain.Group{}
 
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := []qm.QueryMod{
@@ -146,8 +146,8 @@ func (g *StaffGroupRepo) SelectAll() ([]*authentication.Group, error) {
 		if err == nil {
 
 			for _, group := range groups {
-				var ge *authentication.Group
-				ge = &authentication.Group{}
+				var ge *domain.Group
+				ge = &domain.Group{}
 
 				ge.ID = group.ID
 				ge.Name = group.Name
@@ -163,8 +163,8 @@ func (g *StaffGroupRepo) SelectAll() ([]*authentication.Group, error) {
 }
 
 // Select select staffGroup data by condition from database
-func (g *StaffGroupRepo) Select(queryItems ...*query.SearchConditionItem) ([]*authentication.Group, error) {
-	staffGroups := []*authentication.Group{}
+func (g *StaffGroupRepo) Select(queryItems ...*query.SearchConditionItem) ([]*domain.Group, error) {
+	staffGroups := []*domain.Group{}
 	queries := g.createQueryModSlice()
 	var q qm.QueryMod
 
@@ -235,12 +235,12 @@ func (g *StaffGroupRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 }
 
 // StaffGroupObjectMap data mapper sqlboiler object to entities object
-func StaffGroupObjectMap(sg *sqlboiler.StaffGroup) (eg *authentication.Group) {
+func StaffGroupObjectMap(sg *sqlboiler.StaffGroup) (eg *domain.Group) {
 
 	if sg == nil {
 		return nil
 	}
-	eg = &authentication.Group{
+	eg = &domain.Group{
 		ID:   sg.ID,
 		Name: sg.Name,
 	}

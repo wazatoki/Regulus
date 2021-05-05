@@ -1,7 +1,7 @@
 package group
 
 import (
-	"regulus/app/domain/authentication"
+	"regulus/app/domain"
 )
 
 // Persistance API用のインターフェース
@@ -10,6 +10,6 @@ type Persistance interface {
 	//Update(*group.Group) error
 	//Delete(string) error
 	//SelectByID(string) (*group.Group, error)
-	SelectAll() ([]*authentication.Group, error)
+	SelectAll() ([]*domain.Group, error)
 	//Select(string) ([]group.Group, error)
 }
