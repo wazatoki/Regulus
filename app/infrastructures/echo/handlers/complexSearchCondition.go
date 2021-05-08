@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"regulus/app/domain"
 	"regulus/app/repositories"
-	"regulus/app/usecases/maintenance/master/query"
+	"regulus/app/usecases"
 
 	"github.com/labstack/echo"
 )
@@ -20,7 +20,7 @@ func DeleteQueryCondition(c echo.Context) error {
 	if e != nil {
 		return e
 	}
-	result := query.Delete(conditionIDs, repo, getAuthStaffID(c))
+	result := usecases.QueryDelete(conditionIDs, repo, getAuthStaffID(c))
 
 	return c.JSON(http.StatusOK, result)
 }
@@ -35,7 +35,7 @@ func UpdateQueryCondition(c echo.Context) error {
 	if e != nil {
 		return e
 	}
-	err := query.Update(condition, repo, getAuthStaffID(c))
+	err := usecases.QueryUpdate(condition, repo, getAuthStaffID(c))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -52,7 +52,7 @@ func AddQueryCondition(c echo.Context) error {
 	if e != nil {
 		return e
 	}
-	result, err := query.Add(condition, repo, getAuthStaffID(c))
+	result, err := usecases.QueryAdd(condition, repo, getAuthStaffID(c))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -65,13 +65,12 @@ FindQueryConditionByCondition return search result of query condition
 */
 func FindQueryConditionByCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
-	var conditionData *domain.ConditionData
-	conditionData = &domain.ConditionData{}
+	conditionData := &domain.ConditionData{}
 	e := json.Unmarshal([]byte(c.QueryParam("condition")), conditionData)
 	if e != nil {
 		return c.JSON(http.StatusInternalServerError, e.Error())
 	}
-	result, err := query.Find(conditionData, repo)
+	result, err := usecases.QueryFind(conditionData, repo)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -83,7 +82,7 @@ FetchQueryConditionSearchItems は詳細検索条件設定フォームを開く�
 */
 func FetchQueryConditionSearchItems(c echo.Context) error {
 	groupRepo := repositories.NewStaffGroupRepo()
-	categories, e := query.FetchDataInputFormItems(groupRepo)
+	categories, e := usecases.QueryFetchDataInputFormItems(groupRepo)
 	if e != nil {
 		return c.JSON(http.StatusInternalServerError, e)
 	}
@@ -101,7 +100,7 @@ FetchQueryConditionDataInputFormItems は検索条件登録フォームを開く
 */
 func FetchQueryConditionDataInputFormItems(c echo.Context) error {
 	groupRepo := repositories.NewStaffGroupRepo()
-	categories, e := query.FetchDataInputFormItems(groupRepo)
+	categories, e := usecases.QueryFetchDataInputFormItems(groupRepo)
 	if e != nil {
 		return e
 	}

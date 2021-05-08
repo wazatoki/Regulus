@@ -338,7 +338,7 @@ func (q *QueryConditionRepo) SelectAll() (queryConditions []*domain.Condition, e
 }
 
 // Select select query condition data by condition from database
-func (q *QueryConditionRepo) Select(queryItems ...domain.SearchConditionItem) (resultQueryConditions []*domain.Condition, err error) {
+func (q *QueryConditionRepo) Select(queryItems ...domain.SearchConditionItem) (resultQueryConditions domain.Conditions, err error) {
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 

@@ -15,14 +15,16 @@ type Conditions []*Condition
 /*
 Sort is sort condition slice by orderItems
 */
-func Sort(queryConditions []*Condition, orderItems ...OrderConditionItem) []*Condition {
+func (c *Conditions) Sort(orderItems ...OrderConditionItem) []*Condition {
+	queryConditions := *c
 	sort.Slice(queryConditions, func(i int, j int) bool {
-		return compare(queryConditions[i], queryConditions[j], orderItems, 0)
+
+		return c.compare(queryConditions[i], queryConditions[j], orderItems, 0)
 	})
 	return queryConditions
 }
 
-func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems []OrderConditionItem, orderIndex int) bool {
+func (c *Conditions) compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems []OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false
@@ -32,7 +34,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 	case "category-view-value":
 		if queryCondition1.Category.ViewValue == queryCondition2.Category.ViewValue {
 			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+			return c.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
 		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return queryCondition1.Category.ViewValue > queryCondition2.Category.ViewValue
@@ -41,7 +43,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 	case "is-disclose":
 		if queryCondition1.IsDisclose == queryCondition2.IsDisclose {
 			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+			return c.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
 		qc1 := utils.BoolToInt(queryCondition1.IsDisclose)
 		qc2 := utils.BoolToInt(queryCondition2.IsDisclose)
@@ -53,7 +55,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 	case "owner":
 		if queryCondition1.Owner.ID == queryCondition2.Owner.ID {
 			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+			return c.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
 		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return queryCondition1.Owner.Name > queryCondition2.Owner.Name
@@ -63,7 +65,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 	default: // PatternNameで並び替え
 		if queryCondition1.PatternName == queryCondition2.PatternName {
 			orderIndex++
-			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+			return c.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
 		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return queryCondition1.PatternName > queryCondition2.PatternName
