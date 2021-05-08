@@ -1,7 +1,7 @@
 package query
 
 import (
-	"regulus/app/domain/query"
+	"regulus/app/domain"
 	"regulus/app/usecases/maintenance/master/group"
 	"regulus/app/utils/log"
 )
@@ -11,9 +11,9 @@ import (
 Delete は検索条件削除時のユースケースです。
 
 */
-func Delete(queryConditionIDs *[]string, queryRepo persistance, operatorID string) (result []query.Condition) {
+func Delete(queryConditionIDs *[]string, queryRepo persistance, operatorID string) (result []domain.Condition) {
 
-	result = []query.Condition{}
+	result = []domain.Condition{}
 
 	for _, id := range *queryConditionIDs {
 
@@ -34,7 +34,7 @@ func Delete(queryConditionIDs *[]string, queryRepo persistance, operatorID strin
 Update は検索条件更新時のユースケースです。
 
 */
-func Update(queryCondition *query.Condition, queryRepo persistance, operatorID string) error {
+func Update(queryCondition *domain.Condition, queryRepo persistance, operatorID string) error {
 
 	err := queryRepo.Update(queryCondition, operatorID)
 
@@ -50,7 +50,7 @@ func Update(queryCondition *query.Condition, queryRepo persistance, operatorID s
 Add は検索条件追加時のユースケースです。成功した場合は id を返却します。
 
 */
-func Add(queryCondition *query.Condition, queryRepo persistance, operatorID string) (*query.Condition, error) {
+func Add(queryCondition *domain.Condition, queryRepo persistance, operatorID string) (*domain.Condition, error) {
 
 	id, err := queryRepo.Insert(queryCondition, operatorID)
 
@@ -68,7 +68,7 @@ func Add(queryCondition *query.Condition, queryRepo persistance, operatorID stri
 Find は検索時のユースケースです。条件指定がない場合は全件検索の結果を返します。
 
 */
-func Find(conditionData *query.ConditionData, queryRepo persistance) ([]*query.Condition, error) {
+func Find(conditionData *domain.ConditionData, queryRepo persistance) ([]*domain.Condition, error) {
 
 	items, err := queryRepo.Select(conditionData.SearchConditionList...)
 
@@ -78,7 +78,7 @@ func Find(conditionData *query.ConditionData, queryRepo persistance) ([]*query.C
 		return nil, err
 	}
 
-	items = query.Sort(items, conditionData.OrderConditionList...)
+	items = domain.Sort(items, conditionData.OrderConditionList...)
 	return items, nil
 }
 
@@ -87,13 +87,13 @@ func Find(conditionData *query.ConditionData, queryRepo persistance) ([]*query.C
 FetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するユースケースです。
 
 */
-func FetchDataInputFormItems(groupRepo group.Persistance) ([]*query.Category, error) {
+func FetchDataInputFormItems(groupRepo group.Persistance) ([]*domain.Category, error) {
 	groups, err := groupRepo.SelectAll()
 
 	if err != nil {
 		log.Error("usecases:query:FetchDataInputFormItems:message:" + err.Error())
 		return nil, err
 	}
-	return query.CreateCategories(groups), nil
+	return domain.CreateCategories(groups), nil
 
 }

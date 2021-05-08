@@ -3,7 +3,7 @@ package repositories
 import (
 	"regulus/app/infrastructures/postgresql"
 
-	"regulus/app/domain/query"
+	"regulus/app/domain"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -16,24 +16,24 @@ type db interface {
 	WithDbContext(fn func(db *sqlx.DB) error) error
 }
 
-func comparisonOperator(matchType query.MatchTypeEnum, val string) (string, string) {
+func comparisonOperator(matchType domain.QueryMatchType, val string) (string, string) {
 
-	switch matchType {
-	case query.Match:
+	switch matchType.String() {
+	case domain.QueryMatchTypeEnum.MATCH.String():
 		return "=", val
-	case query.Unmatch:
+	case domain.QueryMatchTypeEnum.UNMATCH.String():
 		return "!=", val
-	case query.Pertialmatch:
+	case domain.QueryMatchTypeEnum.PERTIALMATCH.String():
 		return "like", "%" + val + "%"
-	case query.Gt:
+	case domain.QueryMatchTypeEnum.GT.String():
 		return ">", val
-	case query.Ge:
+	case domain.QueryMatchTypeEnum.GE.String():
 		return ">=", val
-	case query.Lt:
+	case domain.QueryMatchTypeEnum.LT.String():
 		return "<", val
-	case query.Le:
+	case domain.QueryMatchTypeEnum.LE.String():
 		return "<=", val
-	case query.In:
+	case domain.QueryMatchTypeEnum.IN.String():
 		return "in", val
 	default:
 		return "=", val

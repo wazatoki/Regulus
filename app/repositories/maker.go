@@ -8,7 +8,7 @@ import (
 	"regulus/app/utils"
 	"sort"
 
-	"regulus/app/domain/query"
+	"regulus/app/domain"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -21,7 +21,7 @@ type MakerRepo struct {
 }
 
 // Select select maker data by condition from database
-func (m *MakerRepo) Select(queryItems ...*query.SearchConditionItem) ([]supplier.Maker, error) {
+func (m *MakerRepo) Select(queryItems ...*domain.SearchConditionItem) ([]supplier.Maker, error) {
 	meSlice := []supplier.Maker{}
 	queries := []qm.QueryMod{}
 	var q qm.QueryMod
@@ -218,13 +218,13 @@ func (m *MakerRepo) columnName(fieldName string) string {
 	}
 }
 
-func (m *MakerRepo) createQueryMod(queryItem *query.SearchConditionItem) qm.QueryMod {
+func (m *MakerRepo) createQueryMod(queryItem *domain.SearchConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
 	switch queryItem.SearchField.ID {
 	default:
-		if queryItem.Operator == "or" {
+		if queryItem.Operator.String() == "or" {
 			return qm.Or(m.columnName(queryItem.SearchField.ID)+" "+mt+" ?", val)
 		}
 		//queryItem.Operator = "and"
@@ -235,14 +235,14 @@ func (m *MakerRepo) createQueryMod(queryItem *query.SearchConditionItem) qm.Quer
 /*
 Sort is sort maker slice by orderItems
 */
-func Sort(makers []supplier.Maker, orderItems []query.OrderConditionItem) []supplier.Maker {
+func Sort(makers []supplier.Maker, orderItems []domain.OrderConditionItem) []supplier.Maker {
 	sort.Slice(makers, func(i int, j int) bool {
 		return compare(makers[i], makers[j], orderItems, 0)
 	})
 	return makers
 }
 
-func compare(maker1 supplier.Maker, maker2 supplier.Maker, orderItems []query.OrderConditionItem, orderIndex int) bool {
+func compare(maker1 supplier.Maker, maker2 supplier.Maker, orderItems []domain.OrderConditionItem, orderIndex int) bool {
 
 	if len(orderItems) <= orderIndex {
 		return false
@@ -254,7 +254,7 @@ func compare(maker1 supplier.Maker, maker2 supplier.Maker, orderItems []query.Or
 			orderIndex++
 			return compare(maker1, maker2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord.String() == domain.QueryOrderTypeEnum.DESC.String() {
 			return maker1.Name > maker2.Name
 		}
 		return maker1.Name < maker2.Name
@@ -264,7 +264,7 @@ func compare(maker1 supplier.Maker, maker2 supplier.Maker, orderItems []query.Or
 			orderIndex++
 			return compare(maker1, maker2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == query.Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord.String() == domain.QueryOrderTypeEnum.DESC.String() {
 			return maker1.Name > maker2.Name
 		}
 		return maker1.Name < maker2.Name

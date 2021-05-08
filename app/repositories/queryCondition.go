@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"regulus/app/domain"
-	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 	"regulus/app/utils/log"
@@ -38,7 +37,7 @@ func (q *QueryConditionRepo) Delete(id string, operatorID string) error {
 }
 
 // Update update data to database
-func (q *QueryConditionRepo) Update(queryCondition *query.Condition, operatorID string) (err error) {
+func (q *QueryConditionRepo) Update(queryCondition *domain.Condition, operatorID string) (err error) {
 	if queryCondition.ID == "" {
 		return errors.New("ID must be required")
 	}
@@ -77,8 +76,8 @@ func (q *QueryConditionRepo) Update(queryCondition *query.Condition, operatorID 
 			QueryConditionsID: sqlQueryCondition.ID,
 			SearchFieldID:     s.SearchField.ID,
 			ConditionValue:    s.ConditionValue,
-			MatchType:         string(s.MatchType),
-			Operator:          string(s.Operator),
+			MatchType:         s.MatchType.String(),
+			Operator:          s.Operator.String(),
 			RowOrder:          i,
 		}
 	}
@@ -90,7 +89,7 @@ func (q *QueryConditionRepo) Update(queryCondition *query.Condition, operatorID 
 			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			OrderFieldID:      o.OrderField.ID,
-			OrderFieldKeyWord: string(o.OrderFieldKeyWord),
+			OrderFieldKeyWord: o.OrderFieldKeyWord.String(),
 			RowOrder:          i,
 		}
 	}
@@ -148,7 +147,7 @@ func (q *QueryConditionRepo) Update(queryCondition *query.Condition, operatorID 
 }
 
 // Insert insert data to database
-func (q *QueryConditionRepo) Insert(queryCondition *query.Condition, operatorID string) (id string, err error) {
+func (q *QueryConditionRepo) Insert(queryCondition *domain.Condition, operatorID string) (id string, err error) {
 	id = ""
 	sqlQueryCondition := &sqlboiler.QueryCondition{
 		ID:            utils.CreateID(),
@@ -187,8 +186,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *query.Condition, operatorID 
 			QueryConditionsID: sqlQueryCondition.ID,
 			SearchFieldID:     s.SearchField.ID,
 			ConditionValue:    s.ConditionValue,
-			MatchType:         string(s.MatchType),
-			Operator:          string(s.Operator),
+			MatchType:         s.MatchType.String(),
+			Operator:          s.Operator.String(),
 			RowOrder:          i,
 		}
 	}
@@ -200,7 +199,7 @@ func (q *QueryConditionRepo) Insert(queryCondition *query.Condition, operatorID 
 			UpdateStaffID:     null.StringFrom(operatorID),
 			QueryConditionsID: sqlQueryCondition.ID,
 			OrderFieldID:      o.OrderField.ID,
-			OrderFieldKeyWord: string(o.OrderFieldKeyWord),
+			OrderFieldKeyWord: o.OrderFieldKeyWord.String(),
 			RowOrder:          i,
 		}
 	}
@@ -259,8 +258,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *query.Condition, operatorID 
 }
 
 // SelectByIDs select staff data by id list from database
-func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*query.Condition, err error) {
-	queryConditions = []*query.Condition{}
+func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*domain.Condition, err error) {
+	queryConditions = []*domain.Condition{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -297,7 +296,7 @@ func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*query
 }
 
 // SelectByID select staaff data by id from database
-func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *query.Condition, err error) {
+func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *domain.Condition, err error) {
 	if id == "" {
 		return nil, errors.New("id must be required")
 	}
@@ -320,8 +319,8 @@ func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *query.Condit
 }
 
 // SelectAll select all query condition data without not del from database
-func (q *QueryConditionRepo) SelectAll() (queryConditions []*query.Condition, err error) {
-	queryConditions = []*query.Condition{}
+func (q *QueryConditionRepo) SelectAll() (queryConditions []*domain.Condition, err error) {
+	queryConditions = []*domain.Condition{}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := q.createQueryModSlice()
@@ -339,7 +338,7 @@ func (q *QueryConditionRepo) SelectAll() (queryConditions []*query.Condition, er
 }
 
 // Select select query condition data by condition from database
-func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (resultQueryConditions []*query.Condition, err error) {
+func (q *QueryConditionRepo) Select(queryItems ...domain.SearchConditionItem) (resultQueryConditions []*domain.Condition, err error) {
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 
@@ -354,20 +353,20 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 			"where qc.del != true"
 
 		// 条件構築
-		searchConditionItems := []query.SearchConditionItem{}
+		searchConditionItems := []domain.SearchConditionItem{}
 
 		for _, queryItem := range queryItems {
 
 			// 検索条件がDB管理されていない場合の処理
 			if queryItem.SearchField.ID == "category-view-value" {
 
-				item := query.SearchConditionItem{
-					SearchField: query.FieldAttr{},
+				item := domain.SearchConditionItem{
+					SearchField: domain.FieldAttr{},
 				}
 				item.Operator = queryItem.Operator
-				item.MatchType = query.In
+				item.MatchType = domain.QueryMatchTypeEnum.IN
 				item.SearchField.ID = "category-name"
-				categoryNames := query.CategoryNameListByMatchType(queryItem.ConditionValue, queryItem.MatchType)
+				categoryNames := domain.CategoryNameListByMatchType(queryItem.ConditionValue, queryItem.MatchType)
 				tmpByte, _ := json.Marshal(categoryNames)
 				item.ConditionValue = string(tmpByte)
 				searchConditionItems = append(searchConditionItems, item)
@@ -415,18 +414,18 @@ func (q *QueryConditionRepo) Select(queryItems ...query.SearchConditionItem) (re
 	return
 }
 
-func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchConditionItem) (string, []string) {
+func (q *QueryConditionRepo) createQueryModWhere(queryItem domain.SearchConditionItem) (string, []string) {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
 	switch queryItem.SearchField.ID {
 	case "pattern-name":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return " or qc." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
 		}
 		return " and qc." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
 	case "is-disclose":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return " or qc." + sqlboiler.QueryConditionColumns.IsDisclose + " " + mt + " ?", []string{val}
 		}
 		return " and qc." + sqlboiler.QueryConditionColumns.IsDisclose + " " + mt + " ?", []string{val}
@@ -437,14 +436,14 @@ func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchCondition
 		for i, d := range ids {
 			convertedIDs[i] = d
 		}
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			q, _, _ := sqlx.In(" or sg.id in (?)", convertedIDs)
 			return q, ids
 		}
 		q, _, _ := sqlx.In(" and sg.id in (?)", convertedIDs)
 		return q, ids
 	case "owner":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return " or owner." + sqlboiler.StaffColumns.Name + " " + mt + " ?", []string{val}
 		}
 		return " and owner." + sqlboiler.StaffColumns.Name + " " + mt + " ?", []string{val}
@@ -455,7 +454,7 @@ func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchCondition
 		for i, d := range ids {
 			convertedIDs[i] = d
 		}
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			q, _, _ := sqlx.In(" or qc."+sqlboiler.QueryConditionColumns.CategoryName+" in (?)", convertedIDs)
 			return q, ids
 		}
@@ -463,7 +462,7 @@ func (q *QueryConditionRepo) createQueryModWhere(queryItem query.SearchCondition
 		return q, ids
 
 	default:
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return " or query_conditions." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
 		}
 		return " and query_conditions." + sqlboiler.QueryConditionColumns.PatternName + " " + mt + " ?", []string{val}
@@ -487,12 +486,12 @@ func (q *QueryConditionRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 }
 
 // QueryConditionObjectMap data mapper sqlboiler object to entities object
-func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Condition) {
-	var category *query.Category
+func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *domain.Condition) {
+	var category *domain.Category
 	var staffGroups []*domain.Group
-	var displayItemList []query.FieldAttr
-	var searchConditionList []query.SearchConditionItem
-	var orderConditionList []query.OrderConditionItem
+	var displayItemList []domain.FieldAttr
+	var searchConditionList []domain.SearchConditionItem
+	var orderConditionList []domain.OrderConditionItem
 
 	if sqc == nil {
 		return nil
@@ -501,7 +500,7 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Conditio
 	r := NewStaffGroupRepo()
 	groups, _ := r.SelectAll()
 
-	for _, category = range query.CreateCategories(groups) {
+	for _, category = range domain.CreateCategories(groups) {
 		if category.Name == sqc.CategoryName {
 			break
 		}
@@ -511,9 +510,9 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Conditio
 		staffGroups = append(staffGroups, StaffGroupObjectMap(group))
 	}
 
-	displayItemList = []query.FieldAttr{}
+	displayItemList = []domain.FieldAttr{}
 	for _, item := range sqc.R.QueryDisplayItems {
-		var displayItem query.FieldAttr
+		var displayItem domain.FieldAttr
 		for _, displayItem = range category.SearchItems.DisplayItemList {
 			if item.DisplayFieldID == displayItem.ID {
 				break
@@ -522,19 +521,19 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Conditio
 		displayItemList = append(displayItemList, displayItem)
 	}
 
-	searchConditionList = []query.SearchConditionItem{}
+	searchConditionList = []domain.SearchConditionItem{}
 	for _, item := range sqc.R.QuerySearchConditionItems {
-		var searchField query.FieldAttr
+		var searchField domain.FieldAttr
 		for _, searchField = range category.SearchItems.SearchConditionList {
 			if item.SearchFieldID == searchField.ID {
 				break
 			}
 		}
 
-		var matchTypeEnum query.MatchTypeEnum
-		var operatorEnum query.OperatorEnum
+		matchTypeEnum := domain.QueryMatchType{}
+		operatorEnum := domain.QueryOperator{}
 
-		searchConditionItem := query.SearchConditionItem{
+		searchConditionItem := domain.SearchConditionItem{
 			SearchField:    searchField,
 			ConditionValue: item.ConditionValue,
 			MatchType:      matchTypeEnum.StrToEnum(item.MatchType),
@@ -544,29 +543,29 @@ func QueryConditionObjectMap(sqc *sqlboiler.QueryCondition) (eqc *query.Conditio
 		searchConditionList = append(searchConditionList, searchConditionItem)
 	}
 
-	orderConditionList = []query.OrderConditionItem{}
+	orderConditionList = []domain.OrderConditionItem{}
 	for _, item := range sqc.R.QueryOrderConditionItems {
-		var orderField query.FieldAttr
+		var orderField domain.FieldAttr
 		for _, orderField = range category.SearchItems.OrderConditionList {
 			if item.OrderFieldID == orderField.ID {
 				break
 			}
 		}
-		var orderTypeEnum query.OrderTypeEnum
+		orderTypeEnum := domain.QueryOrderType{}
 
-		orderConditionItem := query.OrderConditionItem{
+		orderConditionItem := domain.OrderConditionItem{
 			OrderField:        orderField,
 			OrderFieldKeyWord: orderTypeEnum.StrToEnum(item.OrderFieldKeyWord),
 		}
 		orderConditionList = append(orderConditionList, orderConditionItem)
 	}
-	eqc = &query.Condition{
+	eqc = &domain.Condition{
 		ID:             sqc.ID,
 		PatternName:    sqc.PatternName,
 		Category:       category,
 		IsDisclose:     sqc.IsDisclose,
 		DiscloseGroups: staffGroups,
-		ConditionData: query.ConditionData{
+		ConditionData: domain.ConditionData{
 			DisplayItemList:     displayItemList,
 			SearchConditionList: searchConditionList,
 			OrderConditionList:  orderConditionList,

@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"reflect"
-	"regulus/app/domain/query"
+	"regulus/app/domain"
 	"regulus/app/domain/supplier"
 	"regulus/app/infrastructures/viper"
 	"testing"
@@ -274,27 +274,27 @@ func TestMakerRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*query.SearchConditionItem
+		queryItems []*domain.SearchConditionItem
 	}
-	qi1 := query.SearchConditionItem{
-		SearchField: query.FieldAttr{
+	qi1 := domain.SearchConditionItem{
+		SearchField: domain.FieldAttr{
 			ID:        "id1",
 			ViewValue: "MakerName",
-			FieldType: query.STRING,
+			FieldType: domain.QueryValueTypeEnum.STRING,
 		},
 		ConditionValue: "1",
-		MatchType:      "pertialmatch",
-		Operator:       "and",
+		MatchType:      domain.QueryMatchTypeEnum.PERTIALMATCH,
+		Operator:       domain.QueryOperatorEnum.AND,
 	}
-	qi2 := query.SearchConditionItem{
-		SearchField: query.FieldAttr{
+	qi2 := domain.SearchConditionItem{
+		SearchField: domain.FieldAttr{
 			ID:        "id1",
 			ViewValue: "MakerName",
-			FieldType: query.STRING,
+			FieldType: domain.QueryValueTypeEnum.STRING,
 		},
 		ConditionValue: "2",
-		MatchType:      "pertialmatch",
-		Operator:       "or",
+		MatchType:      domain.QueryMatchTypeEnum.PERTIALMATCH,
+		Operator:       domain.QueryOperatorEnum.OR,
 	}
 	tests := []struct {
 		name    string
@@ -327,7 +327,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.SearchConditionItem{
+				queryItems: []*domain.SearchConditionItem{
 					&qi1,
 				},
 			},
@@ -345,7 +345,7 @@ func TestMakerRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.SearchConditionItem{
+				queryItems: []*domain.SearchConditionItem{
 					&qi1,
 					&qi2,
 				},
@@ -445,7 +445,7 @@ func TestMakerRepo_SelectByIDs(t *testing.T) {
 func TestSort(t *testing.T) {
 	type args struct {
 		makers     []supplier.Maker
-		orderItems []query.OrderConditionItem
+		orderItems []domain.OrderConditionItem
 	}
 	unsortMakers := []supplier.Maker{
 		{
@@ -470,14 +470,14 @@ func TestSort(t *testing.T) {
 			name: "sort by asc",
 			args: args{
 				makers: unsortMakers,
-				orderItems: []query.OrderConditionItem{
+				orderItems: []domain.OrderConditionItem{
 					{
-						OrderField: query.FieldAttr{
+						OrderField: domain.FieldAttr{
 							ID:        "id1",
-							FieldType: query.STRING,
+							FieldType: domain.QueryValueTypeEnum.STRING,
 							ViewValue: "makerName",
 						},
-						OrderFieldKeyWord: query.Asc,
+						OrderFieldKeyWord: domain.QueryOrderTypeEnum.ASC,
 					},
 				},
 			},
@@ -500,14 +500,14 @@ func TestSort(t *testing.T) {
 			name: "sort by desc",
 			args: args{
 				makers: unsortMakers,
-				orderItems: []query.OrderConditionItem{
+				orderItems: []domain.OrderConditionItem{
 					{
-						OrderField: query.FieldAttr{
+						OrderField: domain.FieldAttr{
 							ID:        "id1",
-							FieldType: query.STRING,
+							FieldType: domain.QueryValueTypeEnum.STRING,
 							ViewValue: "makerName",
 						},
-						OrderFieldKeyWord: query.Desc,
+						OrderFieldKeyWord: domain.QueryOrderTypeEnum.DESC,
 					},
 				},
 			},

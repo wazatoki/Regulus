@@ -1,15 +1,15 @@
 package query
 
 import (
-	"regulus/app/domain/query"
+	"regulus/app/domain"
 )
 
 // persistance API用のインターフェース
 type persistance interface {
-	Insert(*query.Condition, string) (string, error)
-	Update(*query.Condition, string) error
+	Insert(*domain.Condition, string) (string, error)
+	Update(*domain.Condition, string) error
 	Delete(string, string) error
-	SelectByID(string) (*query.Condition, error)
-	SelectAll() ([]*query.Condition, error)
-	Select(...query.SearchConditionItem) ([]*query.Condition, error)
+	SelectByID(string) (*domain.Condition, error)
+	SelectAll() ([]*domain.Condition, error)
+	Select(...domain.SearchConditionItem) ([]*domain.Condition, error)
 }

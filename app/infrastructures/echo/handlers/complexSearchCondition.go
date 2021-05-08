@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	domainQuery "regulus/app/domain/query"
+	"regulus/app/domain"
 	"regulus/app/repositories"
 	"regulus/app/usecases/maintenance/master/query"
 
@@ -30,7 +30,7 @@ UpdateQueryCondition 検索条件修正用ハンドラ
 */
 func UpdateQueryCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
-	condition := &domainQuery.Condition{}
+	condition := &domain.Condition{}
 	e := c.Bind(condition)
 	if e != nil {
 		return e
@@ -47,7 +47,7 @@ AddQueryCondition 検索条件追加用ハンドラ
 */
 func AddQueryCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
-	condition := &domainQuery.Condition{}
+	condition := &domain.Condition{}
 	e := c.Bind(condition)
 	if e != nil {
 		return e
@@ -65,8 +65,8 @@ FindQueryConditionByCondition return search result of query condition
 */
 func FindQueryConditionByCondition(c echo.Context) error {
 	repo := repositories.NewQueryConditionRepo()
-	var conditionData *domainQuery.ConditionData
-	conditionData = &domainQuery.ConditionData{}
+	var conditionData *domain.ConditionData
+	conditionData = &domain.ConditionData{}
 	e := json.Unmarshal([]byte(c.QueryParam("condition")), conditionData)
 	if e != nil {
 		return c.JSON(http.StatusInternalServerError, e.Error())

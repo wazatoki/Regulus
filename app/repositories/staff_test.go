@@ -4,7 +4,6 @@ import (
 	"context"
 	"reflect"
 	"regulus/app/domain"
-	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
 
@@ -135,7 +134,7 @@ func TestStaffRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*query.SearchConditionItem
+		queryItems []*domain.SearchConditionItem
 	}
 	tests := []struct {
 		name    string
@@ -150,36 +149,36 @@ func TestStaffRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.SearchConditionItem{
+				queryItems: []*domain.SearchConditionItem{
 					{
-						SearchField: query.FieldAttr{
+						SearchField: domain.FieldAttr{
 							ID:        "name",
 							ViewValue: "利用者名称",
-							FieldType: query.STRING,
+							FieldType: domain.QueryValueTypeEnum.STRING,
 						},
 						ConditionValue: "name",
-						MatchType:      query.Pertialmatch,
-						Operator:       query.And,
+						MatchType:      domain.QueryMatchTypeEnum.PERTIALMATCH,
+						Operator:       domain.QueryOperatorEnum.AND,
 					},
 					{
-						SearchField: query.FieldAttr{
+						SearchField: domain.FieldAttr{
 							ID:        "groups",
 							ViewValue: "所属グループ",
-							FieldType: query.ARRAY,
+							FieldType: domain.QueryValueTypeEnum.ARRAY,
 						},
 						ConditionValue: "[\"staffgroupid2\"]",
-						MatchType:      query.In,
-						Operator:       query.And,
+						MatchType:      domain.QueryMatchTypeEnum.IN,
+						Operator:       domain.QueryOperatorEnum.AND,
 					},
 					{
-						SearchField: query.FieldAttr{
+						SearchField: domain.FieldAttr{
 							ID:        "groups",
 							ViewValue: "所属グループ",
-							FieldType: query.ARRAY,
+							FieldType: domain.QueryValueTypeEnum.ARRAY,
 						},
 						ConditionValue: "[\"staffgroupid3\"]",
-						MatchType:      query.In,
-						Operator:       query.Or,
+						MatchType:      domain.QueryMatchTypeEnum.IN,
+						Operator:       domain.QueryOperatorEnum.OR,
 					},
 				},
 			},

@@ -1,7 +1,6 @@
-package query
+package domain
 
 import (
-	"regulus/app/domain"
 	"regulus/app/utils"
 	"sort"
 	"strings"
@@ -14,7 +13,7 @@ Conditions *query.Conditionのスライス
 type Conditions []*Condition
 
 /*
-Sort is sort maker slice by orderItems
+Sort is sort condition slice by orderItems
 */
 func Sort(queryConditions []*Condition, orderItems ...OrderConditionItem) []*Condition {
 	sort.Slice(queryConditions, func(i int, j int) bool {
@@ -35,7 +34,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return queryCondition1.Category.ViewValue > queryCondition2.Category.ViewValue
 		}
 		return queryCondition1.Category.ViewValue < queryCondition2.Category.ViewValue
@@ -46,7 +45,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 		}
 		qc1 := utils.BoolToInt(queryCondition1.IsDisclose)
 		qc2 := utils.BoolToInt(queryCondition2.IsDisclose)
-		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return qc1 > qc2
 		}
 		return qc1 < qc2
@@ -56,7 +55,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return queryCondition1.Owner.Name > queryCondition2.Owner.Name
 		}
 		return queryCondition1.Owner.Name < queryCondition2.Owner.Name
@@ -66,7 +65,7 @@ func compare(queryCondition1 *Condition, queryCondition2 *Condition, orderItems 
 			orderIndex++
 			return compare(queryCondition1, queryCondition2, orderItems, orderIndex)
 		}
-		if orderItems[orderIndex].OrderFieldKeyWord == Desc {
+		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
 			return queryCondition1.PatternName > queryCondition2.PatternName
 		}
 		return queryCondition1.PatternName < queryCondition2.PatternName
@@ -79,18 +78,18 @@ CategoryNameListByMatchType ViewValueの値が引数の文字列sとMatchType mt
 NameのSliceを返す。
 
 */
-func CategoryNameListByMatchType(s string, mt MatchTypeEnum) (categoryNames []string) {
+func CategoryNameListByMatchType(s string, mt QueryMatchType) (categoryNames []string) {
 
-	categories := CreateCategories([]*domain.Group{})
+	categories := CreateCategories([]*Group{})
 
 	for _, category := range categories {
 
-		switch mt {
-		case Match:
+		switch mt.Value {
+		case QueryMatchTypeEnum.MATCH.Value:
 			if category.ViewValue == s {
 				categoryNames = append(categoryNames, category.Name)
 			}
-		case Unmatch:
+		case QueryMatchTypeEnum.UNMATCH.Value:
 			if category.ViewValue != s {
 				categoryNames = append(categoryNames, category.Name)
 			}
@@ -106,9 +105,9 @@ func CategoryNameListByMatchType(s string, mt MatchTypeEnum) (categoryNames []st
 
 /*
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
-optionのグループにはすべてのdomain.Groupを渡す。
+optionのグループにはすべてのGroupを渡す。
 */
-func CreateCategories(groups []*domain.Group) (categories []*Category) {
+func CreateCategories(groups []*Group) (categories []*Category) {
 
 	categories = []*Category{}
 
@@ -121,7 +120,7 @@ func CreateCategories(groups []*domain.Group) (categories []*Category) {
 	return
 }
 
-func createQueryConditionCategory(groups []*domain.Group) (category *Category) {
+func createQueryConditionCategory(groups []*Group) (category *Category) {
 
 	optionItems := []OptionItem{}
 
@@ -137,28 +136,28 @@ func createQueryConditionCategory(groups []*domain.Group) (category *Category) {
 				{
 					ID:        "pattern-name",
 					ViewValue: "検索パターン名称",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 				{
 					ID:        "category-view-value",
 					ViewValue: "カテゴリー名称",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 				{
 					ID:        "is-disclose",
 					ViewValue: "公開",
-					FieldType: BOOLEAN,
+					FieldType: QueryValueTypeEnum.BOOLEAN,
 				},
 				{
 					ID:          "disclose-groups",
 					ViewValue:   "公開先グループ",
-					FieldType:   ARRAY,
+					FieldType:   QueryValueTypeEnum.ARRAY,
 					OptionItems: optionItems,
 				},
 				{
 					ID:        "owner",
 					ViewValue: "所有者",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 			},
 			DisplayItemList:    []FieldAttr{},
@@ -170,7 +169,7 @@ func createQueryConditionCategory(groups []*domain.Group) (category *Category) {
 	return
 }
 
-func createStaffCategory(groups []*domain.Group) (category *Category) {
+func createStaffCategory(groups []*Group) (category *Category) {
 	category = &Category{
 		Name:      "staff",
 		ViewValue: "利用者",
@@ -179,22 +178,22 @@ func createStaffCategory(groups []*domain.Group) (category *Category) {
 				{
 					ID:        "account-id",
 					ViewValue: "利用者ID",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 				{
 					ID:        "name",
 					ViewValue: "利用者名称",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 				{
 					ID:        "groups",
 					ViewValue: "所属グループ",
-					FieldType: ARRAY,
+					FieldType: QueryValueTypeEnum.ARRAY,
 				},
 				{
 					ID:        "group-name",
 					ViewValue: "所属グループ名",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 			},
 			DisplayItemList:    []FieldAttr{},
@@ -205,7 +204,7 @@ func createStaffCategory(groups []*domain.Group) (category *Category) {
 	return
 }
 
-func createStaffGroupCategory(groups []*domain.Group) (category *Category) {
+func createStaffGroupCategory(groups []*Group) (category *Category) {
 	category = &Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
@@ -214,17 +213,17 @@ func createStaffGroupCategory(groups []*domain.Group) (category *Category) {
 				{
 					ID:        "name",
 					ViewValue: "グループ名称",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 				{
 					ID:        "staff-name",
 					ViewValue: "利用者名称",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 				{
 					ID:        "staff-account-id",
 					ViewValue: "利用者ID",
-					FieldType: STRING,
+					FieldType: QueryValueTypeEnum.STRING,
 				},
 			},
 			DisplayItemList:    []FieldAttr{},

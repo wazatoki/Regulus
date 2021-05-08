@@ -4,7 +4,6 @@ import (
 	"context"
 	"reflect"
 	"regulus/app/domain"
-	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"testing"
 
@@ -94,7 +93,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*query.SearchConditionItem
+		queryItems []*domain.SearchConditionItem
 	}
 	tests := []struct {
 		name    string
@@ -109,16 +108,16 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*query.SearchConditionItem{
+				queryItems: []*domain.SearchConditionItem{
 					{
-						SearchField: query.FieldAttr{
+						SearchField: domain.FieldAttr{
 							ID:        "name",
 							ViewValue: "グループ名称",
-							FieldType: query.STRING,
+							FieldType: domain.QueryValueTypeEnum.STRING,
 						},
 						ConditionValue: "name 1",
-						MatchType:      query.Pertialmatch,
-						Operator:       query.And,
+						MatchType:      domain.QueryMatchTypeEnum.PERTIALMATCH,
+						Operator:       domain.QueryOperatorEnum.AND,
 					},
 				},
 			},

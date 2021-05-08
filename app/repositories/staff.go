@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"regulus/app/domain"
-	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 
@@ -204,7 +203,7 @@ func (s *StaffRepo) SelectAll() (staffs []*domain.Staff, err error) {
 }
 
 // Select select staff data by condition from database
-func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []*domain.Staff, err error) {
+func (s *StaffRepo) Select(queryItems ...*domain.SearchConditionItem) (staffs []*domain.Staff, err error) {
 	staffs = []*domain.Staff{}
 	queries := s.createQueryModSlice()
 	var q qm.QueryMod
@@ -235,35 +234,35 @@ func (s *StaffRepo) Select(queryItems ...*query.SearchConditionItem) (staffs []*
 	return
 }
 
-func (s *StaffRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm.QueryMod {
+func (s *StaffRepo) createQueryModWhere(queryItem *domain.SearchConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
 	switch queryItem.SearchField.ID {
 	case "account-id":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("staffs."+sqlboiler.StaffColumns.AccountID+" "+mt+" ?", val)
 		}
 		return qm.And("staffs."+sqlboiler.StaffColumns.AccountID+" "+mt+" ?", val)
 	case "name":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 		}
 		return qm.And("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 	case "groups":
 		var ids []interface{}
 		json.Unmarshal([]byte(val), &ids)
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.OrIn("sg.id"+" "+mt+" ?", ids...)
 		}
 		return qm.AndIn("sg.id"+" "+mt+" ?", ids...)
 	case "group-name":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("sg.name"+" "+mt+" ?", val)
 		}
 		return qm.And("sg.name"+" "+mt+" ?", val)
 	default:
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("staffs."+sqlboiler.StaffColumns.Name+" "+mt+" ?", val)
 		}
 		// queryItem.Operator == and

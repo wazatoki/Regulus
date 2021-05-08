@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"regulus/app/domain"
-	"regulus/app/domain/query"
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 
@@ -163,7 +162,7 @@ func (g *StaffGroupRepo) SelectAll() ([]*domain.Group, error) {
 }
 
 // Select select staffGroup data by condition from database
-func (g *StaffGroupRepo) Select(queryItems ...*query.SearchConditionItem) ([]*domain.Group, error) {
+func (g *StaffGroupRepo) Select(queryItems ...*domain.SearchConditionItem) ([]*domain.Group, error) {
 	staffGroups := []*domain.Group{}
 	queries := g.createQueryModSlice()
 	var q qm.QueryMod
@@ -194,28 +193,28 @@ func (g *StaffGroupRepo) Select(queryItems ...*query.SearchConditionItem) ([]*do
 	return staffGroups, err
 }
 
-func (g *StaffGroupRepo) createQueryModWhere(queryItem *query.SearchConditionItem) qm.QueryMod {
+func (g *StaffGroupRepo) createQueryModWhere(queryItem *domain.SearchConditionItem) qm.QueryMod {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
 	switch queryItem.SearchField.ID {
 	case "name":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("staff_groups.name "+mt+" ?", val)
 		}
 		return qm.And("staff_groups.name "+mt+" ?", val)
 	case "staff-name":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("s.name "+mt+" ?", val)
 		}
 		return qm.And("s.name "+mt+" ?", val)
 	case "staff-account-id":
-		if queryItem.Operator == query.Or {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("s.account_id "+mt+" ?", val)
 		}
 		return qm.And("s.account_id "+mt+" ?", val)
 	default:
-		if queryItem.Operator == "or" {
+		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
 			return qm.Or("staff_groups.name "+mt+" ?", val)
 		}
 		//queryItem.Operator = "and"
