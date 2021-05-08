@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"regulus/app/repositories"
-	"regulus/app/usecases/login"
+	"regulus/app/usecases"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -19,7 +19,7 @@ func Login(c echo.Context) error {
 
 	repo := repositories.NewStaffRepo()
 
-	staff, token, err := login.Login(repo, m["id"].(string), m["password"].(string))
+	staff, token, err := usecases.Login(repo, m["id"].(string), m["password"].(string))
 
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, "")
