@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"regulus/app/domain"
-	"regulus/app/usecases/maintenance/master/group"
 	"regulus/app/utils/log"
 )
 
@@ -11,7 +10,7 @@ import (
 QueryFetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するユースケースです。
 
 */
-func QueryFetchDataInputFormItems(groupRepo group.Persistance) ([]*domain.Category, error) {
+func QueryFetchDataInputFormItems(groupRepo groupRepo) ([]*domain.Category, error) {
 	groups, err := groupRepo.SelectAll()
 
 	if err != nil {

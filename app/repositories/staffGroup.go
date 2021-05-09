@@ -132,7 +132,7 @@ func (g *StaffGroupRepo) SelectByID(id string) (staffGroup *domain.Group, err er
 }
 
 // SelectAll select all group data without not del from database
-func (g *StaffGroupRepo) SelectAll() ([]*domain.Group, error) {
+func (g *StaffGroupRepo) SelectAll() (domain.Groups, error) {
 	geSlice := []*domain.Group{}
 
 	err := g.database.WithDbContext(func(db *sqlx.DB) error {
