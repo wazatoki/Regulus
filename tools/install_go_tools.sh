@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# add path
+echo "export PATH=$PATH:/workspace/Regulus/tools" >> ~/.bashrc
+
 # mage
 git clone https://github.com/magefile/mage
 cd mage
