@@ -15,7 +15,7 @@ type Conditions []*Condition
 /*
 Sort is sort condition slice by orderItems
 */
-func (c *Conditions) Sort(orderItems ...OrderConditionItem) []*Condition {
+func (c *Conditions) Sort(orderItems ...OrderConditionItem) Conditions {
 	queryConditions := *c
 	sort.Slice(queryConditions, func(i int, j int) bool {
 
