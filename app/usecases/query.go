@@ -103,6 +103,6 @@ type queryRepo interface {
 	Update(*domain.Condition, string) error
 	Delete(string, string) error
 	SelectByID(string) (*domain.Condition, error)
-	SelectAll() ([]*domain.Condition, error)
+	SelectAll() (domain.Conditions, error)
 	Select(...domain.SearchConditionItem) (domain.Conditions, error)
 }

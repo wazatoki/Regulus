@@ -258,8 +258,8 @@ func (q *QueryConditionRepo) Insert(queryCondition *domain.Condition, operatorID
 }
 
 // SelectByIDs select staff data by id list from database
-func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions []*domain.Condition, err error) {
-	queryConditions = []*domain.Condition{}
+func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions domain.Conditions, err error) {
+	queryConditions = domain.Conditions{}
 	if len(ids) == 0 {
 		return nil, errors.New("id list must be required")
 	}
@@ -319,8 +319,8 @@ func (q *QueryConditionRepo) SelectByID(id string) (queryCondition *domain.Condi
 }
 
 // SelectAll select all query condition data without not del from database
-func (q *QueryConditionRepo) SelectAll() (queryConditions []*domain.Condition, err error) {
-	queryConditions = []*domain.Condition{}
+func (q *QueryConditionRepo) SelectAll() (queryConditions domain.Conditions, err error) {
+	queryConditions = domain.Conditions{}
 
 	err = q.database.WithDbContext(func(db *sqlx.DB) error {
 		queries := q.createQueryModSlice()

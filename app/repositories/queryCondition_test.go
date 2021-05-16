@@ -446,7 +446,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 		name                      string
 		fields                    fields
 		args                      args
-		wantResultQueryConditions []*domain.Condition
+		wantResultQueryConditions domain.Conditions
 		wantErr                   bool
 	}{
 		{
@@ -470,7 +470,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			wantResultQueryConditions: []*domain.Condition{
+			wantResultQueryConditions: domain.Conditions{
 				createExpectedQueryCondition5Entity(),
 			},
 			wantErr: false,
@@ -490,7 +490,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			wantResultQueryConditions: []*domain.Condition{
+			wantResultQueryConditions: domain.Conditions{
 				createExpectedQueryCondition8Entity(),
 			},
 			wantErr: false,
@@ -510,7 +510,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			wantResultQueryConditions: []*domain.Condition{
+			wantResultQueryConditions: domain.Conditions{
 				createExpectedQueryCondition9Entity(),
 			},
 			wantErr: false,
@@ -536,7 +536,7 @@ func TestQueryConditionRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			wantResultQueryConditions: []*domain.Condition{
+			wantResultQueryConditions: domain.Conditions{
 				createExpectedQueryCondition5Entity(),
 			},
 			wantErr: false,
@@ -624,7 +624,7 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 		name                string
 		fields              fields
 		args                args
-		wantQueryConditions []*domain.Condition
+		wantQueryConditions domain.Conditions
 		wantErr             bool
 	}{
 		{
@@ -638,7 +638,7 @@ func TestQueryConditionRepo_SelectByIDs(t *testing.T) {
 					"queryConditionid1",
 				},
 			},
-			wantQueryConditions: []*domain.Condition{
+			wantQueryConditions: domain.Conditions{
 				createExpectedQueryCondition0Entity(),
 				createExpectedQueryCondition1Entity(),
 			},
