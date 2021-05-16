@@ -1,16 +1,17 @@
 #!/bin/sh
 
 # mage
-GO111MODULE=off go get -u -d github.com/magefile/mage
-cd $HOME/go/1.3.1/src/github.com/magefile/mage
+git clone https://github.com/magefile/mage
+cd mage
 go run bootstrap.go
 
 # sqlboiler
 # Install sqlboiler v4
-GO111MODULE=off go get -u -t github.com/volatiletech/sqlboiler
+
+GO111MODULE=on go get -u -t github.com/volatiletech/sqlboiler/v4
 # Install an sqlboiler driver - these are seperate binaries, here we are
 # choosing postgresql
-GO111MODULE=off go get github.com/volatiletech/sqlboiler/drivers/sqlboiler-psql
+GO111MODULE=on go get github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql
 
 # sql-migrate
 GO111MODULE=off go get -v -u github.com/rubenv/sql-migrate/...
