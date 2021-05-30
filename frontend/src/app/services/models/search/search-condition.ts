@@ -8,6 +8,6 @@ SearchCondition 検索条件のパーツ
 export interface SearchCondition {
     searchField: FieldAttr
     conditionValue: string
-    matchType: string
-    operator: string
+    matchType: {value: string}
+    operator: {value: string}
 }

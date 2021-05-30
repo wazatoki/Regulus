@@ -6,8 +6,8 @@ export function createTestInstance1(): SearchCondition {
     return {
         searchField: createFieldAttr1(),
         conditionValue: 'test value',
-        matchType: 'match',
-        operator: 'and',
+        matchType: {value: 'match'},
+        operator: {value: 'and'},
     }
 }
 
@@ -15,8 +15,8 @@ export function createTestInstance2(): SearchCondition {
     return {
         searchField: createFieldAttr2(),
         conditionValue: 'test value2',
-        matchType: 'unmatch',
-        operator: 'or',
+        matchType: {value: 'unmatch'},
+        operator: {value: 'or'},
     }
 }
 

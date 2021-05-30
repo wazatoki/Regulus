@@ -81,7 +81,9 @@ type ConditionData struct {
 /*
 QueryValueType is a const type of field value
 */
-type QueryValueType struct{ Value string }
+type QueryValueType struct {
+	Value string `json:"value"`
+}
 
 func (s QueryValueType) String() string {
 	return s.Value
@@ -102,7 +104,9 @@ var QueryValueTypeEnum = struct {
 /*
 QueryMatchType is a const type of match type
 */
-type QueryMatchType struct{ Value string }
+type QueryMatchType struct {
+	Value string `json:"value"`
+}
 
 func (s QueryMatchType) String() string {
 	return s.Value
@@ -154,7 +158,9 @@ var QueryMatchTypeEnum = struct {
 /*
 QueryOperator is a const type of Operator
 */
-type QueryOperator struct{ Value string }
+type QueryOperator struct {
+	Value string `json:"value"`
+}
 
 func (s QueryOperator) String() string {
 	return s.Value

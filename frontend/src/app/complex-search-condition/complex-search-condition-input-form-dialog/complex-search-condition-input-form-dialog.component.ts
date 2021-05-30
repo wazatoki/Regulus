@@ -271,7 +271,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
       const condition: SearchCondition = {
         searchField: field,
-        conditionValue: conditionValue(field.fieldType),
+        conditionValue: conditionValue(field.fieldType.value),
         matchType: formGroup.get('matchTypeSelected').value,
         operator: formGroup.get('operatorSelected').value,
       };

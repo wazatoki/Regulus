@@ -1,5 +1,5 @@
 <div class="complex-search-condition-item">
-    <mat-grid-list cols="5" rowHeight="50px" [ngSwitch]="selectedFieldType">
+    <mat-grid-list cols="5" rowHeight="50px" [ngSwitch]="selectedFieldTypeValue">
         <mat-grid-tile>
             <mat-form-field>
                 <mat-select class="select-field-name" (selectionChange)="onSelectField()" [formControl]="fieldSelected">

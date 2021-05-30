@@ -41,9 +41,16 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     return this.formGroup.get('operatorSelected') as FormControl;
   }
 
+  get selectedFieldTypeValue() {
+    if (this.selectedFieldType) {
+      return this.selectedFieldType.value
+    }
+    return ""
+  }
+
   matchTypes: matchTypeAttr[];
   optionItems: OptionItem[];
-  selectedFieldType: string;
+  selectedFieldType: { value: string };
 
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
@@ -97,7 +104,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       this.selectedFieldType = f.fieldType;
       this.optionItems = f.optionItems
 
-      switch (f.fieldType) {
+      switch (f.fieldType.value) {
         case 'number':
           this.matchTypes = this.matchTypesForNumber;
           this.matchTypeSelected.setValue(this.matchTypes[0].name);

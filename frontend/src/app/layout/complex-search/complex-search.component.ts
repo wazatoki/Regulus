@@ -208,7 +208,6 @@ export class ComplexSearchComponent implements OnInit {
         }
       }
 
-      console.log(this.searchConditionList)
       this.searchConditionList.forEach((v, i) => {
         console.log(formGroup.get('fieldSelected').value)
         if (v.id == formGroup.get('fieldSelected').value) {
@@ -219,9 +218,9 @@ export class ComplexSearchComponent implements OnInit {
       if(field){
         const condition: SearchCondition = {
           searchField: field,
-          conditionValue: conditionValue(field.fieldType),
-          matchType: formGroup.get('matchTypeSelected').value,
-          operator: formGroup.get('operatorSelected').value,
+          conditionValue: conditionValue(field.fieldType.value),
+          matchType: {value: formGroup.get('matchTypeSelected').value},
+          operator: {value: formGroup.get('operatorSelected').value},
         };
         result.push(condition);
       }

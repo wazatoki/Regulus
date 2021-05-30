@@ -15,6 +15,10 @@ func defineRouting(e *echo.Echo) {
 
 	apiPath := "/api"
 	api := e.Group(apiPath)
+	defineComplexSearchConditionRouting(api)
+}
+
+func defineComplexSearchConditionRouting(api *echo.Group) {
 	api.Use(middleware.JWT([]byte("secret")))
 	api.GET("/complexSearchCondition", handlers.FindQueryConditionByCondition)
 	api.POST("/complexSearchCondition", handlers.AddQueryCondition)

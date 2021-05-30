@@ -202,8 +202,8 @@ describe('ComplexSearchComponent', () => {
     expect(saveData.discloseGroups).toEqual([{id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}]);
     expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
-    expect(saveData.conditionData.searchConditionList[0].matchType).toEqual('match');
-    expect(saveData.conditionData.searchConditionList[0].operator).toEqual('and');
+    expect(saveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
+    expect(saveData.conditionData.searchConditionList[0].operator.value).toEqual('and');
     expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.orderConditionList[1]);
     expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
   });

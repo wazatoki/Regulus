@@ -113,13 +113,13 @@ class TestHostComponent {
     {
       id: 'id1',
       viewValue: 'aaa-AAA',
-      fieldType: 'number',
+      fieldType: {value: 'number'},
       optionItems: null,
     },
     {
       id: 'id2',
       viewValue: 'bbb-BBB',
-      fieldType: 'string',
+      fieldType: {value: 'string'},
       optionItems: null,
     },
   ]
