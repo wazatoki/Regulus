@@ -93,7 +93,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 		database db
 	}
 	type args struct {
-		queryItems []*domain.SearchConditionItem
+		queryItems []domain.SearchConditionItem
 	}
 	tests := []struct {
 		name    string
@@ -108,7 +108,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				queryItems: []*domain.SearchConditionItem{
+				queryItems: []domain.SearchConditionItem{
 					{
 						SearchField: domain.FieldAttr{
 							ID:        "name",

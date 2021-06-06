@@ -162,63 +162,88 @@ func (g *StaffGroupRepo) SelectAll() (domain.StaffGroups, error) {
 }
 
 // Select select staffGroup data by condition from database
-func (g *StaffGroupRepo) Select(queryItems ...*domain.SearchConditionItem) (domain.StaffGroups, error) {
-	staffGroups := domain.StaffGroups{}
-	queries := g.createQueryModSlice()
-	var q qm.QueryMod
+func (g *StaffGroupRepo) Select(queryItems ...domain.SearchConditionItem) (result domain.StaffGroups, err error) {
 
-	err := g.database.WithDbContext(func(db *sqlx.DB) error {
-		q = qm.Where("staff_groups.id IS NOT NULL")
+	err = g.database.WithDbContext(func(db *sqlx.DB) error {
+		var args []interface{} = make([]interface{}, 0)
+		ids := []string{}
+
+		queryStr := "select distinct sg.id " +
+			"from staff_groups sg " +
+			"left join join_staffs_staff_groups jsg on sg.id = jsg.staff_groups_id " +
+			"left join staffs s on jsg.staffs_id = s.id " +
+			"where sg.del != true"
+
+		// 条件構築
+		searchConditionItems := []domain.SearchConditionItem{}
 
 		for _, queryItem := range queryItems {
-			q = qm.Expr(q, g.createQueryModWhere(queryItem))
+			searchConditionItems = append(searchConditionItems, queryItem)
 		}
 
-		q = qm.Expr(q, qm.And("staff_groups.del != ?", true))
+		for _, searchConditionItem := range searchConditionItems {
+			qu, pslice := g.createQueryModWhere(searchConditionItem)
+			queryStr += qu
 
-		queries = append(queries, q)
-
-		fetchedStaffGroups, err := sqlboiler.StaffGroups(queries...).All(context.Background(), db.DB)
-
-		if err == nil {
-
-			for _, fsg := range fetchedStaffGroups {
-				staffGroups = append(staffGroups, StaffGroupObjectMap(fsg))
+			for _, p := range pslice {
+				args = append(args, p)
 			}
 		}
 
+		// クエリをDBドライバに併せて再構築
+		queryStr = db.Rebind(queryStr)
+
+		// データ取得処理
+		db.Select(&ids, queryStr, args...)
+		var convertedIDs []interface{} = make([]interface{}, len(ids))
+		for i, d := range ids {
+			convertedIDs[i] = d
+		}
+		queries := g.createQueryModSlice()
+		queries = append(
+			queries,
+			qm.And("staff_groups."+sqlboiler.StaffGroupColumns.Del+" != ?", true),
+			qm.AndIn("staff_groups."+sqlboiler.StaffGroupColumns.ID+" in ?", convertedIDs...),
+		)
+		fetchedStaffGroups, err := sqlboiler.StaffGroups(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+			for _, fg := range fetchedStaffGroups {
+				result = append(result, StaffGroupObjectMap(fg))
+			}
+		}
 		return err
 	})
 
-	return staffGroups, err
+	return
 }
 
-func (g *StaffGroupRepo) createQueryModWhere(queryItem *domain.SearchConditionItem) qm.QueryMod {
+func (g *StaffGroupRepo) createQueryModWhere(queryItem domain.SearchConditionItem) (string, []string) {
 
 	mt, val := comparisonOperator(queryItem.MatchType, queryItem.ConditionValue)
 
 	switch queryItem.SearchField.ID {
 	case "name":
 		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
-			return qm.Or("staff_groups.name "+mt+" ?", val)
+			return " or sg." + sqlboiler.StaffGroupColumns.Name + " " + mt + " ?", []string{val}
 		}
-		return qm.And("staff_groups.name "+mt+" ?", val)
+		return " and sg." + sqlboiler.StaffGroupColumns.Name + " " + mt + " ?", []string{val}
 	case "staff-name":
 		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
-			return qm.Or("s.name "+mt+" ?", val)
+			return " or s." + sqlboiler.StaffColumns.Name + " " + mt + " ?", []string{val}
 		}
-		return qm.And("s.name "+mt+" ?", val)
+		return " and s." + sqlboiler.StaffColumns.Name + " " + mt + " ?", []string{val}
 	case "staff-account-id":
 		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
-			return qm.Or("s.account_id "+mt+" ?", val)
+			return " or s." + sqlboiler.StaffColumns.AccountID + " " + mt + " ?", []string{val}
 		}
-		return qm.And("s.account_id "+mt+" ?", val)
+		return " and s." + sqlboiler.StaffColumns.AccountID + " " + mt + " ?", []string{val}
 	default:
 		if queryItem.Operator.String() == domain.QueryOperatorEnum.OR.String() {
-			return qm.Or("staff_groups.name "+mt+" ?", val)
+			return " or sg." + sqlboiler.StaffGroupColumns.Name + " " + mt + " ?", []string{val}
 		}
 		//queryItem.Operator = "and"
-		return qm.And("staff_groups.name "+mt+" ?", val)
+		return " and sg." + sqlboiler.StaffGroupColumns.Name + " " + mt + " ?", []string{val}
 	}
 }
 
@@ -227,8 +252,8 @@ func (g *StaffGroupRepo) createQueryModSlice() (qslice []qm.QueryMod) {
 	qslice = append(
 		qslice,
 		qm.Select("distinct staff_groups.*"),
-		qm.InnerJoin("join_staffs_staff_groups jsg on staff_groups.id = jsg.staff_groups_id"),
-		qm.InnerJoin("staffs s on jsg.staffs_id = s.id"),
+		qm.Where("staff_groups."+sqlboiler.StaffGroupColumns.ID+" IS NOT NULL"),
+		qm.Load(qm.Rels(sqlboiler.StaffGroupRels.Staffs), qm.Where("del != true")),
 	)
 	return
 }
