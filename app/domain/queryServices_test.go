@@ -7,11 +7,11 @@ import (
 
 func createExpectedStaff1Entity() *Staff {
 	return &Staff{
-		ID:        "staffid1",
-		AccountID: "12345",
-		Name:      "name 1",
-		Password:  "password 1",
-		Groups:    createExpectedStaffGroupEntity1Slice(),
+		ID:          "staffid1",
+		AccountID:   "12345",
+		Name:        "name 1",
+		Password:    "password 1",
+		StaffGroups: createExpectedStaffGroupEntity1Slice(),
 	}
 }
 
@@ -21,42 +21,42 @@ func createExpectedStaff2Entity() *Staff {
 		AccountID: "22345",
 		Name:      "name 2",
 		Password:  "password 2",
-		Groups: Groups{
+		StaffGroups: StaffGroups{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
 }
 
-func createExpectedStaffGroup1Entity() *Group {
-	return &Group{
+func createExpectedStaffGroup1Entity() *StaffGroup {
+	return &StaffGroup{
 		ID:   "staffgroupid1",
 		Name: "staff group name 1",
 	}
 }
 
-func createExpectedStaffGroup2Entity() *Group {
-	return &Group{
+func createExpectedStaffGroup2Entity() *StaffGroup {
+	return &StaffGroup{
 		ID:   "staffgroupid2",
 		Name: "staff group name 2",
 	}
 }
 
-func createExpectedStaffGroup3Entity() *Group {
-	return &Group{
+func createExpectedStaffGroup3Entity() *StaffGroup {
+	return &StaffGroup{
 		ID:   "staffgroupid3",
 		Name: "staff group name 3",
 	}
 }
 
-func createExpectedStaffGroupEntity1Slice() Groups {
-	return Groups{
+func createExpectedStaffGroupEntity1Slice() StaffGroups {
+	return StaffGroups{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 	}
 }
 
-func createExpectedStaffGroupEntity2Slice() Groups {
-	return Groups{
+func createExpectedStaffGroupEntity2Slice() StaffGroups {
+	return StaffGroups{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 		createExpectedStaffGroup3Entity(),
@@ -163,7 +163,7 @@ var categories = []*Category{
 			SearchConditionList: staffSearchConditionList,
 			DisplayItemList:     []FieldAttr{},
 			OrderConditionList:  []FieldAttr{},
-			Groups:              createExpectedStaffGroupEntity2Slice(),
+			StaffGroups:         createExpectedStaffGroupEntity2Slice(),
 		},
 	},
 	{
@@ -173,7 +173,7 @@ var categories = []*Category{
 			SearchConditionList: staffGroupSearchConditionList,
 			DisplayItemList:     []FieldAttr{},
 			OrderConditionList:  []FieldAttr{},
-			Groups:              createExpectedStaffGroupEntity2Slice(),
+			StaffGroups:         createExpectedStaffGroupEntity2Slice(),
 		},
 	},
 	{
@@ -183,7 +183,7 @@ var categories = []*Category{
 			SearchConditionList: queryConditionSearchConditionList,
 			DisplayItemList:     []FieldAttr{},
 			OrderConditionList:  []FieldAttr{},
-			Groups:              nil,
+			StaffGroups:         nil,
 		},
 	},
 }

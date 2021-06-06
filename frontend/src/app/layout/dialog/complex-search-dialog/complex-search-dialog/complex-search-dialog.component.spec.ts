@@ -19,7 +19,7 @@ import { ComplexSearchConditionItemComponent } from '../../../complex-search/com
 import { ComplexSearchOrderItemComponent } from '../../../complex-search/complex-search-order-item/complex-search-order-item.component';
 import { CancelComponent } from '../../../form/buttons/cancel/cancel.component';
 import { DeleteComponent } from '../../../form/buttons/delete/delete.component';
-import { Group } from '../../../../services/models/group/group';
+import { StaffGroup } from '../../../../services/models/group/staff-group';
 import { FieldAttr } from '../../../../services/models/search/field-attr';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';

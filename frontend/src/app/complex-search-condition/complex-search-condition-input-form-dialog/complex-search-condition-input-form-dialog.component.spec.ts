@@ -248,7 +248,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     expect(expectSaveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
     expect(expectSaveData.conditionData.searchConditionList[0].operator.value).toEqual('and');
     expect(expectSaveData.conditionData.orderConditionList[0].orderField).toEqual(component.selectedCategory.searchItems.orderConditionList[1]);
-    expect(expectSaveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
+    expect(expectSaveData.conditionData.orderConditionList[0].orderFieldKeyWord.value).toEqual('asc');
   });
 
   it('should delete condition', () => {

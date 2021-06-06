@@ -1,5 +1,5 @@
 import { FieldAttr } from './field-attr';
-import { Group } from '../group/group';
+import { StaffGroup } from '../group/staff-group';
 
 /*
 
@@ -13,5 +13,5 @@ export interface ComplexSearchItems {
     isShowDisplayItem: boolean
     isShowOrderCondition: boolean
     isShowSaveCondition: boolean
-    groups: Group[]
+    groups: StaffGroup[]
 }

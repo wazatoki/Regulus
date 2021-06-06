@@ -5,7 +5,7 @@ import { SaveData } from 'src/app/services/models/search/save-data';
 import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl, Validators } from '@angular/forms';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { FieldAttr } from 'src/app/services/models/search/field-attr';
-import { Group } from 'src/app/services/models/group/group';
+import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
 import { SearchCondition } from 'src/app/services/models/search/search-condition';
@@ -25,7 +25,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   isShowDisplayItem: boolean = false;
   isShowOrderCondition: boolean = false;
   isShowSaveCondition: boolean = true;
-  groupList: Group[] = [];
+  groupList: StaffGroup[] = [];
   displayItemList: FieldAttr[] = [];
   searchConditionList: FieldAttr[] = [];
   orderConditionList: FieldAttr[] = [];
@@ -240,7 +240,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       });
       const condition: OrderCondition = {
         orderField: field,
-        orderFieldKeyWord: formGroup.get('orderFieldKeyWordSelected').value,
+        orderFieldKeyWord: {value: formGroup.get('orderFieldKeyWordSelected').value},
       }
       result.push(condition);
     });
@@ -272,8 +272,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       const condition: SearchCondition = {
         searchField: field,
         conditionValue: conditionValue(field.fieldType.value),
-        matchType: formGroup.get('matchTypeSelected').value,
-        operator: formGroup.get('operatorSelected').value,
+        matchType: {value: formGroup.get('matchTypeSelected').value},
+        operator: {value: formGroup.get('operatorSelected').value},
       };
       result.push(condition);
     });

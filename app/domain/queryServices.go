@@ -82,7 +82,7 @@ NameのSliceを返す。
 */
 func CategoryNameListByMatchType(s string, mt QueryMatchType) (categoryNames []string) {
 
-	categories := CreateCategories([]*Group{})
+	categories := CreateCategories(StaffGroups{})
 
 	for _, category := range categories {
 
@@ -109,7 +109,7 @@ func CategoryNameListByMatchType(s string, mt QueryMatchType) (categoryNames []s
 CreateCategories 検索パターン作成時に使用するカテゴリーリストを返す
 optionのグループにはすべてのGroupを渡す。
 */
-func CreateCategories(groups []*Group) (categories []*Category) {
+func CreateCategories(groups StaffGroups) (categories []*Category) {
 
 	categories = []*Category{}
 
@@ -122,7 +122,7 @@ func CreateCategories(groups []*Group) (categories []*Category) {
 	return
 }
 
-func createQueryConditionCategory(groups []*Group) (category *Category) {
+func createQueryConditionCategory(groups StaffGroups) (category *Category) {
 
 	optionItems := []OptionItem{}
 
@@ -164,14 +164,14 @@ func createQueryConditionCategory(groups []*Group) (category *Category) {
 			},
 			DisplayItemList:    []FieldAttr{},
 			OrderConditionList: []FieldAttr{},
-			Groups:             groups,
+			StaffGroups:        groups,
 		},
 	}
 
 	return
 }
 
-func createStaffCategory(groups []*Group) (category *Category) {
+func createStaffCategory(groups StaffGroups) (category *Category) {
 	category = &Category{
 		Name:      "staff",
 		ViewValue: "利用者",
@@ -200,13 +200,13 @@ func createStaffCategory(groups []*Group) (category *Category) {
 			},
 			DisplayItemList:    []FieldAttr{},
 			OrderConditionList: []FieldAttr{},
-			Groups:             groups,
+			StaffGroups:        groups,
 		},
 	}
 	return
 }
 
-func createStaffGroupCategory(groups []*Group) (category *Category) {
+func createStaffGroupCategory(groups StaffGroups) (category *Category) {
 	category = &Category{
 		Name:      "staff-group",
 		ViewValue: "利用者グループ",
@@ -230,7 +230,7 @@ func createStaffGroupCategory(groups []*Group) (category *Category) {
 			},
 			DisplayItemList:    []FieldAttr{},
 			OrderConditionList: []FieldAttr{},
-			Groups:             groups,
+			StaffGroups:        groups,
 		},
 	}
 	return

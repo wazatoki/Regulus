@@ -1,6 +1,6 @@
 import { ComplexSearchItems } from './complex-search-items';
 import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
-import { ceateTestArray as createTestGroupArray } from 'src/app/services/models/group/group.spec';
+import { ceateTestArray as createTestGroupArray } from 'src/app/services/models/group/staff-group.spec';
 
 export function createTestInstance1(): ComplexSearchItems {
     return {

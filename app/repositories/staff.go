@@ -47,8 +47,8 @@ func (s *StaffRepo) Update(staff *domain.Staff, operatorID string) (err error) {
 		Password:      staff.Password,
 	}
 
-	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.Groups))
-	for i, g := range staff.Groups {
+	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.StaffGroups))
+	for i, g := range staff.StaffGroups {
 		sqlStaffGroups[i] = &sqlboiler.StaffGroup{
 			ID: g.ID,
 		}
@@ -76,8 +76,8 @@ func (s *StaffRepo) Insert(staff *domain.Staff, operatorID string) (id string, e
 		Password:      staff.Password,
 	}
 
-	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.Groups))
-	for i, g := range staff.Groups {
+	sqlStaffGroups := make([]*sqlboiler.StaffGroup, len(staff.StaffGroups))
+	for i, g := range staff.StaffGroups {
 		sqlStaffGroups[i] = &sqlboiler.StaffGroup{
 			ID: g.ID,
 		}
@@ -288,16 +288,16 @@ func StaffObjectMap(ss *sqlboiler.Staff) (es *domain.Staff) {
 		return nil
 	}
 
-	groups := []*domain.Group{}
+	groups := domain.StaffGroups{}
 	for _, group := range ss.R.StaffGroups {
 		groups = append(groups, StaffGroupObjectMap(group))
 	}
 	es = &domain.Staff{
-		ID:        ss.ID,
-		AccountID: ss.AccountID,
-		Name:      ss.Name,
-		Password:  ss.Password,
-		Groups:    groups,
+		ID:          ss.ID,
+		AccountID:   ss.AccountID,
+		Name:        ss.Name,
+		Password:    ss.Password,
+		StaffGroups: groups,
 	}
 	return
 }

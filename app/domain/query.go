@@ -16,7 +16,7 @@ type ComplexSearchItems struct {
 	DisplayItemList     []FieldAttr `json:"displayItemList"`
 	SearchConditionList []FieldAttr `json:"searchConditionList"`
 	OrderConditionList  []FieldAttr `json:"orderConditionList"`
-	Groups              []*Group    `json:"groups"`
+	StaffGroups         StaffGroups `json:"staffGroups"`
 }
 
 /*
@@ -27,7 +27,7 @@ type Condition struct {
 	PatternName    string        `json:"patternName"`
 	Category       *Category     `json:"category"`
 	IsDisclose     bool          `json:"isDisclose"`
-	DiscloseGroups []*Group      `json:"discloseGroups"`
+	DiscloseGroups StaffGroups   `json:"discloseGroups"`
 	Owner          *Staff        `json:"owner"`
 	ConditionData  ConditionData `json:"conditionData"`
 }
@@ -65,7 +65,7 @@ OrderConditionItem is order condition
 */
 type OrderConditionItem struct {
 	OrderField        FieldAttr      `json:"orderField"`
-	OrderFieldKeyWord QueryOrderType `json:"orderType"` // asc, desc
+	OrderFieldKeyWord QueryOrderType `json:"orderFieldKeyWord"` // asc, desc
 }
 
 /*
@@ -188,7 +188,9 @@ var QueryOperatorEnum = struct {
 /*
 QueryOrderType is a const type of Operator
 */
-type QueryOrderType struct{ Value string }
+type QueryOrderType struct {
+	Value string `json:"value"`
+}
 
 func (s QueryOrderType) String() string {
 	return s.Value

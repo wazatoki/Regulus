@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Group } from '../../services/models/group/group';
+import { StaffGroup } from '../../services/models/group/staff-group';
 import { FieldAttr } from '../../services/models/search/field-attr';
 import { ConditionData } from '../../services/models/search/condition-data';
 import { SearchCondition } from '../../services/models/search/search-condition';
@@ -29,7 +29,7 @@ export class ComplexSearchComponent implements OnInit {
   @Input() isShowDisplayItem: boolean = false;
   @Input() isShowOrderCondition: boolean = false;
   @Input() isShowSaveCondition: boolean = false;
-  @Input() groupList: Group[] = [];
+  @Input() groupList: StaffGroup[] = [];
   @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
 
   get searchConditionFormArray() {
@@ -243,7 +243,7 @@ export class ComplexSearchComponent implements OnInit {
       if (field){
         const condition: OrderCondition = {
           orderField: field,
-          orderFieldKeyWord: formGroup.get('orderFieldKeyWordSelected').value,
+          orderFieldKeyWord: {value: formGroup.get('orderFieldKeyWordSelected').value},
         }
         result.push(condition);
       }

@@ -100,7 +100,7 @@ var categories = []*domain.Category{
 			SearchConditionList: staffSearchConditionList,
 			DisplayItemList:     []domain.FieldAttr{},
 			OrderConditionList:  []domain.FieldAttr{},
-			Groups:              createExpectedStaffGroupEntity2Slice(),
+			StaffGroups:         createExpectedStaffGroupEntity2Slice(),
 		},
 	},
 	{
@@ -110,7 +110,7 @@ var categories = []*domain.Category{
 			SearchConditionList: staffGroupSearchConditionList,
 			DisplayItemList:     []domain.FieldAttr{},
 			OrderConditionList:  []domain.FieldAttr{},
-			Groups:              createExpectedStaffGroupEntity2Slice(),
+			StaffGroups:         createExpectedStaffGroupEntity2Slice(),
 		},
 	},
 	{
@@ -120,7 +120,7 @@ var categories = []*domain.Category{
 			SearchConditionList: queryConditionSearchConditionList,
 			DisplayItemList:     []domain.FieldAttr{},
 			OrderConditionList:  []domain.FieldAttr{},
-			Groups:              nil,
+			StaffGroups:         nil,
 		},
 	},
 }

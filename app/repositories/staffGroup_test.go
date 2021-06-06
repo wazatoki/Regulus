@@ -22,36 +22,36 @@ func tearDownStaffGroupTest(con *sqlx.DB) {
 	con.Close()
 }
 
-func createExpectedStaffGroup1Entity() *domain.Group {
-	return &domain.Group{
+func createExpectedStaffGroup1Entity() *domain.StaffGroup {
+	return &domain.StaffGroup{
 		ID:   "staffgroupid1",
 		Name: "staff group name 1",
 	}
 }
 
-func createExpectedStaffGroup2Entity() *domain.Group {
-	return &domain.Group{
+func createExpectedStaffGroup2Entity() *domain.StaffGroup {
+	return &domain.StaffGroup{
 		ID:   "staffgroupid2",
 		Name: "staff group name 2",
 	}
 }
 
-func createExpectedStaffGroup3Entity() *domain.Group {
-	return &domain.Group{
+func createExpectedStaffGroup3Entity() *domain.StaffGroup {
+	return &domain.StaffGroup{
 		ID:   "staffgroupid3",
 		Name: "staff group name 3",
 	}
 }
 
-func createExpectedStaffGroupEntity1Slice() []*domain.Group {
-	return []*domain.Group{
+func createExpectedStaffGroupEntity1Slice() domain.StaffGroups {
+	return domain.StaffGroups{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 	}
 }
 
-func createExpectedStaffGroupEntity2Slice() []*domain.Group {
-	return []*domain.Group{
+func createExpectedStaffGroupEntity2Slice() domain.StaffGroups {
+	return domain.StaffGroups{
 		createExpectedStaffGroup1Entity(),
 		createExpectedStaffGroup2Entity(),
 		createExpectedStaffGroup3Entity(),
@@ -65,10 +65,10 @@ func TestStaffGroupObjectMap(t *testing.T) {
 	tests := []struct {
 		name   string
 		args   args
-		wantEg *domain.Group
+		wantEg *domain.StaffGroup
 	}{
 		{
-			name:   "convert sqlboiler.staffGroup to domain.Group",
+			name:   "convert sqlboiler.staffGroup to domain.StaffGroup",
 			args:   args{},
 			wantEg: createExpectedStaffGroup1Entity(),
 		},
@@ -99,7 +99,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []*domain.Group
+		want    domain.StaffGroups
 		wantErr bool
 	}{
 		{
@@ -121,7 +121,7 @@ func TestStaffGroupRepo_Select(t *testing.T) {
 					},
 				},
 			},
-			want: []*domain.Group{
+			want: domain.StaffGroups{
 				createExpectedStaffGroup1Entity(),
 			},
 			wantErr: false,
@@ -159,7 +159,7 @@ func TestStaffGroupRepo_SelectByID(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		wantStaffGroup *domain.Group
+		wantStaffGroup *domain.StaffGroup
 		wantErr        bool
 	}{
 		{
@@ -206,7 +206,7 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 		name            string
 		fields          fields
 		args            args
-		wantStaffGroups []*domain.Group
+		wantStaffGroups domain.StaffGroups
 		wantErr         bool
 	}{
 		{
@@ -220,7 +220,7 @@ func TestStaffGroupRepo_SelectByIDs(t *testing.T) {
 					"staffgroupid2",
 				},
 			},
-			wantStaffGroups: []*domain.Group{
+			wantStaffGroups: domain.StaffGroups{
 				createExpectedStaffGroup1Entity(),
 				createExpectedStaffGroup2Entity(),
 			},
@@ -253,7 +253,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staffGroup *domain.Group
+		staffGroup *domain.StaffGroup
 		operatorID string
 	}
 	tests := []struct {
@@ -268,7 +268,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 				database: createDB(),
 			},
 			args: args{
-				staffGroup: &domain.Group{
+				staffGroup: &domain.StaffGroup{
 					ID:   "staffgroupid3",
 					Name: "staff group name 5",
 				},
@@ -282,7 +282,7 @@ func TestStaffGroupRepo_Insert(t *testing.T) {
 			con := setUpStaffGroupTest()
 			defer tearDownStaffGroupTest(con)
 			setupTestData()
-			want := &domain.Group{
+			want := &domain.StaffGroup{
 				ID:   "staffgroupid3",
 				Name: "staff group name 5",
 			}
@@ -311,7 +311,7 @@ func TestStaffGroupRepo_Update(t *testing.T) {
 		database db
 	}
 	type args struct {
-		staffGroup *domain.Group
+		staffGroup *domain.StaffGroup
 		operatorID string
 	}
 	tests := []struct {

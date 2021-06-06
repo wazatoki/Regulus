@@ -5,14 +5,14 @@ import { createTestInstance1 as createFieldAttr1,
 export function createTestInstance1(): OrderCondition {
     return {
         orderField: createFieldAttr1(),
-        orderFieldKeyWord: 'asc',
+        orderFieldKeyWord: {value: 'asc'},
     }
 }
 
 export function createTestInstance2(): OrderCondition {
     return {
         orderField: createFieldAttr2(),
-        orderFieldKeyWord: 'desc',
+        orderFieldKeyWord: {value: 'desc'},
     }
 }
 

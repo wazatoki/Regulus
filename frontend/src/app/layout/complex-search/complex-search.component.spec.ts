@@ -18,13 +18,13 @@ import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/com
 import { DeleteComponent } from '../form/buttons/delete/delete.component';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Group } from '../../services/models/group/group';
+import { StaffGroup } from '../../services/models/group/staff-group';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
 import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
-import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/group/group.spec';
+import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/group/staff-group.spec';
 import { createTestInstance1 as createTestInstanceSaveData} from 'src/app/services/models/search/save-data.spec';
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
@@ -205,7 +205,7 @@ describe('ComplexSearchComponent', () => {
     expect(saveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
     expect(saveData.conditionData.searchConditionList[0].operator.value).toEqual('and');
     expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.orderConditionList[1]);
-    expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord).toEqual('asc');
+    expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord.value).toEqual('asc');
   });
 
   it('should delete condition', () => {
@@ -286,7 +286,7 @@ class TestHostComponent {
   displayItemList: FieldAttr[] = createTestArray();
   searchConditionList: FieldAttr[] = createTestArray();
   orderConditionList = createTestArray();
-  groupList: Group[] = ceateTestArrayGroup();
+  groupList: StaffGroup[] = ceateTestArrayGroup();
 
   saveData: SaveData = createTestInstanceSaveData()
 }

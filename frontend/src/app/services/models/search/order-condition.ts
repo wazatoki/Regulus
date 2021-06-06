@@ -7,5 +7,5 @@ OrderCondition 並び順設定のためのパーツ
 */
 export interface OrderCondition {
     orderField: FieldAttr
-    orderFieldKeyWord: string
+    orderFieldKeyWord: {value: string}
 }

@@ -24,11 +24,11 @@ func tearDownStaffTest(con *sqlx.DB) {
 
 func createExpectedStaff1Entity() *domain.Staff {
 	return &domain.Staff{
-		ID:        "staffid1",
-		AccountID: "12345",
-		Name:      "name 1",
-		Password:  "password 1",
-		Groups:    createExpectedStaffGroupEntity1Slice(),
+		ID:          "staffid1",
+		AccountID:   "12345",
+		Name:        "name 1",
+		Password:    "password 1",
+		StaffGroups: createExpectedStaffGroupEntity1Slice(),
 	}
 }
 
@@ -38,7 +38,7 @@ func createExpectedStaff2Entity() *domain.Staff {
 		AccountID: "22345",
 		Name:      "name 2",
 		Password:  "password 2",
-		Groups: []*domain.Group{
+		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
@@ -50,7 +50,7 @@ func createExpectedStaff3Entity() *domain.Staff {
 		AccountID: "32345",
 		Name:      "name 3",
 		Password:  "password 3",
-		Groups: []*domain.Group{
+		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup2Entity(),
 		},
 	}
@@ -62,7 +62,7 @@ func createExpectedStaff4Entity() *domain.Staff {
 		AccountID: "42345",
 		Name:      "name 4",
 		Password:  "password 4",
-		Groups: []*domain.Group{
+		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup3Entity(),
 		},
 	}
@@ -74,7 +74,7 @@ func createExpectedStaff5Entity() *domain.Staff {
 		AccountID: "52345",
 		Name:      "name 5",
 		Password:  "password 5",
-		Groups: []*domain.Group{
+		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup1Entity(),
 		},
 	}
@@ -371,7 +371,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 					AccountID: "62345",
 					Name:      "name 6",
 					Password:  "password 6",
-					Groups: []*domain.Group{
+					StaffGroups: domain.StaffGroups{
 						createExpectedStaffGroup1Entity(),
 						createExpectedStaffGroup2Entity(),
 					},
@@ -391,7 +391,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 				AccountID: "62345",
 				Name:      "name 6",
 				Password:  "password 6",
-				Groups: []*domain.Group{
+				StaffGroups: domain.StaffGroups{
 					createExpectedStaffGroup1Entity(),
 					createExpectedStaffGroup2Entity(),
 				},
@@ -450,7 +450,7 @@ func TestStaffRepo_Update(t *testing.T) {
 			tt.args.staff.AccountID = "1234512345"
 			tt.args.staff.Name = "name 1name 1"
 			tt.args.staff.Password = "password 1password 1"
-			tt.args.staff.Groups = []*domain.Group{
+			tt.args.staff.StaffGroups = domain.StaffGroups{
 				createExpectedStaffGroup2Entity(),
 				createExpectedStaffGroup3Entity(),
 			}
