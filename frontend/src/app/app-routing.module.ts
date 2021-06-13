@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'test', component: TestComponent },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
   { path: 'complex-search-condition-list', loadChildren: () => import('./complex-search-condition/complex-search-condition.module').then(m => m.ComplexSearchConditionModule), canActivate: [AuthGuardGuard] },
+  { path: 'staff-group', loadChildren: () => import('./staff-group/staff-group.module').then(m => m.StaffGroupModule) },
   { path: 'product-list', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },
   { path: 'maker-list', loadChildren: () => import('./maker/maker.module').then(m => m.MakerModule) },
 ];
