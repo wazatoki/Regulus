@@ -6,6 +6,7 @@ import { StaffGroupMasterComponent } from './staff-group-master/staff-group-mast
 import { LayoutModule } from '../layout/layout.module';
 import { StaffGroupSearchComponent } from './staff-group-search/staff-group-search.component';
 import { StaffGroupInputFormDialogComponent } from './staff-group-input-form-dialog/staff-group-input-form-dialog.component';
+import { NoticeDialogComponent } from '../layout/dialog/notice-dialog/notice-dialog.component';
 
 
 @NgModule({
@@ -17,6 +18,9 @@ import { StaffGroupInputFormDialogComponent } from './staff-group-input-form-dia
     CommonModule,
     StaffGroupRoutingModule,
     LayoutModule,
+  ],
+  entryComponents: [
+    NoticeDialogComponent,
   ]
 })
 export class StaffGroupModule { }
