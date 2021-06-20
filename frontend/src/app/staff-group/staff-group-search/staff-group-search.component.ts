@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { ConditionData, splitStrings } from 'src/app/services/models/search/condition-data';
+import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 
 @Component({
   selector: 'app-staff-group-search',
@@ -30,8 +31,11 @@ export class StaffGroupSearchComponent implements OnInit {
   }
 
   constructor(
-    private staffGroupService: StaffGroupService
-  ) { }
+    private staffGroupService: StaffGroupService,
+    private complexSearchService: ComplexSearchService,
+  ) { 
+    this.condition = complexSearchService.initConditionDataObj();
+  }
 
   ngOnInit() {
   }

@@ -209,7 +209,6 @@ export class ComplexSearchComponent implements OnInit {
       }
 
       this.searchConditionList.forEach((v, i) => {
-        console.log(formGroup.get('fieldSelected').value)
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }

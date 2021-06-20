@@ -5,7 +5,7 @@ import { HttpService } from '../http.service';
 import { StaffGroup } from '../models/group/staff-group';
 
 import { StaffGroupService } from './staff-group.service';
-import { ceateTestArray as createTestArrayStaffGroupData } from '../models/group/staff-group.spec';
+import { createTestInstance1 as createTestInstanceStaffGroup, ceateTestArray as createTestArrayStaffGroupData } from '../models/group/staff-group.spec';
 import { createTestInstance1 as createTestInstanceConditionData } from 'src/app/services/models/search/condition-data.spec';
 
 describe('StaffGroupService', () => {
@@ -55,6 +55,42 @@ describe('StaffGroupService', () => {
     data.set('condition', JSON.stringify(condition));
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/staffGroup', data);
   });
+
+    it('should call httpService.post with /staffGroup when called add method', () => {
+    const testData: StaffGroup = createTestInstanceStaffGroup();
+    testData.id = '';
+    const resultData: StaffGroup = createTestInstanceStaffGroup();
+    staffGroupService = TestBed.get(StaffGroupService);
+    httpServiceSpy = TestBed.get(HttpService);
+    httpServiceSpy.post.and.returnValue(of(resultData));
+
+    let result: StaffGroup;
+
+    staffGroupService.add(testData).subscribe(data => {
+      result = data
+    })
+
+    expect(result).toEqual(resultData);
+    expect(httpServiceSpy.post).toHaveBeenCalledWith('/staffGroup', testData);
+  });
+
+  it('should call httpService.put with /staffGroup when called update method', () => {
+    const testData: StaffGroup = createTestInstanceStaffGroup();
+    const resultData: StaffGroup = createTestInstanceStaffGroup();
+    staffGroupService = TestBed.get(StaffGroupService);
+    httpServiceSpy = TestBed.get(HttpService);
+    httpServiceSpy.put.and.returnValue(of(resultData));
+
+    let result: StaffGroup;
+
+    staffGroupService.update(testData).subscribe(data => {
+      result = data
+    })
+
+    expect(result).toEqual(resultData);
+    expect(httpServiceSpy.put).toHaveBeenCalledWith('/staffGroup', testData);
+  });
+
 
   it('should call httpService.delete with /staffGroup when called delete method', () => {
     const testData: string[] = ['ID1', 'ID2'];

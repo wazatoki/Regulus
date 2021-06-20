@@ -14,7 +14,15 @@ export class StaffGroupService {
     data.set('condition',JSON.stringify(condition));
     return this.http.get<StaffGroup[]>('/staffGroup', data);
   }
-  
+
+  add(data: StaffGroup): Observable<StaffGroup> {
+    return this.http.post<StaffGroup>( '/staffGroup', data );
+  }
+
+  update(data: StaffGroup): Observable<StaffGroup> {
+    return this.http.put<StaffGroup>( '/staffGroup', data );
+  }
+
   delete(data: string[]): Observable<StaffGroup[]> {
     return this.http.delete<StaffGroup>('/staffGroup', data);
   }
