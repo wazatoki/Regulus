@@ -7,6 +7,8 @@ import { LayoutModule } from '../layout/layout.module';
 import { StaffGroupSearchComponent } from './staff-group-search/staff-group-search.component';
 import { StaffGroupInputFormDialogComponent } from './staff-group-input-form-dialog/staff-group-input-form-dialog.component';
 import { NoticeDialogComponent } from '../layout/dialog/notice-dialog/notice-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -17,6 +19,8 @@ import { NoticeDialogComponent } from '../layout/dialog/notice-dialog/notice-dia
   imports: [
     CommonModule,
     StaffGroupRoutingModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
     LayoutModule,
   ],
   entryComponents: [

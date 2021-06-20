@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { StaffGroupService } from 'src/app/services/api/staff-group.service';
+import { StaffGroup } from 'src/app/services/models/group/staff-group';
+import { ConditionData, splitStrings } from 'src/app/services/models/search/condition-data';
 
 @Component({
   selector: 'app-staff-group-search',
@@ -7,7 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StaffGroupSearchComponent implements OnInit {
 
-  constructor() { }
+  private condition: ConditionData;
+
+  @Output() fetched: EventEmitter<StaffGroup[]> = new EventEmitter();
+  
+  onSearch(searchStrings: string) {
+
+    // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
+    this.condition.searchStrings = splitStrings(searchStrings)
+    this.search();
+  }
+
+  search() {
+    this.staffGroupService.findByCondition(this.condition).subscribe(
+      (res: StaffGroup[]) => {
+        this.fetched.emit(res);
+      }
+    );
+  }
+
+  constructor(
+    private staffGroupService: StaffGroupService
+  ) { }
 
   ngOnInit() {
   }
