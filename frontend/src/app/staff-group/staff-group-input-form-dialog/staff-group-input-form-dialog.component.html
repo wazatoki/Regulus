@@ -1,1 +1,40 @@
-<p>staff-group-input-form-dialog works!</p>
+<div fxFlex="95%">
+
+    <form [formGroup]='form' (ngSubmit)="onSubmit()">
+
+        <mat-dialog-content>
+
+            <mat-card class="save-data">
+                <mat-card-header>
+                    <mat-card-title>グループ</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div formGroupName="staffGroup">
+                        <mat-form-field appearance="standard">
+                            <mat-label>グループ名称</mat-label>
+                            <input class="name" matInput formControlName="name" required>
+                            <mat-error *ngIf="staffGroup.get('name').invalid">{{getNameErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </mat-card-content>
+
+                <mat-card-actions class="form-container">
+                    <mat-grid-list cols="4" rowHeight="40">
+                        <mat-grid-tile>
+                            <app-cancel (clicked)="onCancelClick()"></app-cancel>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="2">
+                            <app-clear (clicked)="onClearClick()"></app-clear>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <app-submit [buttonLabelType]="save"></app-submit>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </mat-card-actions>
+            </mat-card>
+
+        </mat-dialog-content>
+
+    </form>
+
+</div>

@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
+import { StaffGroupInputFormDialogComponent } from '../staff-group-input-form-dialog/staff-group-input-form-dialog.component';
 
 @Component({
   selector: 'app-staff-group-master',
@@ -15,12 +16,28 @@ import { StaffGroup } from 'src/app/services/models/group/staff-group';
 })
 export class StaffGroupMasterComponent implements OnInit {
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   displayedColumns: string[];
   dataSource: MatTableDataSource<StaffGroup>;
   selection: SelectionModel<StaffGroup>;
-  
+
+  onUpdateClicked(groupData: StaffGroup): void {
+    this.dialog.open(StaffGroupInputFormDialogComponent, {
+      data: {
+        groupData: groupData,
+      },
+    })
+  }
+
+  openInputForm(): void {
+    this.dialog.open(StaffGroupInputFormDialogComponent, {
+      data: {
+        groupData: null,
+      },
+    })
+  }
+
   deleteItems(): void {
     if (this.selection.selected.length === 0) {
       const dialogRef = this.dialog.open(NoticeDialogComponent, {
