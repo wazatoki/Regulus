@@ -380,7 +380,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   ngOnInit() {
     this.dialogRef.updateSize("1100px")
     // saveDataの編集のときは値をフォームに反映する
-    if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
+    if (this.data.saveData !== null && this.data.saveData !== undefined && this.data.saveData.id !== '') {
       this.setSavedDataToForm()
     }
   }
