@@ -7,11 +7,13 @@ import { createTestInstance1 as createGroupData} from 'src/app/services/models/g
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { LayoutModule } from 'src/app/layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatCardModule, MatFormFieldModule, MatGridListModule, MatInputModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { Subject } from 'rxjs';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 describe('StaffGroupInputFormDialogComponent', () => {
   let component: StaffGroupInputFormDialogComponent;
@@ -84,4 +86,48 @@ describe('StaffGroupInputFormDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should click save button', () => {
+   
+
+    (component.staffGroup as FormGroup).get('name').setValue('value1');
+
+    const formDebugElement: DebugElement = fixture.debugElement.query(By.css('form'));
+    formDebugElement.triggerEventHandler('submit', null);
+    fixture.detectChanges();
+
+    if (component.groupData.id) {
+      expect(staffGroupServiceSpy.update).toHaveBeenCalled();
+    } else {
+      expect(staffGroupServiceSpy.add).toHaveBeenCalled();
+    }
+  });
+
+  it('should create save data', async () => {
+
+    const nameDe: DebugElement = fixture.debugElement.query(By.css("input.name"));
+    const nameEl: HTMLInputElement = nameDe.nativeElement;
+    nameEl.value = 'sample name';
+    nameEl.dispatchEvent(new Event('input'));
+    
+    component.createSaveData();
+    const expectData = component.groupData;
+    expect(expectData.name).toBe('sample name');
+  });
+
+  it('should clear form', async () => {
+
+    const nameDe: DebugElement = fixture.debugElement.query(By.css("input.name"));
+    const nameEl: HTMLInputElement = nameDe.nativeElement;
+    nameEl.value = 'sample name';
+    nameEl.dispatchEvent(new Event('input'));
+
+    component.onClearClick();
+    fixture.detectChanges();
+    
+    expect(nameEl.textContent).not.toContain('sample name');
+    console.log(nameEl.textContent)
+    expect(nameEl.textContent).toEqual('')
+  });
+
 });
