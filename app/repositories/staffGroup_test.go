@@ -388,7 +388,7 @@ func TestStaffGroupRepo_Dalete(t *testing.T) {
 			g := &StaffGroupRepo{
 				database: tt.fields.database,
 			}
-			if err := g.Dalete(tt.args.id, tt.args.operatorID); (err != nil) != tt.wantErr {
+			if err := g.Delete(tt.args.id, tt.args.operatorID); (err != nil) != tt.wantErr {
 				t.Errorf("StaffGroupRepo.Dalete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 

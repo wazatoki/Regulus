@@ -14,7 +14,7 @@ import (
 )
 
 // Dalete delete data to database
-func (g *StaffGroupRepo) Dalete(id string, operatorID string) error {
+func (g *StaffGroupRepo) Delete(id string, operatorID string) error {
 	if id == "" {
 		return errors.New("id must be required")
 	}

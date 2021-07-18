@@ -31,6 +31,15 @@ func (c *Conditions) compare(queryCondition1 *Condition, queryCondition2 *Condit
 	}
 
 	switch orderItems[orderIndex].OrderField.ID {
+	case "pattern-name":
+		if queryCondition1.PatternName == queryCondition2.PatternName {
+			orderIndex++
+			return c.compare(queryCondition1, queryCondition2, orderItems, orderIndex)
+		}
+		if orderItems[orderIndex].OrderFieldKeyWord.Value == QueryOrderTypeEnum.DESC.Value {
+			return queryCondition1.PatternName > queryCondition2.PatternName
+		}
+		return queryCondition1.PatternName < queryCondition2.PatternName
 	case "category-view-value":
 		if queryCondition1.Category.ViewValue == queryCondition2.Category.ViewValue {
 			orderIndex++
@@ -162,9 +171,30 @@ func createQueryConditionCategory(groups StaffGroups) (category *Category) {
 					FieldType: QueryValueTypeEnum.STRING,
 				},
 			},
-			DisplayItemList:    []FieldAttr{},
-			OrderConditionList: []FieldAttr{},
-			StaffGroups:        groups,
+			DisplayItemList: []FieldAttr{},
+			OrderConditionList: []FieldAttr{
+				{
+					ID:        "pattern-name",
+					ViewValue: "検索パターン名称",
+					FieldType: QueryValueTypeEnum.STRING,
+				},
+				{
+					ID:        "category-view-value",
+					ViewValue: "カテゴリー名称",
+					FieldType: QueryValueTypeEnum.STRING,
+				},
+				{
+					ID:        "is-disclose",
+					ViewValue: "公開",
+					FieldType: QueryValueTypeEnum.BOOLEAN,
+				},
+				{
+					ID:        "owner",
+					ViewValue: "所有者",
+					FieldType: QueryValueTypeEnum.STRING,
+				},
+			},
+			StaffGroups: groups,
 		},
 	}
 
