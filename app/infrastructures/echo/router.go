@@ -15,15 +15,24 @@ func defineRouting(e *echo.Echo) {
 
 	apiPath := "/api"
 	api := e.Group(apiPath)
+	api.Use(middleware.JWT([]byte("secret")))
 	defineComplexSearchConditionRouting(api)
+	defineStaffGroupRouting(api)
 }
 
 func defineComplexSearchConditionRouting(api *echo.Group) {
-	api.Use(middleware.JWT([]byte("secret")))
 	api.GET("/complexSearchCondition", handlers.FindQueryConditionByCondition)
 	api.POST("/complexSearchCondition", handlers.AddQueryCondition)
 	api.PUT("/complexSearchCondition", handlers.UpdateQueryCondition)
 	api.DELETE("/complexSearchCondition", handlers.DeleteQueryCondition)
 	api.GET("/complexSearchCondition/DataInputFormItems", handlers.FetchQueryConditionDataInputFormItems)
 	api.GET("/complexSearchCondition/complexSearchItems", handlers.FetchQueryConditionSearchItems)
+}
+
+func defineStaffGroupRouting(api *echo.Group) {
+	api.GET("/staffGroup", handlers.FindStaffGroupByCondition)
+	api.POST("/staffGroup", handlers.AddStaffGroup)
+	api.PUT("/staffGroup", handlers.UpdateStaffGroup)
+	api.DELETE("/staffGroup", handlers.DeleteStaffGroup)
+	api.GET("/staffGroup/complexSearchItems", handlers.FetchStaffGroupSearchItems)
 }
