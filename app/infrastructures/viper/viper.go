@@ -3,6 +3,7 @@ package viper
 import (
 	"log"
 
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -27,6 +28,15 @@ func SetupAppConfig() {
 	if err != nil {
 		log.Panic(err.Error())
 	}
+
+	// read command line options
+	pflag.String("dbUrl", "127.0.0.1", "db host url")
+	pflag.String("dbPort", "5432", "db host port")
+	pflag.String("dbUser", "regulus", "db user")
+	pflag.String("dbPassword", "regulus", "db password")
+	pflag.String("dbName", "regulusdb", "db name")
+	pflag.Parse()
+	viper.BindPFlags(pflag.CommandLine)
 }
 
 // SetupTestConfig test用の設定読み込み

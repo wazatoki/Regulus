@@ -79,7 +79,7 @@ func Run() error {
 	os.Chdir("./build")
 	defer os.Chdir("../")
 
-	out, err := exec.Command("./regulus_linux_amd64.bin").Output()
+	out, err := exec.Command("./regulus_linux_amd64.bin", "--dbUrl=regulus_db").Output()
 	fmt.Println(string(out))
 	if err != nil {
 		return err
