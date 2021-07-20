@@ -59,7 +59,7 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
       if (this.groupData.id) {
         this.staffGroupService.update(this.groupData).subscribe(data => {
           this.dialog.open(NoticeDialogComponent, {
-            data: { contents: '検索条件を修正しました。' }
+            data: { contents: 'グループ名称を修正しました。' }
           });
         });
 
@@ -68,7 +68,7 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
 
         this.staffGroupService.add(this.groupData).subscribe(data => {
           this.dialog.open(NoticeDialogComponent, {
-            data: { contents: '検索条件を保存しました。' }
+            data: { contents: 'グループ名称を保存しました。' }
           });
         });
 

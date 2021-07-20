@@ -121,7 +121,7 @@ export class StaffGroupMasterComponent implements OnInit {
   ) {
     const initialSelection = [];
     const allowMultiSelect = true;
-    this.displayedColumns = ['select', 'name'];
+    this.displayedColumns = ['select', 'name', 'action'];
     this.dataSource = new MatTableDataSource<StaffGroup>([]);
     this.selection = new SelectionModel<StaffGroup>(allowMultiSelect, initialSelection);
 
