@@ -96,7 +96,7 @@ export class StaffGroupMasterComponent implements OnInit {
     });
   }
 
-  onFetchedSearchConditions(data: StaffGroup[]) {
+  onFetchedStaffGroups(data: StaffGroup[]) {
     this.dataSource.data = data || []
   }
 

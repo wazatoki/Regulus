@@ -11,6 +11,8 @@ import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { ceateTestArray } from 'src/app/services/models/group/staff-group.spec';
 
 import { StaffGroupMasterComponent } from './staff-group-master.component';
+import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
+import { of } from 'rxjs';
 
 describe('StaffGroupMasterComponent', () => {
   let component: StaffGroupMasterComponent;
@@ -65,7 +67,7 @@ describe('StaffGroupMasterComponent', () => {
 
     expect(element.textContent).toContain('グループ名称');
 
-    component.onFetchedSearchConditions(testData);
+    component.onFetchedStaffGroups(testData);
     fixture.detectChanges();
     expect(element.textContent).toContain('TEST_GROUP_NAME_1');
     expect(element.textContent).toContain('TEST_GROUP_NAME_2');
@@ -73,7 +75,7 @@ describe('StaffGroupMasterComponent', () => {
 
   it('select item as all checked', () => {
 
-    component.onFetchedSearchConditions(testData);
+    component.onFetchedStaffGroups(testData);
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
@@ -87,4 +89,52 @@ describe('StaffGroupMasterComponent', () => {
 
     });
   });
+
+  it('select item as checked', () => {
+
+    component.onFetchedStaffGroups(testData);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkbox = checkboxList[1];
+      checkbox.dispatchEvent(new Event('click'));
+      fixture.detectChanges();
+      expect(component.selection.selected.length).toBe(1);
+
+    });
+  });
+
+  it('click delete without select', () => {
+    component.deleteItems();
+    expect(component.dialog.open).toHaveBeenCalledWith(NoticeDialogComponent, {
+      data: { contents: '削除対象が選択されていません。' }
+    })
+  });
+
+  it('click delete with select', () => {
+
+    const spy: jasmine.SpyObj<StaffGroupService> = TestBed.get(StaffGroupService);
+    const stubValue = of(testData);
+    spy.delete.and.returnValue(stubValue);
+    
+    component.onFetchedStaffGroups(testData);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkbox = checkboxList[1];
+      checkbox.dispatchEvent(new Event('click'));
+      fixture.detectChanges();
+
+      component.execDeleteItems();
+      expect(spy.delete).toHaveBeenCalled();
+
+    });
+  });
+
 });
