@@ -7,6 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LayoutModule } from 'src/app/layout/layout.module';
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 import { StaffGroupSearchComponent } from '../staff-group-search/staff-group-search.component';
+import { StaffGroup } from 'src/app/services/models/group/staff-group';
+import { ceateTestArray } from 'src/app/services/models/group/staff-group.spec';
 
 import { StaffGroupMasterComponent } from './staff-group-master.component';
 
@@ -15,6 +17,7 @@ describe('StaffGroupMasterComponent', () => {
   let fixture: ComponentFixture<StaffGroupMasterComponent>;
   let dbElement: DebugElement;
   let element: HTMLElement;
+  let testData: StaffGroup[];
 
   beforeEach(async(() => {
 
@@ -51,9 +54,20 @@ describe('StaffGroupMasterComponent', () => {
     dbElement = fixture.debugElement;
     element = dbElement.nativeElement;
     fixture.detectChanges();
+    testData = ceateTestArray();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should explain table', () => {
+
+    expect(element.textContent).toContain('グループ名称');
+
+    component.onFetchedSearchConditions(testData);
+    fixture.detectChanges();
+    expect(element.textContent).toContain('TEST_GROUP_NAME_1');
+    expect(element.textContent).toContain('TEST_GROUP_NAME_2');
   });
 });
