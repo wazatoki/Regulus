@@ -137,7 +137,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
 
-      component.deleteItems();
+      component.execDeleteItems();
       expect(spy.delete).toHaveBeenCalled();
 
     });

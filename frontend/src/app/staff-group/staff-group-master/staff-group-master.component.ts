@@ -57,38 +57,43 @@ export class StaffGroupMasterComponent implements OnInit {
 
       dialogref.afterClosed().subscribe(result => {
         if (result === TRUE) {
-          // 削除処理
-          const data: string[] = [];
-
-          this.selection.selected.forEach((staffGroup: StaffGroup) => {
-            data.push(staffGroup.id);
-          });
-
-          this.staffGroupService.delete(data).subscribe((res: StaffGroup[]) => {
-            if (res.length > 0) {
-              let str: string;
-              str = '以下のdataが削除できませんでした。<br/>';
-
-              res.forEach((s: StaffGroup) => {
-                str += '・' + s.name + '<br/>';
-              });
-
-              this.dialog.open(NoticeDialogComponent, {
-                data: { contents: str }
-              });
-            } else {
-              let str: string;
-              str = '選択したデータを削除しました。';
-
-              this.dialog.open(NoticeDialogComponent, {
-                data: { contents: str }
-              });
-            }
-          });
+          
+          this.execDeleteItems()
 
         }
       });
     }
+  }
+
+  execDeleteItems(): void {
+
+    const data: string[] = [];
+
+    this.selection.selected.forEach((staffGroup: StaffGroup) => {
+      data.push(staffGroup.id);
+    });
+
+    this.staffGroupService.delete(data).subscribe((res: StaffGroup[]) => {
+      if (res.length > 0) {
+        let str: string;
+        str = '以下のデータが削除できませんでした。<br/>';
+
+        res.forEach((s: StaffGroup) => {
+          str += '・' + s.name + '<br/>';
+        });
+
+        this.dialog.open(NoticeDialogComponent, {
+          data: { contents: str }
+        });
+      } else {
+        let str: string;
+        str = '選択したデータを削除しました。';
+
+        this.dialog.open(NoticeDialogComponent, {
+          data: { contents: str }
+        });
+      }
+    });
   }
 
   onFetchedSearchConditions(data: StaffGroup[]) {

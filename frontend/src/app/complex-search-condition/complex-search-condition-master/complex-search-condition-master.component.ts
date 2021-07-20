@@ -7,6 +7,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
+import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
+import { TRUE } from 'src/app/services/models/enum/boolean';
 
 @Component({
   selector: 'app-complex-search-condition-master',
@@ -15,7 +17,7 @@ import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-
 })
 export class ComplexSearchConditionMasterComponent implements OnInit {
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   displayedColumns: string[];
   dataSource: MatTableDataSource<SaveData>;
@@ -54,25 +56,52 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
         data: { contents: '削除対象が選択されていません。' }
       });
     } else {
-      const data: string[] = [];
-      this.selection.selected.forEach((saveData: SaveData) => {
-        data.push(saveData.id);
+
+      // 削除前の確認
+      const dialogref = this.dialog.open(AlertDialogComponent, {
+        data: {
+          title: '確認',
+          contents: '選択したデータを削除しますか？',
+        }
       });
-      this.complexSearchConditionService.delete(data).subscribe((res: SaveData[]) => {
-        if (res.length > 0) {
-          let str: string;
-          str = '以下のdataが削除できませんでした。<br/>';
 
-          res.forEach((s: SaveData) => {
-            str += '・' + s.patternName + '<br/>';
-          });
+      dialogref.afterClosed().subscribe(result => {
+        if (result === TRUE) {
 
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: str }
-          });
+          this.execDeleteItems();
         }
       });
     }
+  }
+
+  execDeleteItems(): void {
+    const data: string[] = [];
+
+    this.selection.selected.forEach((saveData: SaveData) => {
+      data.push(saveData.id);
+    });
+
+    this.complexSearchConditionService.delete(data).subscribe((res: SaveData[]) => {
+      if (res.length > 0) {
+        let str: string;
+        str = '以下のデータが削除できませんでした。<br/>';
+
+        res.forEach((s: SaveData) => {
+          str += '・' + s.patternName + '<br/>';
+        });
+
+        this.dialog.open(NoticeDialogComponent, {
+          data: { contents: str }
+        });
+      } else {
+        let str: string;
+        str = '選択したデータを削除しました。';
+
+        this.dialog.open(NoticeDialogComponent, {
+          data: { contents: str }
+        });
+      }
+    });
   }
 
   onFetchedSearchConditions(data: SaveData[]) {
