@@ -70,4 +70,21 @@ describe('StaffGroupMasterComponent', () => {
     expect(element.textContent).toContain('TEST_GROUP_NAME_1');
     expect(element.textContent).toContain('TEST_GROUP_NAME_2');
   });
+
+  it('select item as all checked', () => {
+
+    component.onFetchedSearchConditions(testData);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkbox = checkboxList[0];
+      checkbox.dispatchEvent(new Event('click'));
+      fixture.detectChanges();
+      expect(component.selection.selected.length).toBe(2);
+
+    });
+  });
 });
