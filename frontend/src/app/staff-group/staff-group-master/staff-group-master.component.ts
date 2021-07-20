@@ -4,8 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
+import { TRUE } from 'src/app/services/models/enum/boolean';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { StaffGroupInputFormDialogComponent } from '../staff-group-input-form-dialog/staff-group-input-form-dialog.component';
 
@@ -44,22 +46,46 @@ export class StaffGroupMasterComponent implements OnInit {
         data: { contents: '削除対象が選択されていません。' }
       });
     } else {
-      const data: string[] = [];
-      this.selection.selected.forEach((staffGroup: StaffGroup) => {
-        data.push(staffGroup.id);
+
+      // 削除前の確認
+      const dialogref = this.dialog.open(AlertDialogComponent, {
+        data: {
+          title: '確認',
+          contents: '選択したデータを削除しますか？',
+        }
       });
-      this.staffGroupService.delete(data).subscribe((res: StaffGroup[]) => {
-        if (res.length > 0) {
-          let str: string;
-          str = '以下のdataが削除できませんでした。<br/>';
 
-          res.forEach((s: StaffGroup) => {
-            str += '・' + s.name + '<br/>';
+      dialogref.afterClosed().subscribe(result => {
+        if (result === TRUE) {
+          // 削除処理
+          const data: string[] = [];
+
+          this.selection.selected.forEach((staffGroup: StaffGroup) => {
+            data.push(staffGroup.id);
           });
 
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: str }
+          this.staffGroupService.delete(data).subscribe((res: StaffGroup[]) => {
+            if (res.length > 0) {
+              let str: string;
+              str = '以下のdataが削除できませんでした。<br/>';
+
+              res.forEach((s: StaffGroup) => {
+                str += '・' + s.name + '<br/>';
+              });
+
+              this.dialog.open(NoticeDialogComponent, {
+                data: { contents: str }
+              });
+            } else {
+              let str: string;
+              str = '選択したデータを削除しました。';
+
+              this.dialog.open(NoticeDialogComponent, {
+                data: { contents: str }
+              });
+            }
           });
+
         }
       });
     }
