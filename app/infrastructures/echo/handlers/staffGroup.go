@@ -37,7 +37,7 @@ func UpdateStaffGroup(c echo.Context) error {
 	}
 	err := usecases.GroupUpdate(staffGroup, repo, getAuthStaffID(c))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, newErrorInfo(err.Error(), http.StatusInternalServerError, "Internal Server Error"))
 	}
 	return c.JSON(http.StatusOK, nil)
 }
@@ -54,7 +54,8 @@ func AddStaffGroup(c echo.Context) error {
 	}
 	result, err := usecases.GroupAdd(staffGroup, repo, getAuthStaffID(c))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+
+		return c.JSON(http.StatusInternalServerError, newErrorInfo(err.Error(), http.StatusInternalServerError, "Internal Server Error"))
 	}
 
 	return c.JSON(http.StatusOK, *result)
@@ -72,7 +73,7 @@ func FindStaffGroupByCondition(c echo.Context) error {
 	}
 	result, err := usecases.GroupFind(conditionData, repo)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, newErrorInfo(err.Error(), http.StatusInternalServerError, "Internal Server Error"))
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -92,5 +93,5 @@ func FetchStaffGroupSearchItems(c echo.Context) error {
 			return c.JSON(http.StatusOK, category.SearchItems)
 		}
 	}
-	return c.JSON(http.StatusInternalServerError, "search items is blank")
+	return c.JSON(http.StatusInternalServerError, newErrorInfo("search items is blank", http.StatusInternalServerError, "Internal Server Error"))
 }

@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"errors"
 	"regulus/app/domain"
 	"regulus/app/utils/log"
 )
@@ -54,6 +55,27 @@ GroupUpdate は検索条件更新時のユースケースです。
 */
 func GroupUpdate(staffGroup *domain.StaffGroup, groupRepo groupRepo, operatorID string) error {
 
+	// nameの重複をチェック
+	condition := &domain.SearchConditionItem{
+		SearchField: domain.FieldAttr{
+			ID: "name",
+		},
+		ConditionValue: staffGroup.Name,
+		MatchType:      domain.QueryMatchTypeEnum.MATCH,
+		Operator:       domain.QueryOperatorEnum.AND,
+	}
+	g, e := groupRepo.Select(*condition)
+
+	if e != nil {
+		log.Error("usecases:GroupAdd:message:" + e.Error())
+		return e
+	}
+
+	if g != nil {
+		log.Error("usecases:GroupAdd:message: duplicate staffGroup name")
+		return errors.New("duplicate-staffGroup-name")
+	}
+
 	err := groupRepo.Update(staffGroup, operatorID)
 
 	if err != nil {
@@ -69,6 +91,27 @@ GroupAdd は検索条件追加時のユースケースです。成功した場�
 
 */
 func GroupAdd(staffGroup *domain.StaffGroup, groupRepo groupRepo, operatorID string) (*domain.StaffGroup, error) {
+
+	// nameの重複をチェック
+	condition := &domain.SearchConditionItem{
+		SearchField: domain.FieldAttr{
+			ID: "name",
+		},
+		ConditionValue: staffGroup.Name,
+		MatchType:      domain.QueryMatchTypeEnum.MATCH,
+		Operator:       domain.QueryOperatorEnum.AND,
+	}
+	g, e := groupRepo.Select(*condition)
+
+	if e != nil {
+		log.Error("usecases:GroupAdd:message:" + e.Error())
+		return nil, e
+	}
+
+	if g != nil {
+		log.Error("usecases:GroupAdd:message: duplicate staffGroup name")
+		return nil, errors.New("duplicate-staffGroup-name")
+	}
 
 	id, err := groupRepo.Insert(staffGroup, operatorID)
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class HttpService {
     return params;
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleErroraa(error: HttpErrorResponse) {
     console.log(error)
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -41,35 +41,58 @@ export class HttpService {
       'Something bad happened; please try again later.');
   };
 
-  get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T> {
+  private handleError<T>(operation = 'operation') {
+    return (error: any): Observable<T | HttpErrorResponse> => {
+  
+      console.log(error); 
+      let result: HttpErrorResponse
+      result = new HttpErrorResponse({error: error})
+
+      if (error.error instanceof ErrorEvent) {
+        // A client-side or network error occurred. Handle it accordingly.
+        console.error('An error occurred at ' + operation + ':', error.error.message);
+      } else {
+        // The backend returned an unsuccessful response code.
+        // The response body may contain clues as to what went wrong,
+        console.error(
+          `Backend returned code ${error.status}, ` +
+          `body was: ${error.error}`);
+      }
+      // 空の結果を返して、アプリを持続可能にする
+      return of(result);
+      
+    };
+  }
+
+  get<T>(path: string, data: Map<string, string> = new Map<string, string>()): Observable<T | HttpErrorResponse> {
     return this.client.get<T>(`${this.API_URL}${path}`, {
       params: this.getHttpParams(data)
     })
       .pipe(
         retry(3),
-        catchError(this.handleError)
+        catchError(this.handleError<T | HttpErrorResponse>('get'))
       );
   }
 
-  post<T>(path: string, data: T): Observable<T> {
+  post<T>(path: string, data: T): Observable<T | HttpErrorResponse> {
 
     return this.client.post<T>(`${this.API_URL}${path}`, data)
       .pipe(
         retry(3),
-        catchError(this.handleError)
+        catchError(this.handleError<T | HttpErrorResponse>('post'))
       );
   }
 
-  put<T>(path: string, data: T): Observable<T> {
+  put<T>(path: string, data: T): Observable<T | HttpErrorResponse> {
 
     return this.client.put<T>(`${this.API_URL}${path}`, data)
       .pipe(
         retry(3),
-        catchError(this.handleError)
+        catchError(this.handleError<T | HttpErrorResponse>('put'))
       );
   }
 
-  delete<T>(path: string, data: string[]): Observable<T[]> {
+  delete<T>(path: string, data: string[]): Observable<T[] | HttpErrorResponse> {
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -83,7 +106,8 @@ export class HttpService {
     return this.client.delete<T[]>(`${this.API_URL}${path}`, options)
     .pipe(
       retry(3),
-      catchError(this.handleError)
+      catchError(this.handleError<T[] | HttpErrorResponse>('delete'))
     );
   }
 }
+

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +15,7 @@ import { StaffGroup } from 'src/app/services/models/group/staff-group';
 export class StaffGroupInputFormDialogComponent implements OnInit {
 
   form: FormGroup;
-  
+
   get groupData(): StaffGroup {
     return this.data.groupData;
   }
@@ -26,7 +27,7 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
   setSavedDataToForm() {
 
     this.staffGroup.get('name').setValue(this.groupData.name)
-     
+
   }
 
   onClearClick(): void {
@@ -57,25 +58,56 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
       this.createSaveData();
 
       if (this.groupData.id) {
-        this.staffGroupService.update(this.groupData).subscribe(data => {
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: 'グループ名称を修正しました。' }
-          });
-        });
+        this.staffGroupService.update(this.groupData).subscribe((data: StaffGroup | HttpErrorResponse) => {
 
+          if (data instanceof HttpErrorResponse == true) {
+
+            if ((data as HttpErrorResponse).error == "duplicate-staffGroup-name") {
+              this.dialog.open(NoticeDialogComponent, {
+                data: { contents: 'グループ名称が重複しています。' }
+              });
+            } else {
+              this.dialog.open(NoticeDialogComponent, {
+                data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
+              });
+            }
+
+          }else{
+
+            this.dialog.open(NoticeDialogComponent, {
+              data: { contents: 'グループ名称を修正しました。' }
+            });
+
+          }
+        });
 
       } else {
 
-        this.staffGroupService.add(this.groupData).subscribe(data => {
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: 'グループ名称を保存しました。' }
-          });
+        this.staffGroupService.add(this.groupData).subscribe((data: StaffGroup | HttpErrorResponse) => {
+
+          if (data instanceof HttpErrorResponse == true) {
+
+            if ((data as HttpErrorResponse).error == "duplicate-staffGroup-name") {
+              this.dialog.open(NoticeDialogComponent, {
+                data: { contents: 'グループ名称が重複しています。' }
+              });
+            } else {
+              this.dialog.open(NoticeDialogComponent, {
+                data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
+              });
+            }
+
+          }else{
+
+            this.dialog.open(NoticeDialogComponent, {
+              data: { contents: 'グループ名称を保存しました。' }
+            });
+
+          }
         });
 
       }
-
     }
-
   }
 
   getNameErrorMessage() {

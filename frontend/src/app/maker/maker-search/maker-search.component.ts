@@ -9,6 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ComplexSearchDialogComponent } from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
 import { SaveData } from 'src/app/services/models/search/save-data';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-maker-search',
@@ -88,7 +89,10 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
   search() {
     this.makerService.findByCondition(this.condition).subscribe(
       makers => {
-        this.fetched.emit(makers);
+        if (makers instanceof HttpErrorResponse !== true) {
+          this.fetched.emit(makers as Maker[]);
+        }
+        
       }
     );
   }

@@ -5,21 +5,22 @@ import { SaveData } from '../models/search/save-data';
 import { ConditionData } from '../models/search/condition-data';
 import { Category } from '../models/search/category';
 import { ComplexSearchItems } from '../models/search/complex-search-items';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComplexSearchConditionService {
 
-  findAllCategories(): Observable<Category[]> {
+  findAllCategories(): Observable<Category[] | HttpErrorResponse> {
     return this.http.get<Category[]>('/complexSearchCondition/DataInputFormItems');
   }
 
-  findComplexSearchItems(): Observable<ComplexSearchItems> {
+  findComplexSearchItems(): Observable<ComplexSearchItems | HttpErrorResponse> {
     return this.http.get<ComplexSearchItems>('/complexSearchCondition/complexSearchItems')
   }
 
-  findByCondition(condition: ConditionData): Observable<SaveData[]> {
+  findByCondition(condition: ConditionData): Observable<SaveData[] | HttpErrorResponse> {
     const data: Map<string, string> = new Map();
     data.set('condition',JSON.stringify(condition));
     return this.http.get<SaveData[]>('/complexSearchCondition', data);
@@ -33,7 +34,7 @@ export class ComplexSearchConditionService {
   //   return this.http.put<SaveData>( '/complexSearchCondition', data );
   // }
 
-  delete(data: string[]): Observable<SaveData[]> {
+  delete(data: string[]): Observable<SaveData[] | HttpErrorResponse> {
     return this.http.delete<SaveData>('/complexSearchCondition', data);
   }
 
