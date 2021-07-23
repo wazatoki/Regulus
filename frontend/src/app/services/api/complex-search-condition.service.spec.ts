@@ -41,7 +41,7 @@ describe('ComplexSearchConditionService', () => {
 
 
 
-  it('should call httpService.get with /complexSearchCondition/DataInputFormItems when called findAllCategories method', () => {
+  it('should call httpService.get with /complexSearchCondition/dataInputFormItems when called findAllCategories method', () => {
     const testData: Category[] = ceateTestArrayForMasterMaintenanceTest();
 
     complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
@@ -56,7 +56,7 @@ describe('ComplexSearchConditionService', () => {
     })
 
     expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/DataInputFormItems');
+    expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/dataInputFormItems');
   });
 
   it('should call httpService.get with /complexSearchCondition/categories when called findComplexSearchItems method', () => {

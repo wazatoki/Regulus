@@ -9,7 +9,7 @@
     </div>
 
     <div class="contents">
-        <app-complex-search-condition-search (fetched)="onFetchedSearchConditions($event)"></app-complex-search-condition-search>
+        <app-complex-search-condition-search (searchClicked)="search($event)" [condition]="conditionData"></app-complex-search-condition-search>
 
         <table mat-table [dataSource]="dataSource">
 

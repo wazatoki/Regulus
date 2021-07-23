@@ -13,5 +13,5 @@ export interface ComplexSearchItems {
     isShowDisplayItem: boolean
     isShowOrderCondition: boolean
     isShowSaveCondition: boolean
-    groups: StaffGroup[]
+    staffGroups: StaffGroup[]
 }

@@ -25,7 +25,7 @@ func defineComplexSearchConditionRouting(api *echo.Group) {
 	api.POST("/complexSearchCondition", handlers.AddQueryCondition)
 	api.PUT("/complexSearchCondition", handlers.UpdateQueryCondition)
 	api.DELETE("/complexSearchCondition", handlers.DeleteQueryCondition)
-	api.GET("/complexSearchCondition/DataInputFormItems", handlers.FetchQueryConditionDataInputFormItems)
+	api.GET("/complexSearchCondition/dataInputFormItems", handlers.FetchQueryConditionDataInputFormItems)
 	api.GET("/complexSearchCondition/complexSearchItems", handlers.FetchQueryConditionSearchItems)
 }
 

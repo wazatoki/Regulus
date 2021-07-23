@@ -13,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class ComplexSearchConditionService {
 
   findAllCategories(): Observable<Category[] | HttpErrorResponse> {
-    return this.http.get<Category[]>('/complexSearchCondition/DataInputFormItems');
+    return this.http.get<Category[]>('/complexSearchCondition/dataInputFormItems');
   }
 
   findComplexSearchItems(): Observable<ComplexSearchItems | HttpErrorResponse> {

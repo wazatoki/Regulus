@@ -348,8 +348,8 @@ func (q *QueryConditionRepo) Select(queryItems ...domain.SearchConditionItem) (r
 		queryStr := "select distinct qc.id " +
 			"from query_conditions qc " +
 			"inner join staffs owner on qc.owner_id = owner.id " +
-			"inner join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
-			"inner join staff_groups sg on jqcsg.staff_groups_id = sg.id " +
+			"left join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
+			"left join staff_groups sg on jqcsg.staff_groups_id = sg.id " +
 			"where qc.del != true"
 
 		// 条件構築

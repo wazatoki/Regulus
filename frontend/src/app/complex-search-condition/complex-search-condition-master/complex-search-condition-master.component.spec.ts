@@ -28,7 +28,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
 
   beforeEach(async(() => {
 
-    const spy = jasmine.createSpyObj('ComplexSearchConditionService', ['delete']);
+    const spy = jasmine.createSpyObj('ComplexSearchConditionService', ['delete', 'findByCondition']);
     const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
@@ -141,6 +141,22 @@ describe('ComplexSearchConditionMasterComponent', () => {
       expect(spy.delete).toHaveBeenCalled();
 
     });
+  });
+
+  it('called api when onSearch execute', () => {
+    const spy: jasmine.SpyObj<ComplexSearchConditionService>  = TestBed.get(ComplexSearchConditionService);
+    const searchWords = 'aaa bbb ccc';
+    const condition = {
+      searchStrings: ['aaa','bbb','ccc'],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    };
+    const data: SaveData[] = createTestArray();
+    spy.findByCondition.and.returnValue(of(data))
+    component.search(condition);
+
+    expect(spy.findByCondition).toHaveBeenCalledWith(condition);
   });
 
 });

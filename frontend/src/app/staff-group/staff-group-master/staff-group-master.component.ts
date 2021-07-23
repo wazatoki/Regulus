@@ -51,10 +51,14 @@ export class StaffGroupMasterComponent implements OnInit {
   }
 
   onUpdateClicked(groupData: StaffGroup): void {
-    this.dialog.open(StaffGroupInputFormDialogComponent, {
+    const dialogRef = this.dialog.open(StaffGroupInputFormDialogComponent, {
       data: {
         groupData: groupData,
       },
+    })
+
+    dialogRef.componentInstance.submitted.subscribe(() => {
+      this.search(this.conditionData)
     })
   }
 

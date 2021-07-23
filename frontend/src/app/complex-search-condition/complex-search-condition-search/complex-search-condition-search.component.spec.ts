@@ -56,23 +56,4 @@ describe('ComplexSearchConditionSearchComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('called api when onSearch execute', () => {
-    complexSearchConditionServiceSpy = TestBed.get(ComplexSearchConditionService);
-    const searchWords = 'aaa bbb ccc';
-    const condition = {
-      searchStrings: ['aaa','bbb','ccc'],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    };
-    const data: SaveData[] = createTestArray();
-    complexSearchConditionServiceSpy.findByCondition.and.returnValue(of(data))
-    component.onSearch(searchWords);
-
-    component.fetched.subscribe( (res: SaveData[]) => {
-      expect(res).toBe(data);
-    });
-
-    expect(complexSearchConditionServiceSpy.findByCondition).toHaveBeenCalledWith(condition);
-  });
 });

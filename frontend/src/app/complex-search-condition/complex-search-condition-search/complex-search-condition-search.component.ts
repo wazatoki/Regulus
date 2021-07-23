@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
@@ -18,12 +18,13 @@ import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notic
 })
 export class ComplexSearchConditionSearchComponent implements OnInit {
 
-  private condition: ConditionData;
   private complexSearchSubscription: Subscription;
   private saveData: SaveData;
   private dialogRef: MatDialogRef<ComplexSearchDialogComponent>;
 
-  @Output() fetched: EventEmitter<SaveData[]> = new EventEmitter();
+  @Input() condition: ConditionData;
+
+  @Output() searchClicked: EventEmitter<ConditionData> = new EventEmitter();
 
   openComplexSearch() {
     this.complexSearchConditionService.findComplexSearchItems().subscribe((data: ComplexSearchItems) => {
@@ -40,28 +41,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
 
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
     this.condition.searchStrings = splitStrings(searchStrings)
-    this.search();
-  }
-
-  search() {
-
-    this.complexSearchConditionService.findByCondition(this.condition).subscribe(
-      (res: SaveData[] | HttpErrorResponse) => {
-
-        if (res instanceof HttpErrorResponse == true) {
-
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
-          });
-
-        } else {
-
-          this.fetched.emit(res as SaveData[]);
-
-        }
-
-      }
-    );
+    this.searchClicked.emit(this.condition)
   }
 
   ngOnDestroy() {
@@ -74,7 +54,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     this.complexSearchSubscription = this.complexSearchService.complexSearchOrdered$.subscribe(
       (data: ConditionData) => {
         mapCondition(data, this.condition);
-        this.search();
+        this.searchClicked.emit(this.condition)
         this.dialogRef.close();
       }
     );
@@ -85,7 +65,6 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     private complexSearchService: ComplexSearchService,
     private dialog: MatDialog
   ) {
-    this.condition = complexSearchService.initConditionDataObj();
     this.defineDialogSearch();
   }
 

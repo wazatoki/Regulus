@@ -158,8 +158,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       this.searchConditionFormArray.push(new FormGroup({
         fieldSelected: new FormControl(condition.searchField.id),
         conditionValue: new FormControl(condition.conditionValue, [Validators.required]),
-        matchTypeSelected: new FormControl(condition.matchType),
-        operatorSelected: new FormControl(condition.operator),
+        matchTypeSelected: new FormControl(condition.matchType.value),
+        operatorSelected: new FormControl(condition.operator.value),
       }));
     } else {
       this.searchConditionFormArray.push(new FormGroup({
@@ -197,12 +197,12 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   }
 
   initGroups() {
-    if (this.selectedCategory && this.selectedCategory.searchItems.groups) {
+    if (this.selectedCategory && this.selectedCategory.searchItems.staffGroups) {
       this.discloseGroupFormArray.clear();
-      this.selectedCategory.searchItems.groups.forEach(g => {
+      this.selectedCategory.searchItems.staffGroups.forEach(g => {
         this.discloseGroupFormArray.push(this.fb.control(''));
       })
-      this.groupList = this.selectedCategory.searchItems.groups
+      this.groupList = this.selectedCategory.searchItems.staffGroups
     } else {
       this.discloseGroupFormArray.clear();
       this.groupList = [];

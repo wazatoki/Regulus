@@ -9,6 +9,9 @@ import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notic
 import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
 import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
 import { TRUE } from 'src/app/services/models/enum/boolean';
+import { ConditionData } from 'src/app/services/models/search/condition-data';
+import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-complex-search-condition-master',
@@ -22,16 +25,41 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   displayedColumns: string[];
   dataSource: MatTableDataSource<SaveData>;
   selection: SelectionModel<SaveData>;
+  conditionData: ConditionData;
 
+  search(condition: ConditionData) {
+
+    this.complexSearchConditionService.findByCondition(condition).subscribe(
+      (res: SaveData[] | HttpErrorResponse) => {
+
+        if (res instanceof HttpErrorResponse == true) {
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
+          });
+
+        } else {
+
+          this.dataSource.data = (res as SaveData[]) || []
+
+        }
+
+      }
+    );
+  }
 
   onUpdateClicked(saveData: SaveData): void {
 
     this.complexSearchConditionService.findAllCategories().subscribe(categories => {
-      this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
+      const dialogRef = this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
         data: {
           categories: categories,
           saveData: saveData,
         },
+      })
+
+      dialogRef.componentInstance.submitted.subscribe(() => {
+        this.search(this.conditionData)
       })
     });
 
@@ -40,11 +68,15 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   openInputForm(): void {
 
     this.complexSearchConditionService.findAllCategories().subscribe(categories => {
-      this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
+      const dialogRef = this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
         data: {
           categories: categories,
           saveData: null,
         },
+      })
+
+      dialogRef.componentInstance.submitted.subscribe(() => {
+        this.search(this.conditionData)
       })
     });
 
@@ -130,7 +162,9 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
 
-  constructor(private complexSearchConditionService: ComplexSearchConditionService,
+  constructor(
+    private complexSearchConditionService: ComplexSearchConditionService,
+    private complexSearchService:ComplexSearchService,
     public dialog: MatDialog
   ) {
     const initialSelection = [];
@@ -138,6 +172,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
     this.displayedColumns = ['select', 'name', 'category', 'owner', 'action'];
     this.dataSource = new MatTableDataSource<SaveData>([]);
     this.selection = new SelectionModel<SaveData>(allowMultiSelect, initialSelection);
+    this.conditionData = this.complexSearchService.initConditionDataObj();
 
   }
 
