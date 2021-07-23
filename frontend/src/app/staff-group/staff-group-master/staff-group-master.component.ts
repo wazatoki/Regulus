@@ -1,14 +1,17 @@
 import { SelectionModel } from '@angular/cdk/collections';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 import { TRUE } from 'src/app/services/models/enum/boolean';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
+import { ConditionData } from 'src/app/services/models/search/condition-data';
+import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { StaffGroupInputFormDialogComponent } from '../staff-group-input-form-dialog/staff-group-input-form-dialog.component';
 
 @Component({
@@ -23,6 +26,29 @@ export class StaffGroupMasterComponent implements OnInit {
   displayedColumns: string[];
   dataSource: MatTableDataSource<StaffGroup>;
   selection: SelectionModel<StaffGroup>;
+  conditionData: ConditionData;
+
+  search(condition: ConditionData) {
+
+    this.conditionData = condition
+
+    this.staffGroupService.findByCondition(condition).subscribe(
+      (res: StaffGroup[] | HttpErrorResponse) => {
+        if (res instanceof HttpErrorResponse == true) {
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
+          });
+
+        }else{
+
+          this.dataSource.data = (res as StaffGroup[]) || []
+
+        }
+        
+      }
+    );
+  }
 
   onUpdateClicked(groupData: StaffGroup): void {
     this.dialog.open(StaffGroupInputFormDialogComponent, {
@@ -33,10 +59,14 @@ export class StaffGroupMasterComponent implements OnInit {
   }
 
   openInputForm(): void {
-    this.dialog.open(StaffGroupInputFormDialogComponent, {
+    const dialogRef = this.dialog.open(StaffGroupInputFormDialogComponent, {
       data: {
         groupData: null,
       },
+    })
+
+    dialogRef.componentInstance.submitted.subscribe(() => {
+      this.search(this.conditionData)
     })
   }
 
@@ -96,10 +126,6 @@ export class StaffGroupMasterComponent implements OnInit {
     });
   }
 
-  onFetchedStaffGroups(data: StaffGroup[]) {
-    this.dataSource.data = data || []
-  }
-
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -122,13 +148,17 @@ export class StaffGroupMasterComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
 
-  constructor(private staffGroupService: StaffGroupService, public dialog: MatDialog
-  ) {
+  constructor(
+    private staffGroupService: StaffGroupService, 
+    private complexSearchService:ComplexSearchService,
+    public dialog: MatDialog
+    ) {
     const initialSelection = [];
     const allowMultiSelect = true;
     this.displayedColumns = ['select', 'name', 'action'];
     this.dataSource = new MatTableDataSource<StaffGroup>([]);
     this.selection = new SelectionModel<StaffGroup>(allowMultiSelect, initialSelection);
+    this.conditionData = this.complexSearchService.initConditionDataObj();
 
   }
 

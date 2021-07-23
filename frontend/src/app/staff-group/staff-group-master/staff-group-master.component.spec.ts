@@ -9,7 +9,7 @@ import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 import { StaffGroupSearchComponent } from '../staff-group-search/staff-group-search.component';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { ceateTestArray } from 'src/app/services/models/group/staff-group.spec';
-
+import { ceateTestArray as createTestArrayStaffGroupData } from '../../services/models/group/staff-group.spec';
 import { StaffGroupMasterComponent } from './staff-group-master.component';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { of } from 'rxjs';
@@ -23,7 +23,7 @@ describe('StaffGroupMasterComponent', () => {
 
   beforeEach(async(() => {
 
-    const spy = jasmine.createSpyObj('StaffGroupService', ['delete']);
+    const spy = jasmine.createSpyObj('StaffGroupService', ['delete', 'findByCondition']);
     const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
@@ -67,7 +67,7 @@ describe('StaffGroupMasterComponent', () => {
 
     expect(element.textContent).toContain('グループ名称');
 
-    component.onFetchedStaffGroups(testData);
+    component.dataSource.data = testData;
     fixture.detectChanges();
     expect(element.textContent).toContain('TEST_GROUP_NAME_1');
     expect(element.textContent).toContain('TEST_GROUP_NAME_2');
@@ -75,7 +75,7 @@ describe('StaffGroupMasterComponent', () => {
 
   it('select item as all checked', () => {
 
-    component.onFetchedStaffGroups(testData);
+    component.dataSource.data = testData;
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
@@ -92,7 +92,7 @@ describe('StaffGroupMasterComponent', () => {
 
   it('select item as checked', () => {
 
-    component.onFetchedStaffGroups(testData);
+    component.dataSource.data = testData;
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
@@ -120,7 +120,7 @@ describe('StaffGroupMasterComponent', () => {
     const stubValue = of(testData);
     spy.delete.and.returnValue(stubValue);
     
-    component.onFetchedStaffGroups(testData);
+    component.dataSource.data = testData;
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
@@ -135,6 +135,22 @@ describe('StaffGroupMasterComponent', () => {
       expect(spy.delete).toHaveBeenCalled();
 
     });
+  });
+
+  it('called api when search execute', () => {
+    const spy: jasmine.SpyObj<StaffGroupService> = TestBed.get(StaffGroupService);
+    const searchWords = 'aaa bbb ccc';
+    const condition = {
+      searchStrings: ['aaa','bbb','ccc'],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    };
+    const data: StaffGroup[] = createTestArrayStaffGroupData();
+    spy.findByCondition.and.returnValue(of(data))
+    component.search(condition)
+
+    expect(spy.findByCondition).toHaveBeenCalledWith(condition);
   });
 
 });

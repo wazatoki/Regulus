@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Inject } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
@@ -15,6 +14,8 @@ import { StaffGroup } from 'src/app/services/models/group/staff-group';
 export class StaffGroupInputFormDialogComponent implements OnInit {
 
   form: FormGroup;
+
+  submitted: EventEmitter<string> = new EventEmitter();
 
   get groupData(): StaffGroup {
     return this.data.groupData;
@@ -78,6 +79,8 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
               data: { contents: 'グループ名称を修正しました。' }
             });
 
+            this.submitted.emit('');
+
           }
         });
 
@@ -102,6 +105,8 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: 'グループ名称を保存しました。' }
             });
+
+            this.submitted.emit('');
 
           }
         });

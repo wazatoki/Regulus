@@ -9,7 +9,7 @@
     </div>
 
     <div class="contents">
-        <app-staff-group-search (fetched)="onFetchedStaffGroups($event)"></app-staff-group-search>
+        <app-staff-group-search (searchClicked)="search($event)" [condition]="conditionData"></app-staff-group-search>
 
         <table mat-table [dataSource]="dataSource">
 

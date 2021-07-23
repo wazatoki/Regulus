@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Category } from 'src/app/services/models/search/category';
 import { SaveData } from 'src/app/services/models/search/save-data';
@@ -33,6 +33,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   form: FormGroup;
 
+  submitted: EventEmitter<string> = new EventEmitter();
 
   get saveData(): SaveData {
     return this.data.saveData;
@@ -343,6 +344,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: '検索条件を修正しました。' }
             });
+
+            this.submitted.emit('');
           
           }
         });
@@ -362,6 +365,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: '検索条件を保存しました。' }
             });
+
+            this.submitted.emit('');
           
           }
         });
