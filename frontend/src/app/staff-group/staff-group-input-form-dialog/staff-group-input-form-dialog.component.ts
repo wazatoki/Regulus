@@ -58,11 +58,11 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
       this.createSaveData();
 
       if (this.groupData.id) {
-        this.staffGroupService.update(this.groupData).subscribe((data: StaffGroup | HttpErrorResponse) => {
+        this.staffGroupService.update(this.groupData).subscribe((res: StaffGroup | HttpErrorResponse) => {
 
-          if (data instanceof HttpErrorResponse == true) {
+          if (res instanceof HttpErrorResponse == true) {
 
-            if ((data as HttpErrorResponse).error == "duplicate-staffGroup-name") {
+            if ((res as HttpErrorResponse).error == "duplicate-staffGroup-name") {
               this.dialog.open(NoticeDialogComponent, {
                 data: { contents: 'グループ名称が重複しています。' }
               });
@@ -83,11 +83,11 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
 
       } else {
 
-        this.staffGroupService.add(this.groupData).subscribe((data: StaffGroup | HttpErrorResponse) => {
+        this.staffGroupService.add(this.groupData).subscribe((res: StaffGroup | HttpErrorResponse) => {
 
-          if (data instanceof HttpErrorResponse == true) {
+          if (res instanceof HttpErrorResponse == true) {
 
-            if ((data as HttpErrorResponse).error == "duplicate-staffGroup-name") {
+            if ((res as HttpErrorResponse).error == "duplicate-staffGroup-name") {
               this.dialog.open(NoticeDialogComponent, {
                 data: { contents: 'グループ名称が重複しています。' }
               });

@@ -8,6 +8,8 @@ import { ConditionData, mapCondition, splitStrings } from 'src/app/services/mode
 import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 
 @Component({
   selector: 'app-complex-search-condition-search',
@@ -42,9 +44,22 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   }
 
   search() {
+
     this.complexSearchConditionService.findByCondition(this.condition).subscribe(
-      (res: SaveData[]) => {
-        this.fetched.emit(res);
+      (res: SaveData[] | HttpErrorResponse) => {
+
+        if (res instanceof HttpErrorResponse == true) {
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
+          });
+
+        } else {
+
+          this.fetched.emit(res as SaveData[]);
+
+        }
+
       }
     );
   }
@@ -64,15 +79,15 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
       }
     );
   }
-  
+
   constructor(
     private complexSearchConditionService: ComplexSearchConditionService,
     private complexSearchService: ComplexSearchService,
     private dialog: MatDialog
-    ) {
-      this.condition = complexSearchService.initConditionDataObj();
-      this.defineDialogSearch();
-    }
+  ) {
+    this.condition = complexSearchService.initConditionDataObj();
+    this.defineDialogSearch();
+  }
 
   ngOnInit() {
   }

@@ -11,6 +11,7 @@ import { ConditionData } from 'src/app/services/models/search/condition-data';
 import { SearchCondition } from 'src/app/services/models/search/search-condition';
 import { OrderCondition } from 'src/app/services/models/search/order-condition';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-complex-search-condition-input-form-dialog',
@@ -328,25 +329,44 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       this.createSaveData();
 
       if (this.saveData.id) {
-        this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: '検索条件を修正しました。' }
-          });
-        });
 
+        this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe((res: SaveData | HttpErrorResponse) => {
+
+          if (res instanceof HttpErrorResponse == true) {
+
+            this.dialog.open(NoticeDialogComponent, {
+              data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
+            });
+
+          }else{
+
+            this.dialog.open(NoticeDialogComponent, {
+              data: { contents: '検索条件を修正しました。' }
+            });
+          
+          }
+        });
 
       } else {
 
-        this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe(data => {
-          this.dialog.open(NoticeDialogComponent, {
-            data: { contents: '検索条件を保存しました。' }
-          });
+        this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe((res: SaveData | HttpErrorResponse) => {
+        
+          if (res instanceof HttpErrorResponse == true) {
+
+            this.dialog.open(NoticeDialogComponent, {
+              data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
+            });
+
+          }else{
+
+            this.dialog.open(NoticeDialogComponent, {
+              data: { contents: '検索条件を保存しました。' }
+            });
+          
+          }
         });
-
       }
-
     }
-
   }
 
   getPatternNameErrorMessage() {

@@ -1,4 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { ConditionData, splitStrings } from 'src/app/services/models/search/condition-data';
@@ -24,8 +27,19 @@ export class StaffGroupSearchComponent implements OnInit {
 
   search() {
     this.staffGroupService.findByCondition(this.condition).subscribe(
-      (res: StaffGroup[]) => {
-        this.fetched.emit(res);
+      (res: StaffGroup[] | HttpErrorResponse) => {
+        if (res instanceof HttpErrorResponse == true) {
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
+          });
+
+        }else{
+
+          this.fetched.emit(res as StaffGroup[]);
+
+        }
+        
       }
     );
   }
@@ -33,8 +47,9 @@ export class StaffGroupSearchComponent implements OnInit {
   constructor(
     private staffGroupService: StaffGroupService,
     private complexSearchService: ComplexSearchService,
+    private dialog: MatDialog,
   ) { 
-    this.condition = complexSearchService.initConditionDataObj();
+    this.condition = this.complexSearchService.initConditionDataObj();
   }
 
   ngOnInit() {
