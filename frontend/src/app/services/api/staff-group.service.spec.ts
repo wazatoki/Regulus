@@ -7,6 +7,7 @@ import { StaffGroup } from '../models/group/staff-group';
 import { StaffGroupService } from './staff-group.service';
 import { createTestInstance1 as createTestInstanceStaffGroup, ceateTestArray as createTestArrayStaffGroupData } from '../models/group/staff-group.spec';
 import { createTestInstance1 as createTestInstanceConditionData } from 'src/app/services/models/search/condition-data.spec';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('StaffGroupService', () => {
 
@@ -42,7 +43,7 @@ describe('StaffGroupService', () => {
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: StaffGroup[];
+    let result: StaffGroup[] | HttpErrorResponse;
 
     const condition = createTestInstanceConditionData();
     staffGroupService.findByCondition(condition).subscribe(data => {
@@ -64,7 +65,7 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.post.and.returnValue(of(resultData));
 
-    let result: StaffGroup;
+    let result: StaffGroup | HttpErrorResponse;
 
     staffGroupService.add(testData).subscribe(data => {
       result = data
@@ -81,7 +82,7 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.put.and.returnValue(of(resultData));
 
-    let result: StaffGroup;
+    let result: StaffGroup | HttpErrorResponse;
 
     staffGroupService.update(testData).subscribe(data => {
       result = data
@@ -99,7 +100,7 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.delete.and.returnValue(of(resultData));
 
-    let result: StaffGroup[];
+    let result: StaffGroup[] | HttpErrorResponse;
 
     staffGroupService.delete(testData).subscribe(data => {
       result = data

@@ -11,6 +11,7 @@ import { createTestInstance1 as createTestInstanceSaveData, createTestArray as c
 import { createTestInstance1 as createTestInstanceComplexSearchItem } from 'src/app/services/models/search/complex-search-items.spec';
 import { ComplexSearchItems } from '../models/search/complex-search-items';
 import { createTestInstance1 as createTestInstanceConditionData } from 'src/app/services/models/search/condition-data.spec';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ComplexSearchConditionService', () => {
 
@@ -48,7 +49,7 @@ describe('ComplexSearchConditionService', () => {
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Category[];
+    let result: Category[] | HttpErrorResponse;
 
     complexSearchConditionService.findAllCategories().subscribe(data => {
       result = data
@@ -66,7 +67,7 @@ describe('ComplexSearchConditionService', () => {
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: ComplexSearchItems;
+    let result: ComplexSearchItems | HttpErrorResponse;
 
     complexSearchConditionService.findComplexSearchItems().subscribe(data => {
       result = data
@@ -83,7 +84,7 @@ describe('ComplexSearchConditionService', () => {
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: SaveData[];
+    let result: SaveData[] | HttpErrorResponse;
 
     const condition = createTestInstanceConditionData();
     complexSearchConditionService.findByCondition(condition).subscribe(data => {
@@ -139,7 +140,7 @@ describe('ComplexSearchConditionService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.delete.and.returnValue(of(resultData));
 
-    let result: SaveData[];
+    let result: SaveData[] | HttpErrorResponse;
 
     complexSearchConditionService.delete(testData).subscribe(data => {
       result = data

@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 
 import { createTestInstance1 as createConditionData1 } from 'src/app/services/models/search/condition-data.spec';
 import { createTestInstance1 } from 'src/app/services/models/search/complex-search-items.spec';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('MakerService', () => {
 
@@ -53,7 +54,7 @@ describe('MakerService', () => {
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Maker;
+    let result: Maker | HttpErrorResponse;
 
     makerService.findById('testid').subscribe(data => {
       result = data
@@ -78,7 +79,7 @@ describe('MakerService', () => {
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Maker[];
+    let result: Maker[] | HttpErrorResponse;
 
     makerService.findByCondition(conditionData).subscribe(data => {
       result = data
@@ -101,7 +102,7 @@ describe('MakerService', () => {
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Maker[];
+    let result: Maker[] | HttpErrorResponse;
 
     makerService.findAll().subscribe(data => {
       result = data
@@ -118,7 +119,7 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.post.and.returnValue(of(resultData));
 
-    let result: Maker;
+    let result: Maker | HttpErrorResponse;
 
     makerService.add(testData).subscribe(data => {
       result = data
@@ -135,7 +136,7 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.put.and.returnValue(of(resultData));
 
-    let result: Maker;
+    let result: Maker | HttpErrorResponse;
 
     makerService.update(testData).subscribe(data => {
       result = data
@@ -152,7 +153,7 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.delete.and.returnValue(of(resultData));
 
-    let result: Maker[];
+    let result: Maker[] | HttpErrorResponse;
 
     makerService.delete(testData).subscribe(data => {
       result = data
@@ -169,7 +170,7 @@ describe('MakerService', () => {
     const stubValue = of(testData)
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: ComplexSearchItems;
+    let result: ComplexSearchItems | HttpErrorResponse;
 
     makerService.findComplexSearchItems().subscribe(data => {
       result = data
