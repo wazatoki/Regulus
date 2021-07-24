@@ -1,9 +1,6 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FieldAttr } from '../../../../services/models/search/field-attr';
-import { ConditionData } from '../../../../services/models/search/condition-data';
 import { ComplexSearchItems } from '../../../../services/models/search/complex-search-items';
-import { StaffGroup } from '../../../../services/models/group/staff-group';
 
 @Component({
   selector: 'app-complex-search-dialog',

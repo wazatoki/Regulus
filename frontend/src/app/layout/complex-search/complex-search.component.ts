@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { StaffGroup } from '../../services/models/group/staff-group';
 import { FieldAttr } from '../../services/models/search/field-attr';
@@ -10,6 +10,7 @@ import { SaveData } from '../../services/models/search/save-data';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from '../dialog/notice-dialog/notice-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-complex-search',
@@ -69,8 +70,8 @@ export class ComplexSearchComponent implements OnInit {
     })
     this.initSelectedDisplayItems();
 
-    // saveDataの編集のときは値をフォームに反映する
-    if (this.saveData !== null && this.saveData !== undefined && this.saveData.id !== '') {
+    // saveDataが設定されているときは値をフォームに反映する
+    if (this.saveData !== null && this.saveData !== undefined) {
       this.setSavedDataToForm()
     }
   }
@@ -108,12 +109,12 @@ export class ComplexSearchComponent implements OnInit {
 
     // 検索条件を反映する
     this.saveData.conditionData.searchConditionList.forEach(condition => {
-      this.pushSearchCondition();
-      const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);
-      fgroup.get('fieldSelected').setValue(condition.searchField.id);
-      fgroup.get('conditionValue').setValue(condition.conditionValue);
-      fgroup.get('matchTypeSelected').setValue(condition.matchType);
-      fgroup.get('operatorSelected').setValue(condition.operator);
+      this.pushSearchCondition(condition);
+      // const fgroup = this.searchConditionFormArray.at(this.searchConditionFormArray.length - 1);
+      // fgroup.get('fieldSelected').setValue(condition.searchField.id);
+      // fgroup.get('conditionValue').setValue(condition.conditionValue);
+      // fgroup.get('matchTypeSelected').setValue(condition.matchType.value);
+      // fgroup.get('operatorSelected').setValue(condition.operator.value);
     });
 
     // 並び順を反映する
@@ -145,13 +146,29 @@ export class ComplexSearchComponent implements OnInit {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
   }
 
-  pushSearchCondition() {
-    this.searchConditionFormArray.push(new FormGroup({
-      fieldSelected: new FormControl(''),
-      conditionValue: new FormControl(''),
-      matchTypeSelected: new FormControl(''),
-      operatorSelected: new FormControl(''),
-    }));
+  pushSearchCondition(condition?: SearchCondition) {
+    if (condition && condition.searchField && condition.searchField.id) {
+      this.searchConditionFormArray.push(new FormGroup({
+        fieldSelected: new FormControl(condition.searchField.id),
+        conditionValue: new FormControl(condition.conditionValue, [Validators.required]),
+        matchTypeSelected: new FormControl(condition.matchType.value),
+        operatorSelected: new FormControl(condition.operator.value),
+      }));
+    } else {
+      this.searchConditionFormArray.push(new FormGroup({
+        fieldSelected: new FormControl(this.searchConditionList[0].id),
+        conditionValue: new FormControl('', [Validators.required]),
+        matchTypeSelected: new FormControl(''),
+        operatorSelected: new FormControl(''),
+      }));
+    }
+
+    // this.searchConditionFormArray.push(new FormGroup({
+    //   fieldSelected: new FormControl(''),
+    //   conditionValue: new FormControl(''),
+    //   matchTypeSelected: new FormControl(''),
+    //   operatorSelected: new FormControl(''),
+    // }));
   }
 
   removeSearchCondition(i: number) {
@@ -172,16 +189,37 @@ export class ComplexSearchComponent implements OnInit {
   clickSave() {
     this.createSaveData();
     if (this.saveData.id) {
-      this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe(data => {
-        this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '検索条件を保存しました。' }
-        });
+      this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe((res: SaveData | HttpErrorResponse) => {
+        if (res instanceof HttpErrorResponse == true) {
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
+          });
+
+        }else{
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '検索条件を修正しました。' }
+          });
+
+        }
       });
+
     } else {
-      this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe(data => {
-        this.dialog.open(NoticeDialogComponent, {
-          data: { contents: '検索条件を保存しました。' }
-        });
+      this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe((res: SaveData | HttpErrorResponse) => {
+        if (res instanceof HttpErrorResponse == true) {
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
+          });
+
+        }else{
+
+          this.dialog.open(NoticeDialogComponent, {
+            data: { contents: '検索条件を保存しました。' }
+          });
+
+        }
       });
     }
 
