@@ -36,6 +36,8 @@ func QueryFind(conditionData *domain.ConditionData, queryRepo queryRepo) (domain
 		return nil, err
 	}
 
+	items = items.FilterByString(conditionData.SearchStrings...)
+
 	items = items.Sort(conditionData.OrderConditionList...)
 	return items, nil
 }

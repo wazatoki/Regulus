@@ -21,6 +21,8 @@ func GroupFind(conditionData *domain.ConditionData, groupRepo groupRepo) (domain
 		return nil, err
 	}
 
+	items = items.FilterByString(conditionData.SearchStrings...)
+
 	items = items.Sort()
 	return items, nil
 }

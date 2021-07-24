@@ -13,6 +13,50 @@ Conditions *query.Conditionのスライス
 type Conditions []*Condition
 
 /*
+FilterByString is filter condition slice by string
+*/
+func (c *Conditions) FilterByString(str ...string) (result Conditions) {
+	queryConditions := *c
+
+	isContains := func(condition *Condition, str string) bool {
+
+		isGroupsContains := func(groups StaffGroups, str string) bool {
+
+			if groups == nil || len(groups) == 0 {
+				return true
+			}
+
+			for _, g := range groups {
+				if strings.Contains(g.Name, str) {
+					return true
+				}
+			}
+			return false
+		}
+
+		return strings.Contains(condition.PatternName, str) ||
+			strings.Contains(condition.Category.ViewValue, str) ||
+			strings.Contains(condition.Owner.Name, str) ||
+			strings.Contains(condition.Owner.AccountID, str) ||
+			isGroupsContains(condition.DiscloseGroups, str)
+	}
+
+	for _, s := range str {
+		result = Conditions{}
+		for _, condition := range queryConditions {
+
+			if isContains(condition, s) {
+				result = append(result, condition)
+			}
+		}
+		queryConditions = result
+	}
+
+	return
+
+}
+
+/*
 Sort is sort condition slice by orderItems
 */
 func (c *Conditions) Sort(orderItems ...OrderConditionItem) Conditions {
