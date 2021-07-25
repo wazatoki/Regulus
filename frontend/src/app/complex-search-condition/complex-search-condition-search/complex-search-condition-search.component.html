@@ -1,4 +1,12 @@
 <div fxLayout="row wrap">
     <app-search (searchClick)="onSearch($event)"></app-search>
-    <button mat-flat-button (click)="openComplexSearch()" [color]="complexConditionButtonColor">条件を設定</button>
+    <span *ngIf="isConditionDataAvailable; then accentButton; else defaultButton"></span>
+    <ng-template #defaultButton>
+        <button mat-flat-button (click)="openComplexSearch()" color="default">条件を設定</button>
+    </ng-template>
+    <ng-template #accentButton>
+        <button mat-flat-button (click)="openComplexSearch()" color="accent">条件を設定</button>
+    </ng-template>
+    
+    
 </div>

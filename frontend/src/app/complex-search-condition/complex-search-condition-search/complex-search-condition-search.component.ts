@@ -26,19 +26,11 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
 
   @Output() searchClicked: EventEmitter<ConditionData> = new EventEmitter();
 
-  get complexConditionButtonColor():string {
+  get isConditionDataAvailable (): boolean {
 
-    if (this.saveData.conditionData.searchConditionList.length > 0 ||
+    return this.saveData.conditionData.searchConditionList.length > 0 ||
       this.saveData.conditionData.displayItemList.length > 0 ||
-      this.saveData.conditionData.orderConditionList.length > 0) {
-
-      return "accent";
-
-    } else {
-
-      return "";
-
-    }
+      this.saveData.conditionData.orderConditionList.length > 0
   }
 
   openComplexSearch() {

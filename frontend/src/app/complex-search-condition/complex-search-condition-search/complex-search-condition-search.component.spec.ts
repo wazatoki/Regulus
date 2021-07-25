@@ -10,6 +10,8 @@ import { ConditionData } from 'src/app/services/models/search/condition-data';
 import { of, Subject } from 'rxjs';
 
 import { createTestArray } from 'src/app/services/models/search/save-data.spec';
+import { MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatPaginatorModule, MatRadioModule, MatSelectModule, MatTableModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComplexSearchConditionSearchComponent', () => {
   let component: ComplexSearchConditionSearchComponent;
@@ -21,24 +23,44 @@ describe('ComplexSearchConditionSearchComponent', () => {
 
     const complexSearchConditionServiceSpy = jasmine.createSpyObj('ComplexSearchConditionService', ['findByCondition']);
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
+      ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
-      declarations: [ ComplexSearchConditionSearchComponent ],
+      declarations: [ComplexSearchConditionSearchComponent],
       imports: [
+        BrowserAnimationsModule,
         LayoutModule,
         FlexLayoutModule,
+        MatButtonModule,
       ],
       providers: [
         { provide: ComplexSearchConditionService, useValue: complexSearchConditionServiceSpy },
         { provide: ComplexSearchService, useValue: complexSearchServiceSpy },
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     complexSearchServiceSpy = TestBed.get(ComplexSearchService);
+    complexSearchServiceSpy.initSaveDataObj.and.returnValue({
+      id: '',
+      patternName: '',
+      category: null,
+      isDisclose: false,
+      discloseGroups: [],
+      ownerID: '',
+      conditionData: {
+        searchStrings: [],
+        displayItemList: [],
+        searchConditionList: [],
+        orderConditionList: [],
+      },
+      owner: {
+        id: '',
+        name: '',
+      }
+    });
     complexSearchServiceSpy.initConditionDataObj.and.returnValue({
       searchStrings: [],
       displayItemList: [],
