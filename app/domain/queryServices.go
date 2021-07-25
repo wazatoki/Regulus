@@ -15,10 +15,21 @@ type Conditions []*Condition
 /*
 FilterByString is filter condition slice by string
 */
-func (c *Conditions) FilterByString(str ...string) (result Conditions) {
+func (c *Conditions) FilterByString(strSlice ...string) (result Conditions) {
 	queryConditions := *c
 
+	if len(strSlice) == 0 {
+
+		result = queryConditions
+
+		return
+	}
+
 	isContains := func(condition *Condition, str string) bool {
+
+		if str == "" {
+			return true
+		}
 
 		isGroupsContains := func(groups StaffGroups, str string) bool {
 
@@ -37,11 +48,10 @@ func (c *Conditions) FilterByString(str ...string) (result Conditions) {
 		return strings.Contains(condition.PatternName, str) ||
 			strings.Contains(condition.Category.ViewValue, str) ||
 			strings.Contains(condition.Owner.Name, str) ||
-			strings.Contains(condition.Owner.AccountID, str) ||
 			isGroupsContains(condition.DiscloseGroups, str)
 	}
 
-	for _, s := range str {
+	for _, s := range strSlice {
 		result = Conditions{}
 		for _, condition := range queryConditions {
 

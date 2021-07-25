@@ -10,15 +10,26 @@ type StaffGroups []*StaffGroup
 /*
 FilterByString is filter staffGroup slice by string
 */
-func (g *StaffGroups) FilterByString(str ...string) (result StaffGroups) {
+func (g *StaffGroups) FilterByString(strSlice ...string) (result StaffGroups) {
 	staffGroups := *g
 
+	if len(strSlice) == 0 {
+
+		result = staffGroups
+
+		return
+	}
+
 	isContains := func(staffGroup *StaffGroup, str string) bool {
+
+		if str == "" {
+			return true
+		}
 
 		return strings.Contains(staffGroup.Name, str)
 	}
 
-	for _, s := range str {
+	for _, s := range strSlice {
 		result = StaffGroups{}
 		for _, group := range staffGroups {
 

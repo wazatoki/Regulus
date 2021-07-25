@@ -35,7 +35,7 @@ export class ComplexSearchService {
 
   initConditionDataObj(): ConditionData {
     return {
-      searchStrings: [],
+      searchStrings: [''],
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
