@@ -91,3 +91,69 @@ func TestStaffGroups_Sort(t *testing.T) {
 		})
 	}
 }
+
+func TestStaffGroups_FilterByString(t *testing.T) {
+	type args struct {
+		strSlice []string
+	}
+	tests := []struct {
+		name       string
+		g          *StaffGroups
+		args       args
+		wantResult StaffGroups
+	}{
+		{
+			name: "filter without strings",
+			g: &StaffGroups{
+				createExpectedStaffGroup2Entity(),
+				createExpectedStaffGroup1Entity(),
+				createExpectedStaffGroup3Entity(),
+			},
+			args: args{
+				strSlice: []string{},
+			},
+			wantResult: StaffGroups{
+				createExpectedStaffGroup2Entity(),
+				createExpectedStaffGroup1Entity(),
+				createExpectedStaffGroup3Entity(),
+			},
+		},
+		{
+			name: "filter with ''",
+			g: &StaffGroups{
+				createExpectedStaffGroup2Entity(),
+				createExpectedStaffGroup1Entity(),
+				createExpectedStaffGroup3Entity(),
+			},
+			args: args{
+				strSlice: []string{},
+			},
+			wantResult: StaffGroups{
+				createExpectedStaffGroup2Entity(),
+				createExpectedStaffGroup1Entity(),
+				createExpectedStaffGroup3Entity(),
+			},
+		},
+		{
+			name: "filter with '1'",
+			g: &StaffGroups{
+				createExpectedStaffGroup2Entity(),
+				createExpectedStaffGroup1Entity(),
+				createExpectedStaffGroup3Entity(),
+			},
+			args: args{
+				strSlice: []string{"1"},
+			},
+			wantResult: StaffGroups{
+				createExpectedStaffGroup1Entity(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotResult := tt.g.FilterByString(tt.args.strSlice...); !reflect.DeepEqual(gotResult, tt.wantResult) {
+				t.Errorf("StaffGroups.FilterByString() = %v, want %v", gotResult, tt.wantResult)
+			}
+		})
+	}
+}

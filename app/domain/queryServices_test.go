@@ -418,3 +418,103 @@ func TestConditions_Sort(t *testing.T) {
 		})
 	}
 }
+
+func TestConditions_FilterByString(t *testing.T) {
+	type args struct {
+		strSlice []string
+	}
+	tests := []struct {
+		name       string
+		c          *Conditions
+		args       args
+		wantResult Conditions
+	}{
+		{
+			name: "filter without strings",
+			c: &Conditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+			args: args{},
+			wantResult: Conditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+		},
+		{
+			name: "filter with ''",
+			c: &Conditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+			args: args{
+				strSlice: []string{""},
+			},
+			wantResult: Conditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+		},
+		{
+			name: "filter with 'patternName', '1'",
+			c: &Conditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+			args: args{
+				strSlice: []string{"patternName", "3"},
+			},
+			wantResult: Conditions{
+				createExpectedQueryCondition3Entity(), // hit by PatternName
+				createExpectedQueryCondition4Entity(), // hit by DiscloseGroups
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotResult := tt.c.FilterByString(tt.args.strSlice...); !reflect.DeepEqual(gotResult, tt.wantResult) {
+				t.Errorf("Conditions.FilterByString() = %v, want %v", gotResult, tt.wantResult)
+			}
+		})
+	}
+}
