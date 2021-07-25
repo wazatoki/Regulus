@@ -1,4 +1,4 @@
 <div fxLayout="row wrap">
     <app-search (searchClick)="onSearch($event)"></app-search>
-    <button mat-flat-button (click)="openComplexSearch()">条件を設定</button>
+    <button mat-flat-button (click)="openComplexSearch()" [color]="complexConditionButtonColor">条件を設定</button>
 </div>
