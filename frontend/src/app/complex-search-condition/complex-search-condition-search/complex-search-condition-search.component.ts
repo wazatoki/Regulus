@@ -33,6 +33,11 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
       this.saveData.conditionData.orderConditionList.length > 0
   }
 
+  clearCondition() {
+    this.saveData = this.complexSearchService.initSaveDataObj()
+    this.condition = this.saveData.conditionData
+  }
+
   openComplexSearch() {
     this.complexSearchConditionService.findComplexSearchItems().subscribe((data: ComplexSearchItems) => {
       const aData: any = data;
