@@ -21,8 +21,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   private complexSearchSubscription: Subscription;
   private saveData: SaveData;
   private dialogRef: MatDialogRef<ComplexSearchDialogComponent>;
-
-  @Input() condition: ConditionData;
+  private condition: ConditionData;
 
   @Output() searchClicked: EventEmitter<ConditionData> = new EventEmitter();
 
@@ -78,7 +77,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     private complexSearchService: ComplexSearchService,
     private dialog: MatDialog
   ) {
-    this.saveData = this.complexSearchService.initSaveDataObj()
+    this.clearCondition()
     this.defineDialogSearch();
   }
 

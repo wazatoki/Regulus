@@ -29,6 +29,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
 
   search(condition: ConditionData) {
 
+
     this.complexSearchConditionService.findByCondition(condition).subscribe(
       (res: SaveData[] | HttpErrorResponse) => {
 
@@ -41,6 +42,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
         } else {
 
           this.dataSource.data = (res as SaveData[]) || []
+          this.conditionData = condition
 
         }
 
