@@ -7,15 +7,7 @@ import { LayoutHeaderSidebarContentsComponent } from './layout-header-sidebar-co
 import { LayoutHeaderContentsComponent } from './layout-header-contents/layout-header-contents.component';
 import { LayoutContentsComponent } from './layout-contents/layout-contents.component';
 import { SearchComponent } from './search/search.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule,MatCheckboxModule, MatButtonModule,MatDialogModule, MatListModule, MatGridListModule, MatCardModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CancelComponent } from './form/buttons/cancel/cancel.component';
@@ -31,6 +23,7 @@ import { ComplexSearchConditionItemComponent } from './complex-search/complex-se
 import { ComplexSearchOrderItemComponent } from './complex-search/complex-search-order-item/complex-search-order-item.component';
 import { ComplexSearchComponent } from './complex-search/complex-search.component';
 import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
+import { FavoriteConditionsComponent } from './complex-search/favorite-conditions/favorite-conditions.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +45,7 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
     ComplexSearchComponent,
     ComplexSearchDialogComponent,
     AutofocusDirective,
+    FavoriteConditionsComponent,
   ],
   imports: [
     CommonModule,
@@ -64,6 +58,7 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
     MatCheckboxModule,
     MatButtonModule,
     MatDialogModule,
+    MatListModule,
     MatGridListModule,
     MatCardModule,
     DragDropModule,

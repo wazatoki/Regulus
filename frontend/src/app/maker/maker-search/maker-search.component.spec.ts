@@ -59,6 +59,7 @@ describe('MakerSearchComponent', () => {
       owner: {
         id: '',
         name: '',
+        favoriteConditions: [],
       }
     });
     complexSearchServiceSpy.initConditionDataObj.and.returnValue({

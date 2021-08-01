@@ -24,11 +24,12 @@ func tearDownStaffTest(con *sqlx.DB) {
 
 func createExpectedStaff1Entity() *domain.Staff {
 	return &domain.Staff{
-		ID:          "staffid1",
-		AccountID:   "12345",
-		Name:        "name 1",
-		Password:    "password 1",
-		StaffGroups: createExpectedStaffGroupEntity1Slice(),
+		ID:                 "staffid1",
+		AccountID:          "12345",
+		Name:               "name 1",
+		Password:           "password 1",
+		StaffGroups:        createExpectedStaffGroupEntity1Slice(),
+		FavoriteConditions: domain.Conditions{},
 	}
 }
 
@@ -41,6 +42,7 @@ func createExpectedStaff2Entity() *domain.Staff {
 		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup1Entity(),
 		},
+		FavoriteConditions: domain.Conditions{},
 	}
 }
 
@@ -53,6 +55,7 @@ func createExpectedStaff3Entity() *domain.Staff {
 		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup2Entity(),
 		},
+		FavoriteConditions: domain.Conditions{},
 	}
 }
 
@@ -65,6 +68,7 @@ func createExpectedStaff4Entity() *domain.Staff {
 		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup3Entity(),
 		},
+		FavoriteConditions: domain.Conditions{},
 	}
 }
 
@@ -77,6 +81,7 @@ func createExpectedStaff5Entity() *domain.Staff {
 		StaffGroups: domain.StaffGroups{
 			createExpectedStaffGroup1Entity(),
 		},
+		FavoriteConditions: domain.Conditions{},
 	}
 }
 
@@ -395,6 +400,7 @@ func TestStaffRepo_Insert(t *testing.T) {
 					createExpectedStaffGroup1Entity(),
 					createExpectedStaffGroup2Entity(),
 				},
+				FavoriteConditions: domain.Conditions{},
 			}
 
 			s := &StaffRepo{

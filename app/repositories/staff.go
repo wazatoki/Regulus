@@ -292,12 +292,17 @@ func StaffObjectMap(ss *sqlboiler.Staff) (es *domain.Staff) {
 	for _, group := range ss.R.StaffGroups {
 		groups = append(groups, StaffGroupObjectMap(group))
 	}
+	conditions := domain.Conditions{}
+	for _, queryCondition := range ss.R.QueryConditions {
+		conditions = append(conditions, QueryConditionObjectMap(queryCondition))
+	}
 	es = &domain.Staff{
-		ID:          ss.ID,
-		AccountID:   ss.AccountID,
-		Name:        ss.Name,
-		Password:    ss.Password,
-		StaffGroups: groups,
+		ID:                 ss.ID,
+		AccountID:          ss.AccountID,
+		Name:               ss.Name,
+		Password:           ss.Password,
+		StaffGroups:        groups,
+		FavoriteConditions: conditions,
 	}
 	return
 }
