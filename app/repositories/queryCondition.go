@@ -15,6 +15,50 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
+// SelectQueryOperatorUsable select Userble condition by operatorID
+func (q *QueryConditionRepo) SelectQueryOperatorUsable(operatorID string) (resultQueryConditions domain.Conditions, err error) {
+	if operatorID == "" {
+		return nil, errors.New("operatorID must be required")
+	}
+
+	err = q.database.WithDbContext(func(db *sqlx.DB) error {
+		ids := []string{}
+		queryStr := "select distinct qc.id " +
+			"from query_conditions qc " +
+			"left join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
+			"left join staff_groups sg on jqcsg.staff_groups_id = sg.id " +
+			"inner join join_staffs_staff_groups jssg on sg.id = jssg.staff_groups_id " +
+			"where qc.del != true and qc.owner_id = ? and jssg.staffs_id = ?"
+
+		// クエリをDBドライバに併せて再構築
+		queryStr = db.Rebind(queryStr)
+
+		// データ取得処理
+		db.Select(&ids, queryStr, operatorID, operatorID)
+		var convertedIDs []interface{} = make([]interface{}, len(ids))
+		for i, d := range ids {
+			convertedIDs[i] = d
+		}
+		queries := q.createQueryModSlice()
+		queries = append(
+			queries,
+			qm.And("query_conditions."+sqlboiler.QueryConditionColumns.Del+" != ?", true),
+			qm.AndIn("query_conditions."+sqlboiler.QueryConditionColumns.ID+" in ?", convertedIDs...),
+		)
+		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
+
+		if err == nil {
+			for _, fc := range fetchedQueryConditions {
+				resultQueryConditions = append(resultQueryConditions, QueryConditionObjectMap(fc))
+			}
+		}
+
+		return err
+	})
+
+	return resultQueryConditions, err
+}
+
 // Delete delete data to database
 func (q *QueryConditionRepo) Delete(id string, operatorID string) error {
 	if id == "" {
@@ -257,7 +301,7 @@ func (q *QueryConditionRepo) Insert(queryCondition *domain.Condition, operatorID
 	return
 }
 
-// SelectByIDs select staff data by id list from database
+// SelectByIDs select condition data by id list from database
 func (q *QueryConditionRepo) SelectByIDs(ids []string) (queryConditions domain.Conditions, err error) {
 	queryConditions = domain.Conditions{}
 	if len(ids) == 0 {

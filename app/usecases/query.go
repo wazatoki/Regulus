@@ -5,6 +5,16 @@ import (
 	"regulus/app/utils/log"
 )
 
+func FetchQueryOperatorUsable(operatorID string, queryRepo queryRepo) (domain.Conditions, error) {
+
+	items, err := queryRepo.SelectQueryOperatorUsable(operatorID)
+	if err != nil {
+		log.Error("usecases:query:FetchQueryOperatorUsable:message:" + err.Error())
+		return nil, err
+	}
+	return items, nil
+}
+
 /*
 
 QueryFetchDataInputFormItems は検索条件登録フォームを開く際に必要なデータを取得するユースケースです。
@@ -104,6 +114,7 @@ type queryRepo interface {
 	Insert(*domain.Condition, string) (string, error)
 	Update(*domain.Condition, string) error
 	Delete(string, string) error
+	SelectQueryOperatorUsable(string) (domain.Conditions, error)
 	SelectByID(string) (*domain.Condition, error)
 	SelectAll() (domain.Conditions, error)
 	Select(...domain.SearchConditionItem) (domain.Conditions, error)
