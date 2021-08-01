@@ -881,3 +881,75 @@ func TestQueryConditionRepo_Dalete(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		operatorID string
+	}
+	tests := []struct {
+		name                      string
+		fields                    fields
+		args                      args
+		wantResultQueryConditions domain.Conditions
+		wantErr                   bool
+	}{
+		{
+			name: "shuld return staffid4 usable condition list",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				operatorID: "staffid4",
+			},
+			wantResultQueryConditions: domain.Conditions{
+				createExpectedQueryCondition9Entity(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			gotResultQueryConditions, err := q.SelectQueryOperatorUsable(tt.args.operatorID)
+
+			if (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.SelectQueryOperatorUsable() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if len(gotResultQueryConditions) != len(tt.wantResultQueryConditions) {
+				t.Errorf("QueryConditionRepo.SelectQueryOperatorUsable() = %v, want %v", len(gotResultQueryConditions), len(tt.wantResultQueryConditions))
+			}
+
+			for _, rc := range gotResultQueryConditions {
+				flag := false
+				for _, wc := range tt.wantResultQueryConditions {
+					if reflect.DeepEqual(rc, wc) {
+						flag = true
+					}
+				}
+				if flag == false {
+					t.Errorf(" condition of gotResultQueryConditions %v is not match", rc)
+				} else {
+					t.Logf(" condition of gotResultQueryConditions %v is match", rc)
+				}
+			}
+
+			// if diff := cmp.Diff(gotResultQueryConditions, tt.wantResultQueryConditions); diff != "" {
+			// 	t.Errorf("differs = %s", diff)
+			// }
+			// if !reflect.DeepEqual(gotResultQueryConditions, tt.wantResultQueryConditions) {
+			// 	t.Errorf("QueryConditionRepo.SelectQueryOperatorUsable() = %v, want %v", gotResultQueryConditions, tt.wantResultQueryConditions)
+			// }
+		})
+	}
+}

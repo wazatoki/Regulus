@@ -28,7 +28,7 @@ func (q *QueryConditionRepo) SelectQueryOperatorUsable(operatorID string) (resul
 			"left join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
 			"left join staff_groups sg on jqcsg.staff_groups_id = sg.id " +
 			"inner join join_staffs_staff_groups jssg on sg.id = jssg.staff_groups_id " +
-			"where qc.del != true and qc.owner_id = ? and jssg.staffs_id = ?"
+			"where qc.del != true and (qc.owner_id = ? OR jssg.staffs_id = ?)"
 
 		// クエリをDBドライバに併せて再構築
 		queryStr = db.Rebind(queryStr)
