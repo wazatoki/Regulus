@@ -27,6 +27,9 @@ func Login(staffRepo loginRepo, id string, pass string) (*domain.Staff, string, 
 		if generateError != nil {
 			return nil, "", generateError
 		}
+
+		s.Password = ""
+
 		return s, token, nil
 	}
 	return nil, "", errors.New("login incorrect")

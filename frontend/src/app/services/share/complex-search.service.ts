@@ -29,7 +29,7 @@ export class ComplexSearchService {
       owner: {
         id: '',
         name: '',
-        favoriteConditions: [],
+        operatorUsableConditions: [],
       }
     };
   }

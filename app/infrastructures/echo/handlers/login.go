@@ -18,14 +18,20 @@ func Login(c echo.Context) error {
 	c.Bind(&m)
 
 	repo := repositories.NewStaffRepo()
+	queryRepo := repositories.NewQueryConditionRepo()
 
-	staff, token, err := usecases.Login(repo, m["id"].(string), m["password"].(string))
+	staff, token, err1 := usecases.Login(repo, m["id"].(string), m["password"].(string))
 
-	if err != nil {
+	if err1 != nil {
 		return c.JSON(http.StatusUnauthorized, "")
 	}
 
-	staff.Password = ""
+	operatorUsableCondition, err2 := usecases.FetchOperatorUsableCondition(staff.ID, queryRepo)
+	if err2 != nil {
+		return c.JSON(http.StatusInternalServerError, "favorite condition fetch error")
+	}
+
+	staff.OeratorUsableConditions = operatorUsableCondition
 
 	return c.JSON(http.StatusOK, echo.Map{"staff": staff, "jwtToken": token})
 }

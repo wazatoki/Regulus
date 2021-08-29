@@ -5,7 +5,12 @@ import (
 	"regulus/app/utils/log"
 )
 
-func FetchQueryOperatorUsable(operatorID string, queryRepo queryRepo) (domain.Conditions, error) {
+/*
+
+FetchOperatorUsableCondition 認証されたユーザーのusable conditionsを取得します。
+
+*/
+func FetchOperatorUsableCondition(operatorID string, queryRepo queryRepo) (domain.Conditions, error) {
 
 	items, err := queryRepo.SelectQueryOperatorUsable(operatorID)
 	if err != nil {

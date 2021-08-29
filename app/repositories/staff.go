@@ -297,12 +297,12 @@ func StaffObjectMap(ss *sqlboiler.Staff) (es *domain.Staff) {
 		conditions = append(conditions, QueryConditionObjectMap(queryCondition))
 	}
 	es = &domain.Staff{
-		ID:                 ss.ID,
-		AccountID:          ss.AccountID,
-		Name:               ss.Name,
-		Password:           ss.Password,
-		StaffGroups:        groups,
-		FavoriteConditions: conditions,
+		ID:                      ss.ID,
+		AccountID:               ss.AccountID,
+		Name:                    ss.Name,
+		Password:                ss.Password,
+		StaffGroups:             groups,
+		OeratorUsableConditions: conditions,
 	}
 	return
 }
