@@ -897,6 +897,28 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 		wantErr                   bool
 	}{
 		{
+			name: "shuld return staffid1 usable condition list",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				operatorID: "staffid1",
+			},
+			wantResultQueryConditions: domain.Conditions{
+				createExpectedQueryCondition0Entity(),
+				createExpectedQueryCondition1Entity(),
+				createExpectedQueryCondition2Entity(),
+				createExpectedQueryCondition3Entity(),
+				createExpectedQueryCondition4Entity(),
+				createExpectedQueryCondition5Entity(),
+				createExpectedQueryCondition6Entity(),
+				createExpectedQueryCondition7Entity(),
+				createExpectedQueryCondition8Entity(),
+				createExpectedQueryCondition9Entity(),
+			},
+			wantErr: false,
+		},
+		{
 			name: "shuld return staffid4 usable condition list",
 			fields: fields{
 				database: createDB(),
@@ -926,10 +948,6 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 				return
 			}
 
-			if len(gotResultQueryConditions) != len(tt.wantResultQueryConditions) {
-				t.Errorf("QueryConditionRepo.SelectQueryOperatorUsable() = %v, want %v", len(gotResultQueryConditions), len(tt.wantResultQueryConditions))
-			}
-
 			for _, rc := range gotResultQueryConditions {
 				flag := false
 				for _, wc := range tt.wantResultQueryConditions {
@@ -944,12 +962,6 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 				}
 			}
 
-			// if diff := cmp.Diff(gotResultQueryConditions, tt.wantResultQueryConditions); diff != "" {
-			// 	t.Errorf("differs = %s", diff)
-			// }
-			// if !reflect.DeepEqual(gotResultQueryConditions, tt.wantResultQueryConditions) {
-			// 	t.Errorf("QueryConditionRepo.SelectQueryOperatorUsable() = %v, want %v", gotResultQueryConditions, tt.wantResultQueryConditions)
-			// }
 		})
 	}
 }
