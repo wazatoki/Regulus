@@ -61,7 +61,7 @@ describe('ComplexSearchDialogComponent', () => {
           useValue: MatDialogRef
         },
         {
-          provide: MAT_DIALOG_DATA, useValue: {} 
+          provide: MAT_DIALOG_DATA, useValue: {}
         },
         {
           provide: HttpClient, useValue: {}
@@ -69,7 +69,7 @@ describe('ComplexSearchDialogComponent', () => {
       ],
     }).overrideModule(BrowserDynamicTestingModule, {
       set: {
-        entryComponents: [ ComplexSearchDialogComponent ],
+        entryComponents: [ComplexSearchDialogComponent],
       }
     })
       .compileComponents();
@@ -97,61 +97,64 @@ class TestHostComponent {
   openDialog() {
     const dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
       data: {
-        displayItemList: [
-          {
-            id: 'id1',
-            entityName: 'aaa',
-            fieldName: 'AAA',
-            viewValue: 'aaa-AAA',
-            fieldType: 'number',
-          },
-          {
-            id: 'id2',
-            entityName: 'bbb',
-            fieldName: 'BBB',
-            viewValue: 'bbb-BBB',
-            fieldType: 'string',
-          },
-        ],
-        searchConditionList: [
-          {
-            id: 'id1',
-            entityName: 'aaa',
-            fieldName: 'AAA',
-            viewValue: 'aaa-AAA',
-            fieldType: 'number',
-          },
-          {
-            id: 'id2',
-            entityName: 'bbb',
-            fieldName: 'BBB',
-            viewValue: 'bbb-BBB',
-            fieldType: 'string',
-          },
-        ],
-        orderConditionList: [
-          {
-            id: 'id1',
-            entityName: 'aaa',
-            fieldName: 'AAA',
-            viewValue: 'aaa-AAA',
-            fieldType: 'number',
-          },
-          {
-            id: 'id2',
-            entityName: 'bbb',
-            fieldName: 'BBB',
-            viewValue: 'bbb-BBB',
-            fieldType: 'string',
-          },
-        ],
-        isShowDisplayItem: true,
-        isShowOrderCondition: true,
-        isShowSaveCondition: true,
-        groupList: [
-          { id: 'id1', name: 'name1' },
-          { id: 'id2', name: 'name2' },
-        ],
+        complexSearchItems: {
+          displayItemList: [
+            {
+              id: 'id1',
+              entityName: 'aaa',
+              fieldName: 'AAA',
+              viewValue: 'aaa-AAA',
+              fieldType: 'number',
+            },
+            {
+              id: 'id2',
+              entityName: 'bbb',
+              fieldName: 'BBB',
+              viewValue: 'bbb-BBB',
+              fieldType: 'string',
+            },
+          ],
+          searchConditionList: [
+            {
+              id: 'id1',
+              entityName: 'aaa',
+              fieldName: 'AAA',
+              viewValue: 'aaa-AAA',
+              fieldType: 'number',
+            },
+            {
+              id: 'id2',
+              entityName: 'bbb',
+              fieldName: 'BBB',
+              viewValue: 'bbb-BBB',
+              fieldType: 'string',
+            },
+          ],
+          orderConditionList: [
+            {
+              id: 'id1',
+              entityName: 'aaa',
+              fieldName: 'AAA',
+              viewValue: 'aaa-AAA',
+              fieldType: 'number',
+            },
+            {
+              id: 'id2',
+              entityName: 'bbb',
+              fieldName: 'BBB',
+              viewValue: 'bbb-BBB',
+              fieldType: 'string',
+            },
+          ],
+          isShowDisplayItem: true,
+          isShowOrderCondition: true,
+          isShowSaveCondition: true,
+          staffGroups: [
+            { id: 'id1', name: 'name1' },
+            { id: 'id2', name: 'name2' },
+          ],
+        },
+        saveData: {}
       }
     });
   }

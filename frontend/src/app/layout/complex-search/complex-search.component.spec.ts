@@ -28,6 +28,7 @@ import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/gr
 import { createTestInstance1 as createTestInstanceSaveData} from 'src/app/services/models/search/save-data.spec';
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
+import { ComplexSearchItems } from 'src/app/services/models/search/complex-search-items';
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -97,9 +98,9 @@ describe('ComplexSearchComponent', () => {
 
   it('should click add condition button', () => {
 
-    component.searchComponent.isShowDisplayItem = false;
-    component.searchComponent.isShowOrderCondition = false;
-    component.searchComponent.isShowSaveCondition = false;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = false;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = false;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = false;
     fixture.detectChanges();
 
     const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-search-condition"));
@@ -115,9 +116,9 @@ describe('ComplexSearchComponent', () => {
 
   it('should click add order button', () => {
 
-    component.searchComponent.isShowDisplayItem = false;
-    component.searchComponent.isShowOrderCondition = true;
-    component.searchComponent.isShowSaveCondition = false;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = false;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = true;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = false;
     fixture.detectChanges();
 
     const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-order-condition"));
@@ -132,9 +133,9 @@ describe('ComplexSearchComponent', () => {
   });
 
   it('should click save button', () => {
-    component.searchComponent.isShowDisplayItem = true;
-    component.searchComponent.isShowOrderCondition = true;
-    component.searchComponent.isShowSaveCondition = true;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = true;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = true;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = true;
     fixture.detectChanges();
 
     const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-condition-save-button"));
@@ -151,9 +152,9 @@ describe('ComplexSearchComponent', () => {
 
   it('should click search button', () => {
 
-    component.searchComponent.isShowDisplayItem = true;
-    component.searchComponent.isShowOrderCondition = true;
-    component.searchComponent.isShowSaveCondition = true;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = true;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = true;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = true;
     fixture.detectChanges();
 
     const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-button"));
@@ -167,9 +168,9 @@ describe('ComplexSearchComponent', () => {
 
   it('should create save data', () => {
 
-    component.searchComponent.isShowDisplayItem = true;
-    component.searchComponent.isShowOrderCondition = true;
-    component.searchComponent.isShowSaveCondition = true;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = true;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = true;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = true;
     fixture.detectChanges();
 
     const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
@@ -200,19 +201,19 @@ describe('ComplexSearchComponent', () => {
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(false);
     expect(saveData.discloseGroups).toEqual([{id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}]);
-    expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.searchConditionList[0]);
+    expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.complexSearchItems.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(saveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
     expect(saveData.conditionData.searchConditionList[0].operator.value).toEqual('and');
-    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.orderConditionList[1]);
+    expect(saveData.conditionData.orderConditionList[0].orderField).toEqual(component.complexSearchItems.orderConditionList[1]);
     expect(saveData.conditionData.orderConditionList[0].orderFieldKeyWord.value).toEqual('asc');
   });
 
   it('should delete condition', () => {
 
-    component.searchComponent.isShowDisplayItem = false;
-    component.searchComponent.isShowOrderCondition = false;
-    component.searchComponent.isShowSaveCondition = false;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = false;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = false;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = false;
     fixture.detectChanges();
 
 
@@ -240,9 +241,9 @@ describe('ComplexSearchComponent', () => {
 
   it('should delete order condition', () => {
 
-    component.searchComponent.isShowDisplayItem = false;
-    component.searchComponent.isShowOrderCondition = true;
-    component.searchComponent.isShowSaveCondition = false;
+    component.searchComponent.complexSearchItems.isShowDisplayItem = false;
+    component.searchComponent.complexSearchItems.isShowOrderCondition = true;
+    component.searchComponent.complexSearchItems.isShowSaveCondition = false;
     fixture.detectChanges();
 
 
@@ -270,10 +271,7 @@ describe('ComplexSearchComponent', () => {
 @Component({
   template: `
   <app-complex-search
-    [displayItemList]="displayItemList"
-    [searchConditionList]="searchConditionList"
-    [orderConditionList]="orderConditionList"
-    [groupList]="groupList"
+    [complexSearchItems]="complexSearchItems"
     [saveData]="saveData"
     >
   </app-complex-search>`
@@ -283,10 +281,14 @@ class TestHostComponent {
   @ViewChild(ComplexSearchComponent, {static: true})
   searchComponent:ComplexSearchComponent;
 
-  displayItemList: FieldAttr[] = createTestArray();
-  searchConditionList: FieldAttr[] = createTestArray();
-  orderConditionList = createTestArray();
-  groupList: StaffGroup[] = ceateTestArrayGroup();
-
+  complexSearchItems: ComplexSearchItems = {
+    displayItemList: createTestArray(),
+    searchConditionList: createTestArray(),
+    orderConditionList: createTestArray(),
+    isShowDisplayItem: false,
+    isShowOrderCondition: false,
+    isShowSaveCondition: false,
+    staffGroups: ceateTestArrayGroup()
+  }
   saveData: SaveData = createTestInstanceSaveData()
 }

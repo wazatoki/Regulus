@@ -59,7 +59,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
       owner: {
         id: '',
         name: '',
-        favoriteConditions: [],
+        operatorUsableConditions: [],
       }
     });
     complexSearchServiceSpy.initConditionDataObj.and.returnValue({

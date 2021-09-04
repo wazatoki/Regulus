@@ -1,6 +1,6 @@
 <form [formGroup]='form'>
 
-    <mat-card class="display-item" *ngIf="isShowDisplayItem">
+    <mat-card class="display-item" *ngIf="complexSearchItems.isShowDisplayItem">
         <mat-card-header>
             <mat-card-title>表示項目</mat-card-title>
         </mat-card-header>
@@ -40,14 +40,14 @@
             <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of searchConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup" (onDelete)="removeSearchCondition(i)">
+                    <app-complex-search-condition-item [fields]="complexSearchItems.searchConditionList" [formGroup]="formGroup" (onDelete)="removeSearchCondition(i)">
                     </app-complex-search-condition-item>
                 </div>
             </div>
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="order-condition" *ngIf="isShowOrderCondition">
+    <mat-card class="order-condition" *ngIf="complexSearchItems.isShowOrderCondition">
         <mat-card-header>
             <mat-card-title>
                 並び順
@@ -58,14 +58,14 @@
             <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup" (onDelete)="removeOrderCondition(i)">
+                    <app-complex-search-order-item [fields]="complexSearchItems.orderConditionList" [formGroup]="formGroup" (onDelete)="removeOrderCondition(i)">
                     </app-complex-search-order-item>
                 </div>
             </div>
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="save-condition" *ngIf="isShowSaveCondition">
+    <mat-card class="save-condition" *ngIf="complexSearchItems.isShowSaveCondition">
         <mat-card-header>
             <mat-card-title>保存条件</mat-card-title>
         </mat-card-header>
@@ -79,7 +79,7 @@
                 <div class="disclosure-destination" formArrayName="discloseGroups">
                     <div class="disclosure-destination-group" *ngFor="let dg of discloseGroupFormArray.controls; let i=index">
                         <mat-checkbox [formControlName]="i">
-                            {{groupList[i].name}}
+                            {{complexSearchItems.staffGroups[i].name}}
                         </mat-checkbox>
                     </div>
                 </div>

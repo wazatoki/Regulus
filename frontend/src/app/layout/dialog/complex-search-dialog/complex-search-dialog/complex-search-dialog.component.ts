@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SaveData } from 'src/app/services/models/search/save-data';
 import { ComplexSearchItems } from '../../../../services/models/search/complex-search-items';
 
 @Component({
@@ -11,7 +12,7 @@ export class ComplexSearchDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ComplexSearchDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ComplexSearchItems
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 
   ngOnInit() {
@@ -24,3 +25,8 @@ export class ComplexSearchDialogComponent implements OnInit {
 
 }
 
+export interface DialogData {
+  title: string,
+  complexSearchItems: ComplexSearchItems,
+  saveData: SaveData,
+}

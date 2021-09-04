@@ -48,7 +48,7 @@ export function createInitSaveData(): SaveData {
         owner: {
           id: '',
           name: '',
-          favoriteConditions: [],
+          operatorUsableConditions: [],
         },
       }
 }

@@ -1,0 +1,13 @@
+<div>
+    <h1 mat-dialog-title class="dialog-title">{{ data.title }}</h1>
+    <div mat-dialog-content>
+        <div class="dialog-contents">
+            <app-operator-usable-conditions
+                [usableConditions]="data.operatorUsableConditions">
+            </app-operator-usable-conditions>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <app-cancel (clicked)="onCancelClick()"></app-cancel>
+    </div>
+</div>

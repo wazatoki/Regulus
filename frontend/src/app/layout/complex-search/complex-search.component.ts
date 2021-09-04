@@ -11,6 +11,7 @@ import { ComplexSearchService } from '../../services/share/complex-search.servic
 import { MatDialog } from '@angular/material/dialog';
 import { NoticeDialogComponent } from '../dialog/notice-dialog/notice-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ComplexSearchItems } from 'src/app/services/models/search/complex-search-items';
 
 @Component({
   selector: 'app-complex-search',
@@ -24,13 +25,15 @@ export class ComplexSearchComponent implements OnInit {
   selectedDisplayItemArray: FieldAttr[];
   fromDisplayItemArray: FieldAttr[];
 
-  @Input() displayItemList: FieldAttr[] = [];
-  @Input() searchConditionList: FieldAttr[] = [];
-  @Input() orderConditionList: FieldAttr[] = [];
-  @Input() isShowDisplayItem: boolean = false;
-  @Input() isShowOrderCondition: boolean = false;
-  @Input() isShowSaveCondition: boolean = false;
-  @Input() groupList: StaffGroup[] = [];
+  @Input() complexSearchItems: ComplexSearchItems = {
+    displayItemList: [],
+    searchConditionList: [],
+    orderConditionList: [],
+    isShowDisplayItem: false,
+    isShowOrderCondition: false,
+    isShowSaveCondition: false,
+    staffGroups: []
+  }
   @Input() saveData: SaveData = this.complexSearchDataShereService.initSaveDataObj();
 
   get searchConditionFormArray() {
@@ -65,7 +68,7 @@ export class ComplexSearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupList.forEach(g => {
+    this.complexSearchItems.staffGroups.forEach(g => {
       this.discloseGroupFormArray.push(this.fb.control(''));
     })
     this.initSelectedDisplayItems();
@@ -83,7 +86,7 @@ export class ComplexSearchComponent implements OnInit {
     if (this.saveData.isDisclose && this.saveData.discloseGroups) {
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         this.saveData.discloseGroups.forEach(g => {
-          if (this.groupList[i].id === g.id) {
+          if (this.complexSearchItems.staffGroups[i].id === g.id) {
             v.setValue(true)
           }
         });
@@ -97,7 +100,7 @@ export class ComplexSearchComponent implements OnInit {
 
       this.selectedDisplayItemArray = this.saveData.conditionData.displayItemList;
       this.fromDisplayItemArray = [];
-      this.displayItemList.filter(item => {
+      this.complexSearchItems.displayItemList.filter(item => {
         const flag = this.saveData.conditionData.displayItemList.some(savedItem => {
           return savedItem.id !== item.id
         });
@@ -156,7 +159,7 @@ export class ComplexSearchComponent implements OnInit {
       }));
     } else {
       this.searchConditionFormArray.push(new FormGroup({
-        fieldSelected: new FormControl(this.searchConditionList[0].id),
+        fieldSelected: new FormControl(this.complexSearchItems.searchConditionList[0].id),
         conditionValue: new FormControl('', [Validators.required]),
         matchTypeSelected: new FormControl(''),
         operatorSelected: new FormControl(''),
@@ -246,7 +249,7 @@ export class ComplexSearchComponent implements OnInit {
         }
       }
 
-      this.searchConditionList.forEach((v, i) => {
+      this.complexSearchItems.searchConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('fieldSelected').value) {
           field = v;
         }
@@ -271,7 +274,7 @@ export class ComplexSearchComponent implements OnInit {
     const result: OrderCondition[] = [];
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
-      this.orderConditionList.forEach((v, i) => {
+      this.complexSearchItems.orderConditionList.forEach((v, i) => {
         if (v.id == formGroup.get('orderFieldSelected').value) {
           field = v;
         }
@@ -296,12 +299,12 @@ export class ComplexSearchComponent implements OnInit {
       this.saveData = this.complexSearchDataShereService.initSaveDataObj();
     }
 
-    if (this.isShowSaveCondition) {
+    if (this.complexSearchItems.isShowSaveCondition) {
       this.saveData.patternName = this.saveConditions.get('patternName').value;
       this.saveData.isDisclose = this.saveConditions.get('isDisclose').value;
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         if (v.value === true) {
-          this.saveData.discloseGroups.push({id: this.groupList[i].id, name: ''});
+          this.saveData.discloseGroups.push({id: this.complexSearchItems.staffGroups[i].id, name: ''});
         }
       });
     }
@@ -313,13 +316,13 @@ export class ComplexSearchComponent implements OnInit {
   createSearchData(): ConditionData {
     const data: ConditionData = this.complexSearchDataShereService.initConditionDataObj();
 
-    if (this.isShowDisplayItem) {
+    if (this.complexSearchItems.isShowDisplayItem) {
       data.displayItemList = this.selectedDisplayItemArray;
     }
 
     data.searchConditionList = this.createSearchCondition();
 
-    if (this.isShowOrderCondition) {
+    if (this.complexSearchItems.isShowOrderCondition) {
       data.orderConditionList = this.createOrderCondition();
     }
     return data;
@@ -327,7 +330,7 @@ export class ComplexSearchComponent implements OnInit {
 
   initSelectedDisplayItems() {
     this.fromDisplayItemArray = [];
-    this.displayItemList.forEach(item => {
+    this.complexSearchItems.displayItemList.forEach(item => {
       this.fromDisplayItemArray.push(item)
     })
     this.selectedDisplayItemArray = [];
