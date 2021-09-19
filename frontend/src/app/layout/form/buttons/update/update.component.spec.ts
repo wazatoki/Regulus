@@ -24,4 +24,11 @@ describe('UpdateComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('set other name', () => {
+    component.buttonLabelName = 'testLabel';
+    fixture.detectChanges();
+    const htmlel: HTMLElement = fixture.nativeElement;
+    expect(htmlel.textContent).toContain('testLabel')
+  });
 });

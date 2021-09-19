@@ -8,6 +8,9 @@ import { StaffGroupSearchComponent } from './staff-group-search.component';
 import { of, Subject } from 'rxjs';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
+import { SelectSearchConditionComponent } from 'src/app/layout/form/buttons/select-search-condition/select-search-condition.component';
+import { MatDialog } from '@angular/material';
+import { LoginService } from 'src/app/services/api/login.service';
 
 describe('StaffGroupSearchComponent', () => {
   let component: StaffGroupSearchComponent;
@@ -20,13 +23,15 @@ describe('StaffGroupSearchComponent', () => {
     ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
-      declarations: [ StaffGroupSearchComponent ],
+      declarations: [ StaffGroupSearchComponent],
       imports: [
         LayoutModule,
         FlexLayoutModule,
       ],
       providers: [
         { provide: ComplexSearchService, useValue: complexSearchServiceSpy },
+        { provide: MatDialog },
+        { provide: LoginService },
       ],
     })
     .compileComponents();

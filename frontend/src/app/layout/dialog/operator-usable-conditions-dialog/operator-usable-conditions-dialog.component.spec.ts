@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatListModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { OperatorUsableConditionsComponent } from '../../complex-search/operator-usable-conditions/operator-usable-conditions.component';
 import { CancelComponent } from '../../form/buttons/cancel/cancel.component';
 
 import { OperatorUsableConditionsDialogComponent } from './operator-usable-conditions-dialog.component';
 
 describe('OperatorUsableConditionsDialogComponent', () => {
-  let component: OperatorUsableConditionsDialogComponent;
-  let fixture: ComponentFixture<OperatorUsableConditionsDialogComponent>;
+  let component: TestHostComponent;
+  let fixture: ComponentFixture<TestHostComponent>;
+  let debugElement: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -25,6 +28,7 @@ describe('OperatorUsableConditionsDialogComponent', () => {
         MatDialogModule,
         MatButtonModule,
         MatListModule,
+        NoopAnimationsModule,
       ],
       providers: [
         {
@@ -43,13 +47,17 @@ describe('OperatorUsableConditionsDialogComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OperatorUsableConditionsDialogComponent);
+    fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
+    debugElement = fixture.debugElement;
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
+    component.openDialog();
+    fixture.detectChanges();
     expect(component).toBeTruthy();
+
   });
 });
 
@@ -63,6 +71,7 @@ class TestHostComponent {
   openDialog() {
     const dialogRef = this.dialog.open(OperatorUsableConditionsDialogComponent, {
       data: {
+        title: 'test_title',
         operatorUsableConditions: []
       }
     });

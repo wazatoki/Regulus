@@ -11,7 +11,7 @@ export class CreateComponent implements OnInit {
 
   @Input() set buttonLabelName(name: string) {
     if( !(name === '' || name === null || name === undefined) ){
-      this.buttonLabel = this.buttonLabelName;
+      this.buttonLabel = name;
     }
   }
 

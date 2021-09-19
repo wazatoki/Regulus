@@ -26,6 +26,7 @@ import { ComplexSearchDialogComponent } from './dialog/complex-search-dialog/com
 import { FavoriteConditionsComponent } from './complex-search/favorite-conditions/favorite-conditions.component';
 import { OperatorUsableConditionsComponent } from './complex-search/operator-usable-conditions/operator-usable-conditions.component';
 import { OperatorUsableConditionsDialogComponent } from './dialog/operator-usable-conditions-dialog/operator-usable-conditions-dialog.component';
+import { SelectSearchConditionComponent } from './form/buttons/select-search-condition/select-search-condition.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { OperatorUsableConditionsDialogComponent } from './dialog/operator-usabl
     FavoriteConditionsComponent,
     OperatorUsableConditionsComponent,
     OperatorUsableConditionsDialogComponent,
+    SelectSearchConditionComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +87,7 @@ import { OperatorUsableConditionsDialogComponent } from './dialog/operator-usabl
     ComplexSearchConditionItemComponent,
     ComplexSearchOrderItemComponent,
     AutofocusDirective,
+    SelectSearchConditionComponent,
   ],
   entryComponents: [
     AlertDialogComponent,

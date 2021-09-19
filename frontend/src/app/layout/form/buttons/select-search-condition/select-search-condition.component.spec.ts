@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material';
 
-import { DeleteComponent } from './delete.component';
+import { SelectSearchConditionComponent } from './select-search-condition.component';
 
-describe('DeleteComponent', () => {
-  let component: DeleteComponent;
-  let fixture: ComponentFixture<DeleteComponent>;
+describe('SelectSearchConditionComponent', () => {
+  let component: SelectSearchConditionComponent;
+  let fixture: ComponentFixture<SelectSearchConditionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeleteComponent ],
+      declarations: [ SelectSearchConditionComponent ],
       imports: [ MatButtonModule ],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeleteComponent);
+    fixture = TestBed.createComponent(SelectSearchConditionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
