@@ -91,6 +91,9 @@ import { SelectSearchConditionComponent } from './form/buttons/select-search-con
   ],
   entryComponents: [
     AlertDialogComponent,
+    NoticeDialogComponent,
+    ComplexSearchDialogComponent,
+    OperatorUsableConditionsDialogComponent,
   ]
 })
 export class LayoutModule { }
