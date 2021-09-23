@@ -2,3 +2,6 @@
     <app-search (searchClick)="onSearch($event)"></app-search>
     <app-select-search-condition (clicked)="openDialogSelectSearchCondition()"></app-select-search-condition>
 </div>
+<div fxLayout="row wrap">
+    <span>検索パターン : </span><span>{{ selectedPatternName }}</span>
+</div>

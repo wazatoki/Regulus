@@ -16,6 +16,8 @@ export class StaffGroupSearchComponent implements OnInit {
 
   @Output() searchClicked: EventEmitter<ConditionData> = new EventEmitter();
 
+  public selectedPatternName: string
+
   onSearch(searchStrings: string) {
 
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
@@ -27,12 +29,19 @@ export class StaffGroupSearchComponent implements OnInit {
 
     const conditions: SaveData[] = this.loginSsevice.currentUserValue.operatorUsableConditions.filter((d: SaveData) => d.category.name === 'staff-group');
 
-    this.conditionSelectDialog.open(OperatorUsableConditionsDialogComponent, {
+    const dialogRef = this.conditionSelectDialog.open(OperatorUsableConditionsDialogComponent, {
       data: {
         title: '検索条件',
         operatorUsableConditions: conditions
       }
     });
+
+    dialogRef.afterClosed().subscribe(
+      (data: SaveData) => {
+        this.selectedPatternName = data.patternName
+        this.searchClicked.emit(data.conditionData)
+      }
+    )
 
   }
 
@@ -41,6 +50,8 @@ export class StaffGroupSearchComponent implements OnInit {
     private loginSsevice: LoginService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.selectedPatternName = '';
+   }
 
 }
