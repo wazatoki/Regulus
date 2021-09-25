@@ -16,7 +16,7 @@ export class StaffGroupSearchComponent implements OnInit {
 
   @Output() searchClicked: EventEmitter<ConditionData> = new EventEmitter();
 
-  public selectedPatternName: string
+  public selectedPatternName: string;
 
   onSearch(searchStrings: string) {
 

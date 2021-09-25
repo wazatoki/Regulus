@@ -10,6 +10,8 @@ import { ComplexSearchService } from 'src/app/services/share/complex-search.serv
 import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
+import { LoginService } from 'src/app/services/api/login.service';
+import { OperatorUsableConditionsDialogComponent } from 'src/app/layout/dialog/operator-usable-conditions-dialog/operator-usable-conditions-dialog.component';
 
 @Component({
   selector: 'app-complex-search-condition-search',
@@ -23,24 +25,58 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   private dialogRef: MatDialogRef<ComplexSearchDialogComponent>;
   private condition: ConditionData;
 
+  public selectedPatternName: string;
+
   @Output() searchClicked: EventEmitter<ConditionData> = new EventEmitter();
 
-  get isConditionDataAvailable (): boolean {
+  get isConditionDataAvailable(): boolean {
 
     return this.saveData.conditionData.searchConditionList.length > 0 ||
       this.saveData.conditionData.displayItemList.length > 0 ||
       this.saveData.conditionData.orderConditionList.length > 0
   }
 
+  openDialogSelectSearchCondition() {
+
+    const conditions: SaveData[] = this.loginSsevice.currentUserValue.operatorUsableConditions
+      .filter((d: SaveData) => d.category.name === 'query-condition');
+
+    const dialogRef = this.conditionSelectDialog.open(OperatorUsableConditionsDialogComponent, {
+      data: {
+        title: '検索条件',
+        operatorUsableConditions: conditions
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (data: SaveData) => {
+        this.selectedPatternName = data.patternName;
+        this.saveData = data;
+        this.condition = data.conditionData;
+        this.searchClicked.emit(data.conditionData);
+      }
+    )
+
+  }
+
   clearCondition() {
-    this.saveData = this.complexSearchService.initSaveDataObj()
-    this.condition = this.saveData.conditionData
+    this.saveData = this.complexSearchService.initSaveDataObj();
+    this.condition = this.saveData.conditionData;
+    this.selectedPatternName = '';
   }
 
   openComplexSearch() {
     this.complexSearchConditionService.findComplexSearchItems().subscribe((data: ComplexSearchItems) => {
-      const aData: any = data;
-      aData.saveData = this.saveData;
+      const aData: {
+        title: string,
+        complexSearchItems: ComplexSearchItems,
+        saveData: SaveData,
+      } = {
+        title: '検索条件設定',
+        complexSearchItems: data,
+        saveData: this.saveData
+      };
+
       // aData.saveData = this.testData(); // 検証用
       this.dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
         data: aData,
@@ -75,7 +111,9 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   constructor(
     private complexSearchConditionService: ComplexSearchConditionService,
     private complexSearchService: ComplexSearchService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private conditionSelectDialog: MatDialog,
+    private loginSsevice: LoginService
   ) {
     this.clearCondition()
     this.defineDialogSearch();

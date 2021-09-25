@@ -38,7 +38,9 @@ func insertTestDataToQueryCondition(con *sqlx.DB) {
 	sql += "('queryConditionid6', 'patternName6', 'staff-group', false, 'staffid2'),"
 	sql += "('queryConditionid7', 'patternName7', 'staff-group', false, 'staffid2'),"
 	sql += "('queryConditionid8', 'patternName8', 'staff-group', true, 'staffid2'),"
-	sql += "('queryConditionid9', 'patternName9', 'staff-group', false, 'staffid2')"
+	sql += "('queryConditionid9', 'patternName9', 'staff-group', false, 'staffid2'),"
+	sql += "('queryConditionid10', 'patternName10', 'query-condition', false, 'staffid1'),"
+	sql += "('queryConditionid11', 'patternName11', 'query-condition', false, 'staffid1')"
 
 	_, err = con.Exec(sql)
 	if err != nil {
@@ -62,7 +64,9 @@ func insertTestDataToQuerySearchConditionItems(con *sqlx.DB) {
 	sql += "('searchConditionItem6', 'queryConditionid6', 'name', '2', 'pertialmatch', 'and', 1),"
 	sql += "('searchConditionItem7', 'queryConditionid7', 'name', '3', 'pertialmatch', 'and', 1),"
 	sql += "('searchConditionItem8', 'queryConditionid8', 'name', '4', 'pertialmatch', 'and', 1),"
-	sql += "('searchConditionItem9', 'queryConditionid9', 'name', '5', 'pertialmatch', 'and', 1)"
+	sql += "('searchConditionItem9', 'queryConditionid9', 'name', '5', 'pertialmatch', 'and', 1),"
+	sql += "('searchConditionItem10', 'queryConditionid10', 'pattern-name', '10', 'pertialmatch', 'and', 1),"
+	sql += "('searchConditionItem11', 'queryConditionid11', 'category-view-value', '検索', 'pertialmatch', 'and', 1)"
 	_, err = con.Exec(sql)
 	if err != nil {
 		log.Println(sql)
