@@ -5,7 +5,10 @@ import { HttpService } from '../http.service';
 import { StaffGroup } from '../models/group/staff-group';
 
 import { StaffGroupService } from './staff-group.service';
-import { createTestInstance1 as createTestInstanceStaffGroup, ceateTestArray as createTestArrayStaffGroupData } from '../models/group/staff-group.spec';
+import {
+  createTestInstance1 as createTestInstanceStaffGroup,
+  ceateTestArray as createTestArrayStaffGroupData
+} from '../models/group/staff-group.spec';
 import { createTestInstance1 as createTestInstanceConditionData } from 'src/app/services/models/search/condition-data.spec';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -42,19 +45,14 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
-
-    let result: StaffGroup[] | HttpErrorResponse;
-
     const condition = createTestInstanceConditionData();
-    staffGroupService.findByCondition(condition).subscribe(data => {
-      result = data;
+
+    staffGroupService.findByCondition(condition).subscribe((res: StaffGroup[] | HttpErrorResponse) => {
+      expect(res).toEqual(testData);
+      const data: Map<string, string> = new Map();
+      data.set('condition', JSON.stringify(condition));
+      expect(httpServiceSpy.get).toHaveBeenCalledWith('/staffGroup', data);
     });
-
-    expect(result).toEqual(testData);
-
-    const data: Map<string, string> = new Map();
-    data.set('condition', JSON.stringify(condition));
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/staffGroup', data);
   });
 
   it('should call httpService.post with /staffGroup when called add method', () => {
@@ -65,14 +63,10 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.post.and.returnValue(of(resultData));
 
-    let result: StaffGroup | HttpErrorResponse;
-
-    staffGroupService.add(testData).subscribe(data => {
-      result = data;
+    staffGroupService.add(testData).subscribe((res: StaffGroup | HttpErrorResponse) => {
+      expect(res).toEqual(resultData);
+      expect(httpServiceSpy.post).toHaveBeenCalledWith('/staffGroup', testData);
     });
-
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.post).toHaveBeenCalledWith('/staffGroup', testData);
   });
 
   it('should call httpService.put with /staffGroup when called update method', () => {
@@ -82,14 +76,10 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.put.and.returnValue(of(resultData));
 
-    let result: StaffGroup | HttpErrorResponse;
-
-    staffGroupService.update(testData).subscribe(data => {
-      result = data;
+    staffGroupService.update(testData).subscribe((res: StaffGroup | HttpErrorResponse) => {
+      expect(res).toEqual(resultData);
+      expect(httpServiceSpy.put).toHaveBeenCalledWith('/staffGroup', testData);
     });
-
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.put).toHaveBeenCalledWith('/staffGroup', testData);
   });
 
 
@@ -100,16 +90,11 @@ describe('StaffGroupService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.delete.and.returnValue(of(resultData));
 
-    let result: StaffGroup[] | HttpErrorResponse;
-
-    staffGroupService.delete(testData).subscribe(data => {
-      result = data;
+    staffGroupService.delete(testData).subscribe((res: StaffGroup[] | HttpErrorResponse) => {
+      expect(res).toEqual(resultData);
+      expect(httpServiceSpy.delete).toHaveBeenCalledWith('/staffGroup', testData);
     });
-
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.delete).toHaveBeenCalledWith('/staffGroup', testData);
   });
-
 
   it('should be created', () => {
     const service: StaffGroupService = TestBed.get(StaffGroupService);

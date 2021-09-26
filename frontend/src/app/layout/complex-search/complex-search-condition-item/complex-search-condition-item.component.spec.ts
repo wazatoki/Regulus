@@ -17,6 +17,56 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
+@Component({
+  template: `
+  <app-complex-search-condition-item
+    [fields]="fields"
+    [formGroup]="formGroup"
+    (deleted)="deleted()">
+  </app-complex-search-condition-item>`
+})
+class TestHostComponent {
+
+  formGroup: FormGroup;
+  fields: FieldAttr[];
+
+  deleted(): string {
+    return 'deleted called';
+  }
+
+  constructor() {
+    this.formGroup = new FormGroup({
+      fieldSelected: new FormControl(''),
+      conditionValue: new FormControl(''),
+      matchTypeSelected: new FormControl(''),
+      operatorSelected: new FormControl(''),
+    });
+
+    this.formGroup.setValue({
+      fieldSelected: 'id1',
+      conditionValue: 'abcdefg',
+      matchTypeSelected: 'unmatch',
+      operatorSelected: 'or',
+    });
+
+    this.fields = [
+      {
+        id: 'id1',
+        viewValue: 'aaa-AAA',
+        fieldType: { value: 'number' },
+        optionItems: null,
+      },
+      {
+        id: 'id2',
+        viewValue: 'bbb-BBB',
+        fieldType: { value: 'string' },
+        optionItems: null,
+      },
+    ];
+  }
+
+}
+
 describe('ComplexSearchConditionItemComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
@@ -88,11 +138,11 @@ describe('ComplexSearchConditionItemComponent', () => {
     const inputDe: DebugElement = fixture.debugElement.query(By.css('.input-value'));
     const inputEl: HTMLInputElement = inputDe.nativeElement;
     const conditionValueControll: FormControl = component.formGroup.get('conditionValue') as FormControl;
-    inputEl.value = "aaa"
+    inputEl.value = 'aaa';
     inputEl.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
-    expect(conditionValueControll.value).toBe('aaa')
+    expect(conditionValueControll.value).toBe('aaa');
   });
 
   it('should click match type select', async () => {
@@ -106,10 +156,10 @@ describe('ComplexSearchConditionItemComponent', () => {
 
     await fixture.whenStable().then(() => {
       const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
-      inquiryOptions[0].nativeElement.click()
+      inquiryOptions[0].nativeElement.click();
 
       fixture.detectChanges();
-      expect(matchTypeControll.value).toBe('match')
+      expect(matchTypeControll.value).toBe('match');
     });
   });
 
@@ -129,57 +179,7 @@ describe('ComplexSearchConditionItemComponent', () => {
     const deleteEl: HTMLButtonElement = deleteDe.nativeElement;
     deleteEl.click();
     fixture.detectChanges();
-    expect(component.onDelete()).toEqual('onDelete called');
+    expect(component.deleted()).toEqual('deleted called');
   });
 
 });
-
-@Component({
-  template: `
-  <app-complex-search-condition-item
-    [fields]="fields"
-    [formGroup]="formGroup"
-    (onDelete)="onDelete()">
-  </app-complex-search-condition-item>`
-})
-class TestHostComponent {
-
-  formGroup: FormGroup;
-  fields: FieldAttr[];
-
-  onDelete(): string{
-    return 'onDelete called';
-  }
-
-  constructor() {
-    this.formGroup = new FormGroup({
-      fieldSelected: new FormControl(''),
-      conditionValue: new FormControl(''),
-      matchTypeSelected: new FormControl(''),
-      operatorSelected: new FormControl(''),
-    });
-
-    this.formGroup.setValue({
-      fieldSelected : 'id1',
-      conditionValue : 'abcdefg',
-      matchTypeSelected: 'unmatch',
-      operatorSelected: 'or',
-    });
-
-    this.fields = [
-      {
-        id: 'id1',
-        viewValue: 'aaa-AAA',
-        fieldType: {value: 'number'},
-        optionItems: null,
-      },
-      {
-        id: 'id2',
-        viewValue: 'bbb-BBB',
-        fieldType: {value: 'string'},
-        optionItems: null,
-      },
-    ];
-  }
-
-}

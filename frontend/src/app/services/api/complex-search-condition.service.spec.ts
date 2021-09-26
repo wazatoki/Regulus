@@ -7,7 +7,7 @@ import { Category } from '../models/search/category';
 import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec';
 import { of } from 'rxjs';
 import { SaveData } from '../models/search/save-data';
-import { createTestInstance1 as createTestInstanceSaveData, createTestArray as createTestArraySaveData } from 'src/app/services/models/search/save-data.spec';
+import { createTestArray as createTestArraySaveData } from 'src/app/services/models/search/save-data.spec';
 import { createTestInstance1 as createTestInstanceComplexSearchItem } from 'src/app/services/models/search/complex-search-items.spec';
 import { ComplexSearchItems } from '../models/search/complex-search-items';
 import { createTestInstance1 as createTestInstanceConditionData } from 'src/app/services/models/search/condition-data.spec';
@@ -83,19 +83,14 @@ describe('ComplexSearchConditionService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
-
-    let result: SaveData[] | HttpErrorResponse;
-
     const condition = createTestInstanceConditionData();
-    complexSearchConditionService.findByCondition(condition).subscribe(data => {
-      result = data;
+
+    complexSearchConditionService.findByCondition(condition).subscribe((res: SaveData[] | HttpErrorResponse) => {
+      expect(res).toEqual(testData);
+      const data: Map<string, string> = new Map();
+      data.set('condition', JSON.stringify(condition));
+      expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition', data);
     });
-
-    expect(result).toEqual(testData);
-
-    const data: Map<string, string> = new Map();
-    data.set('condition', JSON.stringify(condition));
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition', data);
   });
 
   // it('should call httpService.post with /complexSearchCondition when called add method', () => {

@@ -87,8 +87,8 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (let i = 0; i < retryCount; i++) {
-      const req = httpTestingController.expectOne('http://localhost:9876/api/data');
-      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+      const errreq = httpTestingController.expectOne('http://localhost:9876/api/data');
+      errreq.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
     const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(testData);
@@ -147,8 +147,8 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (let i = 0; i < retryCount; i++) {
-      const req = httpTestingController.expectOne('http://localhost:9876/api/data');
-      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+      const errreq = httpTestingController.expectOne('http://localhost:9876/api/data');
+      errreq.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
     const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(resultData);
@@ -189,8 +189,8 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (let i = 0; i < retryCount; i++) {
-      const req = httpTestingController.expectOne('http://localhost:9876/api/data');
-      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+      const errreq = httpTestingController.expectOne('http://localhost:9876/api/data');
+      errreq.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
     const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(resultData);
@@ -231,13 +231,11 @@ describe('HttpService', () => {
 
     const retryCount = 3;
     for (let i = 0; i < retryCount; i++) {
-      const req = httpTestingController.expectOne('http://localhost:9876/api/data');
-      req.flush(emsg, { status: 404, statusText: 'Not Found' });
+      const errreq = httpTestingController.expectOne('http://localhost:9876/api/data');
+      errreq.flush(emsg, { status: 404, statusText: 'Not Found' });
     }
     const req = httpTestingController.expectOne('http://localhost:9876/api/data');
     req.flush(resultData);
 
   });
-
-
 });

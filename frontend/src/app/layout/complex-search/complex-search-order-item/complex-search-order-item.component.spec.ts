@@ -15,6 +15,42 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement, Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
+@Component({
+  template: `
+  <app-complex-search-order-item
+    [fields]="fields"
+    [formGroup]="formGroup"
+    (deleted)="deleted()">
+  </app-complex-search-order-item>`
+})
+class TestHostComponent {
+
+  formGroup: FormGroup = new FormGroup({
+    orderFieldSelected: new FormControl(''),
+    orderFieldKeyWordSelected: new FormControl(''),
+  });
+
+  fields: FieldAttr[] = [
+    {
+      id: 'id1',
+      viewValue: 'aaa-AAA',
+      fieldType: {value: 'number'},
+      optionItems: null,
+    },
+    {
+      id: 'id2',
+      viewValue: 'bbb-BBB',
+      fieldType: {value: 'string'},
+      optionItems: null,
+    },
+  ];
+
+  deleted(): string {
+    return 'deleted called';
+  }
+
+}
+
 describe('ComplexSearchOrderItemComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
@@ -53,7 +89,7 @@ describe('ComplexSearchOrderItemComponent', () => {
 
   it('should click order field select', async () => {
 
-    const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-order-field-name"));
+    const selectDe: DebugElement = fixture.debugElement.query(By.css('.select-order-field-name'));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
     const orderFieldFormControll: FormControl = component.formGroup.get('orderFieldSelected') as FormControl;
     selectEl.click();
@@ -61,7 +97,7 @@ describe('ComplexSearchOrderItemComponent', () => {
 
     await fixture.whenStable().then(() => {
       const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
-      inquiryOptions[0].nativeElement.click()
+      inquiryOptions[0].nativeElement.click();
 
       fixture.detectChanges();
       expect(orderFieldFormControll.value).toBe(component.fields[0].id);
@@ -84,45 +120,7 @@ describe('ComplexSearchOrderItemComponent', () => {
     const deleteEl: HTMLButtonElement = deleteDe.nativeElement;
     deleteEl.click();
     fixture.detectChanges();
-    expect(component.onDelete()).toEqual('onDelete called');
+    expect(component.deleted()).toEqual('deleted called');
   });
 
 });
-
-
-@Component({
-  template: `
-  <app-complex-search-order-item
-    [fields]="fields"
-    [formGroup]="formGroup"
-    (onDelete)="onDelete()">
-  </app-complex-search-order-item>`
-})
-class TestHostComponent {
-
-  formGroup: FormGroup = new FormGroup({
-    orderFieldSelected: new FormControl(''),
-    orderFieldKeyWordSelected: new FormControl(''),
-  });
-
-  fields: FieldAttr[] = [
-    {
-      id: 'id1',
-      viewValue: 'aaa-AAA',
-      fieldType: {value: 'number'},
-      optionItems: null,
-    },
-    {
-      id: 'id2',
-      viewValue: 'bbb-BBB',
-      fieldType: {value: 'string'},
-      optionItems: null,
-    },
-  ];
-
-  onDelete(): string{
-    return 'onDelete called';
-  }
-
-}
-

@@ -16,59 +16,56 @@ describe('MakerSearchComponent', () => {
   let elementd: DebugElement;
   let element: HTMLElement;
   let fixture: ComponentFixture<MakerSearchComponent>;
-  let makerServiceSpy: jasmine.SpyObj<MakerService>;
-  let complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService>;
-
+  const makerServiceSpy: jasmine.SpyObj<MakerService> = jasmine.createSpyObj(
+    'MakerService',
+    ['findByCondition', 'findComplexSearchItems']);
+  const complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService> = jasmine.createSpyObj(
+    'ComplexSearchService',
+    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
+  complexSearchServiceSpy.initSaveDataObj.and.returnValue({
+    id: '',
+    patternName: '',
+    category: null,
+    isDisclose: false,
+    discloseGroups: [],
+    ownerID: '',
+    conditionData: {
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    },
+    owner: {
+      id: '',
+      name: '',
+      operatorUsableConditions: [],
+    }
+  });
+  complexSearchServiceSpy.initConditionDataObj.and.returnValue({
+    searchStrings: [],
+    displayItemList: [],
+    searchConditionList: [],
+    orderConditionList: [],
+  });
+  complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
 
   beforeEach(async(() => {
-
-    const spy = jasmine.createSpyObj('MakerService', ['findByCondition', 'findComplexSearchItems']);
-    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
-
     TestBed.configureTestingModule({
-      declarations: [ MakerSearchComponent ],
+      declarations: [MakerSearchComponent],
       imports: [
         LayoutModule,
         MatButtonModule,
         FlexLayoutModule,
       ],
       providers: [
-        { provide: MakerService, useValue: spy },
-        { provide: ComplexSearchService, useValue: complexSearchServiceSpy}
+        { provide: MakerService, useValue: makerServiceSpy },
+        { provide: ComplexSearchService, useValue: complexSearchServiceSpy }
       ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    complexSearchServiceSpy = TestBed.get(ComplexSearchService);
-    complexSearchServiceSpy.initSaveDataObj.and.returnValue({
-      id: '',
-      patternName: '',
-      category: null,
-      isDisclose: false,
-      discloseGroups: [],
-      ownerID: '',
-      conditionData: {
-        searchStrings: [],
-        displayItemList: [],
-        searchConditionList: [],
-        orderConditionList: [],
-      },
-      owner: {
-        id: '',
-        name: '',
-        operatorUsableConditions: [],
-      }
-    });
-    complexSearchServiceSpy.initConditionDataObj.and.returnValue({
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    });
-    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
 
     fixture = TestBed.createComponent(MakerSearchComponent);
     component = fixture.componentInstance;
@@ -78,7 +75,6 @@ describe('MakerSearchComponent', () => {
   });
 
   it('should create', () => {
-    makerServiceSpy = TestBed.get(MakerService);
     const complexSearchItems: ComplexSearchItems = {
       displayItemList: [],
       searchConditionList: [],
@@ -89,14 +85,11 @@ describe('MakerSearchComponent', () => {
       staffGroups: [],
     };
     const stubValue = of(complexSearchItems);
-
     makerServiceSpy.findComplexSearchItems.and.returnValue(stubValue);
     expect(component).toBeTruthy();
   });
 
   it('should onSearch set keywords to makerCondition.searchStrings', () => {
-    makerServiceSpy = TestBed.get(MakerService);
-    complexSearchServiceSpy = TestBed.get(ComplexSearchService);
     const testData: Maker[] = [
       { id: 'testid1', name: 'Test Maker1' },
       { id: 'testid2', name: 'Test Maker2' },
@@ -110,7 +103,7 @@ describe('MakerSearchComponent', () => {
     };
     makerServiceSpy.findByCondition.and.returnValue(stubValue);
     complexSearchServiceSpy.initConditionDataObj.and.returnValue(condition);
-    component.fetched.subscribe( (data: Maker[]) => {
+    component.fetched.subscribe((data: Maker[]) => {
       expect(data).toBe(testData);
     });
     component.onSearch('search word');

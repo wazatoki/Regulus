@@ -40,7 +40,7 @@
             <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="searchCondition" [cdkDropListData]="searchConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of searchConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-condition-item [fields]="complexSearchItems.searchConditionList" [formGroup]="formGroup" (onDelete)="removeSearchCondition(i)">
+                    <app-complex-search-condition-item [fields]="complexSearchItems.searchConditionList" [formGroup]="formGroup" (deleted)="removeSearchCondition(i)">
                     </app-complex-search-condition-item>
                 </div>
             </div>
@@ -58,7 +58,7 @@
             <div cdkDropList class="item-list" (cdkDropListDropped)="controlDrop($event)" formArrayName="orderCondition" [cdkDropListData]="orderConditionFormArray.controls">
                 <div class="item-box" *ngFor="let formGroup of orderConditionFormArray.controls; let i=index" cdkDrag>
 
-                    <app-complex-search-order-item [fields]="complexSearchItems.orderConditionList" [formGroup]="formGroup" (onDelete)="removeOrderCondition(i)">
+                    <app-complex-search-order-item [fields]="complexSearchItems.orderConditionList" [formGroup]="formGroup" (deleted)="removeOrderCondition(i)">
                     </app-complex-search-order-item>
                 </div>
             </div>
@@ -96,6 +96,6 @@
         </mat-grid-tile>
     </mat-grid-list>
 
-    
+
 
 </form>

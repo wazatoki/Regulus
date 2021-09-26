@@ -24,8 +24,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient } from '@angular/common/http';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { By } from '@angular/platform-browser';
-import { ComplexSearchConditionItemComponent } from 'src/app/layout/complex-search/complex-search-condition-item/complex-search-condition-item.component';
-import { ComplexSearchOrderItemComponent } from 'src/app/layout/complex-search/complex-search-order-item/complex-search-order-item.component';
+import {
+  ComplexSearchConditionItemComponent
+} from 'src/app/layout/complex-search/complex-search-condition-item/complex-search-condition-item.component';
+import {
+  ComplexSearchOrderItemComponent
+} from 'src/app/layout/complex-search/complex-search-order-item/complex-search-order-item.component';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
@@ -241,12 +245,14 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     const expectSaveData = component.saveData;
     expect(expectSaveData.patternName).toBe('sample pattern name');
     expect(expectSaveData.isDisclose).toBe(false);
-    expect(expectSaveData.discloseGroups).toEqual([{ id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}]);
-    expect(expectSaveData.conditionData.searchConditionList[0].searchField).toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
+    expect(expectSaveData.discloseGroups).toEqual([{ id: 'test-group-id-1', name: '' }, { id: 'test-group-id-2', name: '' }]);
+    expect(expectSaveData.conditionData.searchConditionList[0].searchField)
+      .toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
     expect(expectSaveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(expectSaveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
     expect(expectSaveData.conditionData.searchConditionList[0].operator.value).toEqual('and');
-    expect(expectSaveData.conditionData.orderConditionList[0].orderField).toEqual(component.selectedCategory.searchItems.orderConditionList[1]);
+    expect(expectSaveData.conditionData.orderConditionList[0].orderField)
+      .toEqual(component.selectedCategory.searchItems.orderConditionList[1]);
     expect(expectSaveData.conditionData.orderConditionList[0].orderFieldKeyWord.value).toEqual('asc');
   });
 

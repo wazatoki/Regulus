@@ -9,16 +9,14 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { ComplexSearchComponent } from './complex-search.component';
-import { FieldAttr } from '../../services/models/search/field-attr';
 import { SaveData } from '../../services/models/search/save-data';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from './complex-search-order-item/complex-search-order-item.component';
 import { DeleteComponent } from '../form/buttons/delete/delete.component';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { StaffGroup } from '../../services/models/group/staff-group';
 import { ComplexSearchService } from '../../services/share/complex-search.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -29,6 +27,31 @@ import { createTestInstance1 as createTestInstanceSaveData } from 'src/app/servi
 import { createInitSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 import { ComplexSearchItems } from 'src/app/services/models/search/complex-search-items';
+
+@Component({
+  template: `
+  <app-complex-search
+    [complexSearchItems]="complexSearchItems"
+    [saveData]="saveData"
+    >
+  </app-complex-search>`
+})
+class TestHostComponent {
+
+  @ViewChild(ComplexSearchComponent, { static: true })
+  searchComponent: ComplexSearchComponent;
+
+  complexSearchItems: ComplexSearchItems = {
+    displayItemList: createTestArray(),
+    searchConditionList: createTestArray(),
+    orderConditionList: createTestArray(),
+    isShowDisplayItem: false,
+    isShowOrderCondition: false,
+    isShowSaveCondition: false,
+    staffGroups: ceateTestArrayGroup()
+  };
+  saveData: SaveData = createTestInstanceSaveData();
+}
 
 describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
@@ -266,28 +289,3 @@ describe('ComplexSearchComponent', () => {
   });
 
 });
-
-@Component({
-  template: `
-  <app-complex-search
-    [complexSearchItems]="complexSearchItems"
-    [saveData]="saveData"
-    >
-  </app-complex-search>`
-})
-class TestHostComponent {
-
-  @ViewChild(ComplexSearchComponent, { static: true })
-  searchComponent: ComplexSearchComponent;
-
-  complexSearchItems: ComplexSearchItems = {
-    displayItemList: createTestArray(),
-    searchConditionList: createTestArray(),
-    orderConditionList: createTestArray(),
-    isShowDisplayItem: false,
-    isShowOrderCondition: false,
-    isShowSaveCondition: false,
-    staffGroups: ceateTestArrayGroup()
-  }
-  saveData: SaveData = createTestInstanceSaveData();
-}

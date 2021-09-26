@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { OperatorUsableConditionsDialogComponent } from 'src/app/layout/dialog/operator-usable-conditions-dialog/operator-usable-conditions-dialog.component';
+import {
+  OperatorUsableConditionsDialogComponent,
+} from 'src/app/layout/dialog/operator-usable-conditions-dialog/operator-usable-conditions-dialog.component';
 import { LoginService } from 'src/app/services/api/login.service';
 import { ConditionData, splitStrings } from 'src/app/services/models/search/condition-data';
 import { SaveData } from 'src/app/services/models/search/save-data';
@@ -27,7 +29,8 @@ export class StaffGroupSearchComponent implements OnInit {
 
   openDialogSelectSearchCondition() {
 
-    const conditions: SaveData[] = this.loginSsevice.currentUserValue.operatorUsableConditions.filter((d: SaveData) => d.category.name === 'staff-group');
+    const conditions: SaveData[] = this.loginSsevice.currentUserValue.operatorUsableConditions
+      .filter((d: SaveData) => d.category.name === 'staff-group');
 
     const dialogRef = this.conditionSelectDialog.open(OperatorUsableConditionsDialogComponent, {
       data: {
@@ -52,6 +55,6 @@ export class StaffGroupSearchComponent implements OnInit {
 
   ngOnInit() {
     this.selectedPatternName = '';
-   }
+  }
 
 }

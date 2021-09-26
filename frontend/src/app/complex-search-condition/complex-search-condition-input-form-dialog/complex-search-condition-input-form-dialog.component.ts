@@ -235,7 +235,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     const result: OrderCondition[] = [];
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
-      this.selectedCategory.searchItems.orderConditionList.forEach((v, i) => {
+      this.selectedCategory.searchItems.orderConditionList.forEach((v, index) => {
         if (v.id === formGroup.get('orderFieldSelected').value) {
           field = v;
         }
@@ -265,7 +265,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
         }
       };
 
-      this.selectedCategory.searchItems.searchConditionList.forEach((v, i) => {
+      this.selectedCategory.searchItems.searchConditionList.forEach((v, index) => {
         if (v.id === formGroup.get('fieldSelected').value) {
           field = v;
         }

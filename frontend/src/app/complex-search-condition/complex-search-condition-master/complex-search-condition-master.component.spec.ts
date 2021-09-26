@@ -131,7 +131,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -152,7 +152,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
       orderConditionList: [],
     };
     const data: SaveData[] = createTestArray();
-    spy.findByCondition.and.returnValue(of(data))
+    spy.findByCondition.and.returnValue(of(data));
     component.search(condition);
 
     expect(spy.findByCondition).toHaveBeenCalledWith(condition);

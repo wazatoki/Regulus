@@ -5,9 +5,9 @@ import { Directive, ElementRef, OnInit } from '@angular/core';
 })
 export class AutofocusDirective implements OnInit {
 
-  constructor( private el: ElementRef) { }
+  constructor(private el: ElementRef) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.el.nativeElement.focus();
   }
 }

@@ -15,85 +15,21 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, 
 
 import { ComplexSearchDialogComponent } from './complex-search-dialog.component';
 import { ComplexSearchComponent } from '../../../complex-search/complex-search.component';
-import { ComplexSearchConditionItemComponent } from '../../../complex-search/complex-search-condition-item/complex-search-condition-item.component';
+import {
+  ComplexSearchConditionItemComponent
+} from '../../../complex-search/complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from '../../../complex-search/complex-search-order-item/complex-search-order-item.component';
 import { CancelComponent } from '../../../form/buttons/cancel/cancel.component';
 import { DeleteComponent } from '../../../form/buttons/delete/delete.component';
-import { StaffGroup } from '../../../../services/models/group/staff-group';
-import { FieldAttr } from '../../../../services/models/search/field-attr';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { HttpClient } from '@angular/common/http';
-
-describe('ComplexSearchDialogComponent', () => {
-  let component: TestHostComponent;
-  let fixture: ComponentFixture<TestHostComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        TestHostComponent,
-        ComplexSearchDialogComponent,
-        ComplexSearchComponent,
-        ComplexSearchConditionItemComponent,
-        ComplexSearchOrderItemComponent,
-        CancelComponent,
-        DeleteComponent,
-      ],
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatCardModule,
-        MatSelectModule,
-        MatRadioModule,
-        MatGridListModule,
-        MatDialogModule,
-        DragDropModule,
-        NoopAnimationsModule,
-      ],
-      providers: [
-        {
-          provide: MatDialogRef,
-          useValue: MatDialogRef
-        },
-        {
-          provide: MAT_DIALOG_DATA, useValue: {}
-        },
-        {
-          provide: HttpClient, useValue: {}
-        }
-      ],
-    }).overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [ComplexSearchDialogComponent],
-      }
-    })
-      .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TestHostComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    component.openDialog();
-    expect(component).toBeTruthy();
-  });
-});
 
 @Component({
   template: `
   <div>test host component</div>`
 })
 class TestHostComponent {
-
-
   openDialog() {
     const dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
       data: {
@@ -163,3 +99,65 @@ class TestHostComponent {
     public dialog: MatDialog) { }
 
 }
+
+describe('ComplexSearchDialogComponent', () => {
+  let component: TestHostComponent;
+  let fixture: ComponentFixture<TestHostComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        TestHostComponent,
+        ComplexSearchDialogComponent,
+        ComplexSearchComponent,
+        ComplexSearchConditionItemComponent,
+        ComplexSearchOrderItemComponent,
+        CancelComponent,
+        DeleteComponent,
+      ],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatCardModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatGridListModule,
+        MatDialogModule,
+        DragDropModule,
+        NoopAnimationsModule,
+      ],
+      providers: [
+        {
+          provide: MatDialogRef,
+          useValue: MatDialogRef
+        },
+        {
+          provide: MAT_DIALOG_DATA, useValue: {}
+        },
+        {
+          provide: HttpClient, useValue: {}
+        }
+      ],
+    }).overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [ComplexSearchDialogComponent],
+      }
+    })
+      .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestHostComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    component.openDialog();
+    expect(component).toBeTruthy();
+  });
+});

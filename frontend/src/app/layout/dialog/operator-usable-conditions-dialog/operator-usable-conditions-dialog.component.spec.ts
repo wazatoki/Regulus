@@ -11,6 +11,27 @@ import { CancelComponent } from '../../form/buttons/cancel/cancel.component';
 
 import { OperatorUsableConditionsDialogComponent } from './operator-usable-conditions-dialog.component';
 
+@Component({
+  template: `
+  <div>test host component</div>`
+})
+class TestHostComponent {
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(OperatorUsableConditionsDialogComponent, {
+      data: {
+        title: 'test_title',
+        operatorUsableConditions: []
+      }
+    });
+  }
+
+  constructor(
+    public dialog: MatDialog) { }
+
+}
+
 describe('OperatorUsableConditionsDialogComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
@@ -60,24 +81,3 @@ describe('OperatorUsableConditionsDialogComponent', () => {
 
   });
 });
-
-@Component({
-  template: `
-  <div>test host component</div>`
-})
-class TestHostComponent {
-
-
-  openDialog() {
-    const dialogRef = this.dialog.open(OperatorUsableConditionsDialogComponent, {
-      data: {
-        title: 'test_title',
-        operatorUsableConditions: []
-      }
-    });
-  }
-
-  constructor(
-    public dialog: MatDialog) { }
-
-}

@@ -48,18 +48,18 @@ export class LoginService {
 
   login(data: { id: string, password: string }): Observable<boolean> {
 
-    return this.client.post<any>('http://' + window.location.host + '/login', data).pipe(map(data => {
+    return this.client.post<any>('http://' + window.location.host + '/login', data).pipe(map(res => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      if (data.jwtToken) {
-        this.currentUserTokenSubject.next(data.jwtToken);
-        this.currentUserSubject.next(data.staff);
-        this.token = data.jwtToken;
-        this.user = data.staff;
+      if (res.jwtToken) {
+        this.currentUserTokenSubject.next(res.jwtToken);
+        this.currentUserSubject.next(res.staff);
+        this.token = res.jwtToken;
+        this.user = res.staff;
         return true;
       }
       return false;
     }),
-    catchError(this.handleError)
+      catchError(this.handleError)
     );
   }
 

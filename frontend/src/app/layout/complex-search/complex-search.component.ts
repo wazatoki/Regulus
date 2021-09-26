@@ -52,7 +52,8 @@ export class ComplexSearchComponent implements OnInit {
     return this.saveConditions.get('discloseGroups') as FormArray;
   }
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private complexSearchDataShereService: ComplexSearchService,
     private dialog: MatDialog) {
 
@@ -60,8 +61,8 @@ export class ComplexSearchComponent implements OnInit {
       searchCondition: this.fb.array([]),
       orderCondition: this.fb.array([]),
       saveCondition: this.fb.group({
-        patternName: this.fb.control(""),
-        isDisclose: this.fb.control(""),
+        patternName: this.fb.control(''),
+        isDisclose: this.fb.control(''),
         discloseGroups: this.fb.array([]),
       }),
     });
@@ -249,7 +250,7 @@ export class ComplexSearchComponent implements OnInit {
         }
       };
 
-      this.complexSearchItems.searchConditionList.forEach((v, i) => {
+      this.complexSearchItems.searchConditionList.forEach((v, index) => {
         if (v.id === formGroup.get('fieldSelected').value) {
           field = v;
         }
@@ -274,7 +275,7 @@ export class ComplexSearchComponent implements OnInit {
     const result: OrderCondition[] = [];
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
-      this.complexSearchItems.orderConditionList.forEach((v, i) => {
+      this.complexSearchItems.orderConditionList.forEach((v, index) => {
         if (v.id === formGroup.get('orderFieldSelected').value) {
           field = v;
         }

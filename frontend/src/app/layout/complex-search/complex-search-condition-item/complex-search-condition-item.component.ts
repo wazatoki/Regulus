@@ -10,12 +10,12 @@ import { OptionItem } from '../../../services/models/search/option-item';
 })
 export class ComplexSearchConditionItemComponent implements OnInit {
 
-  readonly matchTypesForString: matchTypeAttr[] = [
+  readonly matchTypesForString: MatchTypeAttr[] = [
     { name: 'match', viewValue: '完全一致' },
     { name: 'unmatch', viewValue: '不一致' },
     { name: 'pertialmatch', viewValue: '部分一致' },
   ];
-  readonly matchTypesForNumber: matchTypeAttr[] = [
+  readonly matchTypesForNumber: MatchTypeAttr[] = [
     { name: 'match', viewValue: '完全一致 =' },
     { name: 'unmatch', viewValue: '不一致 !=' },
     { name: 'gt', viewValue: '超過 >' },
@@ -48,13 +48,13 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     return '';
   }
 
-  matchTypes: matchTypeAttr[];
+  matchTypes: MatchTypeAttr[];
   optionItems: OptionItem[];
   selectedFieldType: { value: string };
 
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
-  @Output() onDelete = new EventEmitter();
+  @Output() deleted = new EventEmitter();
 
   onSelectField(): void {
     this.setMatchType();
@@ -124,7 +124,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
         default:
           this.matchTypes = this.matchTypesForString;
-          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          this.matchTypeSelected.setValue(this.matchTypes[0].name);
           break;
       }
     } else { // 検索対象フィールドが選択されていないときなど。
@@ -133,12 +133,12 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   deleteClicked() {
-    this.onDelete.emit();
+    this.deleted.emit();
   }
 
 }
 
-interface matchTypeAttr {
-  name: string,
-  viewValue: string,
+interface MatchTypeAttr {
+  name: string;
+  viewValue: string;
 }

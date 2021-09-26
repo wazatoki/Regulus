@@ -1,24 +1,26 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
-import { ComplexSearchDialogComponent } from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
+import {
+  ComplexSearchDialogComponent
+} from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { ConditionData, mapCondition, splitStrings } from 'src/app/services/models/search/condition-data';
 import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
 import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
-import { HttpErrorResponse } from '@angular/common/http';
-import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
 import { LoginService } from 'src/app/services/api/login.service';
-import { OperatorUsableConditionsDialogComponent } from 'src/app/layout/dialog/operator-usable-conditions-dialog/operator-usable-conditions-dialog.component';
+import {
+  OperatorUsableConditionsDialogComponent
+} from 'src/app/layout/dialog/operator-usable-conditions-dialog/operator-usable-conditions-dialog.component';
 
 @Component({
   selector: 'app-complex-search-condition-search',
   templateUrl: './complex-search-condition-search.component.html',
   styleUrls: ['./complex-search-condition-search.component.css']
 })
-export class ComplexSearchConditionSearchComponent implements OnInit {
+export class ComplexSearchConditionSearchComponent implements OnInit, OnDestroy {
 
   private complexSearchSubscription: Subscription;
   private saveData: SaveData;
@@ -92,6 +94,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   }
 
   ngOnDestroy() {
+
     // prevent memory leak when component destroyed
     this.complexSearchSubscription.unsubscribe();
   }
@@ -115,7 +118,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     private conditionSelectDialog: MatDialog,
     private loginSsevice: LoginService
   ) {
-    this.clearCondition()
+    this.clearCondition();
     this.defineDialogSearch();
   }
 

@@ -64,7 +64,7 @@
                             cdkDrag>
 
                             <app-complex-search-condition-item [fields]="searchConditionList" [formGroup]="formGroup"
-                                (onDelete)="removeSearchCondition(i)">
+                                (deleted)="removeSearchCondition(i)">
                             </app-complex-search-condition-item>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                             cdkDrag>
 
                             <app-complex-search-order-item [fields]="orderConditionList" [formGroup]="formGroup"
-                                (onDelete)="removeOrderCondition(i)">
+                                (deleted)="removeOrderCondition(i)">
                             </app-complex-search-order-item>
                         </div>
                     </div>
@@ -133,6 +133,6 @@
 
         </mat-dialog-content>
 
-        
+
     </form>
 </div>

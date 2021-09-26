@@ -13,7 +13,7 @@ export class OperatorUsableConditionsComponent implements OnInit {
 
   @Output() selectedCondition: EventEmitter<SaveData> = new EventEmitter();
 
-  public get conditions() : SaveData[] {
+  public get conditions(): SaveData[] {
     return this.usableConditions;
   }
 

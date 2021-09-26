@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { ProductMasterComponent } from './product-master.component';
 import { LayoutModule } from '../../layout/layout.module';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,21 +8,21 @@ import { Component } from '@angular/core';
 import { LoginService } from 'src/app/services/api/login.service';
 import { BehaviorSubject } from 'rxjs';
 
-@Component({selector: 'app-product-search', template: ''})
-class ProductSearchComponent {}
+@Component({ selector: 'app-product-search', template: '' })
+class ProductSearchComponent { }
 
-@Component({selector: 'app-header', template: ''})
-class HeaderComponent {}
+@Component({ selector: 'app-header', template: '' })
+class HeaderComponent { }
 
 describe('ProductMasterComponent', () => {
   let component: ProductMasterComponent;
   let productMasterElement: HTMLElement;
   let fixture: ComponentFixture<ProductMasterComponent>;
-  let spy: jasmine.SpyObj<LoginService>;
+  const spy: jasmine.SpyObj<LoginService> = jasmine
+    .createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
+  spy.currentUserToken = new BehaviorSubject<string>('').asObservable();
 
   beforeEach(async(() => {
-
-    const spy = jasmine.createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -39,13 +39,10 @@ describe('ProductMasterComponent', () => {
         { provide: LoginService, useValue: spy },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    spy = TestBed.get(LoginService);
-    spy.currentUserToken = new BehaviorSubject<string>('').asObservable();
-
     fixture = TestBed.createComponent(ProductMasterComponent);
     component = fixture.componentInstance;
     productMasterElement = fixture.debugElement.nativeElement;
@@ -64,7 +61,7 @@ describe('ProductMasterComponent', () => {
     expect(productMasterElement.textContent).toContain('製品番号');
   });
 
-  it('should explain table body' , () => {
+  it('should explain table body', () => {
     component.dataSource = [
       {
         name: 'name_aaa',

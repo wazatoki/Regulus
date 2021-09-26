@@ -1,30 +1,53 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ComplexSearchConditionSearchComponent } from './complex-search-condition-search.component';
 import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
 import { LayoutModule } from 'src/app/layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
-import { SaveData } from 'src/app/services/models/search/save-data';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
-import { of, Subject } from 'rxjs';
-
-import { createTestArray } from 'src/app/services/models/search/save-data.spec';
-import { MatButtonModule, MatCardModule, MatCheckboxModule, MatDialog, MatDialogModule, MatFormFieldModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatPaginatorModule, MatRadioModule, MatSelectModule, MatTableModule } from '@angular/material';
+import { Subject } from 'rxjs';
+import { MatButtonModule, MatDialog } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginService } from 'src/app/services/api/login.service';
 
 describe('ComplexSearchConditionSearchComponent', () => {
   let component: ComplexSearchConditionSearchComponent;
   let fixture: ComponentFixture<ComplexSearchConditionSearchComponent>;
-  let complexSearchConditionServiceSpy: jasmine.SpyObj<ComplexSearchConditionService>;
-  let complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService>;
+  const complexSearchConditionServiceSpy: jasmine.SpyObj<ComplexSearchConditionService> = jasmine.createSpyObj(
+    'ComplexSearchConditionService',
+    ['findByCondition']);
+  const complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService> = jasmine.createSpyObj(
+    'ComplexSearchService',
+    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
+
+  complexSearchServiceSpy.initSaveDataObj.and.returnValue({
+    id: '',
+    patternName: '',
+    category: null,
+    isDisclose: false,
+    discloseGroups: [],
+    ownerID: '',
+    conditionData: {
+      searchStrings: [],
+      displayItemList: [],
+      searchConditionList: [],
+      orderConditionList: [],
+    },
+    owner: {
+      id: '',
+      name: '',
+      operatorUsableConditions: [],
+    }
+  });
+  complexSearchServiceSpy.initConditionDataObj.and.returnValue({
+    searchStrings: [],
+    displayItemList: [],
+    searchConditionList: [],
+    orderConditionList: [],
+  });
+  complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
 
   beforeEach(async(() => {
-
-    const complexSearchConditionServiceSpy = jasmine.createSpyObj('ComplexSearchConditionService', ['findByCondition']);
-    const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-      ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'complexSearchOrdered$']);
 
     TestBed.configureTestingModule({
       declarations: [ComplexSearchConditionSearchComponent],
@@ -45,34 +68,6 @@ describe('ComplexSearchConditionSearchComponent', () => {
   }));
 
   beforeEach(() => {
-    complexSearchServiceSpy = TestBed.get(ComplexSearchService);
-    complexSearchServiceSpy.initSaveDataObj.and.returnValue({
-      id: '',
-      patternName: '',
-      category: null,
-      isDisclose: false,
-      discloseGroups: [],
-      ownerID: '',
-      conditionData: {
-        searchStrings: [],
-        displayItemList: [],
-        searchConditionList: [],
-        orderConditionList: [],
-      },
-      owner: {
-        id: '',
-        name: '',
-        operatorUsableConditions: [],
-      }
-    });
-    complexSearchServiceSpy.initConditionDataObj.and.returnValue({
-      searchStrings: [],
-      displayItemList: [],
-      searchConditionList: [],
-      orderConditionList: [],
-    });
-    complexSearchServiceSpy.complexSearchOrdered$ = new Subject<ConditionData>().asObservable();
-
     fixture = TestBed.createComponent(ComplexSearchConditionSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -9,10 +9,6 @@ export class SubmitComponent implements OnInit {
 
   private buttonLabel: string;
 
-  onBlur() {
-    this.focusout.emit('');
-  }
-
   @Input() set focus(a: boolean) {
     if (a) {
       this.el.nativeElement.querySelector('button').focus();
@@ -38,8 +34,15 @@ export class SubmitComponent implements OnInit {
   }
 
   @Output() clicked: EventEmitter<string> = new EventEmitter();
-  @Output() focusout: EventEmitter<string> = new EventEmitter();
+  @Output() focusouted: EventEmitter<string> = new EventEmitter();
 
+  onBlur() {
+    this.focusouted.emit('');
+  }
+
+  onClick() {
+    this.clicked.emit('submitClicked');
+  }
 
   constructor(private el: ElementRef) {
     this.buttonLabel = '送信';
@@ -47,9 +50,4 @@ export class SubmitComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  onClick() {
-    this.clicked.emit('submitClicked');
-  }
-
 }

@@ -9,7 +9,7 @@ import { FieldAttr } from '../../../services/models/search/field-attr';
 })
 export class ComplexSearchOrderItemComponent implements OnInit {
 
-  readonly orderFieldKeyWords: orderKeyWordAttr[] = [
+  readonly orderFieldKeyWords: OrderKeyWordAttr[] = [
     { name: 'asc', viewValue: '昇順' },
     { name: 'desc', viewValue: '降順' },
   ];
@@ -24,7 +24,7 @@ export class ComplexSearchOrderItemComponent implements OnInit {
 
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
-  @Output() onDelete = new EventEmitter();
+  @Output() deleted = new EventEmitter();
 
   constructor() { }
 
@@ -33,12 +33,12 @@ export class ComplexSearchOrderItemComponent implements OnInit {
   }
 
   deleteClicked() {
-    this.onDelete.emit();
+    this.deleted.emit();
   }
 
 }
 
-interface orderKeyWordAttr {
-  name: string,
-  viewValue: string,
+interface OrderKeyWordAttr {
+  name: string;
+  viewValue: string;
 }

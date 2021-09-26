@@ -6,7 +6,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
-import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
+import {
+  ComplexSearchConditionInputFormDialogComponent
+} from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
 import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
 import { TRUE } from 'src/app/services/models/enum/boolean';
 import { ConditionData } from 'src/app/services/models/search/condition-data';

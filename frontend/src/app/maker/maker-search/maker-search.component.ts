@@ -6,7 +6,9 @@ import { ConditionData, mapCondition, splitStrings } from '../../services/models
 import { Subscription } from 'rxjs';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ComplexSearchDialogComponent } from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
+import {
+  ComplexSearchDialogComponent
+} from '../../layout/dialog/complex-search-dialog/complex-search-dialog/complex-search-dialog.component';
 import { ComplexSearchItems } from '../../services/models/search/complex-search-items';
 import { SaveData } from 'src/app/services/models/search/save-data';
 import { HttpErrorResponse } from '@angular/common/http';
