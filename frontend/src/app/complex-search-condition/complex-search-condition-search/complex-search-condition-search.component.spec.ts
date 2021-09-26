@@ -10,8 +10,9 @@ import { ConditionData } from 'src/app/services/models/search/condition-data';
 import { of, Subject } from 'rxjs';
 
 import { createTestArray } from 'src/app/services/models/search/save-data.spec';
-import { MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatPaginatorModule, MatRadioModule, MatSelectModule, MatTableModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatCheckboxModule, MatDialog, MatDialogModule, MatFormFieldModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatPaginatorModule, MatRadioModule, MatSelectModule, MatTableModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoginService } from 'src/app/services/api/login.service';
 
 describe('ComplexSearchConditionSearchComponent', () => {
   let component: ComplexSearchConditionSearchComponent;
@@ -36,6 +37,8 @@ describe('ComplexSearchConditionSearchComponent', () => {
       providers: [
         { provide: ComplexSearchConditionService, useValue: complexSearchConditionServiceSpy },
         { provide: ComplexSearchService, useValue: complexSearchServiceSpy },
+        { provide: MatDialog, useValue: MatDialog },
+        { provide: LoginService, useValue: LoginService },
       ],
     })
       .compileComponents();

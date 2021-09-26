@@ -78,7 +78,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
       };
 
       // aData.saveData = this.testData(); // 検証用
-      this.dialogRef = this.dialog.open(ComplexSearchDialogComponent, {
+      this.dialogRef = this.conditionDialog.open(ComplexSearchDialogComponent, {
         data: aData,
       });
     });
@@ -111,7 +111,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   constructor(
     private complexSearchConditionService: ComplexSearchConditionService,
     private complexSearchService: ComplexSearchService,
-    private dialog: MatDialog,
+    private conditionDialog: MatDialog,
     private conditionSelectDialog: MatDialog,
     private loginSsevice: LoginService
   ) {

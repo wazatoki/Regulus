@@ -10,5 +10,11 @@
     </ng-template>
 
     <span><button mat-flat-button (click)="clearCondition()" color="default">条件をクリア</button></span>
-    
+
+    <app-select-search-condition (clicked)="openDialogSelectSearchCondition()"></app-select-search-condition>
+
+</div>
+
+<div fxLayout="row wrap">
+    <span>検索パターン : </span><span>{{ selectedPatternName }}</span>
 </div>
