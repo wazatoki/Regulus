@@ -8,27 +8,27 @@ import { MatDialog } from '@angular/material/dialog';
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let spy:jasmine.SpyObj<LoginService>;
+  let spy: jasmine.SpyObj<LoginService>;
 
   beforeEach(async(() => {
-    
+
     const spy = jasmine.createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
     const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
-      imports: [ RouterTestingModule ],
+      declarations: [HeaderComponent],
+      imports: [RouterTestingModule],
       providers: [
         { provide: LoginService, useValue: spy },
         { provide: MatDialog, useValue: dialogspy },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     spy = TestBed.get(LoginService);
-    spy.currentUserToken= new BehaviorSubject<string>('').asObservable()
+    spy.currentUserToken = new BehaviorSubject<string>('').asObservable();
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;

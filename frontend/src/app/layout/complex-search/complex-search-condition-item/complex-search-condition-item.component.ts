@@ -43,9 +43,9 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
   get selectedFieldTypeValue() {
     if (this.selectedFieldType) {
-      return this.selectedFieldType.value
+      return this.selectedFieldType.value;
     }
-    return ""
+    return '';
   }
 
   matchTypes: matchTypeAttr[];
@@ -69,13 +69,13 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     if (this.fieldSelected.value !== null && this.fieldSelected.value !== undefined && this.fieldSelected.value !== '') {
 
       const f = this.fields.find((field) => {
-        return (field.id === this.fieldSelected.value)
-      })
+        return (field.id === this.fieldSelected.value);
+      });
       if (f) {
         this.selectedFieldType = f.fieldType;
       }
-      const cv = this.conditionValue.value
-      const mt = this.matchTypeSelected.value
+      const cv = this.conditionValue.value;
+      const mt = this.matchTypeSelected.value;
       this.setMatchType();
       this.conditionValue.setValue(cv);
       this.matchTypeSelected.setValue(mt);
@@ -84,7 +84,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       this.matchTypes = this.matchTypesForString;
     }
     // operatorの初期設定
-    if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
+    if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value === '') {
       this.operatorSelected.setValue(this.operators[0]);
     }
 
@@ -96,13 +96,13 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
   setMatchType(): void {
     const f = this.fields.find((field) => {
-      return (field.id === this.fieldSelected.value)
-    })
+      return (field.id === this.fieldSelected.value);
+    });
 
     if (f) {
 
       this.selectedFieldType = f.fieldType;
-      this.optionItems = f.optionItems
+      this.optionItems = f.optionItems;
 
       switch (f.fieldType.value) {
         case 'number':
@@ -112,7 +112,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
           break;
         case 'string':
           this.matchTypes = this.matchTypesForString;
-          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          this.matchTypeSelected.setValue(this.matchTypes[0].name);
           this.conditionValue.setValue('');
           break;
         case 'boolean':

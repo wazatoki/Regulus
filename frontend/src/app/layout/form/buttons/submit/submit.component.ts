@@ -9,13 +9,13 @@ export class SubmitComponent implements OnInit {
 
   private buttonLabel: string;
 
-  onBlur(){
+  onBlur() {
     this.focusout.emit('');
   }
 
   @Input() set focus(a: boolean) {
     if (a) {
-      this.el.nativeElement.querySelector('button').focus()
+      this.el.nativeElement.querySelector('button').focus();
     }
   }
 
@@ -23,16 +23,16 @@ export class SubmitComponent implements OnInit {
 
     switch (type) {
       case 'insert':
-        this.buttonLabel = '新規作成'
+        this.buttonLabel = '新規作成';
         break;
       case 'update':
-        this.buttonLabel = '更新'
+        this.buttonLabel = '更新';
         break;
       case 'save':
-        this.buttonLabel = '保存'
+        this.buttonLabel = '保存';
         break;
       default:
-        this.buttonLabel = '送信'
+        this.buttonLabel = '送信';
         break;
     }
   }
@@ -42,7 +42,7 @@ export class SubmitComponent implements OnInit {
 
 
   constructor(private el: ElementRef) {
-    this.buttonLabel = '送信'
+    this.buttonLabel = '送信';
   }
 
   ngOnInit() {

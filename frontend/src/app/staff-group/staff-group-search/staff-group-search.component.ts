@@ -21,8 +21,8 @@ export class StaffGroupSearchComponent implements OnInit {
   onSearch(searchStrings: string) {
 
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
-    this.condition.searchStrings = splitStrings(searchStrings)
-    this.searchClicked.emit(this.condition)
+    this.condition.searchStrings = splitStrings(searchStrings);
+    this.searchClicked.emit(this.condition);
   }
 
   openDialogSelectSearchCondition() {
@@ -38,10 +38,10 @@ export class StaffGroupSearchComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       (data: SaveData) => {
-        this.selectedPatternName = data.patternName
-        this.searchClicked.emit(data.conditionData)
+        this.selectedPatternName = data.patternName;
+        this.searchClicked.emit(data.conditionData);
       }
-    )
+    );
 
   }
 

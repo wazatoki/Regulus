@@ -16,7 +16,7 @@ export class ComplexSearchDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dialogRef.updateSize("1100px")
+    this.dialogRef.updateSize('1100px');
   }
 
   onCancelClick(): void {
@@ -26,7 +26,7 @@ export class ComplexSearchDialogComponent implements OnInit {
 }
 
 export interface DialogData {
-  title: string,
-  complexSearchItems: ComplexSearchItems,
-  saveData: SaveData,
+  title: string;
+  complexSearchItems: ComplexSearchItems;
+  saveData: SaveData;
 }

@@ -14,13 +14,13 @@ export class OperatorUsableConditionsComponent implements OnInit {
   @Output() selectedCondition: EventEmitter<SaveData> = new EventEmitter();
 
   public get conditions() : SaveData[] {
-    return this.usableConditions 
+    return this.usableConditions;
   }
 
   onClick(condition: SaveData) {
-    this.selectedCondition.emit(condition)
+    this.selectedCondition.emit(condition);
   }
-  
+
   constructor() { }
 
   ngOnInit() {

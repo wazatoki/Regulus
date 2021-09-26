@@ -18,14 +18,14 @@ describe('ProductMasterComponent', () => {
   let component: ProductMasterComponent;
   let productMasterElement: HTMLElement;
   let fixture: ComponentFixture<ProductMasterComponent>;
-  let spy:jasmine.SpyObj<LoginService>;
+  let spy: jasmine.SpyObj<LoginService>;
 
   beforeEach(async(() => {
 
     const spy = jasmine.createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
 
     TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         ProductMasterComponent,
         ProductSearchComponent,
         HeaderComponent,
@@ -44,7 +44,7 @@ describe('ProductMasterComponent', () => {
 
   beforeEach(() => {
     spy = TestBed.get(LoginService);
-    spy.currentUserToken= new BehaviorSubject<string>('').asObservable()
+    spy.currentUserToken = new BehaviorSubject<string>('').asObservable();
 
     fixture = TestBed.createComponent(ProductMasterComponent);
     component = fixture.componentInstance;
@@ -57,12 +57,12 @@ describe('ProductMasterComponent', () => {
   });
 
   it('should explain table header', () => {
-    //expect(productMasterElement.textContent).toContain('製造販売業者');
-    //expect(productMasterElement.textContent).toContain('一般的名称');
+    // expect(productMasterElement.textContent).toContain('製造販売業者');
+    // expect(productMasterElement.textContent).toContain('一般的名称');
     expect(productMasterElement.textContent).toContain('ＪＡＮコード');
     expect(productMasterElement.textContent).toContain('商品名');
     expect(productMasterElement.textContent).toContain('製品番号');
-  })
+  });
 
   it('should explain table body' , () => {
     component.dataSource = [
@@ -76,7 +76,7 @@ describe('ProductMasterComponent', () => {
         jancode: 'jancode_bbb',
         code: 'code_bbb',
       }
-    ]
+    ];
 
     fixture.detectChanges();
 
@@ -86,5 +86,5 @@ describe('ProductMasterComponent', () => {
     expect(productMasterElement.textContent).toContain('name_bbb');
     expect(productMasterElement.textContent).toContain('jancode_bbb');
     expect(productMasterElement.textContent).toContain('code_bbb');
-  })
+  });
 });

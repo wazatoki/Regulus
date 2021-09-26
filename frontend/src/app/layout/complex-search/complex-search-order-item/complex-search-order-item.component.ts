@@ -10,8 +10,8 @@ import { FieldAttr } from '../../../services/models/search/field-attr';
 export class ComplexSearchOrderItemComponent implements OnInit {
 
   readonly orderFieldKeyWords: orderKeyWordAttr[] = [
-    {name: 'asc', viewValue:'昇順'},
-    {name: 'desc',  viewValue:'降順'},
+    { name: 'asc', viewValue: '昇順' },
+    { name: 'desc', viewValue: '降順' },
   ];
 
   get orderFieldSelected() {
@@ -28,7 +28,7 @@ export class ComplexSearchOrderItemComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.orderFieldKeyWordSelected.setValue(this.orderFieldKeyWords[0].name);
   }
 
@@ -38,7 +38,7 @@ export class ComplexSearchOrderItemComponent implements OnInit {
 
 }
 
-interface orderKeyWordAttr{
+interface orderKeyWordAttr {
   name: string,
   viewValue: string,
 }

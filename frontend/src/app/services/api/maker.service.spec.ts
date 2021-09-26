@@ -32,7 +32,7 @@ describe('MakerService', () => {
           { provide: HttpService, useValue: spy },
         ]
       }
-    )
+    );
 
     httpTestingController = TestBed.get(HttpTestingController);
   });
@@ -57,8 +57,8 @@ describe('MakerService', () => {
     let result: Maker | HttpErrorResponse;
 
     makerService.findById('testid').subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
 
@@ -74,21 +74,21 @@ describe('MakerService', () => {
     ];
     makerService = TestBed.get(MakerService);
     const conditionData: ConditionData = createConditionData1();
-    
+
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
     let result: Maker[] | HttpErrorResponse;
 
     makerService.findByCondition(conditionData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
 
     const data: Map<string, string> = new Map();
-    data.set('condition',JSON.stringify(conditionData));
+    data.set('condition', JSON.stringify(conditionData));
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker', data);
   });
 
@@ -99,14 +99,14 @@ describe('MakerService', () => {
     ];
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
     let result: Maker[] | HttpErrorResponse;
 
     makerService.findAll().subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker');
@@ -122,8 +122,8 @@ describe('MakerService', () => {
     let result: Maker | HttpErrorResponse;
 
     makerService.add(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.post).toHaveBeenCalledWith('/maker', testData);
@@ -139,8 +139,8 @@ describe('MakerService', () => {
     let result: Maker | HttpErrorResponse;
 
     makerService.update(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.put).toHaveBeenCalledWith('/maker', testData);
@@ -156,8 +156,8 @@ describe('MakerService', () => {
     let result: Maker[] | HttpErrorResponse;
 
     makerService.delete(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.delete).toHaveBeenCalledWith('/maker/delete', testData);
@@ -167,14 +167,14 @@ describe('MakerService', () => {
     const testData: ComplexSearchItems = createTestInstance1();
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
     let result: ComplexSearchItems | HttpErrorResponse;
 
     makerService.findComplexSearchItems().subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/complexSearchItems');

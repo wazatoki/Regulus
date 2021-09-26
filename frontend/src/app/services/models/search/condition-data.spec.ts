@@ -22,5 +22,5 @@ export function createInitConditionData(): ConditionData {
         displayItemList: [],
         searchConditionList: [],
         orderConditionList: [],
-      }
+      };
 }

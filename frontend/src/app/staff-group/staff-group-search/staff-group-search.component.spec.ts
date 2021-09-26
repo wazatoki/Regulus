@@ -15,7 +15,7 @@ import { LoginService } from 'src/app/services/api/login.service';
 describe('StaffGroupSearchComponent', () => {
   let component: StaffGroupSearchComponent;
   let fixture: ComponentFixture<StaffGroupSearchComponent>;
-  let complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService>
+  let complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService>;
 
   beforeEach(async(() => {
 

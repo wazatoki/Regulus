@@ -10,7 +10,7 @@ export class SelectSearchConditionComponent implements OnInit {
   @Output() clicked: EventEmitter<string> = new EventEmitter();
 
   @Input() set buttonLabelName(name: string) {
-    if( !(name === '' || name === null || name === undefined) ){
+    if (!(name === '' || name === null || name === undefined)) {
       this.buttonLabel = name;
     }
   }

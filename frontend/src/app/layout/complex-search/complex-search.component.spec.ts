@@ -14,7 +14,7 @@ import { ComplexSearchComponent } from './complex-search.component';
 import { FieldAttr } from '../../services/models/search/field-attr';
 import { SaveData } from '../../services/models/search/save-data';
 import { ComplexSearchConditionItemComponent } from './complex-search-condition-item/complex-search-condition-item.component';
-import { ComplexSearchOrderItemComponent } from "./complex-search-order-item/complex-search-order-item.component";
+import { ComplexSearchOrderItemComponent } from './complex-search-order-item/complex-search-order-item.component';
 import { DeleteComponent } from '../form/buttons/delete/delete.component';
 import { DebugElement, Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -24,9 +24,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
 import { createTestArray } from 'src/app/services/models/search/field-attr.spec';
-import { ceateTestArray as ceateTestArrayGroup} from 'src/app/services/models/group/staff-group.spec';
-import { createTestInstance1 as createTestInstanceSaveData} from 'src/app/services/models/search/save-data.spec';
-import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
+import { ceateTestArray as ceateTestArrayGroup } from 'src/app/services/models/group/staff-group.spec';
+import { createTestInstance1 as createTestInstanceSaveData } from 'src/app/services/models/search/save-data.spec';
+import { createInitSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 import { ComplexSearchItems } from 'src/app/services/models/search/complex-search-items';
 
@@ -34,11 +34,11 @@ describe('ComplexSearchComponent', () => {
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   let spy: jasmine.SpyObj<ComplexSearchService>;
-  let saveData: SaveData
+  let saveData: SaveData;
 
   beforeEach(async(() => {
     const complexSearchServiceSpy = jasmine.createSpyObj('ComplexSearchService',
-    ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
+      ['orderComplexSearch', 'initSaveDataObj', 'initConditionDataObj', 'updateSearchCondition', 'addSearchCondition']);
 
     TestBed.configureTestingModule({
       declarations: [
@@ -83,7 +83,6 @@ describe('ComplexSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;
-    
     spy = TestBed.get(ComplexSearchService);
     spy.initSaveDataObj.and.returnValue(createInitSaveData());
     spy.initConditionDataObj.and.returnValue(createInitConditionData());
@@ -103,7 +102,7 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.complexSearchItems.isShowSaveCondition = false;
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-search-condition"));
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css('.push-search-condition'));
     const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
     buttonEl.click();
     buttonEl.click();
@@ -121,7 +120,7 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.complexSearchItems.isShowSaveCondition = false;
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-order-condition"));
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css('.push-order-condition'));
     const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
     buttonEl.click();
     buttonEl.click();
@@ -138,14 +137,14 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.complexSearchItems.isShowSaveCondition = true;
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-condition-save-button"));
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css('.complex-search-condition-save-button'));
     const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
     buttonEl.click();
     fixture.detectChanges();
 
-    if(component.searchComponent.saveData.id){
+    if (component.searchComponent.saveData.id) {
       expect(spy.updateSearchCondition).toHaveBeenCalled();
-    }else{
+    } else {
       expect(spy.addSearchCondition).toHaveBeenCalled();
     }
   });
@@ -157,7 +156,7 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.complexSearchItems.isShowSaveCondition = true;
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".complex-search-button"));
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css('.complex-search-button'));
     const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
     buttonEl.click();
     fixture.detectChanges();
@@ -173,14 +172,14 @@ describe('ComplexSearchComponent', () => {
     component.searchComponent.complexSearchItems.isShowSaveCondition = true;
     fixture.detectChanges();
 
-    const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
+    const patternNameDe: DebugElement = fixture.debugElement.query(By.css('input.pattern-name'));
     const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
     patternNameEl.value = 'sample pattern name';
     patternNameEl.dispatchEvent(new Event('input'));
-    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css('.is-disclose label'));
     const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
     isDiscloseEl.click();
-    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.disclosure-destination-group label'));
     const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
     const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
     groupEl0.click();
@@ -200,7 +199,7 @@ describe('ComplexSearchComponent', () => {
     saveData = component.searchComponent.saveData;
     expect(saveData.patternName).toBe('sample pattern name');
     expect(saveData.isDisclose).toBe(false);
-    expect(saveData.discloseGroups).toEqual([{id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}]);
+    expect(saveData.discloseGroups).toEqual([{ id: 'test-group-id-1', name: '' }, { id: 'test-group-id-2', name: '' }]);
     expect(saveData.conditionData.searchConditionList[0].searchField).toEqual(component.complexSearchItems.searchConditionList[0]);
     expect(saveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(saveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
@@ -230,7 +229,7 @@ describe('ComplexSearchComponent', () => {
     (component.searchComponent.searchConditionFormArray.controls[1] as FormGroup).get('operatorSelected').setValue('or');
     fixture.detectChanges();
 
-    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".search-condition .item-list .delete-button button"));
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.search-condition .item-list .delete-button button'));
     const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
     deleteEl0.click();
 
@@ -257,7 +256,7 @@ describe('ComplexSearchComponent', () => {
 
     fixture.detectChanges();
 
-    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".order-condition .item-list .delete-button button"));
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.order-condition .item-list .delete-button button'));
     const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
     deleteEl0.click();
 
@@ -278,8 +277,8 @@ describe('ComplexSearchComponent', () => {
 })
 class TestHostComponent {
 
-  @ViewChild(ComplexSearchComponent, {static: true})
-  searchComponent:ComplexSearchComponent;
+  @ViewChild(ComplexSearchComponent, { static: true })
+  searchComponent: ComplexSearchComponent;
 
   complexSearchItems: ComplexSearchItems = {
     displayItemList: createTestArray(),
@@ -290,5 +289,5 @@ class TestHostComponent {
     isShowSaveCondition: false,
     staffGroups: ceateTestArrayGroup()
   }
-  saveData: SaveData = createTestInstanceSaveData()
+  saveData: SaveData = createTestInstanceSaveData();
 }

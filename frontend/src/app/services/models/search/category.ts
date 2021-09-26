@@ -1,7 +1,7 @@
-import { ComplexSearchItems } from './complex-search-items'
+import { ComplexSearchItems } from './complex-search-items';
 
 export interface Category {
-    name: string
-    viewValue: string
-    searchItems: ComplexSearchItems
+    name: string;
+    viewValue: string;
+    searchItems: ComplexSearchItems;
 }

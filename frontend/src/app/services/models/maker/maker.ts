@@ -4,6 +4,6 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class Maker {
-    id: string
-    name: string
+    id: string;
+    name: string;
 }

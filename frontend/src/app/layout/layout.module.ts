@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HeaderComponent } from './header/header.component';
@@ -7,7 +7,7 @@ import { LayoutHeaderSidebarContentsComponent } from './layout-header-sidebar-co
 import { LayoutHeaderContentsComponent } from './layout-header-contents/layout-header-contents.component';
 import { LayoutContentsComponent } from './layout-contents/layout-contents.component';
 import { SearchComponent } from './search/search.component';
-import { MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule,MatCheckboxModule, MatButtonModule,MatDialogModule, MatListModule, MatGridListModule, MatCardModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule, MatCheckboxModule, MatButtonModule, MatDialogModule, MatListModule, MatGridListModule, MatCardModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CancelComponent } from './form/buttons/cancel/cancel.component';

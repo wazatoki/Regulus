@@ -23,9 +23,9 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   selectedCategory: Category;
   selectedDisplayItemArray: FieldAttr[] = [];
   fromDisplayItemArray: FieldAttr[] = [];
-  isShowDisplayItem: boolean = false;
-  isShowOrderCondition: boolean = false;
-  isShowSaveCondition: boolean = true;
+  isShowDisplayItem = false;
+  isShowOrderCondition = false;
+  isShowSaveCondition = true;
   groupList: StaffGroup[] = [];
   displayItemList: FieldAttr[] = [];
   searchConditionList: FieldAttr[] = [];
@@ -66,7 +66,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
 
   onClearClick(): void {
-    this.form = this.initForm()
+    this.form = this.initForm();
     this.onSelectCategory();
     this.selectedDisplayItemArray = [];
     this.fromDisplayItemArray = [];
@@ -89,16 +89,16 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
   setSavedDataToForm() {
     // カテゴリーの反映
-    this.categorySelected.setValue(this.saveData.category.name)
-    this.onSelectCategory()
+    this.categorySelected.setValue(this.saveData.category.name);
+    this.onSelectCategory();
 
-    this.saveConditions.get('patternName').setValue(this.saveData.patternName)
-    this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose)
+    this.saveConditions.get('patternName').setValue(this.saveData.patternName);
+    this.saveConditions.get('isDisclose').setValue(this.saveData.isDisclose);
     if (this.saveData.isDisclose && this.saveData.discloseGroups) {
       this.discloseGroupFormArray.controls.forEach((v, i) => {
         this.saveData.discloseGroups.forEach(g => {
           if (this.groupList[i].id === g.id) {
-            v.setValue(true)
+            v.setValue(true);
           }
         });
       });
@@ -114,12 +114,12 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       this.fromDisplayItemArray = [];
       this.selectedCategory.searchItems.displayItemList.filter(item => {
         const flag = this.saveData.conditionData.displayItemList.some(savedItem => {
-          return savedItem.id !== item.id
+          return savedItem.id !== item.id;
         });
         if (flag) {
           this.fromDisplayItemArray.push(item);
         }
-      })
+      });
     }
 
     // 検索条件を反映する
@@ -137,7 +137,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       && this.saveData.conditionData.orderConditionList !== undefined
       && this.saveData.conditionData.orderConditionList.length > 0) {
       this.saveData.conditionData.orderConditionList.forEach(orderCondition => {
-        this.pushOrderCondition()
+        this.pushOrderCondition();
         const fgroup = this.orderConditionFormArray.at(this.orderConditionFormArray.length - 1);
         fgroup.get('orderFieldSelected').setValue(orderCondition.orderField.id);
         fgroup.get('orderFieldKeyWordSelected').setValue(orderCondition.orderFieldKeyWord);
@@ -187,8 +187,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     if (this.selectedCategory) {
       this.fromDisplayItemArray = [];
       this.selectedCategory.searchItems.displayItemList.forEach(item => {
-        this.fromDisplayItemArray.push(item)
-      })
+        this.fromDisplayItemArray.push(item);
+      });
       this.selectedDisplayItemArray = [];
     } else {
       this.fromDisplayItemArray = [];
@@ -201,8 +201,8 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
       this.discloseGroupFormArray.clear();
       this.selectedCategory.searchItems.staffGroups.forEach(g => {
         this.discloseGroupFormArray.push(this.fb.control(''));
-      })
-      this.groupList = this.selectedCategory.searchItems.staffGroups
+      });
+      this.groupList = this.selectedCategory.searchItems.staffGroups;
     } else {
       this.discloseGroupFormArray.clear();
       this.groupList = [];
@@ -214,15 +214,15 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
     if (this.categorySelected.value) {
       this.selectedCategory = this.data.categories.find((c) => {
-        return (c.name === this.categorySelected.value)
-      })
-      this.initGroups()
+        return (c.name === this.categorySelected.value);
+      });
+      this.initGroups();
 
       if (this.selectedCategory) {
-        this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem
-        this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition
-        this.searchConditionList = this.selectedCategory.searchItems.searchConditionList
-        this.orderConditionList = this.selectedCategory.searchItems.orderConditionList
+        this.isShowDisplayItem = this.selectedCategory.searchItems.isShowDisplayItem;
+        this.isShowOrderCondition = this.selectedCategory.searchItems.isShowOrderCondition;
+        this.searchConditionList = this.selectedCategory.searchItems.searchConditionList;
+        this.orderConditionList = this.selectedCategory.searchItems.orderConditionList;
         this.initSelectedDisplayItems();
         this.searchConditionFormArray.clear();
         this.orderConditionFormArray.clear();
@@ -236,14 +236,14 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     this.orderConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
       this.selectedCategory.searchItems.orderConditionList.forEach((v, i) => {
-        if (v.id == formGroup.get('orderFieldSelected').value) {
+        if (v.id === formGroup.get('orderFieldSelected').value) {
           field = v;
         }
       });
       const condition: OrderCondition = {
         orderField: field,
         orderFieldKeyWord: {value: formGroup.get('orderFieldKeyWordSelected').value},
-      }
+      };
       result.push(condition);
     });
     return result;
@@ -254,7 +254,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     this.searchConditionFormArray.controls.forEach((formGroup: FormGroup, i) => {
       let field: FieldAttr;
       const conditionValue = (fieldType: string) => {
-        if (fieldType == 'boolean') {
+        if (fieldType === 'boolean') {
           if (formGroup.get('conditionValue').value) {
             return 'true';
           } else {
@@ -263,10 +263,10 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
         } else {
           return formGroup.get('conditionValue').value;
         }
-      }
+      };
 
       this.selectedCategory.searchItems.searchConditionList.forEach((v, i) => {
-        if (v.id == formGroup.get('fieldSelected').value) {
+        if (v.id === formGroup.get('fieldSelected').value) {
           field = v;
         }
       });
@@ -304,7 +304,7 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
     }
 
     if (this.isShowSaveCondition) {
-      this.data.saveData.category = this.selectedCategory
+      this.data.saveData.category = this.selectedCategory;
       this.data.saveData.patternName = this.saveConditions.get('patternName').value;
       if (this.saveConditions.get('isDisclose').value) {
         this.data.saveData.isDisclose = true;
@@ -333,41 +333,41 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
 
         this.complexSearchDataShereService.updateSearchCondition(this.saveData).subscribe((res: SaveData | HttpErrorResponse) => {
 
-          if (res instanceof HttpErrorResponse == true) {
+          if (res instanceof HttpErrorResponse === true) {
 
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
             });
 
-          }else{
+          } else {
 
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: '検索条件を修正しました。' }
             });
 
             this.submitted.emit('');
-          
+
           }
         });
 
       } else {
 
         this.complexSearchDataShereService.addSearchCondition(this.saveData).subscribe((res: SaveData | HttpErrorResponse) => {
-        
-          if (res instanceof HttpErrorResponse == true) {
+
+          if (res instanceof HttpErrorResponse === true) {
 
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。<br/>データの整合性を確認してください。' }
             });
 
-          }else{
+          } else {
 
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: '検索条件を保存しました。' }
             });
 
             this.submitted.emit('');
-          
+
           }
         });
       }
@@ -403,10 +403,10 @@ export class ComplexSearchConditionInputFormDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dialogRef.updateSize("1100px")
+    this.dialogRef.updateSize('1100px');
     // saveDataの編集のときは値をフォームに反映する
     if (this.data.saveData !== null && this.data.saveData !== undefined && this.data.saveData.id !== '') {
-      this.setSavedDataToForm()
+      this.setSavedDataToForm();
     }
   }
 }

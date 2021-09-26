@@ -24,19 +24,19 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
   private dialogRef: MatDialogRef<ComplexSearchDialogComponent>;
 
   @Input() set savedData(v: SaveData) {// 値の入力があり有意な値であった場合は検索実行
-    
-    if ( v ) {
-      
-      v.category.name = 'maker'
+
+    if (v) {
+
+      v.category.name = 'maker';
       this.saveData = v;
 
-      if( v.id ){
+      if (v.id) {
         mapCondition(v.conditionData, this.condition);
         this.search();
       }
 
     }
-  };
+  }
 
   @Output() fetched: EventEmitter<Maker[]> = new EventEmitter();
 
@@ -82,7 +82,7 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
   onSearch(searchStrings: string) {
 
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
-    this.condition.searchStrings = splitStrings(searchStrings)
+    this.condition.searchStrings = splitStrings(searchStrings);
     this.search();
   }
 
@@ -92,7 +92,6 @@ export class MakerSearchComponent implements OnInit, OnDestroy {
         if (makers instanceof HttpErrorResponse !== true) {
           this.fetched.emit(makers as Maker[]);
         }
-        
       }
     );
   }

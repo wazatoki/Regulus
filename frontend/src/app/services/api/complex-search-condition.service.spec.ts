@@ -30,7 +30,7 @@ describe('ComplexSearchConditionService', () => {
       providers: [
         { provide: HttpService, useValue: spy },
       ]
-    })
+    });
 
     httpTestingController = TestBed.get(HttpTestingController);
   });
@@ -46,14 +46,14 @@ describe('ComplexSearchConditionService', () => {
 
     complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
     let result: Category[] | HttpErrorResponse;
 
     complexSearchConditionService.findAllCategories().subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/dataInputFormItems');
@@ -64,14 +64,14 @@ describe('ComplexSearchConditionService', () => {
 
     complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
     let result: ComplexSearchItems | HttpErrorResponse;
 
     complexSearchConditionService.findComplexSearchItems().subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/complexSearchCondition/complexSearchItems');
@@ -88,8 +88,8 @@ describe('ComplexSearchConditionService', () => {
 
     const condition = createTestInstanceConditionData();
     complexSearchConditionService.findByCondition(condition).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
 
@@ -143,14 +143,12 @@ describe('ComplexSearchConditionService', () => {
     let result: SaveData[] | HttpErrorResponse;
 
     complexSearchConditionService.delete(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.delete).toHaveBeenCalledWith('/complexSearchCondition', testData);
   });
-
-  
 
   it('should be created', () => {
     const service: ComplexSearchConditionService = TestBed.get(ComplexSearchConditionService);

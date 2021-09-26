@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable }    from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 import { ConditionData } from '../models/search/condition-data';
 import { SaveData } from '../models/search/save-data';
@@ -43,17 +43,16 @@ export class ComplexSearchService {
     };
   }
 
-  orderComplexSearch(data: ConditionData){
+  orderComplexSearch(data: ConditionData) {
     this.complexSearchOrderedSouce.next(data);
   }
 
-  addSearchCondition(data: SaveData):Observable<SaveData | HttpErrorResponse>{
+  addSearchCondition(data: SaveData): Observable<SaveData | HttpErrorResponse> {
     return this.http.post<SaveData>( '/complexSearchCondition', data );
   }
 
-  updateSearchCondition(data: SaveData):Observable<SaveData | HttpErrorResponse>{
+  updateSearchCondition(data: SaveData): Observable<SaveData | HttpErrorResponse> {
     return this.http.put<SaveData>( '/complexSearchCondition', data );
   }
-  
   constructor( private http: HttpService ) { }
 }

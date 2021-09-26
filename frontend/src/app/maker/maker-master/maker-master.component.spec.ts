@@ -92,7 +92,7 @@ describe('MakerMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[0];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -114,7 +114,7 @@ describe('MakerMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -127,7 +127,7 @@ describe('MakerMasterComponent', () => {
     component.deleteItems();
     expect(component.dialog.open).toHaveBeenCalledWith(NoticeDialogComponent, {
       data: { contents: '削除対象が選択されていません。' }
-    })
+    });
   });
 
   it('click delete with select', () => {
@@ -139,14 +139,14 @@ describe('MakerMasterComponent', () => {
     const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
     const stubValue = of(testData);
     spy.delete.and.returnValue(stubValue);
-    
+
     component.onFetchedMakers(testData);
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();

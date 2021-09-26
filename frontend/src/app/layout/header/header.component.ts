@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/api/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
-import { TRUE } from 'src/app/services/models/enum/boolean'
+import { TRUE } from 'src/app/services/models/enum/boolean';
 
 @Component({
   selector: 'app-header',
@@ -12,8 +12,8 @@ import { TRUE } from 'src/app/services/models/enum/boolean'
 })
 export class HeaderComponent implements OnInit {
 
-  isLoginable: boolean
-  isLogoutable: boolean
+  isLoginable: boolean;
+  isLogoutable: boolean;
 
   onLogout(event: any): void {
     event.preventDefault();
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
     });
 
     dialogref.afterClosed().subscribe(result => {
-      if (result === TRUE){
+      if (result === TRUE) {
         this.loginService.logout();
         this.router.navigate(['/']);
       }
@@ -34,15 +34,15 @@ export class HeaderComponent implements OnInit {
   }
 
   constructor(
-    private loginService :LoginService,
+    private loginService: LoginService,
     private dialog: MatDialog,
     private router: Router,
-  ) { 
-    this.loginService.currentUserToken.subscribe( token => {
+  ) {
+    this.loginService.currentUserToken.subscribe(token => {
       if (token === '') {
         this.isLoginable = true;
         this.isLogoutable = false;
-      }else{
+      } else {
         this.isLoginable = false;
         this.isLogoutable = true;
       }

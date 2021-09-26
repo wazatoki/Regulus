@@ -16,7 +16,8 @@ describe('AuthGuardGuard', () => {
       ],
       providers: [
         AuthGuardGuard,
-        { provide: HttpClient, useValue: spy },]
+        { provide: HttpClient, useValue: spy },
+      ]
     });
   });
 

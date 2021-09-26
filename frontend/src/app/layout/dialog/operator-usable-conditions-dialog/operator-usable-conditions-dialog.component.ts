@@ -27,6 +27,6 @@ export class OperatorUsableConditionsDialogComponent implements OnInit {
 }
 
 export interface DialogData {
-  title: string,
-  operatorUsableConditions: SaveData[]
+  title: string;
+  operatorUsableConditions: SaveData[];
 }

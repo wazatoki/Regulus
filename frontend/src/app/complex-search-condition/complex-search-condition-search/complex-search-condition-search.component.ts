@@ -33,7 +33,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
 
     return this.saveData.conditionData.searchConditionList.length > 0 ||
       this.saveData.conditionData.displayItemList.length > 0 ||
-      this.saveData.conditionData.orderConditionList.length > 0
+      this.saveData.conditionData.orderConditionList.length > 0;
   }
 
   openDialogSelectSearchCondition() {
@@ -55,7 +55,7 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
         this.condition = data.conditionData;
         this.searchClicked.emit(data.conditionData);
       }
-    )
+    );
 
   }
 
@@ -87,8 +87,8 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
   onSearch(searchStrings: string) {
 
     // 全角空白半角空白を一旦区切り文字列に置き換えて配列に分割
-    this.condition.searchStrings = splitStrings(searchStrings)
-    this.searchClicked.emit(this.condition)
+    this.condition.searchStrings = splitStrings(searchStrings);
+    this.searchClicked.emit(this.condition);
   }
 
   ngOnDestroy() {
@@ -100,9 +100,9 @@ export class ComplexSearchConditionSearchComponent implements OnInit {
     // 検索条件設定ダイアログで検索ボタンをクリックしたら検索条件を変更して検索を実行する。
     this.complexSearchSubscription = this.complexSearchService.complexSearchOrdered$.subscribe(
       (data: ConditionData) => {
-        this.saveData.conditionData = data
+        this.saveData.conditionData = data;
         mapCondition(data, this.condition);
-        this.searchClicked.emit(this.condition)
+        this.searchClicked.emit(this.condition);
         this.dialogRef.close();
       }
     );

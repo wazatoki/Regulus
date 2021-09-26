@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpErrorInterceptor } from './http-error-interceptor';
-import { LoginService } from '../api/login.service'
+import { LoginService } from '../api/login.service';
 
 describe('HttpErrorInterceptor', () => {
 

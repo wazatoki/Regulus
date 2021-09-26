@@ -18,7 +18,7 @@ describe('OperatorUsableConditionsDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         TestHostComponent,
         OperatorUsableConditionsDialogComponent,
         OperatorUsableConditionsComponent,

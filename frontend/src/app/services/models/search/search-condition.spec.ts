@@ -8,7 +8,7 @@ export function createTestInstance1(): SearchCondition {
         conditionValue: 'test value',
         matchType: {value: 'match'},
         operator: {value: 'and'},
-    }
+    };
 }
 
 export function createTestInstance2(): SearchCondition {
@@ -17,7 +17,7 @@ export function createTestInstance2(): SearchCondition {
         conditionValue: 'test value2',
         matchType: {value: 'unmatch'},
         operator: {value: 'or'},
-    }
+    };
 }
 
 export function ceateTestArray(): SearchCondition[] {

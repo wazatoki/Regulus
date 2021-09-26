@@ -9,11 +9,11 @@ import { SaveData } from 'src/app/services/models/search/save-data';
 })
 export class FavoriteConditionsComponent implements OnInit {
 
-  @Input() favoriteConditions: SaveData[]
+  @Input() favoriteConditions: SaveData[];
   @Output() selectedCondition: EventEmitter<ConditionData> = new EventEmitter();
 
   onClick(condition: SaveData) {
-    this.selectedCondition.emit(condition.conditionData)
+    this.selectedCondition.emit(condition.conditionData);
   }
 
   constructor() { }

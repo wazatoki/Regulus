@@ -64,27 +64,27 @@ describe('ComplexSearchOrderItemComponent', () => {
       inquiryOptions[0].nativeElement.click()
 
       fixture.detectChanges();
-      expect(orderFieldFormControll.value).toBe(component.fields[0].id)
+      expect(orderFieldFormControll.value).toBe(component.fields[0].id);
     });
   });
 
   it('should click order key word radio button', async () => {
 
-    const radioDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".radio-group-order-field-key-word-select .mat-radio-input"));
+    const radioDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.radio-group-order-field-key-word-select .mat-radio-input'));
     const radioEl: HTMLInputElement = radioDe[0].nativeElement;
     const orderFieldKeyWordFormControll: FormControl = component.formGroup.get('orderFieldKeyWordSelected') as FormControl;
-    radioEl.click()
+    radioEl.click();
     fixture.detectChanges();
-    expect(orderFieldKeyWordFormControll.value).toBe('asc')
+    expect(orderFieldKeyWordFormControll.value).toBe('asc');
   });
 
   it('should click delete button', () => {
 
     const deleteDe: DebugElement = fixture.debugElement.query(By.css('.delete-button button'));
     const deleteEl: HTMLButtonElement = deleteDe.nativeElement;
-    deleteEl.click()
+    deleteEl.click();
     fixture.detectChanges();
-    expect(component.onDelete()).toEqual("onDelete called");
+    expect(component.onDelete()).toEqual('onDelete called');
   });
 
 });
@@ -99,10 +99,6 @@ describe('ComplexSearchOrderItemComponent', () => {
   </app-complex-search-order-item>`
 })
 class TestHostComponent {
-
-  onDelete(): string{
-    return 'onDelete called';
-  }
 
   formGroup: FormGroup = new FormGroup({
     orderFieldSelected: new FormControl(''),
@@ -122,6 +118,11 @@ class TestHostComponent {
       fieldType: {value: 'string'},
       optionItems: null,
     },
-  ]
+  ];
+
+  onDelete(): string{
+    return 'onDelete called';
+  }
+
 }
 

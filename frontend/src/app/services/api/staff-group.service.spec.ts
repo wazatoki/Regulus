@@ -14,7 +14,7 @@ describe('StaffGroupService', () => {
   let httpTestingController: HttpTestingController;
   let httpServiceSpy: jasmine.SpyObj<HttpService>;
   let staffGroupService: StaffGroupService;
-  
+
   beforeEach(() => {
 
     const spy = jasmine.createSpyObj('HttpService', ['get', 'post', 'put', 'delete']);
@@ -26,7 +26,7 @@ describe('StaffGroupService', () => {
       providers: [
         { provide: HttpService, useValue: spy },
       ]
-    })
+    });
 
     httpTestingController = TestBed.get(HttpTestingController);
 
@@ -47,8 +47,8 @@ describe('StaffGroupService', () => {
 
     const condition = createTestInstanceConditionData();
     staffGroupService.findByCondition(condition).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(testData);
 
@@ -57,7 +57,7 @@ describe('StaffGroupService', () => {
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/staffGroup', data);
   });
 
-    it('should call httpService.post with /staffGroup when called add method', () => {
+  it('should call httpService.post with /staffGroup when called add method', () => {
     const testData: StaffGroup = createTestInstanceStaffGroup();
     testData.id = '';
     const resultData: StaffGroup = createTestInstanceStaffGroup();
@@ -68,8 +68,8 @@ describe('StaffGroupService', () => {
     let result: StaffGroup | HttpErrorResponse;
 
     staffGroupService.add(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.post).toHaveBeenCalledWith('/staffGroup', testData);
@@ -85,8 +85,8 @@ describe('StaffGroupService', () => {
     let result: StaffGroup | HttpErrorResponse;
 
     staffGroupService.update(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.put).toHaveBeenCalledWith('/staffGroup', testData);
@@ -103,8 +103,8 @@ describe('StaffGroupService', () => {
     let result: StaffGroup[] | HttpErrorResponse;
 
     staffGroupService.delete(testData).subscribe(data => {
-      result = data
-    })
+      result = data;
+    });
 
     expect(result).toEqual(resultData);
     expect(httpServiceSpy.delete).toHaveBeenCalledWith('/staffGroup', testData);

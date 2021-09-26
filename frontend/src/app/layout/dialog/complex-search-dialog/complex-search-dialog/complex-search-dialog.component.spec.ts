@@ -15,7 +15,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormControl, FormArray, 
 
 import { ComplexSearchDialogComponent } from './complex-search-dialog.component';
 import { ComplexSearchComponent } from '../../../complex-search/complex-search.component';
-import { ComplexSearchConditionItemComponent } from '../../../complex-search/complex-search-condition-item/complex-search-condition-item.component'
+import { ComplexSearchConditionItemComponent } from '../../../complex-search/complex-search-condition-item/complex-search-condition-item.component';
 import { ComplexSearchOrderItemComponent } from '../../../complex-search/complex-search-order-item/complex-search-order-item.component';
 import { CancelComponent } from '../../../form/buttons/cancel/cancel.component';
 import { DeleteComponent } from '../../../form/buttons/delete/delete.component';

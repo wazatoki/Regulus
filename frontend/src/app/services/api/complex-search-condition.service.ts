@@ -17,12 +17,12 @@ export class ComplexSearchConditionService {
   }
 
   findComplexSearchItems(): Observable<ComplexSearchItems | HttpErrorResponse> {
-    return this.http.get<ComplexSearchItems>('/complexSearchCondition/complexSearchItems')
+    return this.http.get<ComplexSearchItems>('/complexSearchCondition/complexSearchItems');
   }
 
   findByCondition(condition: ConditionData): Observable<SaveData[] | HttpErrorResponse> {
     const data: Map<string, string> = new Map();
-    data.set('condition',JSON.stringify(condition));
+    data.set('condition', JSON.stringify(condition));
     return this.http.get<SaveData[]>('/complexSearchCondition', data);
   }
 

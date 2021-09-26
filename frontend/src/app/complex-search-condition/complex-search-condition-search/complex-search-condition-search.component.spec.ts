@@ -18,7 +18,7 @@ describe('ComplexSearchConditionSearchComponent', () => {
   let component: ComplexSearchConditionSearchComponent;
   let fixture: ComponentFixture<ComplexSearchConditionSearchComponent>;
   let complexSearchConditionServiceSpy: jasmine.SpyObj<ComplexSearchConditionService>;
-  let complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService>
+  let complexSearchServiceSpy: jasmine.SpyObj<ComplexSearchService>;
 
   beforeEach(async(() => {
 
