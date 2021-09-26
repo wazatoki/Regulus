@@ -43,6 +43,9 @@ export class ComplexSearchService {
     };
   }
 
+  /*
+  complexSearchOrdered$の購読先にdataを渡す
+  */
   orderComplexSearch(data: ConditionData){
     this.complexSearchOrderedSouce.next(data);
   }
