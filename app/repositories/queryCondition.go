@@ -157,12 +157,20 @@ func (q *QueryConditionRepo) Update(queryCondition *domain.Condition, operatorID
 		displayItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QueryDisplayItems(displayItemQuery).UpdateAll(context.Background(), db.DB, displayUpdateCols)
 
+		if err != nil {
+			return err
+		}
+
 		searchUpdateCols := map[string]interface{}{
 			sqlboiler.QuerySearchConditionItemColumns.Del:           true,
 			sqlboiler.QuerySearchConditionItemColumns.UpdateStaffID: null.StringFrom(operatorID),
 		}
 		searchItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QuerySearchConditionItems(searchItemQuery).UpdateAll(context.Background(), db.DB, searchUpdateCols)
+
+		if err != nil {
+			return err
+		}
 
 		orderUpdateCols := map[string]interface{}{
 			sqlboiler.QueryOrderConditionItemColumns.Del:           true,
@@ -171,17 +179,41 @@ func (q *QueryConditionRepo) Update(queryCondition *domain.Condition, operatorID
 		orderItemQuery := qm.Where(sqlboiler.QueryOrderConditionItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QueryOrderConditionItems(orderItemQuery).UpdateAll(context.Background(), db.DB, orderUpdateCols)
 
+		if err != nil {
+			return err
+		}
+
 		// update
 		_, err = sqlQueryCondition.Update(context.Background(), db.DB, boil.Infer())
+
+		if err != nil {
+			return err
+		}
+
 		for _, d := range sqlQueryDisplayItems {
 			err = d.Insert(context.Background(), db.DB, boil.Infer())
 		}
+
+		if err != nil {
+			return err
+		}
+
 		for _, s := range sqlQuerySearchConditionItems {
 			err = s.Insert(context.Background(), db.DB, boil.Infer())
 		}
+
+		if err != nil {
+			return err
+		}
+
 		for _, o := range sqlQueryOrderConditionItems {
 			err = o.Insert(context.Background(), db.DB, boil.Infer())
 		}
+
+		if err != nil {
+			return err
+		}
+
 		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
 		return err
 

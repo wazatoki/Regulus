@@ -42,8 +42,8 @@ func (m *MakerRepo) Select(queryItems ...*domain.SearchConditionItem) ([]supplie
 		if err == nil {
 
 			for _, maker := range makers {
-				var me *supplier.Maker
-				me = &supplier.Maker{}
+
+				var me = &supplier.Maker{}
 
 				me.ID = maker.ID
 				me.Name = maker.Name
@@ -72,8 +72,8 @@ func (m *MakerRepo) SelectAll() ([]supplier.Maker, error) {
 		if err == nil {
 
 			for _, maker := range makers {
-				var me *supplier.Maker
-				me = &supplier.Maker{}
+
+				var me = &supplier.Maker{}
 
 				me.ID = maker.ID
 				me.Name = maker.Name
@@ -115,8 +115,8 @@ func (m *MakerRepo) SelectByIDs(ids []string) ([]supplier.Maker, error) {
 		if err == nil {
 
 			for _, maker := range makers {
-				var me *supplier.Maker
-				me = &supplier.Maker{}
+
+				var me = &supplier.Maker{}
 
 				me.ID = maker.ID
 				me.Name = maker.Name
@@ -137,8 +137,7 @@ func (m *MakerRepo) SelectByID(id string) (*supplier.Maker, error) {
 		return nil, errors.New("id must be required")
 	}
 
-	var me *supplier.Maker
-	me = &supplier.Maker{}
+	var me = &supplier.Maker{}
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
 		maker, err := sqlboiler.FindMaker(context.Background(), db.DB, id)
@@ -197,8 +196,8 @@ func (m *MakerRepo) Insert(makerEntity *supplier.Maker) (string, error) {
 	maker.Name = makerEntity.Name
 
 	err := m.database.WithDbContext(func(db *sqlx.DB) error {
-		var err error
-		err = maker.Insert(context.Background(), db.DB, boil.Infer())
+
+		var err = maker.Insert(context.Background(), db.DB, boil.Infer())
 		return err
 	})
 

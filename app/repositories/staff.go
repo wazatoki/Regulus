@@ -84,9 +84,8 @@ func (s *StaffRepo) Insert(staff *domain.Staff, operatorID string) (id string, e
 	}
 
 	err = s.database.WithDbContext(func(db *sqlx.DB) error {
-		var err error
 
-		err = sqlStaff.Insert(context.Background(), db.DB, boil.Infer())
+		var err = sqlStaff.Insert(context.Background(), db.DB, boil.Infer())
 		sqlStaff.SetStaffGroups(context.Background(), db.DB, false, sqlStaffGroups...)
 		return err
 	})
