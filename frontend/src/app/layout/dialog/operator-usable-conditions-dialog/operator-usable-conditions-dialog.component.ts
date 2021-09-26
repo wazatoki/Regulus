@@ -9,6 +9,10 @@ import { SaveData } from 'src/app/services/models/search/save-data';
 })
 export class OperatorUsableConditionsDialogComponent implements OnInit {
 
+  conditionSelected(data: SaveData) {
+    this.dialogRef.close(data);
+  }
+
   onCancelClick(): void {
     this.dialogRef.close();
   }
@@ -23,6 +27,6 @@ export class OperatorUsableConditionsDialogComponent implements OnInit {
 }
 
 export interface DialogData {
-  title: string,
-  operatorUsableConditions: SaveData[]
+  title: string;
+  operatorUsableConditions: SaveData[];
 }

@@ -12,7 +12,7 @@ export class StaffGroupService {
 
   findByCondition(condition: ConditionData): Observable<StaffGroup[] | HttpErrorResponse> {
     const data: Map<string, string> = new Map();
-    data.set('condition',JSON.stringify(condition));
+    data.set('condition', JSON.stringify(condition));
     return this.http.get<StaffGroup[]>('/staffGroup', data);
   }
 

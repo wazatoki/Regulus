@@ -8,10 +8,10 @@ ConditionData 検索実行の際サーバーに送るデータ構造
 
 */
 export interface ConditionData {
-    searchStrings: string[]
-    displayItemList: FieldAttr[]
-    searchConditionList: SearchCondition[]
-    orderConditionList: OrderCondition[]
+    searchStrings: string[];
+    displayItemList: FieldAttr[];
+    searchConditionList: SearchCondition[];
+    orderConditionList: OrderCondition[];
 }
 
 export function mapCondition(from: ConditionData, to: ConditionData) {

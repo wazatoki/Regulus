@@ -15,7 +15,7 @@ import { MakerInputFormComponent } from '../maker-input-form/maker-input-form.co
 })
 export class MakerMasterComponent implements OnInit {
 
-  
+
   displayedColumns: string[];
   dataSource: MatTableDataSource<Maker>;
   selection: SelectionModel<Maker>;
@@ -26,7 +26,7 @@ export class MakerMasterComponent implements OnInit {
   constructor(
     public makerService: MakerService,
     public dialog: MatDialog) {
-      
+
     const initialSelection = [];
     const allowMultiSelect = true;
     this.displayedColumns = ['select', 'name'];
@@ -76,24 +76,24 @@ export class MakerMasterComponent implements OnInit {
   }
 
   deleteItems(): void {
-    if(this.selection.selected.length === 0){
+    if (this.selection.selected.length === 0) {
       const dialogRef = this.dialog.open(NoticeDialogComponent, {
         data: { contents: '削除対象が選択されていません。' }
       });
-    }else{
+    } else {
       const data: string[] = [];
-      this.selection.selected.forEach( (maker: Maker) => {
+      this.selection.selected.forEach((maker: Maker) => {
         data.push(maker.id);
       });
-      this.makerService.delete(data).subscribe( (res: Maker[]) => {
-        if (res.length > 0){
+      this.makerService.delete(data).subscribe((res: Maker[]) => {
+        if (res.length > 0) {
           let str: string;
           str = '以下のdataが削除できませんでした。<br/>';
-  
-          res.forEach( (m: Maker) => {
+
+          res.forEach((m: Maker) => {
             str += '・' + m.name + '<br/>';
           });
-  
+
           const dialogRef = this.dialog.open(NoticeDialogComponent, {
             data: { contents: str }
           });

@@ -3,7 +3,8 @@
     <div mat-dialog-content>
         <div class="dialog-contents">
             <app-operator-usable-conditions
-                [usableConditions]="data.operatorUsableConditions">
+                [usableConditions]="data.operatorUsableConditions"
+                (selectedCondition)="conditionSelected($event)">
             </app-operator-usable-conditions>
         </div>
     </div>

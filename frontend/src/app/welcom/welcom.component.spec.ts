@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button'; 
+import {MatButtonModule} from '@angular/material/button';
 import { WelcomComponent } from './welcom.component';
 import { Component } from '@angular/core';
 
@@ -14,7 +14,7 @@ describe('WelcomComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         WelcomComponent,
         LayoutHeaderSidebarContentsComponent,
       ],

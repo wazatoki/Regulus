@@ -1,8 +1,7 @@
-import { from } from "rxjs";
-import { SaveData } from '../search/save-data'
+import { SaveData } from '../search/save-data';
 
 export interface Staff {
-    id: string
-    name: string
-    operatorUsableConditions: SaveData[]
+    id: string;
+    name: string;
+    operatorUsableConditions: SaveData[];
 }

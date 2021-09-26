@@ -27,7 +27,7 @@ describe('StaffGroupMasterComponent', () => {
     const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
     TestBed.configureTestingModule({
-      declarations: [ 
+      declarations: [
         StaffGroupMasterComponent,
         StaffGroupSearchComponent,
       ],
@@ -81,7 +81,7 @@ describe('StaffGroupMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[0];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -98,7 +98,7 @@ describe('StaffGroupMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -111,7 +111,7 @@ describe('StaffGroupMasterComponent', () => {
     component.deleteItems();
     expect(component.dialog.open).toHaveBeenCalledWith(NoticeDialogComponent, {
       data: { contents: '削除対象が選択されていません。' }
-    })
+    });
   });
 
   it('click delete with select', () => {
@@ -119,14 +119,14 @@ describe('StaffGroupMasterComponent', () => {
     const spy: jasmine.SpyObj<StaffGroupService> = TestBed.get(StaffGroupService);
     const stubValue = of(testData);
     spy.delete.and.returnValue(stubValue);
-    
+
     component.dataSource.data = testData;
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -141,14 +141,14 @@ describe('StaffGroupMasterComponent', () => {
     const spy: jasmine.SpyObj<StaffGroupService> = TestBed.get(StaffGroupService);
     const searchWords = 'aaa bbb ccc';
     const condition = {
-      searchStrings: ['aaa','bbb','ccc'],
+      searchStrings: ['aaa', 'bbb', 'ccc'],
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
     };
     const data: StaffGroup[] = createTestArrayStaffGroupData();
-    spy.findByCondition.and.returnValue(of(data))
-    component.search(condition)
+    spy.findByCondition.and.returnValue(of(data));
+    component.search(condition);
 
     expect(spy.findByCondition).toHaveBeenCalledWith(condition);
   });

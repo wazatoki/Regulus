@@ -32,7 +32,7 @@ describe('MakerService', () => {
           { provide: HttpService, useValue: spy },
         ]
       }
-    )
+    );
 
     httpTestingController = TestBed.get(HttpTestingController);
   });
@@ -54,13 +54,9 @@ describe('MakerService', () => {
     const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Maker | HttpErrorResponse;
-
-    makerService.findById('testid').subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(testData);
+    makerService.findById('testid').subscribe((res: Maker | HttpErrorResponse) => {
+      expect(res).toEqual(testData);
+    });
 
     const id: Map<string, string> = new Map();
     id.set('id', 'testid');
@@ -74,21 +70,17 @@ describe('MakerService', () => {
     ];
     makerService = TestBed.get(MakerService);
     const conditionData: ConditionData = createConditionData1();
-    
+
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Maker[] | HttpErrorResponse;
-
-    makerService.findByCondition(conditionData).subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(testData);
+    makerService.findByCondition(conditionData).subscribe((res: Maker[] | HttpErrorResponse) => {
+      expect(res).toEqual(testData);
+    });
 
     const data: Map<string, string> = new Map();
-    data.set('condition',JSON.stringify(conditionData));
+    data.set('condition', JSON.stringify(conditionData));
     expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker', data);
   });
 
@@ -99,17 +91,13 @@ describe('MakerService', () => {
     ];
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: Maker[] | HttpErrorResponse;
-
-    makerService.findAll().subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker');
+    makerService.findAll().subscribe((res: Maker[] | HttpErrorResponse) => {
+      expect(res).toEqual(testData);
+      expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker');
+    });
   });
 
   it('add method', () => {
@@ -119,14 +107,10 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.post.and.returnValue(of(resultData));
 
-    let result: Maker | HttpErrorResponse;
-
-    makerService.add(testData).subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.post).toHaveBeenCalledWith('/maker', testData);
+    makerService.add(testData).subscribe((res: Maker | HttpErrorResponse) => {
+      expect(res).toEqual(resultData);
+      expect(httpServiceSpy.post).toHaveBeenCalledWith('/maker', testData);
+    });
   });
 
   it('update method', () => {
@@ -136,14 +120,10 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.put.and.returnValue(of(resultData));
 
-    let result: Maker | HttpErrorResponse;
-
-    makerService.update(testData).subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.put).toHaveBeenCalledWith('/maker', testData);
+    makerService.update(testData).subscribe((res: Maker | HttpErrorResponse) => {
+      expect(res).toEqual(resultData);
+      expect(httpServiceSpy.put).toHaveBeenCalledWith('/maker', testData);
+    });
   });
 
   it('delete method', () => {
@@ -153,31 +133,23 @@ describe('MakerService', () => {
     httpServiceSpy = TestBed.get(HttpService);
     httpServiceSpy.delete.and.returnValue(of(resultData));
 
-    let result: Maker[] | HttpErrorResponse;
-
-    makerService.delete(testData).subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(resultData);
-    expect(httpServiceSpy.delete).toHaveBeenCalledWith('/maker/delete', testData);
+    makerService.delete(testData).subscribe((res: Maker[] | HttpErrorResponse) => {
+      expect(res).toEqual(resultData);
+      expect(httpServiceSpy.delete).toHaveBeenCalledWith('/maker/delete', testData);
+    });
   });
 
   it('findComplexSearchItems method', () => {
     const testData: ComplexSearchItems = createTestInstance1();
     makerService = TestBed.get(MakerService);
     httpServiceSpy = TestBed.get(HttpService);
-    const stubValue = of(testData)
+    const stubValue = of(testData);
     httpServiceSpy.get.and.returnValue(stubValue);
 
-    let result: ComplexSearchItems | HttpErrorResponse;
-
-    makerService.findComplexSearchItems().subscribe(data => {
-      result = data
-    })
-
-    expect(result).toEqual(testData);
-    expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/complexSearchItems');
+    makerService.findComplexSearchItems().subscribe((res: ComplexSearchItems | HttpErrorResponse) => {
+      expect(res).toEqual(testData);
+      expect(httpServiceSpy.get).toHaveBeenCalledWith('/maker/complexSearchItems');
+    });
   });
 
 });

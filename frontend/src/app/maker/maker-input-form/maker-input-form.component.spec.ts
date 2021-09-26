@@ -48,7 +48,7 @@ describe('MakerInputFormComponent', () => {
           useValue: matDialogRefSpy
         },
         {
-          provide: MAT_DIALOG_DATA, useValue: {} 
+          provide: MAT_DIALOG_DATA, useValue: {}
         },
         {
           provide: MakerService,
@@ -57,10 +57,10 @@ describe('MakerInputFormComponent', () => {
       ],
     }).overrideModule(BrowserDynamicTestingModule, {
       set: {
-        entryComponents: [ NoticeDialogComponent ],
+        entryComponents: [NoticeDialogComponent],
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -75,7 +75,7 @@ describe('MakerInputFormComponent', () => {
 
   it('should not dispaly varidation alert at created', () => {
     dbElement = fixture.debugElement;
-    element = dbElement.nativeElement; 
+    element = dbElement.nativeElement;
     expect(element.textContent).not.toContain('製造販売業者名称は必須項目です。');
   });
 
@@ -84,7 +84,7 @@ describe('MakerInputFormComponent', () => {
     const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;
     inputElement.dispatchEvent(new Event('blur'));
     fixture.detectChanges();
-    element = dbElement.nativeElement; 
+    element = dbElement.nativeElement;
     expect(element.textContent).toContain('製造販売業者名称は必須項目です。');
   });
 
@@ -95,7 +95,7 @@ describe('MakerInputFormComponent', () => {
     inputElement.dispatchEvent(new Event('input'));
     inputElement.dispatchEvent(new Event('blur'));
     fixture.detectChanges();
-    element = dbElement.nativeElement; 
+    element = dbElement.nativeElement;
     expect(element.textContent).not.toContain('製造販売業者名称は必須項目です。');
   });
 
@@ -139,7 +139,7 @@ describe('MakerInputFormComponent', () => {
   it('should save form data at click save button with error', () => {
     const testData: Maker = { id: 'testid', name: 'Test Maker' };
     const spy: jasmine.SpyObj<MakerService> = TestBed.get(MakerService);
-    spy.add.and.returnValue(throwError({status: 404}));
+    spy.add.and.returnValue(throwError({ status: 404 }));
 
     dbElement = fixture.debugElement;
     const inputElement: HTMLInputElement = dbElement.query(By.css('input[type="text"]')).nativeElement;

@@ -6,14 +6,14 @@ export function createTestInstance1(): OrderCondition {
     return {
         orderField: createFieldAttr1(),
         orderFieldKeyWord: {value: 'asc'},
-    }
+    };
 }
 
 export function createTestInstance2(): OrderCondition {
     return {
         orderField: createFieldAttr2(),
         orderFieldKeyWord: {value: 'desc'},
-    }
+    };
 }
 
 export function ceateTestArray(): OrderCondition[] {

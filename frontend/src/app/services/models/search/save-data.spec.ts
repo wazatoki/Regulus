@@ -1,7 +1,7 @@
 import { SaveData } from './save-data';
 import { createTestInstance1 as createStaffInstance1} from 'src/app/services/models/staff/staff.spec';
 import { createTestInstance1 as createConditionData, createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
-import { ceateTestArrayForMasterMaintenanceTest as createCategoryArrayData } from 'src/app/services/models/search/category.spec'
+import { ceateTestArrayForMasterMaintenanceTest as createCategoryArrayData } from 'src/app/services/models/search/category.spec';
 
 export function createTestInstance1(): SaveData {
     return {
@@ -13,7 +13,7 @@ export function createTestInstance1(): SaveData {
         discloseGroups: [{id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}],
         isDisclose: true,
         conditionData: createConditionData(),
-    }
+    };
 }
 
 export function createTestInstance2(): SaveData {
@@ -26,14 +26,14 @@ export function createTestInstance2(): SaveData {
         discloseGroups: [{id: 'groupID1', name: ''}],
         isDisclose: true,
         conditionData: createConditionData(),
-    }
+    };
 }
 
-export function createTestArray(): SaveData[]{
+export function createTestArray(): SaveData[] {
     return [
         createTestInstance1(),
         createTestInstance2(),
-    ]
+    ];
 }
 
 export function createInitSaveData(): SaveData {
@@ -50,5 +50,5 @@ export function createInitSaveData(): SaveData {
           name: '',
           operatorUsableConditions: [],
         },
-      }
+      };
 }

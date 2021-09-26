@@ -30,22 +30,22 @@ export class StaffGroupMasterComponent implements OnInit {
 
   search(condition: ConditionData) {
 
-    this.conditionData = condition
+    this.conditionData = condition;
 
     this.staffGroupService.findByCondition(condition).subscribe(
       (res: StaffGroup[] | HttpErrorResponse) => {
-        if (res instanceof HttpErrorResponse == true) {
+        if (res instanceof HttpErrorResponse === true) {
 
           this.dialog.open(NoticeDialogComponent, {
             data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
           });
 
-        }else{
+        } else {
 
-          this.dataSource.data = (res as StaffGroup[]) || []
+          this.dataSource.data = (res as StaffGroup[]) || [];
 
         }
-        
+
       }
     );
   }
@@ -53,13 +53,13 @@ export class StaffGroupMasterComponent implements OnInit {
   onUpdateClicked(groupData: StaffGroup): void {
     const dialogRef = this.dialog.open(StaffGroupInputFormDialogComponent, {
       data: {
-        groupData: groupData,
+        groupData,
       },
-    })
+    });
 
     dialogRef.componentInstance.submitted.subscribe(() => {
-      this.search(this.conditionData)
-    })
+      this.search(this.conditionData);
+    });
   }
 
   openInputForm(): void {
@@ -67,11 +67,11 @@ export class StaffGroupMasterComponent implements OnInit {
       data: {
         groupData: null,
       },
-    })
+    });
 
     dialogRef.componentInstance.submitted.subscribe(() => {
-      this.search(this.conditionData)
-    })
+      this.search(this.conditionData);
+    });
   }
 
   deleteItems(): void {
@@ -91,8 +91,8 @@ export class StaffGroupMasterComponent implements OnInit {
 
       dialogref.afterClosed().subscribe(result => {
         if (result === TRUE) {
-          
-          this.execDeleteItems()
+
+          this.execDeleteItems();
 
         }
       });
@@ -153,8 +153,8 @@ export class StaffGroupMasterComponent implements OnInit {
   }
 
   constructor(
-    private staffGroupService: StaffGroupService, 
-    private complexSearchService:ComplexSearchService,
+    private staffGroupService: StaffGroupService,
+    private complexSearchService: ComplexSearchService,
     public dialog: MatDialog
     ) {
     const initialSelection = [];

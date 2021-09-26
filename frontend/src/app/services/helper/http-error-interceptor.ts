@@ -3,7 +3,7 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/c
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { LoginService } from '../api/login.service'
+import { LoginService } from '../api/login.service';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -13,13 +13,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             if (err.status === 401) {
                 // auto logout if 401 response returned from api
                 this.loginService.logout();
-                location.reload(true);
+                location.reload();
             }
 
             const error = err.error.message || err.statusText;
             return throwError(error);
-        }))
+        }));
     }
 
-    constructor(private loginService: LoginService){ }
+    constructor(private loginService: LoginService) { }
 }

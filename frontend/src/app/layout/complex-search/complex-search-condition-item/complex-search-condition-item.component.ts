@@ -10,12 +10,12 @@ import { OptionItem } from '../../../services/models/search/option-item';
 })
 export class ComplexSearchConditionItemComponent implements OnInit {
 
-  readonly matchTypesForString: matchTypeAttr[] = [
+  readonly matchTypesForString: MatchTypeAttr[] = [
     { name: 'match', viewValue: '完全一致' },
     { name: 'unmatch', viewValue: '不一致' },
     { name: 'pertialmatch', viewValue: '部分一致' },
   ];
-  readonly matchTypesForNumber: matchTypeAttr[] = [
+  readonly matchTypesForNumber: MatchTypeAttr[] = [
     { name: 'match', viewValue: '完全一致 =' },
     { name: 'unmatch', viewValue: '不一致 !=' },
     { name: 'gt', viewValue: '超過 >' },
@@ -43,18 +43,18 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
   get selectedFieldTypeValue() {
     if (this.selectedFieldType) {
-      return this.selectedFieldType.value
+      return this.selectedFieldType.value;
     }
-    return ""
+    return '';
   }
 
-  matchTypes: matchTypeAttr[];
+  matchTypes: MatchTypeAttr[];
   optionItems: OptionItem[];
   selectedFieldType: { value: string };
 
   @Input() fields: FieldAttr[] = [];
   @Input() formGroup: FormGroup;
-  @Output() onDelete = new EventEmitter();
+  @Output() deleted = new EventEmitter();
 
   onSelectField(): void {
     this.setMatchType();
@@ -69,13 +69,13 @@ export class ComplexSearchConditionItemComponent implements OnInit {
     if (this.fieldSelected.value !== null && this.fieldSelected.value !== undefined && this.fieldSelected.value !== '') {
 
       const f = this.fields.find((field) => {
-        return (field.id === this.fieldSelected.value)
-      })
+        return (field.id === this.fieldSelected.value);
+      });
       if (f) {
         this.selectedFieldType = f.fieldType;
       }
-      const cv = this.conditionValue.value
-      const mt = this.matchTypeSelected.value
+      const cv = this.conditionValue.value;
+      const mt = this.matchTypeSelected.value;
       this.setMatchType();
       this.conditionValue.setValue(cv);
       this.matchTypeSelected.setValue(mt);
@@ -84,7 +84,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
       this.matchTypes = this.matchTypesForString;
     }
     // operatorの初期設定
-    if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value == '') {
+    if (this.operatorSelected.value !== null && this.operatorSelected.value !== undefined && this.operatorSelected.value === '') {
       this.operatorSelected.setValue(this.operators[0]);
     }
 
@@ -96,13 +96,13 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
   setMatchType(): void {
     const f = this.fields.find((field) => {
-      return (field.id === this.fieldSelected.value)
-    })
+      return (field.id === this.fieldSelected.value);
+    });
 
     if (f) {
 
       this.selectedFieldType = f.fieldType;
-      this.optionItems = f.optionItems
+      this.optionItems = f.optionItems;
 
       switch (f.fieldType.value) {
         case 'number':
@@ -112,7 +112,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
           break;
         case 'string':
           this.matchTypes = this.matchTypesForString;
-          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          this.matchTypeSelected.setValue(this.matchTypes[0].name);
           this.conditionValue.setValue('');
           break;
         case 'boolean':
@@ -124,7 +124,7 @@ export class ComplexSearchConditionItemComponent implements OnInit {
 
         default:
           this.matchTypes = this.matchTypesForString;
-          this.matchTypeSelected.setValue(this.matchTypes[0].name)
+          this.matchTypeSelected.setValue(this.matchTypes[0].name);
           break;
       }
     } else { // 検索対象フィールドが選択されていないときなど。
@@ -133,12 +133,12 @@ export class ComplexSearchConditionItemComponent implements OnInit {
   }
 
   deleteClicked() {
-    this.onDelete.emit();
+    this.deleted.emit();
   }
 
 }
 
-interface matchTypeAttr {
-  name: string,
-  viewValue: string,
+interface MatchTypeAttr {
+  name: string;
+  viewValue: string;
 }

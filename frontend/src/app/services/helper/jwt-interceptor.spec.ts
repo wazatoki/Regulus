@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { LoginService } from '../api/login.service'
+import { LoginService } from '../api/login.service';
 
 import { JwtInterceptor } from './jwt-interceptor';
 

@@ -14,7 +14,7 @@ export class MakerService {
   constructor( private http: HttpService ) { }
 
   findComplexSearchItems(): Observable<ComplexSearchItems | HttpErrorResponse> {
-    return this.http.get<ComplexSearchItems>('/maker/complexSearchItems')
+    return this.http.get<ComplexSearchItems>('/maker/complexSearchItems');
   }
 
   findById(id: string): Observable<Maker | HttpErrorResponse> {
@@ -25,7 +25,7 @@ export class MakerService {
 
   findByCondition(condition: ConditionData): Observable<Maker[] | HttpErrorResponse> {
     const data: Map<string, string> = new Map();
-    data.set('condition',JSON.stringify(condition));
+    data.set('condition', JSON.stringify(condition));
     return this.http.get<Maker[]>('/maker', data);
   }
 

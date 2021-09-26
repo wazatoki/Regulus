@@ -7,11 +7,11 @@ ComplexSearchItems 検索フォームを構築する際に必要な選択肢ア�
 
 */
 export interface ComplexSearchItems {
-    displayItemList: FieldAttr[]
-    searchConditionList: FieldAttr[]
-    orderConditionList: FieldAttr[]
-    isShowDisplayItem: boolean
-    isShowOrderCondition: boolean
-    isShowSaveCondition: boolean
-    staffGroups: StaffGroup[]
+    displayItemList: FieldAttr[];
+    searchConditionList: FieldAttr[];
+    orderConditionList: FieldAttr[];
+    isShowDisplayItem: boolean;
+    isShowOrderCondition: boolean;
+    isShowSaveCondition: boolean;
+    staffGroups: StaffGroup[];
 }

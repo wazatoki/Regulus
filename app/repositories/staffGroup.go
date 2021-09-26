@@ -63,9 +63,8 @@ func (g *StaffGroupRepo) Insert(staffGroup *domain.StaffGroup, operatorID string
 	}
 
 	err = g.database.WithDbContext(func(db *sqlx.DB) error {
-		var err error
 
-		err = sqlStaffGroup.Insert(context.Background(), db.DB, boil.Infer())
+		var err = sqlStaffGroup.Insert(context.Background(), db.DB, boil.Infer())
 		return err
 	})
 
@@ -145,8 +144,8 @@ func (g *StaffGroupRepo) SelectAll() (domain.StaffGroups, error) {
 		if err == nil {
 
 			for _, group := range groups {
-				var ge *domain.StaffGroup
-				ge = &domain.StaffGroup{}
+
+				var ge = &domain.StaffGroup{}
 
 				ge.ID = group.ID
 				ge.Name = group.Name
@@ -177,9 +176,7 @@ func (g *StaffGroupRepo) Select(queryItems ...domain.SearchConditionItem) (resul
 		// 条件構築
 		searchConditionItems := []domain.SearchConditionItem{}
 
-		for _, queryItem := range queryItems {
-			searchConditionItems = append(searchConditionItems, queryItem)
-		}
+		searchConditionItems = append(searchConditionItems, queryItems...)
 
 		for _, searchConditionItem := range searchConditionItems {
 			qu, pslice := g.createQueryModWhere(searchConditionItem)

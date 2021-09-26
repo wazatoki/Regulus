@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"regulus/app/domain"
 	"regulus/app/infrastructures/sqlboiler"
+	"sort"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -84,6 +85,11 @@ var queryConditionSearchConditionList = []domain.FieldAttr{
 		ID:        "disclose-groups",
 		ViewValue: "公開先グループ",
 		FieldType: domain.QueryValueTypeEnum.ARRAY,
+		OptionItems: []domain.OptionItem{
+			{ID: "staffgroupid1", ViewValue: "staff group name 1"},
+			{ID: "staffgroupid2", ViewValue: "staff group name 2"},
+			{ID: "staffgroupid3", ViewValue: "staff group name 3"},
+		},
 	},
 	{
 		ID:        "owner",
@@ -119,8 +125,27 @@ var categories = []*domain.Category{
 		SearchItems: domain.ComplexSearchItems{
 			SearchConditionList: queryConditionSearchConditionList,
 			DisplayItemList:     []domain.FieldAttr{},
-			OrderConditionList:  []domain.FieldAttr{},
-			StaffGroups:         nil,
+			OrderConditionList: []domain.FieldAttr{{
+				ID:        "pattern-name",
+				ViewValue: "検索パターン名称",
+				FieldType: domain.QueryValueTypeEnum.STRING,
+			},
+				{
+					ID:        "category-view-value",
+					ViewValue: "カテゴリー名称",
+					FieldType: domain.QueryValueTypeEnum.STRING,
+				},
+				{
+					ID:        "is-disclose",
+					ViewValue: "公開",
+					FieldType: domain.QueryValueTypeEnum.BOOLEAN,
+				},
+				{
+					ID:        "owner",
+					ViewValue: "所有者",
+					FieldType: domain.QueryValueTypeEnum.STRING,
+				}},
+			StaffGroups: createExpectedStaffGroupEntity2Slice(),
 		},
 	},
 }
@@ -355,6 +380,52 @@ func createExpectedQueryCondition9Entity() *domain.Condition {
 	}
 }
 
+func createExpectedQueryCondition10Entity() *domain.Condition {
+	return &domain.Condition{
+		ID:          "queryConditionid10",
+		PatternName: "patternName10",
+		Category:    categories[2],
+		ConditionData: domain.ConditionData{
+			DisplayItemList: []domain.FieldAttr{},
+			SearchConditionList: []domain.SearchConditionItem{
+				{
+					SearchField:    queryConditionSearchConditionList[0],
+					ConditionValue: "10",
+					MatchType:      domain.QueryMatchTypeEnum.PERTIALMATCH,
+					Operator:       domain.QueryOperatorEnum.AND,
+				},
+			},
+			OrderConditionList: []domain.OrderConditionItem{},
+		},
+		DiscloseGroups: nil,
+		IsDisclose:     false,
+		Owner:          createExpectedStaff1Entity(),
+	}
+}
+
+func createExpectedQueryCondition11Entity() *domain.Condition {
+	return &domain.Condition{
+		ID:          "queryConditionid11",
+		PatternName: "patternName11",
+		Category:    categories[2],
+		ConditionData: domain.ConditionData{
+			DisplayItemList: []domain.FieldAttr{},
+			SearchConditionList: []domain.SearchConditionItem{
+				{
+					SearchField:    queryConditionSearchConditionList[1],
+					ConditionValue: "検索",
+					MatchType:      domain.QueryMatchTypeEnum.PERTIALMATCH,
+					Operator:       domain.QueryOperatorEnum.AND,
+				},
+			},
+			OrderConditionList: []domain.OrderConditionItem{},
+		},
+		DiscloseGroups: nil,
+		IsDisclose:     false,
+		Owner:          createExpectedStaff1Entity(),
+	}
+}
+
 func TestQueryConditionObjectMap(t *testing.T) {
 	type args struct {
 		sqc *sqlboiler.QueryCondition
@@ -409,7 +480,7 @@ func TestQueryConditionRepo_SelectAll(t *testing.T) {
 			fields: fields{
 				database: createDB(),
 			},
-			want:    10,
+			want:    12,
 			wantErr: false,
 		},
 	}
@@ -915,6 +986,8 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 				createExpectedQueryCondition7Entity(),
 				createExpectedQueryCondition8Entity(),
 				createExpectedQueryCondition9Entity(),
+				createExpectedQueryCondition10Entity(),
+				createExpectedQueryCondition11Entity(),
 			},
 			wantErr: false,
 		},
@@ -943,25 +1016,24 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 			}
 			gotResultQueryConditions, err := q.SelectQueryOperatorUsable(tt.args.operatorID)
 
+			sort.Slice(gotResultQueryConditions, func(i, j int) bool {
+
+				return gotResultQueryConditions[i].PatternName > gotResultQueryConditions[j].PatternName
+			})
+
+			sort.Slice(tt.wantResultQueryConditions, func(i, j int) bool {
+
+				return tt.wantResultQueryConditions[i].PatternName > tt.wantResultQueryConditions[j].PatternName
+			})
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("QueryConditionRepo.SelectQueryOperatorUsable() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
-			for _, rc := range gotResultQueryConditions {
-				flag := false
-				for _, wc := range tt.wantResultQueryConditions {
-					if reflect.DeepEqual(rc, wc) {
-						flag = true
-					}
-				}
-				if flag == false {
-					t.Errorf(" condition of gotResultQueryConditions %v is not match", rc)
-				} else {
-					t.Logf(" condition of gotResultQueryConditions %v is match", rc)
-				}
+			if diff := cmp.Diff(gotResultQueryConditions, tt.wantResultQueryConditions); diff != "" {
+				t.Errorf("differs = %s", diff)
 			}
-
 		})
 	}
 }

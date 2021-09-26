@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   htmlEl: HTMLElement;
-  isSubmitFocus: boolean = false;
+  isSubmitFocus = false;
 
   returnUrl: string;
   error = '';
@@ -25,27 +25,27 @@ export class LoginComponent implements OnInit {
 
     this.loginService.login(this.loginForm.value).pipe(first()).subscribe(
       data => {
-        if(data){
-          this.router.navigate([this.returnUrl])
-        }else{
-          this.error = 'IDまたはパスワードが違います。'
+        if (data) {
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.error = 'IDまたはパスワードが違います。';
         }
-        
+
       },
       error => {
-        this.error = error
+        this.error = error;
       }
     );
   }
 
   onEnterUserID(event: any) {
-    event.preventDefault()
+    event.preventDefault();
     const passEl: HTMLElement = this.htmlEl.querySelector('input[type="password"]');
     passEl.focus();
   }
 
   onEnterPassword(event: any) {
-    event.preventDefault()
+    event.preventDefault();
     this.isSubmitFocus = true;
   }
 
@@ -71,9 +71,9 @@ export class LoginComponent implements OnInit {
     });
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
 
-    this.htmlEl = this.el.nativeElement
+    this.htmlEl = this.el.nativeElement;
   }
 
 }

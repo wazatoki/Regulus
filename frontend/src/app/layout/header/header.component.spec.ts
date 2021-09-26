@@ -8,28 +8,25 @@ import { MatDialog } from '@angular/material/dialog';
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let spy:jasmine.SpyObj<LoginService>;
+  const loginServiceSpy: jasmine.SpyObj<LoginService> = jasmine.createSpyObj(
+    'LoginService',
+    ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
+  loginServiceSpy.currentUserToken = new BehaviorSubject<string>('').asObservable();
+  const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
 
   beforeEach(async(() => {
-    
-    const spy = jasmine.createSpyObj('LoginService', ['currentUser', 'currentUserToken', 'currentUserValue', 'currentUserTokenValue']);
-    const dialogspy = jasmine.createSpyObj('MatDialog', ['open']);
-
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
-      imports: [ RouterTestingModule ],
+      declarations: [HeaderComponent],
+      imports: [RouterTestingModule],
       providers: [
-        { provide: LoginService, useValue: spy },
+        { provide: LoginService, useValue: loginServiceSpy },
         { provide: MatDialog, useValue: dialogspy },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    spy = TestBed.get(LoginService);
-    spy.currentUserToken= new BehaviorSubject<string>('').asObservable()
-
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

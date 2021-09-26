@@ -8,12 +8,12 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 export class SearchComponent implements OnInit {
 
   searchStrings: string;
-  
+
   @Output() searchClick: EventEmitter<string> = new EventEmitter();
 
   constructor() {
     this.searchStrings = '';
-   }
+  }
 
   ngOnInit() {
   }

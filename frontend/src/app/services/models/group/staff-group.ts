@@ -1,4 +1,4 @@
 export interface StaffGroup {
-    id: string
-    name: string
+    id: string;
+    name: string;
 }

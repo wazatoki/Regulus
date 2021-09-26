@@ -29,6 +29,6 @@ describe('SelectSearchConditionComponent', () => {
     component.buttonLabelName = 'testLabel';
     fixture.detectChanges();
     const htmlel: HTMLElement = fixture.nativeElement;
-    expect(htmlel.textContent).toContain('testLabel')
+    expect(htmlel.textContent).toContain('testLabel');
   });
 });

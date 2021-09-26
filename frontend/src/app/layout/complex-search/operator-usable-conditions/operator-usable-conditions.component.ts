@@ -10,18 +10,17 @@ import { SaveData } from 'src/app/services/models/search/save-data';
 export class OperatorUsableConditionsComponent implements OnInit {
 
   @Input() usableConditions: SaveData[];
-  @Input() ownerID: string;
 
-  @Output() selectedCondition: EventEmitter<ConditionData> = new EventEmitter();
+  @Output() selectedCondition: EventEmitter<SaveData> = new EventEmitter();
 
-  public get conditions() : SaveData[] {
-    return this.usableConditions 
+  public get conditions(): SaveData[] {
+    return this.usableConditions;
   }
 
   onClick(condition: SaveData) {
-    this.selectedCondition.emit(condition.conditionData)
+    this.selectedCondition.emit(condition);
   }
-  
+
   constructor() { }
 
   ngOnInit() {

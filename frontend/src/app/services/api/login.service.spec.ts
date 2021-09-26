@@ -12,8 +12,7 @@ describe('LoginService', () => {
       providers: [
         { provide: HttpClient, useValue: spy },
       ]
-    })
-    
+    });
   });
 
   it('should be created', () => {

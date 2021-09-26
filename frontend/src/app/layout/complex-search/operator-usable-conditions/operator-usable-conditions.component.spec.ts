@@ -27,7 +27,6 @@ describe('OperatorUsableConditionsComponent', () => {
     fixture = TestBed.createComponent(OperatorUsableConditionsComponent);
     component = fixture.componentInstance;
     component.usableConditions = createTeatSaveDataArray();
-    component.ownerID = 'ownerID1';
     dbElement = fixture.debugElement;
     element = dbElement.nativeElement;
     spyOn(component.selectedCondition, 'emit');
@@ -44,10 +43,10 @@ describe('OperatorUsableConditionsComponent', () => {
   });
 
   it('should event emit button clicked', () => {
-    const buttonList = element.querySelectorAll('.mat-action-list button')
+    const buttonList = element.querySelectorAll('.mat-action-list button');
     const button = buttonList[0];
     button.dispatchEvent(new Event('click'));
     fixture.detectChanges();
-    expect(component.selectedCondition.emit).toHaveBeenCalledWith(component.conditions[0].conditionData)
+    expect(component.selectedCondition.emit).toHaveBeenCalledWith(component.conditions[0]);
   });
 });

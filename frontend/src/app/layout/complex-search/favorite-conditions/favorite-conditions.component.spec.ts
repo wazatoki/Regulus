@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule, MatListModule } from '@angular/material';
 
 import { FavoriteConditionsComponent } from './favorite-conditions.component';
-import { createTestArray as createTeatSaveDataArray} from '../../../services/models/search/save-data.spec'
+import { createTestArray as createTeatSaveDataArray} from '../../../services/models/search/save-data.spec';
 import { DebugElement } from '@angular/core';
 
 describe('FavoriteConditionsComponent', () => {
@@ -25,7 +25,7 @@ describe('FavoriteConditionsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FavoriteConditionsComponent);
     component = fixture.componentInstance;
-    component.favoriteConditions = createTeatSaveDataArray()
+    component.favoriteConditions = createTeatSaveDataArray();
     dbElement = fixture.debugElement;
     element = dbElement.nativeElement;
     spyOn(component.selectedCondition, 'emit');
@@ -42,11 +42,11 @@ describe('FavoriteConditionsComponent', () => {
   });
 
   it('should event emit button clicked', () => {
-    const buttonList = element.querySelectorAll('.mat-action-list button')
+    const buttonList = element.querySelectorAll('.mat-action-list button');
     const button = buttonList[0];
     button.dispatchEvent(new Event('click'));
     fixture.detectChanges();
-    expect(component.selectedCondition.emit).toHaveBeenCalledWith(component.favoriteConditions[0].conditionData)
+    expect(component.selectedCondition.emit).toHaveBeenCalledWith(component.favoriteConditions[0].conditionData);
   });
 
 

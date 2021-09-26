@@ -8,24 +8,24 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class HttpService {
 
-  readonly HOST_URL: string = 'http://' + window.location.host
-  readonly API_URL: string = this.HOST_URL + '/api' 
+  readonly HOST_URL: string = 'http://' + window.location.host;
+  readonly API_URL: string = this.HOST_URL + '/api';
 
   constructor(private client: HttpClient) { }
 
   private getHttpParams(data: Map<string, string>): HttpParams {
     let params: HttpParams = new HttpParams();
 
-      data.forEach(
-        (value: string, key: string, ) => {
-          params = params.append(key, value);
-        }
-      );
+    data.forEach(
+      (value: string, key: string) => {
+        params = params.append(key, value);
+      }
+    );
     return params;
   }
 
   private handleErroraa(error: HttpErrorResponse) {
-    console.log(error)
+    console.log(error);
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -39,14 +39,13 @@ export class HttpService {
     // return an observable with a user-facing error message
     return throwError(
       'Something bad happened; please try again later.');
-  };
+  }
 
   private handleError<T>(operation = 'operation') {
     return (error: any): Observable<T | HttpErrorResponse> => {
-  
-      console.log(error); 
-      let result: HttpErrorResponse
-      result = new HttpErrorResponse({error: error})
+      console.log(error);
+      let result: HttpErrorResponse;
+      result = new HttpErrorResponse({ error });
 
       if (error.error instanceof ErrorEvent) {
         // A client-side or network error occurred. Handle it accordingly.
@@ -60,7 +59,7 @@ export class HttpService {
       }
       // 空の結果を返して、アプリを持続可能にする
       return of(result);
-      
+
     };
   }
 
@@ -99,15 +98,15 @@ export class HttpService {
       }),
       body: new Array<string>(),
     };
-    data.forEach( d => {
+    data.forEach(d => {
       options.body.push(d);
     });
-    
+
     return this.client.delete<T[]>(`${this.API_URL}${path}`, options)
-    .pipe(
-      retry(3),
-      catchError(this.handleError<T[] | HttpErrorResponse>('delete'))
-    );
+      .pipe(
+        retry(3),
+        catchError(this.handleError<T[] | HttpErrorResponse>('delete'))
+      );
   }
 }
 

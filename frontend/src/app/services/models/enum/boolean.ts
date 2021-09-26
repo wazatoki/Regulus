@@ -1,2 +1,2 @@
-export const TRUE:string = 'true';
-export const FALSE:string = 'false';
+export const TRUE = 'true';
+export const FALSE = 'false';

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angu
 import { StaffGroupService } from 'src/app/services/api/staff-group.service';
 
 import { StaffGroupInputFormDialogComponent } from './staff-group-input-form-dialog.component';
-import { createTestInstance1 as createGroupData} from 'src/app/services/models/group/staff-group.spec'
+import { createTestInstance1 as createGroupData} from 'src/app/services/models/group/staff-group.spec';
 import { StaffGroup } from 'src/app/services/models/group/staff-group';
 import { LayoutModule } from 'src/app/layout/layout.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,7 +23,7 @@ describe('StaffGroupInputFormDialogComponent', () => {
   let dialog: MatDialog;
   const groupData: StaffGroup = createGroupData();
   const dialogPassedData = {
-    groupData: groupData,
+    groupData,
   };
 
   beforeEach(async(() => {
@@ -78,7 +78,7 @@ describe('StaffGroupInputFormDialogComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    staffGroupServiceSpy = TestBed.get(StaffGroupService)
+    staffGroupServiceSpy = TestBed.get(StaffGroupService);
     staffGroupServiceSpy.add.and.returnValue(new Subject<StaffGroup>().asObservable());
     staffGroupServiceSpy.update.and.returnValue(new Subject<StaffGroup>().asObservable());
   });
@@ -88,7 +88,6 @@ describe('StaffGroupInputFormDialogComponent', () => {
   });
 
   it('should click save button', () => {
-   
 
     (component.staffGroup as FormGroup).get('name').setValue('value1');
 
@@ -105,11 +104,11 @@ describe('StaffGroupInputFormDialogComponent', () => {
 
   it('should create save data', async () => {
 
-    const nameDe: DebugElement = fixture.debugElement.query(By.css("input.name"));
+    const nameDe: DebugElement = fixture.debugElement.query(By.css('input.name'));
     const nameEl: HTMLInputElement = nameDe.nativeElement;
     nameEl.value = 'sample name';
     nameEl.dispatchEvent(new Event('input'));
-    
+
     component.createSaveData();
     const expectData = component.groupData;
     expect(expectData.name).toBe('sample name');
@@ -117,17 +116,17 @@ describe('StaffGroupInputFormDialogComponent', () => {
 
   it('should clear form', async () => {
 
-    const nameDe: DebugElement = fixture.debugElement.query(By.css("input.name"));
+    const nameDe: DebugElement = fixture.debugElement.query(By.css('input.name'));
     const nameEl: HTMLInputElement = nameDe.nativeElement;
     nameEl.value = 'sample name';
     nameEl.dispatchEvent(new Event('input'));
 
     component.onClearClick();
     fixture.detectChanges();
-    
+
     expect(nameEl.textContent).not.toContain('sample name');
-    console.log(nameEl.textContent)
-    expect(nameEl.textContent).toEqual('')
+    console.log(nameEl.textContent);
+    expect(nameEl.textContent).toEqual('');
   });
 
 });

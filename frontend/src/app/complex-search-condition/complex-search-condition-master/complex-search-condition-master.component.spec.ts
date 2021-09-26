@@ -52,7 +52,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
         { provide: HttpClient, useValue: {} },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -87,7 +87,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[0];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -104,7 +104,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -117,7 +117,7 @@ describe('ComplexSearchConditionMasterComponent', () => {
     component.deleteItems();
     expect(component.dialog.open).toHaveBeenCalledWith(NoticeDialogComponent, {
       data: { contents: '削除対象が選択されていません。' }
-    })
+    });
   });
 
   it('click delete with select', () => {
@@ -125,14 +125,13 @@ describe('ComplexSearchConditionMasterComponent', () => {
     const spy: jasmine.SpyObj<ComplexSearchConditionService> = TestBed.get(ComplexSearchConditionService);
     const stubValue = of(testData);
     spy.delete.and.returnValue(stubValue);
-    
     component.onFetchedSearchConditions(testData);
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
       fixture.detectChanges();
 
-      const checkboxList = element.querySelectorAll('.mat-checkbox input')
+      const checkboxList = element.querySelectorAll('.mat-checkbox input');
       const checkbox = checkboxList[1];
       checkbox.dispatchEvent(new Event('click'));
       fixture.detectChanges();
@@ -144,16 +143,16 @@ describe('ComplexSearchConditionMasterComponent', () => {
   });
 
   it('called api when onSearch execute', () => {
-    const spy: jasmine.SpyObj<ComplexSearchConditionService>  = TestBed.get(ComplexSearchConditionService);
+    const spy: jasmine.SpyObj<ComplexSearchConditionService> = TestBed.get(ComplexSearchConditionService);
     const searchWords = 'aaa bbb ccc';
     const condition = {
-      searchStrings: ['aaa','bbb','ccc'],
+      searchStrings: ['aaa', 'bbb', 'ccc'],
       displayItemList: [],
       searchConditionList: [],
       orderConditionList: [],
     };
     const data: SaveData[] = createTestArray();
-    spy.findByCondition.and.returnValue(of(data))
+    spy.findByCondition.and.returnValue(of(data));
     component.search(condition);
 
     expect(spy.findByCondition).toHaveBeenCalledWith(condition);

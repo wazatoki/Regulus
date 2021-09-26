@@ -27,12 +27,12 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
 
   setSavedDataToForm() {
 
-    this.staffGroup.get('name').setValue(this.groupData.name)
+    this.staffGroup.get('name').setValue(this.groupData.name);
 
   }
 
   onClearClick(): void {
-    this.form = this.initForm()
+    this.form = this.initForm();
   }
 
   onCancelClick(): void {
@@ -43,12 +43,12 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
 
     if (this.data.groupData === null || this.data.groupData === undefined) {
       this.data.groupData = {
-        id: "",
-        name: "",
-      }
+        id: '',
+        name: '',
+      };
     }
 
-    this.data.groupData.name = this.staffGroup.get("name").value
+    this.data.groupData.name = this.staffGroup.get('name').value;
 
   }
 
@@ -61,9 +61,9 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
       if (this.groupData.id) {
         this.staffGroupService.update(this.groupData).subscribe((res: StaffGroup | HttpErrorResponse) => {
 
-          if (res instanceof HttpErrorResponse == true) {
+          if (res instanceof HttpErrorResponse === true) {
 
-            if ((res as HttpErrorResponse).error == "duplicate-staffGroup-name") {
+            if ((res as HttpErrorResponse).error === 'duplicate-staffGroup-name') {
               this.dialog.open(NoticeDialogComponent, {
                 data: { contents: 'グループ名称が重複しています。' }
               });
@@ -73,7 +73,7 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
               });
             }
 
-          }else{
+          } else {
 
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: 'グループ名称を修正しました。' }
@@ -88,9 +88,9 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
 
         this.staffGroupService.add(this.groupData).subscribe((res: StaffGroup | HttpErrorResponse) => {
 
-          if (res instanceof HttpErrorResponse == true) {
+          if (res instanceof HttpErrorResponse === true) {
 
-            if ((res as HttpErrorResponse).error == "duplicate-staffGroup-name") {
+            if ((res as HttpErrorResponse).error === 'duplicate-staffGroup-name') {
               this.dialog.open(NoticeDialogComponent, {
                 data: { contents: 'グループ名称が重複しています。' }
               });
@@ -100,7 +100,7 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
               });
             }
 
-          }else{
+          } else {
 
             this.dialog.open(NoticeDialogComponent, {
               data: { contents: 'グループ名称を保存しました。' }
@@ -138,10 +138,10 @@ export class StaffGroupInputFormDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dialogRef.updateSize("1100px")
+    this.dialogRef.updateSize('1100px');
     // groupDataの編集のときは値をフォームに反映する
     if (this.data.groupData !== null && this.data.groupData !== undefined && this.data.groupData.id !== '') {
-      this.setSavedDataToForm()
+      this.setSavedDataToForm();
     }
   }
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Staff } from '../models/staff/staff'
+import { Staff } from '../models/staff/staff';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class LoginService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error)
+    console.log(error);
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -38,28 +38,28 @@ export class LoginService {
         `body was: ${error.error}`);
     }
     // return an observable with a user-facing error message
-    if (error.status === 401){
+    if (error.status === 401) {
       return throwError(
-        'login incorrect.\nID or password is mismatch.');  
+        'login incorrect.\nID or password is mismatch.');
     }
     return throwError(
       'Something bad happened; please try again later.');
-  };
+  }
 
   login(data: { id: string, password: string }): Observable<boolean> {
 
-    return this.client.post<any>('http://' + window.location.host + '/login', data).pipe(map(data => {
+    return this.client.post<any>('http://' + window.location.host + '/login', data).pipe(map(res => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      if (data.jwtToken) {
-        this.currentUserTokenSubject.next(data.jwtToken);
-        this.currentUserSubject.next(data.staff);
-        this.token = data.jwtToken;
-        this.user = data.staff
-        return true
+      if (res.jwtToken) {
+        this.currentUserTokenSubject.next(res.jwtToken);
+        this.currentUserSubject.next(res.staff);
+        this.token = res.jwtToken;
+        this.user = res.staff;
+        return true;
       }
-      return false
+      return false;
     }),
-    catchError(this.handleError)
+      catchError(this.handleError)
     );
   }
 

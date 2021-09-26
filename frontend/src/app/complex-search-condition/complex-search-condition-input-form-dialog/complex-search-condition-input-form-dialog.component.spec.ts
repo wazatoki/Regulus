@@ -4,7 +4,7 @@ import { ComplexSearchConditionInputFormDialogComponent } from './complex-search
 import { Component, DebugElement, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec'
+import { ceateTestArrayForMasterMaintenanceTest } from 'src/app/services/models/search/category.spec';
 import { createTestInstance1 as createSaveData } from 'src/app/services/models/search/save-data.spec';
 import { Category } from 'src/app/services/models/search/category';
 import { SaveData } from 'src/app/services/models/search/save-data';
@@ -24,11 +24,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient } from '@angular/common/http';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { By } from '@angular/platform-browser';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { ComplexSearchConditionItemComponent } from 'src/app/layout/complex-search/complex-search-condition-item/complex-search-condition-item.component';
-import { ComplexSearchOrderItemComponent } from 'src/app/layout/complex-search/complex-search-order-item/complex-search-order-item.component';
+import {
+  ComplexSearchConditionItemComponent
+} from 'src/app/layout/complex-search/complex-search-condition-item/complex-search-condition-item.component';
+import {
+  ComplexSearchOrderItemComponent
+} from 'src/app/layout/complex-search/complex-search-order-item/complex-search-order-item.component';
 import { ComplexSearchService } from 'src/app/services/share/complex-search.service';
-import { createInitSaveData } from 'src/app/services/models/search/save-data.spec'
+import { createInitSaveData } from 'src/app/services/models/search/save-data.spec';
 import { createInitConditionData } from 'src/app/services/models/search/condition-data.spec';
 import { Subject } from 'rxjs';
 
@@ -41,8 +44,8 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
   const categories: Category[] = ceateTestArrayForMasterMaintenanceTest();
   const saveData: SaveData = createSaveData();
   const dialogPassedData = {
-    categories: categories,
-    saveData: saveData,
+    categories,
+    saveData,
   };
 
   beforeEach(async(() => {
@@ -121,7 +124,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
   });
 
   it('should select category', async () => {
-    const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-category-name"));
+    const selectDe: DebugElement = fixture.debugElement.query(By.css('.select-category-name'));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
 
     selectEl.click();
@@ -129,12 +132,12 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
 
     await fixture.whenStable().then(() => {
       const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
-      inquiryOptions[0].nativeElement.click()
+      inquiryOptions[0].nativeElement.click();
       fixture.detectChanges();
     });
 
-    expect(component.isShowDisplayItem).toBe(true)
-    expect(component.isShowOrderCondition).toBe(true)
+    expect(component.isShowDisplayItem).toBe(true);
+    expect(component.isShowOrderCondition).toBe(true);
 
   });
 
@@ -145,7 +148,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     component.isShowSaveCondition = false;
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-search-condition"));
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css('.push-search-condition'));
     const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
     buttonEl.click();
     buttonEl.click();
@@ -163,7 +166,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     component.isShowSaveCondition = false;
     fixture.detectChanges();
 
-    const buttonDe: DebugElement = fixture.debugElement.query(By.css(".push-order-condition"));
+    const buttonDe: DebugElement = fixture.debugElement.query(By.css('.push-order-condition'));
     const buttonEl: HTMLSelectElement = buttonDe.nativeElement;
     buttonEl.click();
     buttonEl.click();
@@ -203,7 +206,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     component.isShowSaveCondition = true;
     fixture.detectChanges();
 
-    const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-category-name"));
+    const selectDe: DebugElement = fixture.debugElement.query(By.css('.select-category-name'));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
 
     selectEl.click();
@@ -211,18 +214,18 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
 
     await fixture.whenStable().then(() => {
       const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
-      inquiryOptions[0].nativeElement.click()
+      inquiryOptions[0].nativeElement.click();
       fixture.detectChanges();
     });
 
-    const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
+    const patternNameDe: DebugElement = fixture.debugElement.query(By.css('input.pattern-name'));
     const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
     patternNameEl.value = 'sample pattern name';
     patternNameEl.dispatchEvent(new Event('input'));
-    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+    const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css('.is-disclose label'));
     const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
     isDiscloseEl.click();
-    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+    const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.disclosure-destination-group label'));
     const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
     const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
     groupEl0.click();
@@ -242,12 +245,14 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     const expectSaveData = component.saveData;
     expect(expectSaveData.patternName).toBe('sample pattern name');
     expect(expectSaveData.isDisclose).toBe(false);
-    expect(expectSaveData.discloseGroups).toEqual([{ id: 'test-group-id-1', name: ''}, {id: 'test-group-id-2', name: ''}]);
-    expect(expectSaveData.conditionData.searchConditionList[0].searchField).toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
+    expect(expectSaveData.discloseGroups).toEqual([{ id: 'test-group-id-1', name: '' }, { id: 'test-group-id-2', name: '' }]);
+    expect(expectSaveData.conditionData.searchConditionList[0].searchField)
+      .toEqual(component.selectedCategory.searchItems.searchConditionList[0]);
     expect(expectSaveData.conditionData.searchConditionList[0].conditionValue).toEqual('value1');
     expect(expectSaveData.conditionData.searchConditionList[0].matchType.value).toEqual('match');
     expect(expectSaveData.conditionData.searchConditionList[0].operator.value).toEqual('and');
-    expect(expectSaveData.conditionData.orderConditionList[0].orderField).toEqual(component.selectedCategory.searchItems.orderConditionList[1]);
+    expect(expectSaveData.conditionData.orderConditionList[0].orderField)
+      .toEqual(component.selectedCategory.searchItems.orderConditionList[1]);
     expect(expectSaveData.conditionData.orderConditionList[0].orderFieldKeyWord.value).toEqual('asc');
   });
 
@@ -272,7 +277,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
     (component.searchConditionFormArray.controls[1] as FormGroup).get('operatorSelected').setValue('or');
     fixture.detectChanges();
 
-    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".search-condition .item-list .delete-button button"));
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.search-condition .item-list .delete-button button'));
     const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
     deleteEl0.click();
 
@@ -299,7 +304,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
 
     fixture.detectChanges();
 
-    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".order-condition .item-list .delete-button button"));
+    const deleteDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.order-condition .item-list .delete-button button'));
     const deleteEl0: HTMLButtonElement = deleteDe[0].nativeElement;
     deleteEl0.click();
 
@@ -309,7 +314,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
   });
 
   it('should clear form', async () => {
-    const selectDe: DebugElement = fixture.debugElement.query(By.css(".select-category-name"));
+    const selectDe: DebugElement = fixture.debugElement.query(By.css('.select-category-name'));
     const selectEl: HTMLSelectElement = selectDe.nativeElement;
 
     selectEl.click();
@@ -317,19 +322,19 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
 
     await fixture.whenStable().then(() => {
       const inquiryOptions = fixture.debugElement.queryAll(By.css('.mat-option-text'));
-      inquiryOptions[0].nativeElement.click()
+      inquiryOptions[0].nativeElement.click();
       fixture.detectChanges();
     });
 
     await fixture.whenStable().then(() => {
-      const patternNameDe: DebugElement = fixture.debugElement.query(By.css("input.pattern-name"));
+      const patternNameDe: DebugElement = fixture.debugElement.query(By.css('input.pattern-name'));
       const patternNameEl: HTMLInputElement = patternNameDe.nativeElement;
       patternNameEl.value = 'sample pattern name';
       patternNameEl.dispatchEvent(new Event('input'));
-      const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css(".is-disclose label"));
+      const isDiscloseDe: DebugElement = fixture.debugElement.query(By.css('.is-disclose label'));
       const isDiscloseEl: HTMLInputElement = isDiscloseDe.nativeElement;
       isDiscloseEl.click();
-      const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css(".disclosure-destination-group label"));
+      const groupDe: DebugElement[] = fixture.debugElement.queryAll(By.css('.disclosure-destination-group label'));
       const groupEl0: HTMLInputElement = groupDe[0].nativeElement;
       const groupEl1: HTMLInputElement = groupDe[1].nativeElement;
       groupEl0.click();
@@ -359,7 +364,7 @@ describe('ComplexSearchConditionInputFormDialogComponent', () => {
 
     component.onClearClick();
     fixture.detectChanges();
-    
+
     expect(selectEl.textContent).not.toContain(categories[0].name);
   });
 

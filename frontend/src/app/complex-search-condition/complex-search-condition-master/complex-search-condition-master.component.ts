@@ -6,7 +6,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NoticeDialogComponent } from 'src/app/layout/dialog/notice-dialog/notice-dialog.component';
-import { ComplexSearchConditionInputFormDialogComponent } from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
+import {
+  ComplexSearchConditionInputFormDialogComponent
+} from 'src/app/complex-search-condition/complex-search-condition-input-form-dialog/complex-search-condition-input-form-dialog.component';
 import { AlertDialogComponent } from 'src/app/layout/dialog/alert-dialog/alert-dialog.component';
 import { TRUE } from 'src/app/services/models/enum/boolean';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
@@ -33,7 +35,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
     this.complexSearchConditionService.findByCondition(condition).subscribe(
       (res: SaveData[] | HttpErrorResponse) => {
 
-        if (res instanceof HttpErrorResponse == true) {
+        if (res instanceof HttpErrorResponse === true) {
 
           this.dialog.open(NoticeDialogComponent, {
             data: { contents: 'エラーが発生したため処理が正常に完了しませんでした。' }
@@ -41,8 +43,8 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
 
         } else {
 
-          this.dataSource.data = (res as SaveData[]) || []
-          this.conditionData = condition
+          this.dataSource.data = (res as SaveData[]) || [];
+          this.conditionData = condition;
 
         }
 
@@ -55,14 +57,14 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
     this.complexSearchConditionService.findAllCategories().subscribe(categories => {
       const dialogRef = this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
         data: {
-          categories: categories,
-          saveData: saveData,
+          categories,
+          saveData,
         },
-      })
+      });
 
       dialogRef.componentInstance.submitted.subscribe(() => {
-        this.search(this.conditionData)
-      })
+        this.search(this.conditionData);
+      });
     });
 
   }
@@ -72,14 +74,14 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
     this.complexSearchConditionService.findAllCategories().subscribe(categories => {
       const dialogRef = this.dialog.open(ComplexSearchConditionInputFormDialogComponent, {
         data: {
-          categories: categories,
+          categories,
           saveData: null,
         },
-      })
+      });
 
       dialogRef.componentInstance.submitted.subscribe(() => {
-        this.search(this.conditionData)
-      })
+        this.search(this.conditionData);
+      });
     });
 
   }
@@ -139,7 +141,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
   }
 
   onFetchedSearchConditions(data: SaveData[]) {
-    this.dataSource.data = data || []
+    this.dataSource.data = data || [];
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -166,7 +168,7 @@ export class ComplexSearchConditionMasterComponent implements OnInit {
 
   constructor(
     private complexSearchConditionService: ComplexSearchConditionService,
-    private complexSearchService:ComplexSearchService,
+    private complexSearchService: ComplexSearchService,
     public dialog: MatDialog
   ) {
     const initialSelection = [];

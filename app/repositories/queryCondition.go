@@ -27,7 +27,7 @@ func (q *QueryConditionRepo) SelectQueryOperatorUsable(operatorID string) (resul
 			"from query_conditions qc " +
 			"left join join_query_conditions_staff_groups jqcsg on qc.id = jqcsg.query_conditions_id " +
 			"left join staff_groups sg on jqcsg.staff_groups_id = sg.id " +
-			"inner join join_staffs_staff_groups jssg on sg.id = jssg.staff_groups_id " +
+			"left join join_staffs_staff_groups jssg on sg.id = jssg.staff_groups_id " +
 			"where qc.del != true and (qc.owner_id = ? OR jssg.staffs_id = ?)"
 
 		// クエリをDBドライバに併せて再構築
@@ -157,12 +157,20 @@ func (q *QueryConditionRepo) Update(queryCondition *domain.Condition, operatorID
 		displayItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QueryDisplayItems(displayItemQuery).UpdateAll(context.Background(), db.DB, displayUpdateCols)
 
+		if err != nil {
+			return err
+		}
+
 		searchUpdateCols := map[string]interface{}{
 			sqlboiler.QuerySearchConditionItemColumns.Del:           true,
 			sqlboiler.QuerySearchConditionItemColumns.UpdateStaffID: null.StringFrom(operatorID),
 		}
 		searchItemQuery := qm.Where(sqlboiler.QueryDisplayItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QuerySearchConditionItems(searchItemQuery).UpdateAll(context.Background(), db.DB, searchUpdateCols)
+
+		if err != nil {
+			return err
+		}
 
 		orderUpdateCols := map[string]interface{}{
 			sqlboiler.QueryOrderConditionItemColumns.Del:           true,
@@ -171,17 +179,41 @@ func (q *QueryConditionRepo) Update(queryCondition *domain.Condition, operatorID
 		orderItemQuery := qm.Where(sqlboiler.QueryOrderConditionItemColumns.QueryConditionsID+" = ?", queryCondition.ID)
 		_, err = sqlboiler.QueryOrderConditionItems(orderItemQuery).UpdateAll(context.Background(), db.DB, orderUpdateCols)
 
+		if err != nil {
+			return err
+		}
+
 		// update
 		_, err = sqlQueryCondition.Update(context.Background(), db.DB, boil.Infer())
+
+		if err != nil {
+			return err
+		}
+
 		for _, d := range sqlQueryDisplayItems {
 			err = d.Insert(context.Background(), db.DB, boil.Infer())
 		}
+
+		if err != nil {
+			return err
+		}
+
 		for _, s := range sqlQuerySearchConditionItems {
 			err = s.Insert(context.Background(), db.DB, boil.Infer())
 		}
+
+		if err != nil {
+			return err
+		}
+
 		for _, o := range sqlQueryOrderConditionItems {
 			err = o.Insert(context.Background(), db.DB, boil.Infer())
 		}
+
+		if err != nil {
+			return err
+		}
+
 		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
 		return err
 

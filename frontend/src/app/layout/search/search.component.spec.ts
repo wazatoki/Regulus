@@ -40,11 +40,11 @@ describe('SearchComponent', () => {
 
   it('should explain input.search-strings', () => {
     expect(element.querySelector('input').className).toContain('search-strings');
-  })
+  });
 
   it('should explain search button', () => {
     expect(element.querySelector('button').textContent).toContain('検索');
-  })
+  });
 
   it('should bind input value to seatchStrings', () => {
     const inputDe: DebugElement = elementd.query(By.css('input.search-strings'));
@@ -53,7 +53,7 @@ describe('SearchComponent', () => {
     input.dispatchEvent(new Event('input'));
     fixture.detectChanges();
     expect(component.searchStrings).toBe('test words');
-  })
+  });
 
   it('should emit searchClick event', () => {
     const buttonDe: DebugElement = elementd.query(By.css('button'));

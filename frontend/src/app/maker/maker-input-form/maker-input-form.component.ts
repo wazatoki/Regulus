@@ -17,17 +17,7 @@ export interface DialogData {
 })
 export class MakerInputFormComponent implements OnInit {
 
-  constructor(
-    private fb: FormBuilder,
-    public makerService: MakerService,
-    private dialog: MatDialog,
-    public dialogRef: MatDialogRef<MakerInputFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
-
-  ngOnInit() {
-  }
-
-  makerForm: FormGroup = this.fb.group({
+  public makerForm: FormGroup = this.fb.group({
     name: ['', [Validators.required]],
   });
 
@@ -39,12 +29,12 @@ export class MakerInputFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onClearClick(){
+  onClearClick() {
     this.makerForm.reset();
   }
 
-  onSubmit(){
-    if(this.makerForm.valid){
+  onSubmit() {
+    if (this.makerForm.valid) {
       this.makerService.add(this.makerForm.value).subscribe(
         (res: Maker) => {
           const dialogRef = this.dialog.open(NoticeDialogComponent, {
@@ -59,4 +49,15 @@ export class MakerInputFormComponent implements OnInit {
       );
     }
   }
+
+  constructor(
+    private fb: FormBuilder,
+    public makerService: MakerService,
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<MakerInputFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+
+  ngOnInit() {
+  }
+
 }
