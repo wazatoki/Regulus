@@ -12,6 +12,7 @@ import "testing"
 // It does NOT run each operation group in parallel.
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditions)
 	t.Run("GorpMigrations", testGorpMigrations)
 	t.Run("Makers", testMakers)
 	t.Run("QueryConditions", testQueryConditions)
@@ -23,6 +24,7 @@ func TestParent(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsDelete)
 	t.Run("GorpMigrations", testGorpMigrationsDelete)
 	t.Run("Makers", testMakersDelete)
 	t.Run("QueryConditions", testQueryConditionsDelete)
@@ -34,6 +36,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestQueryDeleteAll(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsQueryDeleteAll)
 	t.Run("GorpMigrations", testGorpMigrationsQueryDeleteAll)
 	t.Run("Makers", testMakersQueryDeleteAll)
 	t.Run("QueryConditions", testQueryConditionsQueryDeleteAll)
@@ -45,6 +48,7 @@ func TestQueryDeleteAll(t *testing.T) {
 }
 
 func TestSliceDeleteAll(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsSliceDeleteAll)
 	t.Run("GorpMigrations", testGorpMigrationsSliceDeleteAll)
 	t.Run("Makers", testMakersSliceDeleteAll)
 	t.Run("QueryConditions", testQueryConditionsSliceDeleteAll)
@@ -56,6 +60,7 @@ func TestSliceDeleteAll(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsExists)
 	t.Run("GorpMigrations", testGorpMigrationsExists)
 	t.Run("Makers", testMakersExists)
 	t.Run("QueryConditions", testQueryConditionsExists)
@@ -67,6 +72,7 @@ func TestExists(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsFind)
 	t.Run("GorpMigrations", testGorpMigrationsFind)
 	t.Run("Makers", testMakersFind)
 	t.Run("QueryConditions", testQueryConditionsFind)
@@ -78,6 +84,7 @@ func TestFind(t *testing.T) {
 }
 
 func TestBind(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsBind)
 	t.Run("GorpMigrations", testGorpMigrationsBind)
 	t.Run("Makers", testMakersBind)
 	t.Run("QueryConditions", testQueryConditionsBind)
@@ -89,6 +96,7 @@ func TestBind(t *testing.T) {
 }
 
 func TestOne(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsOne)
 	t.Run("GorpMigrations", testGorpMigrationsOne)
 	t.Run("Makers", testMakersOne)
 	t.Run("QueryConditions", testQueryConditionsOne)
@@ -100,6 +108,7 @@ func TestOne(t *testing.T) {
 }
 
 func TestAll(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsAll)
 	t.Run("GorpMigrations", testGorpMigrationsAll)
 	t.Run("Makers", testMakersAll)
 	t.Run("QueryConditions", testQueryConditionsAll)
@@ -111,6 +120,7 @@ func TestAll(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsCount)
 	t.Run("GorpMigrations", testGorpMigrationsCount)
 	t.Run("Makers", testMakersCount)
 	t.Run("QueryConditions", testQueryConditionsCount)
@@ -122,6 +132,7 @@ func TestCount(t *testing.T) {
 }
 
 func TestHooks(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsHooks)
 	t.Run("GorpMigrations", testGorpMigrationsHooks)
 	t.Run("Makers", testMakersHooks)
 	t.Run("QueryConditions", testQueryConditionsHooks)
@@ -133,6 +144,8 @@ func TestHooks(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsInsert)
+	t.Run("FavoriteConditions", testFavoriteConditionsInsertWhitelist)
 	t.Run("GorpMigrations", testGorpMigrationsInsert)
 	t.Run("GorpMigrations", testGorpMigrationsInsertWhitelist)
 	t.Run("Makers", testMakersInsert)
@@ -154,6 +167,8 @@ func TestInsert(t *testing.T) {
 // TestToOne tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToOne(t *testing.T) {
+	t.Run("FavoriteConditionToQueryConditionUsingQueryCondition", testFavoriteConditionToOneQueryConditionUsingQueryCondition)
+	t.Run("FavoriteConditionToStaffUsingStaff", testFavoriteConditionToOneStaffUsingStaff)
 	t.Run("QueryConditionToStaffUsingCreStaff", testQueryConditionToOneStaffUsingCreStaff)
 	t.Run("QueryConditionToStaffUsingOwner", testQueryConditionToOneStaffUsingOwner)
 	t.Run("QueryConditionToStaffUsingUpdateStaff", testQueryConditionToOneStaffUsingUpdateStaff)
@@ -169,14 +184,14 @@ func TestOneToOne(t *testing.T) {}
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToMany(t *testing.T) {
-	t.Run("QueryConditionToStaffs", testQueryConditionToManyStaffs)
+	t.Run("QueryConditionToFavoriteConditions", testQueryConditionToManyFavoriteConditions)
 	t.Run("QueryConditionToStaffGroups", testQueryConditionToManyStaffGroups)
 	t.Run("QueryConditionToQueryDisplayItems", testQueryConditionToManyQueryDisplayItems)
 	t.Run("QueryConditionToQueryOrderConditionItems", testQueryConditionToManyQueryOrderConditionItems)
 	t.Run("QueryConditionToQuerySearchConditionItems", testQueryConditionToManyQuerySearchConditionItems)
 	t.Run("StaffGroupToQueryConditions", testStaffGroupToManyQueryConditions)
 	t.Run("StaffGroupToStaffs", testStaffGroupToManyStaffs)
-	t.Run("StaffToQueryConditions", testStaffToManyQueryConditions)
+	t.Run("StaffToFavoriteConditions", testStaffToManyFavoriteConditions)
 	t.Run("StaffToStaffGroups", testStaffToManyStaffGroups)
 	t.Run("StaffToCreStaffQueryConditions", testStaffToManyCreStaffQueryConditions)
 	t.Run("StaffToOwnerQueryConditions", testStaffToManyOwnerQueryConditions)
@@ -186,6 +201,8 @@ func TestToMany(t *testing.T) {
 // TestToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToOneSet(t *testing.T) {
+	t.Run("FavoriteConditionToQueryConditionUsingFavoriteConditions", testFavoriteConditionToOneSetOpQueryConditionUsingQueryCondition)
+	t.Run("FavoriteConditionToStaffUsingFavoriteConditions", testFavoriteConditionToOneSetOpStaffUsingStaff)
 	t.Run("QueryConditionToStaffUsingCreStaffQueryConditions", testQueryConditionToOneSetOpStaffUsingCreStaff)
 	t.Run("QueryConditionToStaffUsingOwnerQueryConditions", testQueryConditionToOneSetOpStaffUsingOwner)
 	t.Run("QueryConditionToStaffUsingUpdateStaffQueryConditions", testQueryConditionToOneSetOpStaffUsingUpdateStaff)
@@ -212,14 +229,14 @@ func TestOneToOneRemove(t *testing.T) {}
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManyAdd(t *testing.T) {
-	t.Run("QueryConditionToStaffs", testQueryConditionToManyAddOpStaffs)
+	t.Run("QueryConditionToFavoriteConditions", testQueryConditionToManyAddOpFavoriteConditions)
 	t.Run("QueryConditionToStaffGroups", testQueryConditionToManyAddOpStaffGroups)
 	t.Run("QueryConditionToQueryDisplayItems", testQueryConditionToManyAddOpQueryDisplayItems)
 	t.Run("QueryConditionToQueryOrderConditionItems", testQueryConditionToManyAddOpQueryOrderConditionItems)
 	t.Run("QueryConditionToQuerySearchConditionItems", testQueryConditionToManyAddOpQuerySearchConditionItems)
 	t.Run("StaffGroupToQueryConditions", testStaffGroupToManyAddOpQueryConditions)
 	t.Run("StaffGroupToStaffs", testStaffGroupToManyAddOpStaffs)
-	t.Run("StaffToQueryConditions", testStaffToManyAddOpQueryConditions)
+	t.Run("StaffToFavoriteConditions", testStaffToManyAddOpFavoriteConditions)
 	t.Run("StaffToStaffGroups", testStaffToManyAddOpStaffGroups)
 	t.Run("StaffToCreStaffQueryConditions", testStaffToManyAddOpCreStaffQueryConditions)
 	t.Run("StaffToOwnerQueryConditions", testStaffToManyAddOpOwnerQueryConditions)
@@ -229,11 +246,9 @@ func TestToManyAdd(t *testing.T) {
 // TestToManySet tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManySet(t *testing.T) {
-	t.Run("QueryConditionToStaffs", testQueryConditionToManySetOpStaffs)
 	t.Run("QueryConditionToStaffGroups", testQueryConditionToManySetOpStaffGroups)
 	t.Run("StaffGroupToQueryConditions", testStaffGroupToManySetOpQueryConditions)
 	t.Run("StaffGroupToStaffs", testStaffGroupToManySetOpStaffs)
-	t.Run("StaffToQueryConditions", testStaffToManySetOpQueryConditions)
 	t.Run("StaffToStaffGroups", testStaffToManySetOpStaffGroups)
 	t.Run("StaffToCreStaffQueryConditions", testStaffToManySetOpCreStaffQueryConditions)
 	t.Run("StaffToUpdateStaffQueryConditions", testStaffToManySetOpUpdateStaffQueryConditions)
@@ -242,17 +257,16 @@ func TestToManySet(t *testing.T) {
 // TestToManyRemove tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManyRemove(t *testing.T) {
-	t.Run("QueryConditionToStaffs", testQueryConditionToManyRemoveOpStaffs)
 	t.Run("QueryConditionToStaffGroups", testQueryConditionToManyRemoveOpStaffGroups)
 	t.Run("StaffGroupToQueryConditions", testStaffGroupToManyRemoveOpQueryConditions)
 	t.Run("StaffGroupToStaffs", testStaffGroupToManyRemoveOpStaffs)
-	t.Run("StaffToQueryConditions", testStaffToManyRemoveOpQueryConditions)
 	t.Run("StaffToStaffGroups", testStaffToManyRemoveOpStaffGroups)
 	t.Run("StaffToCreStaffQueryConditions", testStaffToManyRemoveOpCreStaffQueryConditions)
 	t.Run("StaffToUpdateStaffQueryConditions", testStaffToManyRemoveOpUpdateStaffQueryConditions)
 }
 
 func TestReload(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsReload)
 	t.Run("GorpMigrations", testGorpMigrationsReload)
 	t.Run("Makers", testMakersReload)
 	t.Run("QueryConditions", testQueryConditionsReload)
@@ -264,6 +278,7 @@ func TestReload(t *testing.T) {
 }
 
 func TestReloadAll(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsReloadAll)
 	t.Run("GorpMigrations", testGorpMigrationsReloadAll)
 	t.Run("Makers", testMakersReloadAll)
 	t.Run("QueryConditions", testQueryConditionsReloadAll)
@@ -275,6 +290,7 @@ func TestReloadAll(t *testing.T) {
 }
 
 func TestSelect(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsSelect)
 	t.Run("GorpMigrations", testGorpMigrationsSelect)
 	t.Run("Makers", testMakersSelect)
 	t.Run("QueryConditions", testQueryConditionsSelect)
@@ -286,6 +302,7 @@ func TestSelect(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsUpdate)
 	t.Run("GorpMigrations", testGorpMigrationsUpdate)
 	t.Run("Makers", testMakersUpdate)
 	t.Run("QueryConditions", testQueryConditionsUpdate)
@@ -297,6 +314,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestSliceUpdateAll(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsSliceUpdateAll)
 	t.Run("GorpMigrations", testGorpMigrationsSliceUpdateAll)
 	t.Run("Makers", testMakersSliceUpdateAll)
 	t.Run("QueryConditions", testQueryConditionsSliceUpdateAll)

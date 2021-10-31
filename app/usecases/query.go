@@ -119,6 +119,7 @@ type queryRepo interface {
 	Insert(*domain.Condition, string) (string, error)
 	Update(*domain.Condition, string) error
 	Delete(string, string) error
+	UpdateFavoriteCondition(string, string, int) error
 	SelectQueryOperatorUsable(string) (domain.Conditions, error)
 	SelectByID(string) (*domain.Condition, error)
 	SelectAll() (domain.Conditions, error)

@@ -6,6 +6,8 @@ package sqlboiler
 import "testing"
 
 func TestUpsert(t *testing.T) {
+	t.Run("FavoriteConditions", testFavoriteConditionsUpsert)
+
 	t.Run("GorpMigrations", testGorpMigrationsUpsert)
 
 	t.Run("Makers", testMakersUpsert)

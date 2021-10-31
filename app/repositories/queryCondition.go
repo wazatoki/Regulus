@@ -8,12 +8,38 @@ import (
 	"regulus/app/infrastructures/sqlboiler"
 	"regulus/app/utils"
 	"regulus/app/utils/log"
+	"sort"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
+
+// UpdateFavoriteCondition update favorite condition data to database
+func (q *QueryConditionRepo) UpdateFavoriteCondition(queryConditionID string, operatorID string, rowOrder int) error {
+	if queryConditionID == "" {
+		return errors.New("queryConditionID must be required")
+	}
+	if operatorID == "" {
+		return errors.New("operatorID must be required")
+	}
+
+	err := q.database.WithDbContext(func(db *sqlx.DB) error {
+
+		updateCols := map[string]interface{}{
+			sqlboiler.FavoriteConditionColumns.RowOrder: null.IntFrom(rowOrder),
+		}
+		query := []qm.QueryMod{}
+		query = append(query, qm.Where(sqlboiler.FavoriteConditionColumns.QueryConditionsID+" = ?", queryConditionID))
+		query = append(query, qm.And(sqlboiler.FavoriteConditionColumns.StaffsID+" = ?", operatorID))
+		_, err := sqlboiler.FavoriteConditions(query...).UpdateAll(context.Background(), db.DB, updateCols)
+
+		return err
+	})
+
+	return err
+}
 
 // SelectQueryOperatorUsable select Userble condition by operatorID
 func (q *QueryConditionRepo) SelectQueryOperatorUsable(operatorID string) (resultQueryConditions domain.Conditions, err error) {
@@ -47,11 +73,33 @@ func (q *QueryConditionRepo) SelectQueryOperatorUsable(operatorID string) (resul
 		)
 		fetchedQueryConditions, err := sqlboiler.QueryConditions(queries...).All(context.Background(), db.DB)
 
+		sfconditions, err1 := sqlboiler.FavoriteConditions(
+			qm.Where(sqlboiler.FavoriteConditionColumns.StaffsID+" = '"+operatorID+"'")).All(context.Background(), db.DB)
+
+		if err1 != nil {
+			return err1
+		}
+
 		if err == nil {
 			for _, fc := range fetchedQueryConditions {
 				resultQueryConditions = append(resultQueryConditions, QueryConditionObjectMap(fc))
 			}
 		}
+
+		sort.Slice(resultQueryConditions, func(i int, j int) bool {
+			orderi := 0
+			orderj := 0
+			for _, sfcondition := range sfconditions {
+				if resultQueryConditions[i].ID == sfcondition.QueryConditionsID {
+					orderi = sfcondition.RowOrder.Int
+				}
+				if resultQueryConditions[j].ID == sfcondition.QueryConditionsID {
+					orderj = sfcondition.RowOrder.Int
+				}
+
+			}
+			return orderi < orderj
+		})
 
 		return err
 	})
@@ -317,7 +365,17 @@ func (q *QueryConditionRepo) Insert(queryCondition *domain.Condition, operatorID
 			}
 		}
 		err = sqlQueryCondition.SetStaffGroups(context.Background(), db.DB, false, sqlDiscloseGroups...)
+		if err != nil {
+			log.Error(err.Error())
+		}
 
+		sfCondition := &sqlboiler.FavoriteCondition{
+			QueryConditionsID: sqlQueryCondition.ID,
+			StaffsID:          operatorID,
+			RowOrder:          null.IntFrom(0),
+		}
+
+		err = sfCondition.Insert(context.Background(), db.DB, boil.Infer())
 		if err != nil {
 			log.Error(err.Error())
 		}

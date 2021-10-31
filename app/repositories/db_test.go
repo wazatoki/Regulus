@@ -21,6 +21,7 @@ func setupTestData() {
 	insertTestDataToQueryCondition(con)
 	insertTestDataToQuerySearchConditionItems(con)
 	inserTestDataToJoinQueryConditionsStaffGroups(con)
+	insertTestDataToFavoriteConditions(con)
 }
 
 func insertTestDataToQueryCondition(con *sqlx.DB) {
@@ -162,8 +163,27 @@ func insertTestDataToStaffs(con *sqlx.DB) {
 	}
 }
 
+func insertTestDataToFavoriteConditions(con *sqlx.DB) {
+	var err error
+	var sql string
+	sql = "insert into favorite_conditions (query_conditions_id, staffs_id, row_order) "
+	sql += "values"
+	sql += "('queryConditionid0', 'staffid1', 0), "
+	sql += "('queryConditionid1', 'staffid1', 0)"
+	_, err = con.Exec(sql)
+	if err != nil {
+		log.Println(sql)
+		log.Fatal("insert into favorite_conditions " + err.Error())
+	}
+}
+
 func tearDownTestData(con *sqlx.DB) {
 	var err error
+
+	_, err = con.Exec("delete from favorite_conditions")
+	if err != nil {
+		log.Fatal("delete from favorite_conditions " + err.Error())
+	}
 
 	_, err = con.Exec("delete from join_query_conditions_staff_groups")
 	if err != nil {

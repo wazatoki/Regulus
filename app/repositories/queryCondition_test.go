@@ -1037,3 +1037,58 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryConditionRepo_UpdateFavoriteCondition(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		queryConditionID string
+		operatorID       string
+		rowOrder         int
+	}
+	condition := createExpectedQueryCondition0Entity()
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "update favorite condition",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				queryConditionID: condition.ID,
+				operatorID:       condition.Owner.ID,
+				rowOrder:         4,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			if err := q.UpdateFavoriteCondition(tt.args.queryConditionID, tt.args.operatorID, tt.args.rowOrder); (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.UpdateFavoriteCondition() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			var result []int
+			sql := "select row_order from favorite_conditions where query_conditions_id = ? and staffs_id = ?"
+			sql = con.Rebind(sql)
+			e := con.Select(&result, sql, tt.args.queryConditionID, tt.args.operatorID)
+			if e != nil {
+				t.Errorf("QueryConditionRepo.UpdateFavoriteCondition() error = %v", e)
+			}
+			if result[0] != tt.args.rowOrder {
+				t.Errorf("QueryConditionRepo.UpdateFavoriteCondition() result = %v, wantResult %v", result, tt.args.rowOrder)
+			}
+		})
+	}
+}

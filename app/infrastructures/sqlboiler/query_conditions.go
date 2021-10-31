@@ -118,7 +118,7 @@ var QueryConditionRels = struct {
 	CreStaff                  string
 	Owner                     string
 	UpdateStaff               string
-	Staffs                    string
+	FavoriteConditions        string
 	StaffGroups               string
 	QueryDisplayItems         string
 	QueryOrderConditionItems  string
@@ -127,7 +127,7 @@ var QueryConditionRels = struct {
 	CreStaff:                  "CreStaff",
 	Owner:                     "Owner",
 	UpdateStaff:               "UpdateStaff",
-	Staffs:                    "Staffs",
+	FavoriteConditions:        "FavoriteConditions",
 	StaffGroups:               "StaffGroups",
 	QueryDisplayItems:         "QueryDisplayItems",
 	QueryOrderConditionItems:  "QueryOrderConditionItems",
@@ -139,7 +139,7 @@ type queryConditionR struct {
 	CreStaff                  *Staff                        `db:"CreStaff" boil:"CreStaff" json:"CreStaff" toml:"CreStaff" yaml:"CreStaff"`
 	Owner                     *Staff                        `db:"Owner" boil:"Owner" json:"Owner" toml:"Owner" yaml:"Owner"`
 	UpdateStaff               *Staff                        `db:"UpdateStaff" boil:"UpdateStaff" json:"UpdateStaff" toml:"UpdateStaff" yaml:"UpdateStaff"`
-	Staffs                    StaffSlice                    `db:"Staffs" boil:"Staffs" json:"Staffs" toml:"Staffs" yaml:"Staffs"`
+	FavoriteConditions        FavoriteConditionSlice        `db:"FavoriteConditions" boil:"FavoriteConditions" json:"FavoriteConditions" toml:"FavoriteConditions" yaml:"FavoriteConditions"`
 	StaffGroups               StaffGroupSlice               `db:"StaffGroups" boil:"StaffGroups" json:"StaffGroups" toml:"StaffGroups" yaml:"StaffGroups"`
 	QueryDisplayItems         QueryDisplayItemSlice         `db:"QueryDisplayItems" boil:"QueryDisplayItems" json:"QueryDisplayItems" toml:"QueryDisplayItems" yaml:"QueryDisplayItems"`
 	QueryOrderConditionItems  QueryOrderConditionItemSlice  `db:"QueryOrderConditionItems" boil:"QueryOrderConditionItems" json:"QueryOrderConditionItems" toml:"QueryOrderConditionItems" yaml:"QueryOrderConditionItems"`
@@ -478,23 +478,22 @@ func (o *QueryCondition) UpdateStaff(mods ...qm.QueryMod) staffQuery {
 	return query
 }
 
-// Staffs retrieves all the staff's Staffs with an executor.
-func (o *QueryCondition) Staffs(mods ...qm.QueryMod) staffQuery {
+// FavoriteConditions retrieves all the favorite_condition's FavoriteConditions with an executor.
+func (o *QueryCondition) FavoriteConditions(mods ...qm.QueryMod) favoriteConditionQuery {
 	var queryMods []qm.QueryMod
 	if len(mods) != 0 {
 		queryMods = append(queryMods, mods...)
 	}
 
 	queryMods = append(queryMods,
-		qm.InnerJoin("\"favorite_conditions\" on \"staffs\".\"id\" = \"favorite_conditions\".\"staffs_id\""),
 		qm.Where("\"favorite_conditions\".\"query_conditions_id\"=?", o.ID),
 	)
 
-	query := Staffs(queryMods...)
-	queries.SetFrom(query.Query, "\"staffs\"")
+	query := FavoriteConditions(queryMods...)
+	queries.SetFrom(query.Query, "\"favorite_conditions\"")
 
 	if len(queries.GetSelect(query.Query)) == 0 {
-		queries.SetSelect(query.Query, []string{"\"staffs\".*"})
+		queries.SetSelect(query.Query, []string{"\"favorite_conditions\".*"})
 	}
 
 	return query
@@ -905,9 +904,9 @@ func (queryConditionL) LoadUpdateStaff(ctx context.Context, e boil.ContextExecut
 	return nil
 }
 
-// LoadStaffs allows an eager lookup of values, cached into the
+// LoadFavoriteConditions allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
-func (queryConditionL) LoadStaffs(ctx context.Context, e boil.ContextExecutor, singular bool, maybeQueryCondition interface{}, mods queries.Applicator) error {
+func (queryConditionL) LoadFavoriteConditions(ctx context.Context, e boil.ContextExecutor, singular bool, maybeQueryCondition interface{}, mods queries.Applicator) error {
 	var slice []*QueryCondition
 	var object *QueryCondition
 
@@ -945,10 +944,8 @@ func (queryConditionL) LoadStaffs(ctx context.Context, e boil.ContextExecutor, s
 	}
 
 	query := NewQuery(
-		qm.Select("\"staffs\".id, \"staffs\".del, \"staffs\".created_at, \"staffs\".cre_staff_id, \"staffs\".updated_at, \"staffs\".update_staff_id, \"staffs\".account_id, \"staffs\".password, \"staffs\".name, \"a\".\"query_conditions_id\""),
-		qm.From("\"staffs\""),
-		qm.InnerJoin("\"favorite_conditions\" as \"a\" on \"staffs\".\"id\" = \"a\".\"staffs_id\""),
-		qm.WhereIn("\"a\".\"query_conditions_id\" in ?", args...),
+		qm.From(`favorite_conditions`),
+		qm.WhereIn(`favorite_conditions.query_conditions_id in ?`, args...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -956,36 +953,22 @@ func (queryConditionL) LoadStaffs(ctx context.Context, e boil.ContextExecutor, s
 
 	results, err := query.QueryContext(ctx, e)
 	if err != nil {
-		return errors.Wrap(err, "failed to eager load staffs")
+		return errors.Wrap(err, "failed to eager load favorite_conditions")
 	}
 
-	var resultSlice []*Staff
-
-	var localJoinCols []string
-	for results.Next() {
-		one := new(Staff)
-		var localJoinCol string
-
-		err = results.Scan(&one.ID, &one.Del, &one.CreatedAt, &one.CreStaffID, &one.UpdatedAt, &one.UpdateStaffID, &one.AccountID, &one.Password, &one.Name, &localJoinCol)
-		if err != nil {
-			return errors.Wrap(err, "failed to scan eager loaded results for staffs")
-		}
-		if err = results.Err(); err != nil {
-			return errors.Wrap(err, "failed to plebian-bind eager loaded slice staffs")
-		}
-
-		resultSlice = append(resultSlice, one)
-		localJoinCols = append(localJoinCols, localJoinCol)
+	var resultSlice []*FavoriteCondition
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice favorite_conditions")
 	}
 
 	if err = results.Close(); err != nil {
-		return errors.Wrap(err, "failed to close results in eager load on staffs")
+		return errors.Wrap(err, "failed to close results in eager load on favorite_conditions")
 	}
 	if err = results.Err(); err != nil {
-		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for staffs")
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for favorite_conditions")
 	}
 
-	if len(staffAfterSelectHooks) != 0 {
+	if len(favoriteConditionAfterSelectHooks) != 0 {
 		for _, obj := range resultSlice {
 			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
 				return err
@@ -993,25 +976,24 @@ func (queryConditionL) LoadStaffs(ctx context.Context, e boil.ContextExecutor, s
 		}
 	}
 	if singular {
-		object.R.Staffs = resultSlice
+		object.R.FavoriteConditions = resultSlice
 		for _, foreign := range resultSlice {
 			if foreign.R == nil {
-				foreign.R = &staffR{}
+				foreign.R = &favoriteConditionR{}
 			}
-			foreign.R.QueryConditions = append(foreign.R.QueryConditions, object)
+			foreign.R.QueryCondition = object
 		}
 		return nil
 	}
 
-	for i, foreign := range resultSlice {
-		localJoinCol := localJoinCols[i]
+	for _, foreign := range resultSlice {
 		for _, local := range slice {
-			if local.ID == localJoinCol {
-				local.R.Staffs = append(local.R.Staffs, foreign)
+			if local.ID == foreign.QueryConditionsID {
+				local.R.FavoriteConditions = append(local.R.FavoriteConditions, foreign)
 				if foreign.R == nil {
-					foreign.R = &staffR{}
+					foreign.R = &favoriteConditionR{}
 				}
-				foreign.R.QueryConditions = append(foreign.R.QueryConditions, local)
+				foreign.R.QueryCondition = local
 				break
 			}
 		}
@@ -1636,148 +1618,57 @@ func (o *QueryCondition) RemoveUpdateStaff(ctx context.Context, exec boil.Contex
 	return nil
 }
 
-// AddStaffs adds the given related objects to the existing relationships
+// AddFavoriteConditions adds the given related objects to the existing relationships
 // of the query_condition, optionally inserting them as new records.
-// Appends related to o.R.Staffs.
-// Sets related.R.QueryConditions appropriately.
-func (o *QueryCondition) AddStaffs(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Staff) error {
+// Appends related to o.R.FavoriteConditions.
+// Sets related.R.QueryCondition appropriately.
+func (o *QueryCondition) AddFavoriteConditions(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*FavoriteCondition) error {
 	var err error
 	for _, rel := range related {
 		if insert {
+			rel.QueryConditionsID = o.ID
 			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
 				return errors.Wrap(err, "failed to insert into foreign table")
 			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"favorite_conditions\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"query_conditions_id"}),
+				strmangle.WhereClause("\"", "\"", 2, favoriteConditionPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.QueryConditionsID, rel.StaffsID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.QueryConditionsID = o.ID
 		}
 	}
 
-	for _, rel := range related {
-		query := "insert into \"favorite_conditions\" (\"query_conditions_id\", \"staffs_id\") values ($1, $2)"
-		values := []interface{}{o.ID, rel.ID}
-
-		if boil.IsDebug(ctx) {
-			writer := boil.DebugWriterFrom(ctx)
-			fmt.Fprintln(writer, query)
-			fmt.Fprintln(writer, values)
-		}
-		_, err = exec.ExecContext(ctx, query, values...)
-		if err != nil {
-			return errors.Wrap(err, "failed to insert into join table")
-		}
-	}
 	if o.R == nil {
 		o.R = &queryConditionR{
-			Staffs: related,
+			FavoriteConditions: related,
 		}
 	} else {
-		o.R.Staffs = append(o.R.Staffs, related...)
+		o.R.FavoriteConditions = append(o.R.FavoriteConditions, related...)
 	}
 
 	for _, rel := range related {
 		if rel.R == nil {
-			rel.R = &staffR{
-				QueryConditions: QueryConditionSlice{o},
+			rel.R = &favoriteConditionR{
+				QueryCondition: o,
 			}
 		} else {
-			rel.R.QueryConditions = append(rel.R.QueryConditions, o)
+			rel.R.QueryCondition = o
 		}
 	}
 	return nil
-}
-
-// SetStaffs removes all previously related items of the
-// query_condition replacing them completely with the passed
-// in related items, optionally inserting them as new records.
-// Sets o.R.QueryConditions's Staffs accordingly.
-// Replaces o.R.Staffs with related.
-// Sets related.R.QueryConditions's Staffs accordingly.
-func (o *QueryCondition) SetStaffs(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Staff) error {
-	query := "delete from \"favorite_conditions\" where \"query_conditions_id\" = $1"
-	values := []interface{}{o.ID}
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, query)
-		fmt.Fprintln(writer, values)
-	}
-	_, err := exec.ExecContext(ctx, query, values...)
-	if err != nil {
-		return errors.Wrap(err, "failed to remove relationships before set")
-	}
-
-	removeStaffsFromQueryConditionsSlice(o, related)
-	if o.R != nil {
-		o.R.Staffs = nil
-	}
-	return o.AddStaffs(ctx, exec, insert, related...)
-}
-
-// RemoveStaffs relationships from objects passed in.
-// Removes related items from R.Staffs (uses pointer comparison, removal does not keep order)
-// Sets related.R.QueryConditions.
-func (o *QueryCondition) RemoveStaffs(ctx context.Context, exec boil.ContextExecutor, related ...*Staff) error {
-	if len(related) == 0 {
-		return nil
-	}
-
-	var err error
-	query := fmt.Sprintf(
-		"delete from \"favorite_conditions\" where \"query_conditions_id\" = $1 and \"staffs_id\" in (%s)",
-		strmangle.Placeholders(dialect.UseIndexPlaceholders, len(related), 2, 1),
-	)
-	values := []interface{}{o.ID}
-	for _, rel := range related {
-		values = append(values, rel.ID)
-	}
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, query)
-		fmt.Fprintln(writer, values)
-	}
-	_, err = exec.ExecContext(ctx, query, values...)
-	if err != nil {
-		return errors.Wrap(err, "failed to remove relationships before set")
-	}
-	removeStaffsFromQueryConditionsSlice(o, related)
-	if o.R == nil {
-		return nil
-	}
-
-	for _, rel := range related {
-		for i, ri := range o.R.Staffs {
-			if rel != ri {
-				continue
-			}
-
-			ln := len(o.R.Staffs)
-			if ln > 1 && i < ln-1 {
-				o.R.Staffs[i] = o.R.Staffs[ln-1]
-			}
-			o.R.Staffs = o.R.Staffs[:ln-1]
-			break
-		}
-	}
-
-	return nil
-}
-
-func removeStaffsFromQueryConditionsSlice(o *QueryCondition, related []*Staff) {
-	for _, rel := range related {
-		if rel.R == nil {
-			continue
-		}
-		for i, ri := range rel.R.QueryConditions {
-			if o.ID != ri.ID {
-				continue
-			}
-
-			ln := len(rel.R.QueryConditions)
-			if ln > 1 && i < ln-1 {
-				rel.R.QueryConditions[i] = rel.R.QueryConditions[ln-1]
-			}
-			rel.R.QueryConditions = rel.R.QueryConditions[:ln-1]
-			break
-		}
-	}
 }
 
 // AddStaffGroups adds the given related objects to the existing relationships
