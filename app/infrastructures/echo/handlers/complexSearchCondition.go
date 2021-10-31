@@ -11,6 +11,23 @@ import (
 )
 
 /*
+UpdateFavoriteConditions usable conditionsの並び順更新用ハンドラ
+*/
+func UpdateFavoriteConditions(c echo.Context) error {
+	repo := repositories.NewQueryConditionRepo()
+	conditionIDs := &[]string{}
+	e := c.Bind(conditionIDs)
+	if e != nil {
+		return e
+	}
+	err := usecases.UpdateFavoriteConditions(*conditionIDs, repo, getAuthStaffID(c))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, nil)
+}
+
+/*
 DeleteQueryCondition 検索条件削除用ハンドラ
 */
 func DeleteQueryCondition(c echo.Context) error {

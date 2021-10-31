@@ -10,7 +10,7 @@ import (
 UpdateFavoriteConditions usable conditionsの並び順を更新します。
 
 */
-func UpdateFavoriteConditions(conditionIDs []string, operatorID string, queryRepo queryRepo) error {
+func UpdateFavoriteConditions(conditionIDs []string, queryRepo queryRepo, operatorID string) error {
 
 	for i, id := range conditionIDs {
 		err := queryRepo.UpdateFavoriteCondition(id, operatorID, i)
