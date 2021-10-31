@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@ang
 })
 export class SubmitComponent implements OnInit {
 
-  private buttonLabel: string;
+  buttonLabel: string;
 
   @Input() set focus(a: boolean) {
     if (a) {

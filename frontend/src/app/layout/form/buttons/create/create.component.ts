@@ -15,7 +15,7 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  private buttonLabel: string;
+  buttonLabel: string;
 
   constructor() {
     this.buttonLabel = '新規作成';

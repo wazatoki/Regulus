@@ -15,7 +15,7 @@ export class DeleteComponent implements OnInit {
     }
   }
 
-  private buttonLabel: string;
+  buttonLabel: string;
 
   constructor() {
     this.buttonLabel = '削除';

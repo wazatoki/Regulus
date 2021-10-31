@@ -17,7 +17,8 @@ import {
   MatDialogModule,
   MatListModule,
   MatGridListModule,
-  MatCardModule
+  MatCardModule,
+  MatIconModule
 } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -81,6 +82,7 @@ import { SelectSearchConditionComponent } from './form/buttons/select-search-con
     MatDialogModule,
     MatListModule,
     MatGridListModule,
+    MatIconModule,
     MatCardModule,
     DragDropModule,
     FormsModule,

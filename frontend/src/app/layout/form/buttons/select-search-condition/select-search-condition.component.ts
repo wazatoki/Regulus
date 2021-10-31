@@ -15,7 +15,7 @@ export class SelectSearchConditionComponent implements OnInit {
     }
   }
 
-  private buttonLabel: string;
+  buttonLabel: string;
 
   constructor() {
     this.buttonLabel = '条件選択';

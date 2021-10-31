@@ -15,7 +15,7 @@ export class UpdateComponent implements OnInit {
     }
   }
 
-  private buttonLabel: string;
+  buttonLabel: string;
 
   constructor() {
     this.buttonLabel = '修正';

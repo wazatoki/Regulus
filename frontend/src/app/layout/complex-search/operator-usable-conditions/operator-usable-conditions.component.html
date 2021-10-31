@@ -1,6 +1,13 @@
 <div>
-    <mat-action-list>
-        <button *ngFor="let condition of conditions" mat-list-item (click)="onClick(condition)"> {{
-            condition.patternName }} </button>
-    </mat-action-list>
+  <mat-action-list cdkDropList class="item-list" (cdkDropListDropped)="onDrop($event)">
+    <div mat-list-item class="item-box" *ngFor="let condition of conditions; let i=index" cdkDrag>
+      <p matLine>
+        <mat-icon mat-list-icon cdkDragHandle>drag_handle</mat-icon>
+        <button (click)="onClick(condition)"> {{
+          condition.patternName }} </button>
+      </p>
+
+    </div>
+  </mat-action-list>
+
 </div>

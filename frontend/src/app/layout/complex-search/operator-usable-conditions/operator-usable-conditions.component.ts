@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConditionData } from 'src/app/services/models/search/condition-data';
 import { SaveData } from 'src/app/services/models/search/save-data';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-operator-usable-conditions',
@@ -15,6 +16,10 @@ export class OperatorUsableConditionsComponent implements OnInit {
 
   public get conditions(): SaveData[] {
     return this.usableConditions;
+  }
+
+  onDrop(event: CdkDragDrop<SaveData[]>) {
+    moveItemInArray(this.conditions, event.previousIndex, event.currentIndex);
   }
 
   onClick(condition: SaveData) {

@@ -41,8 +41,10 @@ export class StaffGroupSearchComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       (data: SaveData) => {
-        this.selectedPatternName = data.patternName;
-        this.searchClicked.emit(data.conditionData);
+        if (data) {
+          this.selectedPatternName = data.patternName;
+          this.searchClicked.emit(data.conditionData);
+        }
       }
     );
 

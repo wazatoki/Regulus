@@ -1,6 +1,6 @@
 import { Component, DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatListModule } from '@angular/material';
+import { MatListModule, MatIconModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
@@ -49,6 +49,7 @@ describe('OperatorUsableConditionsDialogComponent', () => {
         MatDialogModule,
         MatButtonModule,
         MatListModule,
+        MatIconModule,
         NoopAnimationsModule,
       ],
       providers: [

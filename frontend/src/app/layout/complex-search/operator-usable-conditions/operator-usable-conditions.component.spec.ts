@@ -3,8 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { OperatorUsableConditionsComponent } from './operator-usable-conditions.component';
 import { createTestArray as createTeatSaveDataArray} from '../../../services/models/search/save-data.spec';
 import { DebugElement } from '@angular/core';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatListModule } from '@angular/material/list';
+import { MatGridListModule, MatListModule, MatIconModule } from '@angular/material';
 
 describe('OperatorUsableConditionsComponent', () => {
   let component: OperatorUsableConditionsComponent;
@@ -18,6 +17,7 @@ describe('OperatorUsableConditionsComponent', () => {
       imports: [
         MatGridListModule,
         MatListModule,
+        MatIconModule,
       ],
     })
     .compileComponents();
