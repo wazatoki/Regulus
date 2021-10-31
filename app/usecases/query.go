@@ -7,6 +7,23 @@ import (
 
 /*
 
+UpdateFavoriteConditions usable conditionsの並び順を更新します。
+
+*/
+func UpdateFavoriteConditions(conditionIDs []string, operatorID string, queryRepo queryRepo) error {
+
+	for i, id := range conditionIDs {
+		err := queryRepo.UpdateFavoriteCondition(id, operatorID, i)
+		if err != nil {
+			log.Error("usecases:query:UpdateFavoriteConditions:message:" + err.Error())
+			return err
+		}
+	}
+	return nil
+}
+
+/*
+
 FetchOperatorUsableCondition 認証されたユーザーのusable conditionsを取得します。
 
 */
