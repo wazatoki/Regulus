@@ -27,6 +27,7 @@ func defineComplexSearchConditionRouting(api *echo.Group) {
 	api.DELETE("/complexSearchCondition", handlers.DeleteQueryCondition)
 	api.GET("/complexSearchCondition/dataInputFormItems", handlers.FetchQueryConditionDataInputFormItems)
 	api.GET("/complexSearchCondition/complexSearchItems", handlers.FetchQueryConditionSearchItems)
+	api.GET("/complexSearchCondition/updateFavoriteConditions", handlers.UpdateFavoriteConditions)
 }
 
 func defineStaffGroupRouting(api *echo.Group) {
