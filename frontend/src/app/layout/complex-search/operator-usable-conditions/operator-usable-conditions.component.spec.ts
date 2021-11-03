@@ -1,9 +1,12 @@
+import { SaveData } from './../../../services/models/search/save-data';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OperatorUsableConditionsComponent } from './operator-usable-conditions.component';
 import { createTestArray as createTeatSaveDataArray} from '../../../services/models/search/save-data.spec';
 import { DebugElement } from '@angular/core';
 import { MatGridListModule, MatListModule, MatIconModule } from '@angular/material';
+import { ComplexSearchConditionService } from 'src/app/services/api/complex-search-condition.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 describe('OperatorUsableConditionsComponent', () => {
   let component: OperatorUsableConditionsComponent;
@@ -12,6 +15,9 @@ describe('OperatorUsableConditionsComponent', () => {
   let element: HTMLElement;
 
   beforeEach(async(() => {
+    const complexSearchConditionServiceSpy = jasmine.createSpyObj('ComplexSearchConditionService',
+      ['updateFavoriteConditions']);
+
     TestBed.configureTestingModule({
       declarations: [ OperatorUsableConditionsComponent ],
       imports: [
@@ -19,6 +25,12 @@ describe('OperatorUsableConditionsComponent', () => {
         MatListModule,
         MatIconModule,
       ],
+      providers: [
+        {
+          provide: ComplexSearchConditionService,
+          useValue: complexSearchConditionServiceSpy
+        }
+      ]
     })
     .compileComponents();
   }));

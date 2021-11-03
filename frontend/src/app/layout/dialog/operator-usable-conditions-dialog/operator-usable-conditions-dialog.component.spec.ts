@@ -10,6 +10,7 @@ import { OperatorUsableConditionsComponent } from '../../complex-search/operator
 import { CancelComponent } from '../../form/buttons/cancel/cancel.component';
 
 import { OperatorUsableConditionsDialogComponent } from './operator-usable-conditions-dialog.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   template: `
@@ -60,6 +61,9 @@ describe('OperatorUsableConditionsDialogComponent', () => {
         {
           provide: MAT_DIALOG_DATA, useValue: {}
         },
+        {
+          provide: HttpClient, useValue: {}
+        }
       ],
     }).overrideModule(BrowserDynamicTestingModule, {
       set: {

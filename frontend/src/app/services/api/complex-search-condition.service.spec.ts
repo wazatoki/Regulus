@@ -145,6 +145,23 @@ describe('ComplexSearchConditionService', () => {
     expect(httpServiceSpy.delete).toHaveBeenCalledWith('/complexSearchCondition', testData);
   });
 
+  it('should call httpService.put with /complexSearchCondition/updateFavoriteConditions when called updateFavoriteConditions method', () => {
+    const testData: string[] = ['saveID1', 'saveID2'];
+    const resultData: string[] = [];
+    complexSearchConditionService = TestBed.get(ComplexSearchConditionService);
+    httpServiceSpy = TestBed.get(HttpService);
+    httpServiceSpy.put.and.returnValue(of(resultData));
+
+    let result: string[] | HttpErrorResponse;
+
+    complexSearchConditionService.updateFavoriteConditions(testData).subscribe(data => {
+      result = data;
+    });
+
+    expect(result).toEqual(resultData);
+    expect(httpServiceSpy.put).toHaveBeenCalledWith('/complexSearchCondition/updateFavoriteConditions', testData);
+  });
+
   it('should be created', () => {
     const service: ComplexSearchConditionService = TestBed.get(ComplexSearchConditionService);
     expect(service).toBeTruthy();

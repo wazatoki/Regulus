@@ -12,6 +12,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class ComplexSearchConditionService {
 
+  updateFavoriteConditions(data: string[]): Observable<string[] | HttpErrorResponse> {
+    return this.http.put<string[]>('/complexSearchCondition/updateFavoriteConditions', data);
+  }
+
   findAllCategories(): Observable<Category[] | HttpErrorResponse> {
     return this.http.get<Category[]>('/complexSearchCondition/dataInputFormItems');
   }
