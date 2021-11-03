@@ -166,10 +166,10 @@ func insertTestDataToStaffs(con *sqlx.DB) {
 func insertTestDataToFavoriteConditions(con *sqlx.DB) {
 	var err error
 	var sql string
-	sql = "insert into favorite_conditions (query_conditions_id, staffs_id, row_order) "
+	sql = "insert into favorite_conditions (query_conditions_id, staffs_id, row_order, category_name) "
 	sql += "values"
-	sql += "('queryConditionid0', 'staffid1', 0), "
-	sql += "('queryConditionid1', 'staffid1', 0)"
+	sql += "('queryConditionid0', 'staffid1', 0, 'staff'), "
+	sql += "('queryConditionid1', 'staffid1', 0, 'staff')"
 	_, err = con.Exec(sql)
 	if err != nil {
 		log.Println(sql)
