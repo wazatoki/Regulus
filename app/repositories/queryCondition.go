@@ -369,17 +369,6 @@ func (q *QueryConditionRepo) Insert(queryCondition *domain.Condition, operatorID
 			log.Error(err.Error())
 		}
 
-		sfCondition := &sqlboiler.FavoriteCondition{
-			QueryConditionsID: sqlQueryCondition.ID,
-			StaffsID:          operatorID,
-			RowOrder:          null.IntFrom(0),
-		}
-
-		err = sfCondition.Insert(context.Background(), db.DB, boil.Infer())
-		if err != nil {
-			log.Error(err.Error())
-		}
-
 		return err
 	})
 
