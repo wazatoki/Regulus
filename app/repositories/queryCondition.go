@@ -16,24 +16,50 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-// UpdateFavoriteCondition update favorite condition data to database
-func (q *QueryConditionRepo) UpdateFavoriteCondition(queryConditionID string, operatorID string, rowOrder int) error {
+func (q *QueryConditionRepo) DeleteFavoriteConditionByCategoryName(categoryName string, operatorID string) error {
+	if operatorID == "" {
+		return errors.New("operatorID must be required")
+	}
+	if categoryName == "" {
+		return errors.New("categoryName must be required")
+	}
+
+	err := q.database.WithDbContext(func(db *sqlx.DB) error {
+
+		query := qm.Where(sqlboiler.FavoriteConditionColumns.CategoryName+" = ?", categoryName)
+		_, err := sqlboiler.FavoriteConditions(query).DeleteAll(context.Background(), db.DB)
+		return err
+	})
+
+	return err
+}
+
+// InsertFavoriteCondition insert favorite condition data to database
+func (q *QueryConditionRepo) InsertFavoriteCondition(queryConditionID string, operatorID string, rowOrder int, categoryName string) error {
 	if queryConditionID == "" {
 		return errors.New("queryConditionID must be required")
 	}
 	if operatorID == "" {
 		return errors.New("operatorID must be required")
 	}
+	if categoryName == "" {
+		return errors.New("categoryName must be required")
+	}
 
 	err := q.database.WithDbContext(func(db *sqlx.DB) error {
 
-		updateCols := map[string]interface{}{
-			sqlboiler.FavoriteConditionColumns.RowOrder: null.IntFrom(rowOrder),
+		fc := &sqlboiler.FavoriteCondition{
+			QueryConditionsID: queryConditionID,
+			StaffsID:          operatorID,
+			RowOrder:          null.IntFrom(rowOrder),
+			CategoryName:      categoryName,
 		}
-		query := []qm.QueryMod{}
-		query = append(query, qm.Where(sqlboiler.FavoriteConditionColumns.QueryConditionsID+" = ?", queryConditionID))
-		query = append(query, qm.And(sqlboiler.FavoriteConditionColumns.StaffsID+" = ?", operatorID))
-		_, err := sqlboiler.FavoriteConditions(query...).UpdateAll(context.Background(), db.DB, updateCols)
+
+		err := fc.Insert(context.Background(), db.DB, boil.Infer())
+		if err != nil {
+			log.Error(err.Error())
+			return err
+		}
 
 		return err
 	})

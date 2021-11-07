@@ -12,13 +12,34 @@ UpdateFavoriteConditions usable conditionsの並び順を更新します。
 */
 func UpdateFavoriteConditions(conditionIDs []string, queryRepo queryRepo, operatorID string) error {
 
-	for i, id := range conditionIDs {
-		err := queryRepo.UpdateFavoriteCondition(id, operatorID, i)
+	if len(conditionIDs) > 0 {
+
+		var (
+			condition *domain.Condition
+			err       error
+		)
+
+		condition, err = queryRepo.SelectByID(conditionIDs[0])
 		if err != nil {
 			log.Error("usecases:query:UpdateFavoriteConditions:message:" + err.Error())
 			return err
 		}
+
+		err = queryRepo.DeleteFavoriteConditionByCategoryName(condition.Category.Name, operatorID)
+		if err != nil {
+			log.Error("usecases:query:UpdateFavoriteConditions:message:" + err.Error())
+			return err
+		}
+
+		for i, id := range conditionIDs {
+			err := queryRepo.InsertFavoriteCondition(id, operatorID, i, condition.Category.Name)
+			if err != nil {
+				log.Error("usecases:query:UpdateFavoriteConditions:message:" + err.Error())
+				return err
+			}
+		}
 	}
+
 	return nil
 }
 
@@ -136,7 +157,8 @@ type queryRepo interface {
 	Insert(*domain.Condition, string) (string, error)
 	Update(*domain.Condition, string) error
 	Delete(string, string) error
-	UpdateFavoriteCondition(string, string, int) error
+	InsertFavoriteCondition(string, string, int, string) error
+	DeleteFavoriteConditionByCategoryName(categoryName string, operatorID string) error
 	SelectQueryOperatorUsable(string) (domain.Conditions, error)
 	SelectByID(string) (*domain.Condition, error)
 	SelectAll() (domain.Conditions, error)

@@ -1038,7 +1038,7 @@ func TestQueryConditionRepo_SelectQueryOperatorUsable(t *testing.T) {
 	}
 }
 
-func TestQueryConditionRepo_UpdateFavoriteCondition(t *testing.T) {
+func TestQueryConditionRepo_InsertFavoriteCondition(t *testing.T) {
 	type fields struct {
 		database db
 	}
@@ -1046,8 +1046,8 @@ func TestQueryConditionRepo_UpdateFavoriteCondition(t *testing.T) {
 		queryConditionID string
 		operatorID       string
 		rowOrder         int
+		categoryName     string
 	}
-	condition := createExpectedQueryCondition0Entity()
 	tests := []struct {
 		name    string
 		fields  fields
@@ -1055,14 +1055,15 @@ func TestQueryConditionRepo_UpdateFavoriteCondition(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "update favorite condition",
+			name: "insert favorite condition",
 			fields: fields{
 				database: createDB(),
 			},
 			args: args{
-				queryConditionID: condition.ID,
-				operatorID:       condition.Owner.ID,
-				rowOrder:         4,
+				queryConditionID: "queryConditionid1",
+				operatorID:       "staffid2",
+				rowOrder:         0,
+				categoryName:     "staff",
 			},
 		},
 	}
@@ -1075,19 +1076,70 @@ func TestQueryConditionRepo_UpdateFavoriteCondition(t *testing.T) {
 			q := &QueryConditionRepo{
 				database: tt.fields.database,
 			}
-			if err := q.UpdateFavoriteCondition(tt.args.queryConditionID, tt.args.operatorID, tt.args.rowOrder); (err != nil) != tt.wantErr {
-				t.Errorf("QueryConditionRepo.UpdateFavoriteCondition() error = %v, wantErr %v", err, tt.wantErr)
+			if err := q.InsertFavoriteCondition(tt.args.queryConditionID, tt.args.operatorID, tt.args.rowOrder, tt.args.categoryName); (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.InsertFavoriteCondition() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			var result []int
-			sql := "select row_order from favorite_conditions where query_conditions_id = ? and staffs_id = ?"
+			sql := "select row_order from favorite_conditions where query_conditions_id = ? and staffs_id = ? and category_name = ?"
 			sql = con.Rebind(sql)
-			e := con.Select(&result, sql, tt.args.queryConditionID, tt.args.operatorID)
+			e := con.Select(&result, sql, tt.args.queryConditionID, tt.args.operatorID, tt.args.categoryName)
 			if e != nil {
-				t.Errorf("QueryConditionRepo.UpdateFavoriteCondition() error = %v", e)
+				t.Errorf("QueryConditionRepo.InsertFavoriteCondition() error = %v", e)
 			}
 			if result[0] != tt.args.rowOrder {
-				t.Errorf("QueryConditionRepo.UpdateFavoriteCondition() result = %v, wantResult %v", result, tt.args.rowOrder)
+				t.Errorf("QueryConditionRepo.InsertFavoriteCondition() result = %v, wantResult %v", result, tt.args.rowOrder)
+			}
+		})
+	}
+}
+
+func TestQueryConditionRepo_DeleteFavoriteConditionByCategoryName(t *testing.T) {
+	type fields struct {
+		database db
+	}
+	type args struct {
+		categoryName string
+		operatorID   string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "delete favorite condition by categoryName",
+			fields: fields{
+				database: createDB(),
+			},
+			args: args{
+				operatorID:   "staffid1",
+				categoryName: "staff",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			con := setUpQueryConditionTest()
+			defer tearDownQueryConditionTest(con)
+			setupTestData()
+
+			q := &QueryConditionRepo{
+				database: tt.fields.database,
+			}
+			if err := q.DeleteFavoriteConditionByCategoryName(tt.args.categoryName, tt.args.operatorID); (err != nil) != tt.wantErr {
+				t.Errorf("QueryConditionRepo.DeleteFavoriteConditionByCategoryName() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			var result []string
+			sql := "select query_conditions_id from favorite_conditions where staffs_id = ? and category_name = ?"
+			sql = con.Rebind(sql)
+			e := con.Select(&result, sql, tt.args.operatorID, tt.args.categoryName)
+			if e != nil {
+				t.Errorf("QueryConditionRepo.DeleteFavoriteCondition() error = %v", e)
+			}
+			if len(result) != 0 {
+				t.Errorf("QueryConditionRepo.DeleteFavoriteCondition() result length = %v, wantResult length %v", len(result), 0)
 			}
 		})
 	}
